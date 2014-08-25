@@ -1,88 +1,66 @@
 <?php
-/*
- * Plugin Name: Kanzu Support Desk
- * Plugin URI: http://kanzucode.com/kanzu-support-desk
- * Description: A simple support desk ticketing system for your WordPress site. 
- * Version: 1.0.0
- * Author: Kanzu Code
- * Author URI: URI: http://kanzucode.com
- * License: GPL2
- * Text Domain: kanzu-support-desk
- * 
+/**
+ * The Kanzu Support Desk
  *
- * @package KanzuSupport
- * @category Core
- * @author KanzuCode
+ * A simple support desk (ticketing) system for your WordPress site
+ *
+ * @package   Kanzu_Support
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Kanzu Support Desk
+ * Plugin URI:        http://kanzucode.com/kanzu-support-desk
+ * Description:       A simple support desk (ticketing) system for your WordPress site
+ * Version:           1.0.0
+ * Author:            Kanzu Code
+ * Author URI:        http://kanzucode.com
+ * Text Domain:       kanzu-support
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * Domain Path:       /languages
+ * GitHub Plugin URI: https://github.com/<owner>/<repo>
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
 }
 
-//if ( ! class_exists( 'KanzuSupport' ) ) :
+/*----------------------------------------------------------------------------*
+ * Public-Facing Functionality
+ *----------------------------------------------------------------------------*/
 
+require_once( plugin_dir_path( __FILE__ ) . 'public/class-kanzu-support.php' );
 
-/**
- * Main Kanzu Support Desk Class
- *
- * @class KanzuSupport
- * @version	1.0.0
+/*
+ * Register hooks that are fired when the plugin is activated or deactivated.
+ * When the plugin is deleted, the uninstall.php file is loaded.
  */
-final class KanzuSupport {
+register_activation_hook( __FILE__, array( 'Kanzu_Support', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'Kanzu_Support', 'deactivate' ) );
 
-	/**
-	 * @var string
-	 */
-	public $version = '1.0.0';
+add_action( 'plugins_loaded', array( 'Kanzu_Support', 'get_instance' ) );
 
-	
-	public function __construct() {
-		// Auto-load classes on demand
-		if ( function_exists( "__autoload" ) ) {
-			spl_autoload_register( "__autoload" );
-		}
+/*----------------------------------------------------------------------------*
+ * Dashboard and Administrative Functionality
+ *----------------------------------------------------------------------------*/
 
-		spl_autoload_register( array( $this, 'autoload' ) );
+/*
+ * When we want to include Ajax within the dashboard, we'll change the following
+ * conditional to:
+ *
+ * if ( is_admin() ) {
+ *   ...
+ * }
+ *
+ * The code below is intended to to give the lightest footprint possible.
+ */
+if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
 
-		// Define constants
-		$this->define_constants();
-
-		// Include required files
-		$this->includes();
-	}
-	
-	/**
-	 * Define KS Constants
-	 */
-	private function define_constants() {
-		define( 'KS_PLUGIN_FILE', __FILE__ );
-		define( 'KS_VERSION', $this->version );
-		
-		//Store the Plugin version. We'll need this for upgrades
-	if (!defined('KANZU_SUPPORT_VERSION_KEY'))
-		define('KANZU_SUPPORT_VERSION_KEY', 'kanzu_support_version');
-
-	add_option(KANZU_SUPPORT_VERSION_KEY, KS_VERSION);
-
-	}
-	
-	private function includes() {
-		include_once( 'includes/class-ks-install.php' );
-		$init = new KS_Install();
-		}
- 
- /**
-  * Added to write custom debug messages
-  */
-	public function kanzu_support_log_me($message) {
-    if (WP_DEBUG === true) {
-        if (is_array($message) || is_object($message)) {
-            error_log(print_r($message, true));
-        } else {
-            error_log($message);
-        }
-    }
-} 
-
+	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-kanzu-support-admin.php' );
+	add_action( 'plugins_loaded', array( 'Kanzu_Support_Admin', 'get_instance' ) );
 
 }

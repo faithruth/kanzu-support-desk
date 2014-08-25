@@ -5,7 +5,7 @@
  
  if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'KS_Install' ) ) :
+//if ( ! class_exists( 'KS_Install' ) ) :
 
 
  class KS_Install{
