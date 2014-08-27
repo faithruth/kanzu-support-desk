@@ -1,9 +1,9 @@
-# Copyright (C) 2013 TODO
-# This file is distributed under the same license as the TODO package.
+# Copyright (C) 2014 Kanzu Support Desk
+# This file is distributed under the same license as the Kanzu Support package.
 msgid ""
 msgstr ""
-"Project-Id-Version: TODO 1.0.0\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/plugins/plugin-name\n"
+"Project-Id-Version: Kanzu Support Desk 1.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/plugins/kanzu-support-desk\n"
 "POT-Creation-Date: 2013-05-10 11:23:19+00:00\n"
 "PO-Revision-Date: 2013-05-10 10:37-0500\n"
 "Last-Translator: FULL NAME <email@example.com>\n"
