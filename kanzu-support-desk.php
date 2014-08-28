@@ -6,16 +6,16 @@
  * Version:           1.0.0
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
- * Text Domain:       kanzu-support
+ * Text Domain:       kanzu-support-desk
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       /languages
  *
- * @package   Kanzu_Support
+ * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
  * @license   GPL-2.0+
  * @link      http://kanzucode.com
- * @copyright 2014 Kanzu Code *
+ * @copyright 2014 Kanzu Code 
  * @wordpress-plugin
  */
 
@@ -41,7 +41,7 @@ final class Kanzu_Support_Desk {
 	 * @var string
 	 * Note that it should match the Text Domain file header in this file
 	 */
-	public $KSD_SLUG = 'kanzu-support';
+	public $ks_slug = 'kanzu-support-desk';
 	
 	/**
 	 * @var KanzuSupport The single instance of the class
@@ -71,7 +71,7 @@ final class Kanzu_Support_Desk {
 	 * @since 1.0.0
 	 */
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'kanzusupport' ), '1.0.0' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'kanzu-support-desk' ), $this->version );
 	}
 
 	/**
@@ -80,14 +80,14 @@ final class Kanzu_Support_Desk {
 	 * @since 1.0.0
 	 */
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'kanzusupport' ), '1.0.0' );
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'kanzu-support-desk' ), $this->version );
 	}
 
 	public function __construct(){
-	// Define constants
+	//Define constants
 	$this->define_constants();
 
-	// Include required files
+	//Include required files
 	$this->includes();
 	
 	/*
@@ -109,13 +109,13 @@ final class Kanzu_Support_Desk {
 		define( 'KSD_PLUGIN_FILE', __FILE__ );
 		define( 'KSD_VERSION', $this->version );
 		define( 'KSD_DB_VERSION', $this->db_version );
-		define( 'KSD_SLUG', $this->db_version );
+		define( 'KSD_SLUG', $this->ks_slug );
 		
 		//Store the Plugin version. We'll need this for upgrades
 		if (!defined('KANZU_SUPPORT_VERSION_KEY')) {
 			define('KANZU_SUPPORT_VERSION_KEY', 'kanzu_support_version');
 		}
-		//Store the Db version
+		//Store the Db version. Might remove Db version altogether & work with just $version
 		if (!defined('KANZU_SUPPORT_DB_VERSION_KEY')) {
 			define('KANZU_SUPPORT_DB_VERSION_KEY', 'kanzu_support_db_version');
 		}
@@ -130,11 +130,11 @@ final class Kanzu_Support_Desk {
 	 */
 	private function includes() {
 		//Do installation-related work
-		include_once( 'includes/class-kanzu-support-install.php' );
+		include_once( 'includes/class-ksd-install.php' );
 		
 		//Dashboard and Administrative Functionality 
 		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'includes/admin/class-kanzu-support-admin.php' );
+			require_once( plugin_dir_path( __FILE__ ) . 'includes/admin/class-ksd-admin.php' );
 			
 		}
 		/*
@@ -147,50 +147,7 @@ final class Kanzu_Support_Desk {
 		 
 		}
 		
-		
-		
-	/**
-	 * Fired when a new site is activated with a WPMU environment.
-	 *
-	 * @since    1.0.0
-	 *
-	 * @param    int    $blog_id    ID of the new blog.
-	 */
-	public function activate_new_site( $blog_id ) {
-
-		if ( 1 !== did_action( 'wpmu_new_blog' ) ) {
-			return;
-		}
-
-		switch_to_blog( $blog_id );
-		Kanzu_Support_Install::single_activate();
-		restore_current_blog();
-
-	}
-
-	/**
-	 * Get all blog ids of blogs in the current network that are:
-	 * - not archived
-	 * - not spam
-	 * - not deleted
-	 *
-	 * @since    1.0.0
-	 *
-	 * @return   array|false    The blog ids, false if no matches.
-	 */
-	private static function get_blog_ids() {
-
-		global $wpdb;
-
-		// get an array of blog ids
-		$sql = "SELECT blog_id FROM $wpdb->blogs
-			WHERE archived = '0' AND spam = '0'
-			AND deleted = '0'";
-
-		return $wpdb->get_col( $sql );
-
-	}
- 
+	
 
 	/**
 	 * Load the plugin text domain for translation.
@@ -199,20 +156,20 @@ final class Kanzu_Support_Desk {
 	 */
 	public function load_plugin_textdomain() {
 	
-		$locale = apply_filters( 'plugin_locale', get_locale(), $this->KSD_SLUG );
+		$locale = apply_filters( 'plugin_locale', get_locale(), KSD_SLUG );
 
-		load_textdomain( $this->KSD_SLUG, trailingslashit( WP_LANG_DIR ) . $this->KSD_SLUG . '/' . $this->KSD_SLUG . '-' . $locale . '.mo' );
-		load_plugin_textdomain( $this->KSD_SLUG, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
+		load_textdomain( KSD_SLUG, trailingslashit( WP_LANG_DIR ) . KSD_SLUG . '/' . KSD_SLUG . '-' . $locale . '.mo' );
+		load_plugin_textdomain( KSD_SLUG, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
 
 	}
 	
-		/**
+	/**
 	 * Register and enqueue public-facing style sheet.
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
-		wp_enqueue_style( $this->KSD_SLUG . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), $this->version );
+		wp_enqueue_style( KSD_SLUG . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), $this->version );
 	}
 
 	/**
@@ -221,21 +178,21 @@ final class Kanzu_Support_Desk {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( $this->KSD_SLUG . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
+		wp_enqueue_script( KSD_SLUG . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
 	}
 
 	
 	/**
 	 * Setup Kanzu Support's actions
+	 * @since    1.0.0
 	 */
 	private function setup_actions(){
-		//add_action( 'plugins_loaded', array( $this, 'get_instance' ) );
-		
+			
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
 		// Activate plugin when new blog is added. Leave this out for now
-		//add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
+		//add_action( 'wpmu_new_blog', array( Kanzu_Support_Install, 'activate_new_site' ) );
 
 		// Load public-facing style sheet and JavaScript.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
