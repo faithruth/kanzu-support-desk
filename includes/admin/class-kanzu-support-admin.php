@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name.
+ * Admin side of Kanzu Support Desk
  *
  * @package   Kanzu_Support_Admin
  * @author    Kanzu Code <feedback@kanzucode.com>
@@ -9,16 +9,10 @@
  * @copyright 2014 Kanzu Code
  */
 
-/**
- * This class should ideally be used to work with the
- * administrative side of the WordPress site.
- *
- * Add all public-facing functionality to `class-kanzu-support.php`
- *
- *
- * @package Kanzu_Support_Admin
- * @author  Kanzu Code <feedback@kanzucode.com>
- */
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
+if ( ! class_exists( 'Kanzu_Support_Admin' ) ) :
+
 class Kanzu_Support_Admin {
 
 	/**
@@ -38,6 +32,16 @@ class Kanzu_Support_Admin {
 	 * @var      string
 	 */
 	protected $plugin_screen_hook_suffix = null;
+	
+	/**
+	 * @var string
+	 */
+	 private $plugin_slug=null;
+	 
+	/**
+	 * @var string
+	 */
+	 private $version=null;
 
 	/**
 	 * Initialize the plugin by loading admin scripts & styles and adding a
@@ -45,35 +49,18 @@ class Kanzu_Support_Admin {
 	 *
 	 * @since     1.0.0
 	 */
-	private function __construct() {
-
-		/*
-		 *
-		 * - Uncomment this line if the admin class should only be available for super admins
-		 */
-		/* if( ! is_super_admin() ) {
-			return;
-		} */
-
-		/*
-		 * Call $plugin_slug from public plugin class.
-		 *
-		 *
-		 */
-		$plugin = Kanzu_Support::get_instance();
-		$this->plugin_slug = $plugin->get_plugin_slug();
+	public function __construct() {
 
 		// Load admin style sheet and JavaScript.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
 		// Add the options page and menu item.
-		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'kanzu_support_add_menu_pages' ) );
 
 		// Add an action link pointing to the options page.
-		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->plugin_slug . '.php' );
-		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
-
+		add_filter( 'plugin_action_links_' . plugin_basename(KSD_PLUGIN_FILE), array( $this, 'kanzu_support_plugin_action_links' ) );		 
+		
 		/*
 		 * Define custom functionality.
 		 *
@@ -94,15 +81,6 @@ class Kanzu_Support_Admin {
 	 */
 	public static function get_instance() {
 
-		/*
-		 * @TODO :
-		 *
-		 * - Uncomment following lines if the admin class should only be available for super admins
-		 */
-		/* if( ! is_super_admin() ) {
-			return;
-		} */
-
 		// If the single instance hasn't been set, set it now.
 		if ( null == self::$instance ) {
 			self::$instance = new self;
@@ -114,9 +92,6 @@ class Kanzu_Support_Admin {
 	/**
 	 * Register and enqueue admin-specific style sheet.
 	 *
-	 * @TODO:
-	 *
-	 * - Rename "Kanzu_Support" to the name your plugin
 	 *
 	 * @since     1.0.0
 	 *
@@ -130,7 +105,7 @@ class Kanzu_Support_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( $this->plugin_slug .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Kanzu_Support::VERSION );
+			wp_enqueue_style( KSD_SLUG .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), Kanzu_Support::VERSION );
 		}
 
 	}
@@ -138,9 +113,6 @@ class Kanzu_Support_Admin {
 	/**
 	 * Register and enqueue admin-specific JavaScript.
 	 *
-	 * @TODO:
-	 *
-	 * - Rename "Kanzu_Support" to the name your plugin
 	 *
 	 * @since     1.0.0
 	 *
@@ -154,42 +126,12 @@ class Kanzu_Support_Admin {
 
 		$screen = get_current_screen();
 		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_script( $this->plugin_slug . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), Kanzu_Support::VERSION );
+			wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), Kanzu_Support::VERSION );
 		}
 
 	}
 
-	/**
-	 * Register the administration menu for this plugin into the WordPress Dashboard menu.
-	 *
-	 * @since    1.0.0
-	 */
-	public function add_plugin_admin_menu() {
-
-		/*
-		 * Add a settings page for this plugin to the Settings menu.
-		 *
-		 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.
-		 *
-		 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
-		 *
-		 * @TODO:
-		 *
-		 * - Change 'Page Title' to the title of your plugin admin page
-		 * - Change 'Menu Text' to the text for menu item for the plugin settings page
-		 * - Change 'manage_options' to the capability you see fit
-		 *   For reference: http://codex.wordpress.org/Roles_and_Capabilities
-		 */
-		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'Page Title', $this->plugin_slug ),
-			__( 'Menu Text', $this->plugin_slug ),
-			'manage_options',
-			$this->plugin_slug,
-			array( $this, 'display_plugin_admin_page' )
-		);
-
-	}
-
+	
 	/**
 	 * Render the settings page for this plugin.
 	 *
@@ -204,16 +146,89 @@ class Kanzu_Support_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function add_action_links( $links ) {
+	public function kanzu_support_plugin_action_links( $links ) {
 
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', $this->plugin_slug ) . '</a>'
+				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . KSD_SLUG ) . '">' . __( 'Settings', KSD_SLUG ) . '</a>'
 			),
 			$links
 		);
 
 	}
+	
+	/**
+	 * Add menu items in the admin panel 
+	 */
+	public function kanzu_support_add_menu_pages() {
+    //Add the top-level admin menu
+    $page_title = 'Kanzu Support';
+    $menu_title = 'Kanzu Support';
+    $capability = 'manage_options';
+    $menu_slug = 'kanzu-support';
+    $function = 'kanzu_support_settings';
+	
+		/*
+		 * Add the settings page to the Settings menu.
+		 *
+		 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.		 
+		 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
+		 */
+    add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function));
+    
+	//Add the ticket pages
+	$ticket_types = array();
+	$ticket_types['ks-my-unresolved']='My unresolved tickets';
+	$ticket_types['ks-all-tickets']='All tickets';
+	$ticket_types['ks-unassigned']='Unassigned tickets';
+	$ticket_types['ks-recently-updated']='Recently updated';
+	$ticket_types['ks-recently-resolved']='Recently resolved';
+	$ticket_types['ks-closed']='Closed';	
+    
+	foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
+		$submenu_function = 'kanzu_support_tickets';
+		add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array($this,$submenu_function));
+	}
+	
+	// Add submenu page with same slug as parent to ensure no duplicates
+     $sub_menu_title = 'Settings';
+    add_submenu_page($menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, array($this,$function));
+
+    // Now add the submenu page for Help
+    $submenu_page_title = 'Kanzu Support Help';
+    $submenu_title = 'Help';
+    $submenu_slug = 'kanzu-support-help';
+    $submenu_function = 'kanzu_support_help';
+    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, array($this,$submenu_function)); 
+	
+	}
+
+	private function kanzu_support_settings() {
+		if (!current_user_can('manage_options')) {
+			wp_die('You do not have sufficient permissions to access this page.');
+		}
+
+    // Render the HTML for the Settings page or include a file that does
+	}
+
+	private function kanzu_support_help() {
+		if (!current_user_can('manage_options')) {
+			wp_die('You do not have sufficient permissions to access this page.');
+		}
+
+    // Render the HTML for the Help page or include a file that does
+	}
+
+	/** 
+	 * Handle all the tickets requests
+	 */
+	 private function kanzu_support_tickets($type){
+	 
+	 }
+
+
+
+ 
 
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
@@ -242,3 +257,7 @@ class Kanzu_Support_Admin {
 	}
 
 }
+endif;
+
+return new Kanzu_Support_Admin();
+

@@ -33,6 +33,7 @@ final class Kanzu_Support_Desk {
 	
 	/**
 	 * @var string
+	 * Same as $version but without the periods
 	 */
 	public $db_version = '100';
 	
@@ -40,7 +41,7 @@ final class Kanzu_Support_Desk {
 	 * @var string
 	 * Note that it should match the Text Domain file header in this file
 	 */
-	public $ks_slug = 'kanzu-support';
+	public $KSD_SLUG = 'kanzu-support';
 	
 	/**
 	 * @var KanzuSupport The single instance of the class
@@ -96,7 +97,7 @@ final class Kanzu_Support_Desk {
 	register_activation_hook( __FILE__, array( 'Kanzu_Support_Install', 'activate' ) );
 	register_deactivation_hook( __FILE__, array( 'Kanzu_Support_Install', 'deactivate' ) );
 	
-	//Set-up actions
+	//Set-up actions and filters
 	$this->setup_actions();
 	
 	}
@@ -105,15 +106,22 @@ final class Kanzu_Support_Desk {
 	 * Define Kanzu Support Constants
 	 */
 	private function define_constants() {
-		define( 'KS_PLUGIN_FILE', __FILE__ );
-		define( 'KS_VERSION', $this->version );
+		define( 'KSD_PLUGIN_FILE', __FILE__ );
+		define( 'KSD_VERSION', $this->version );
+		define( 'KSD_DB_VERSION', $this->db_version );
+		define( 'KSD_SLUG', $this->db_version );
 		
 		//Store the Plugin version. We'll need this for upgrades
 		if (!defined('KANZU_SUPPORT_VERSION_KEY')) {
 			define('KANZU_SUPPORT_VERSION_KEY', 'kanzu_support_version');
 		}
+		//Store the Db version
+		if (!defined('KANZU_SUPPORT_DB_VERSION_KEY')) {
+			define('KANZU_SUPPORT_DB_VERSION_KEY', 'kanzu_support_db_version');
+		}
 		//Store the version in the database as an option
-		add_option(KANZU_SUPPORT_VERSION_KEY, KS_VERSION);
+		add_option(KANZU_SUPPORT_VERSION_KEY, KSD_VERSION);
+		add_option(KANZU_SUPPORT_DB_VERSION_KEY, KSD_DB_VERSION);
 
 	}
 	
@@ -124,14 +132,10 @@ final class Kanzu_Support_Desk {
 		//Do installation-related work
 		include_once( 'includes/class-kanzu-support-install.php' );
 		
-		//Public-Facing Functionality
-		require_once( plugin_dir_path( __FILE__ ) . 'public/class-kanzu-support.php' ); 
-		
 		//Dashboard and Administrative Functionality 
 		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'admin/class-kanzu-support-admin.php' );
-			add_action( 'plugins_loaded', array( 'Kanzu_Support_Admin', 'get_instance' ) );
-
+			require_once( plugin_dir_path( __FILE__ ) . 'includes/admin/class-kanzu-support-admin.php' );
+			
 		}
 		/*
 		 * When we decide to include Ajax within the dashboard, we'll change the if above to
@@ -142,12 +146,100 @@ final class Kanzu_Support_Desk {
 		 */
 		 
 		}
+		
+		
+		
+	/**
+	 * Fired when a new site is activated with a WPMU environment.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @param    int    $blog_id    ID of the new blog.
+	 */
+	public function activate_new_site( $blog_id ) {
+
+		if ( 1 !== did_action( 'wpmu_new_blog' ) ) {
+			return;
+		}
+
+		switch_to_blog( $blog_id );
+		Kanzu_Support_Install::single_activate();
+		restore_current_blog();
+
+	}
+
+	/**
+	 * Get all blog ids of blogs in the current network that are:
+	 * - not archived
+	 * - not spam
+	 * - not deleted
+	 *
+	 * @since    1.0.0
+	 *
+	 * @return   array|false    The blog ids, false if no matches.
+	 */
+	private static function get_blog_ids() {
+
+		global $wpdb;
+
+		// get an array of blog ids
+		$sql = "SELECT blog_id FROM $wpdb->blogs
+			WHERE archived = '0' AND spam = '0'
+			AND deleted = '0'";
+
+		return $wpdb->get_col( $sql );
+
+	}
+ 
+
+	/**
+	 * Load the plugin text domain for translation.
+	 *
+	 * @since    1.0.0
+	 */
+	public function load_plugin_textdomain() {
+	
+		$locale = apply_filters( 'plugin_locale', get_locale(), $this->KSD_SLUG );
+
+		load_textdomain( $this->KSD_SLUG, trailingslashit( WP_LANG_DIR ) . $this->KSD_SLUG . '/' . $this->KSD_SLUG . '-' . $locale . '.mo' );
+		load_plugin_textdomain( $this->KSD_SLUG, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
+
+	}
+	
+		/**
+	 * Register and enqueue public-facing style sheet.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_styles() {
+		wp_enqueue_style( $this->KSD_SLUG . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), $this->version );
+	}
+
+	/**
+	 * Register and enqueues public-facing JavaScript files.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_scripts() {
+		wp_enqueue_script( $this->KSD_SLUG . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
+	}
+
 	
 	/**
 	 * Setup Kanzu Support's actions
 	 */
 	private function setup_actions(){
-		add_action( 'plugins_loaded', array( 'Kanzu_Support', 'get_instance' ) );
+		//add_action( 'plugins_loaded', array( $this, 'get_instance' ) );
+		
+		// Load plugin text domain
+		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+
+		// Activate plugin when new blog is added. Leave this out for now
+		//add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
+
+		// Load public-facing style sheet and JavaScript.
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		
 		/* Define custom functionality. Commented out for now
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
@@ -183,8 +275,10 @@ final class Kanzu_Support_Desk {
 		// @TODO: Define our filter hook callback here
 	}
 	
+
 	/**
-	* Added to write custom debug messages
+	* Added to write custom debug messages to the debug log (wp-content/debug.log). You
+	* need to turn debug on for this to work
 	*/
 	public function kanzu_support_log_me($message) {
     if (WP_DEBUG === true) {

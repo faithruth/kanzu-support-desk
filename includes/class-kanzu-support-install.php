@@ -34,9 +34,6 @@ class Kanzu_Support_Install {
 	 */
 	public function __construct() {
 
-		// Load plugin text domain
-		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
-
 		// Activate plugin when new blog is added
 		add_action( 'wpmu_new_blog', array( $this, 'activate_new_site' ) );
 	}
@@ -183,9 +180,8 @@ class Kanzu_Support_Install {
 	 */
 	private static function single_activate() {
 	
-		add_action('admin_menu',  array( $this,'kanzu_support_menu_pages'),0);
-		add_filter('plugin_action_links',  array( $this,'kanzu_support_plugin_action_links'), 10, 2);
-		$this->ks_create_tables();
+
+		self::ks_create_tables();
 		
 		//add_action( 'admin_init', array( $this, 'install_actions' ) );
 		//add_action( 'admin_init', array( $this, 'check_version' ), 5 );
@@ -201,27 +197,14 @@ class Kanzu_Support_Install {
 		// @TODO: Define deactivation functionality here
 	}
 
-	/**
-	 * Load the plugin text domain for translation.
-	 *
-	 * @since    1.0.0
-	 */
-	public function load_plugin_textdomain() {
-
-		$domain = kanzu_support_desk()->ks_slug;
-		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
-
-		load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . $domain . '/' . $domain . '-' . $locale . '.mo' );
-		load_plugin_textdomain( $domain, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
-
-	}
+ 
 
 	/**
 	* Install Kanzu Support
 	*/
    private function ks_create_tables() {
             global $wpdb;        
-			//$wpdb->hide_errors();		            
+			$wpdb->hide_errors();		            
              
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
 
@@ -253,91 +236,7 @@ class Kanzu_Support_Install {
  }
  
  
-	/**
-	 * Add menu items in the admin panel
-	 */
-	private function kanzu_support_menu_pages() {
-    //Add the top-level admin menu
-    $page_title = 'Kanzu Support';
-    $menu_title = 'Kanzu Support';
-    $capability = 'manage_options';
-    $menu_slug = 'kanzu-support';
-    $function = 'kanzu_support_settings';
-    add_menu_page($page_title, $menu_title, $capability, $menu_slug, $function);
-    
-	//Add the ticket pages
-	$ticket_types = array();
-	$ticket_types['ks-my-unresolved']='My unresolved tickets';
-	$ticket_types['ks-all-tickets']='All tickets';
-	$ticket_types['ks-unassigned']='Unassigned tickets';
-	$ticket_types['ks-recently-updated']='Recently updated';
-	$ticket_types['ks-recently-resolved']='Recently resolved';
-	$ticket_types['ks-closed']='Closed';	
-    
-	foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
-		$submenu_function = 'kanzu_support_tickets';
-		add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
-	}
 	
-	// Add submenu page with same slug as parent to ensure no duplicates
-    $sub_menu_title = 'Settings';
-    add_submenu_page($menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, $function);
-
-    // Now add the submenu page for Help
-    $submenu_page_title = 'Kanzu Support Help';
-    $submenu_title = 'Help';
-    $submenu_slug = 'kanzu-support-help';
-    $submenu_function = 'kanzu_support_help';
-    add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, $submenu_function);
-	
-	}
-
-	private function kanzu_support_settings() {
-		if (!current_user_can('manage_options')) {
-			wp_die('You do not have sufficient permissions to access this page.');
-		}
-
-    // Render the HTML for the Settings page or include a file that does
-	}
-
-	private function kanzu_support_help() {
-		if (!current_user_can('manage_options')) {
-			wp_die('You do not have sufficient permissions to access this page.');
-		}
-
-    // Render the HTML for the Help page or include a file that does
-	}
-
-	/** 
-	 * Handle all the tickets requests
-	 */
-	 private function kanzu_support_tickets($type){
-	 
-	 }
-
-
-
-
-	/**
-	 * Add a link on the plugins page, under our plugin name, linking to our settings page. 
-	 */
-	private function kanzu_support_plugin_action_links($links, $file) {
-		static $this_plugin;
-
-		if (!$this_plugin) {
-			$this_plugin = plugin_basename(__FILE__);
-		}
-
-		if ($file == $this_plugin) {
-			// The "page" query string value must be equal to the slug
-			// of the Settings admin page we defined earlier, which in
-			// this case equals "kanzu-support".
-			$settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=kanzu-support">Settings</a>';
-			array_unshift($links, $settings_link);
-		}
-
-		return $links;
-	}
 
 	 
 	 //Will handle updates
