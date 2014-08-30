@@ -237,15 +237,17 @@ class Kanzu_Support_Install {
 			$wpdb->hide_errors();		            
              
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
-
+                //Our table only stores customer meta data
                 $kanzusupport_tables = "
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-				`tkt_title` VARCHAR(512) NOT NULL, `initial_message` TEXT NOT NULL, 
+				`tkt_title` VARCHAR(512) NOT NULL, 
+                                `initial_message` TEXT NOT NULL, 
 				`tkt_description` TEXT ,
 				`tkt_channel` INT(10),
-				`tkt_status` ENUM{'OPEN','ASSIGNED','RESOLVED'},
-				`tkt_logged_by` INT NOT NULL, `email` VARCHAR(256) NOT NULL, 
+				`tkt_status` ENUM{'OPEN','ASSIGNED','PENDING','RESOLVED'},
+				`tkt_logged_by` INT NOT NULL, 
+                                `email` VARCHAR(256) NOT NULL, 
 				`tkt_severity` ENUM {'URGENT', 'HIGH', 'MEDIUM','LOW'}, 
 				`tkt_resolution` VARCHAR(64) NOT NULL, 
 				`tkt_time_logged` VARCHAR(128) NOT NULL, 
