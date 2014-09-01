@@ -242,7 +242,7 @@ class Kanzu_Support_Install {
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				`tkt_title` VARCHAR(512) NOT NULL, 
-                `initial_message` TEXT NOT NULL, 
+                `tkt_initial_message` TEXT NOT NULL, 
 				`tkt_description` TEXT ,
 				`tkt_channel` INT(10),
 				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED'),
