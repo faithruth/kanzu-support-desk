@@ -232,7 +232,7 @@ class Kanzu_Support_Install {
 	/**
 	* Install Kanzu Support
 	*/
-   private function ks_create_tables() {
+   private static function ks_create_tables() {
             global $wpdb;        
 			$wpdb->hide_errors();		            
              

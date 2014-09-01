@@ -137,28 +137,16 @@ class Kanzu_Support_Admin {
 		
 		//Add the ticket pages. This syntax, __('Word','domain'), allows us to do localization
 		$ticket_types = array();
-		$ticket_types['ksd-my-unresolved']=__('My unresolved tickets','kanzu-support-desk');
-		$ticket_types['ksd-all-tickets']=__('All tickets','kanzu-support-desk');
-		$ticket_types['ksd-unassigned']=__('Unassigned tickets','kanzu-support-desk');
-		$ticket_types['ksd-recently-updated']=__('Recently updated','kanzu-support-desk');
-		$ticket_types['ksd-recently-resolved']=__('Recently resolved','kanzu-support-desk');
-		$ticket_types['ksd-closed']=__('Closed','kanzu-support-desk');
+		$ticket_types['ksd-dashboard']=__('Dashboard','kanzu-support-desk');
+		$ticket_types['ksd-tickets']=__('Tickets','kanzu-support-desk');
+		$ticket_types['ksd-settings']=__('Settings','kanzu-support-desk');
+		$ticket_types['ksd-addons']=__('Add-ons','kanzu-support-desk');
+		$ticket_types['ksd-help']=__('Help','kanzu-support-desk');
 		
 		foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
 			$submenu_function = 'admin_menu_tickets';
-			add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array($this,$submenu_function));
+			add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array($this,$function));
 		}
-		
-		// Add submenu page with same slug as parent to ensure no duplicates
-		 $sub_menu_title = __('Settings','kanzu-support-desk');
-		add_submenu_page($menu_slug, $page_title, $sub_menu_title, $capability, $menu_slug, array($this,$function));
-
-		// Now add the submenu page for Help
-		$submenu_page_title = __('Kanzu Support Help','kanzu-support-desk');
-		$submenu_title = __('Help','kanzu-support-desk');
-		$submenu_slug = 'kanzu-support-help';
-		$submenu_function = 'output_admin_menu_help';
-		add_submenu_page($menu_slug, $submenu_page_title, $submenu_title, $capability, $submenu_slug, array($this,$submenu_function)); 
 	
 	}
 	
