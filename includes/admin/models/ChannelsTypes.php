@@ -17,13 +17,13 @@ $plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
 include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 
 
- class ChannelsModel extends Kanzu_Model{
+ class ChannelTypesModel extends Kanzu_Model{
 
 	
 	public function __construct(){
 		global $wpdb;
-		$this->_tablename = $wpdb->prefix . "kanzusupport_channels";	
-		$this->_id = "chan_id";
+		$this->_tablename = $wpdb->prefix . "kanzusupport_channeltypes";	
+		$this->_id = "chantype_id";
 			
 		$this->_formats = array(
 		'chan_id' 			 => '%d', 
@@ -38,7 +38,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*
 	*@param userid
 	*/
-	public function getChannel( $id ){
+	public function getChannelType( $id ){
 		return parent::getRow($id);
 	}
 	
@@ -54,7 +54,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	/*
 	*
 	*/
-	public function addChannel( &$obj ){
+	public function addChannelType( &$obj ){
 		return parent::addRow( $obj );
 	}
 	
@@ -62,7 +62,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*
 	*@param Channel object.
 	*/
-	public function deleteChannel(  &$obj ){
+	public function deleteChannelType(  &$obj ){
 		return parent::deleteRow( $obj );
 	}
 	
@@ -72,7 +72,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*@param Channel object
 	* *new_* for new value
 	*/
-	public function updateChannel( &$obj ){
+	public function updateChannelType( &$obj ){
 		return parent::updateRow( $obj );
 	}
  }
