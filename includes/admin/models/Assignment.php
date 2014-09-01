@@ -20,23 +20,14 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	
 	public function __construct(){
 		global $wpdb;
-		$this->_tablename = $wpdb->prefix . "kanzusupport_assignments";	
-		$this->_id = "tkt_id";
+		$this->_tablename = $wpdb->prefix . "kanzusupport_assignment";	
+		$this->_id = "assign_id";
 			
 		$this->_formats = array(
-		'tkt_title' => '%s', 
-		'tkt_initial_message'=> '%s',
-		'tkt_description' 	 => '%s' , 
-		'tkt_channel' 		 => '%s',
-		'tkt_status' 		 => '%s',
-		'tkt_logged_by' 	 => '%s',  
-		'tkt_severity' 		 => '%s', 
-		'tkt_resolution' 	 => '%s', 
-		'tkt_time_logged' 	 => '%s', 
-		'tkt_time_updated' 	 => '%s', 
-		'tkt_private_notes'  => '%s',
-		'tkt_tags' 			 => '%s',
-		'tkt_customer_rating' => '%d'
+		'assign_tkt_id' 		 => '%d', 
+		'assign_assigned_to'	 => '%d',
+		'assign_date_assigned' 	 => '%s' , 
+		'assign_assigned_by' 	 => '%d'
 	);
 	}
 	
@@ -45,7 +36,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*
 	*@param userid
 	*/
-	public function getTicket( $id ){
+	public function getAssignment( $id ){
 		return parent::getRow($id);
 	}
 	
@@ -63,8 +54,8 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*
 	*
 	*/
-	public function addTicket( &$ticket ){
-		return parent::addRow( $ticket );
+	public function addAssignment( &$obj ){
+		return parent::addRow( $obj );
 	}
 	
 	/*
@@ -72,8 +63,8 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*
 	*@param Ticket object.
 	*/
-	public function deleteTicket(  &$ticket ){
-		return parent::deleteRow( $ticket );
+	public function deleteAssignment(  &$obj ){
+		return parent::deleteRow( $obj );
 	}
 	
 
@@ -82,8 +73,8 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*@param ticket object
 	* *new_* for new value
 	*/
-	public function updateTicket( &$ticket ){
-		return parent::updateTicket( $ticket );
+	public function updateAssignment( &$obj ){
+		return parent::updateRow( $obj );
 	}
  }
  

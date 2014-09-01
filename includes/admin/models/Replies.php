@@ -17,19 +17,23 @@ $plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
 include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 
 
- class ChannelsModel extends Kanzu_Model{
+ class RepliesModel extends Kanzu_Model{
 
 	
 	public function __construct(){
 		global $wpdb;
-		$this->_tablename = $wpdb->prefix . "kanzusupport_channels";	
-		$this->_id = "chan_id";
+		$this->_tablename = $wpdb->prefix . "kanzusupport_customers";	
+		$this->_id = "rep_id";
 			
 		$this->_formats = array(
-		'chan_id' 			 => '%d', 
-		'chan_chantype_id'	 => '%s',
-		'chan_handle'	 	 => '%s' , 
-		'chan_description' 	 => '%s'
+		'rep_id' 			 	=> '%d', 
+		'rep_tkt_id'	 		=> '%s',
+		'rep_type'	 			=> '%s' , 
+		'rep_is_cc' 			=> '%s'
+		'rep_is_bcc' 	 		=> '%s'
+		'rep_date_created' 		=> '%s'
+		'rep_created_by' 	 	=> '%s',
+		'rep_date_modified' 	=> '%s'
 		);
 	}
 	
@@ -38,7 +42,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*
 	*@param userid
 	*/
-	public function getChannel( $id ){
+	public function getReply( $id ){
 		return parent::getRow($id);
 	}
 	
@@ -54,7 +58,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	/*
 	*
 	*/
-	public function addChannel( &$obj ){
+	public function addReply( &$obj ){
 		return parent::addRow( $obj );
 	}
 	
@@ -62,7 +66,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*
 	*@param Channel object.
 	*/
-	public function deleteChannel(  &$obj ){
+	public function deleteReply(  &$obj ){
 		return parent::deleteRow( $obj );
 	}
 	
@@ -72,7 +76,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*@param Channel object
 	* *new_* for new value
 	*/
-	public function updateChannel( &$obj ){
+	public function updateReply( &$obj ){
 		return parent::updateRow( $obj );
 	}
  }
