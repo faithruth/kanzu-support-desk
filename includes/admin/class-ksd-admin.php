@@ -23,16 +23,8 @@ class Kanzu_Support_Admin {
 	 * @var      object
 	 */
 	protected static $instance = null;
+	
 
-	/**
-	 * Slug of the plugin screen.
-	 *
-	 * @since    1.0.0
-	 *
-	 * @var      string
-	 */
-	protected $plugin_screen_hook_suffix = null;	
- 
 
 	/**
 	 * Initialize the plugin by loading admin scripts & styles and adding a
@@ -89,15 +81,8 @@ class Kanzu_Support_Admin {
 	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_styles() {
-
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_style( KSD_SLUG .'-admin-styles', plugins_url( 'assets/css/admin.css', __FILE__ ), array(), KSD_VERSION );
-		}
+	
+		wp_enqueue_style( KSD_SLUG .'-admin-styles', plugins_url( '../../assets/css/admin-kanzu-support-desk.css', __FILE__ ), array(), KSD_VERSION );
 
 	}
 
@@ -109,29 +94,12 @@ class Kanzu_Support_Admin {
 	 *
 	 * @return    null    Return early if no settings page is registered.
 	 */
-	public function enqueue_admin_scripts() {
-
-		if ( ! isset( $this->plugin_screen_hook_suffix ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-		if ( $this->plugin_screen_hook_suffix == $screen->id ) {
-			wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), KSD_VERSION );
-		}
-
+	public function enqueue_admin_scripts() { 
+		
+		wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery' ), KSD_VERSION ); 
 	}
 
 	
-	/**
-	 * Render the settings page for this plugin.
-	 *
-	 * @since    1.0.0
-	 */
-	public function display_plugin_admin_page() {
-		include_once( 'views/admin.php' );
-	}
-
 	/**
 	 * Add settings action link to the plugins page.
 	 *
@@ -195,7 +163,7 @@ class Kanzu_Support_Admin {
 	}
 	
 	public function output_admin_menu_dashboard(){
-		include('views/html-admin-dashboard.php');
+		include('views/html-admin-wrapper.php');
 	}
 
 	public function output_admin_menu_settings() {
