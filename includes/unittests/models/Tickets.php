@@ -3,7 +3,7 @@
 *Ticket Model Unit Tests
 * Defining tests:
 * 1) Add test name in TestSuit Array and set the test on or off
-* 2) create function with the same name as the te
+* 2) create function with the same name as the test name
 */
 
 $plugindir = plugin_dir_path( __FILE__ );
