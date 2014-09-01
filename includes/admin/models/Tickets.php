@@ -30,11 +30,9 @@
 		'tkt_customer_rating' => '%d'
 	);
 	
-	//private $_obj = new stdClass(); 
-	
 	public function __construct(){
-	
-	
+		global $wpdb;
+		$this->_tablename = $wpdb->prefix . "kanzusupport_tickets";	
 	}
 	
 	/*
@@ -62,17 +60,16 @@
 	*
 	*/
 	public function addTicket( &$ticket ){
-		$table = "{$wpdb->prefix}kanzusupport_tickets";
+		global $wpdb;
+		
 		$data = array();
 		$format = array();
 		foreach( $ticket as $key => $value) {
-			//print "$key => $value\n";
 			$data[$key] = $value;
 			array_push($format,$this->_formats[$key]);
 		}
-		global $wpdb;
 		$wpdb->show_errors();
-		$wpdb->insert( $table, $data, $format );
+		$wpdb->insert( $this->_tablename, $data, $format );
 		return $wpdb->insert_id;
 	}
 	
@@ -81,17 +78,49 @@
 	*
 	*@param $id User id
 	*/
-	public function deleteTicket( int $id ){
-	
+	public function deleteTicket(  &$ticket ){
+		global $wpdb;
+		$table = $this->_tablename;
+		$where = array();
+		$where_format = array();
+		foreach( $ticket as $key => $value) {
+			$where[$key] = $value;
+			array_push($where_format,$this->_formats[$key]);
+		}
+		
+		$wpdb->show_errors();
+		$wpdb->delete( $table, $where, $where_format = null );
+		
+		return True;
+		 
 	}
 	
 	
 	/*
 	*Save/update 
 	*
+	* *new_* for new value
 	*/
-	public function updateTicket( &$userObject ){
-	//$wpdb->insert( $table, $data, $format );
+	public function updateTicket( &$ticket ){
+		global $wpdb;
+		$table = $this->_tablename;
+		$data = array();
+		$where = array();
+		$format = array();
+		$where_format = array();
+		foreach( $ticket as $key => $value) {
+			array_push($format,$this->_formats[$key]);
+			$pfx = substr($key,0,4); #new_
+			if( $pfx == "new_"){
+				$data[ substr($key,4)] = $value;
+			}else{
+				$where[$key] = $value;
+				array_push($where_format,$this->_formats[$key]);
+			}
+		}
+		$wpdb->show_errors();
+		$wpdb->update( $table, $data, $where, $format, $where_format); 
+		return True;
 	}
  }
  

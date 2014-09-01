@@ -20,7 +20,9 @@ echo "<b>TICKETS MODEL UNIT TETS</b>";
 #Test suit
 ######################################################################
 $TestSuit = array(
-'TicketInsert' => True
+'TicketInsert' => False,
+'TicketDelete' => False,
+'TicketUpdate' => True
 );
 
 
@@ -44,6 +46,28 @@ function TicketInsert(){
 	//Add to db, should return id
 	$id = $TM->addTicket( $tO);
 	
+	return ( $id > 0 ) ? True : False;
+}
+
+function TicketDelete(){
+	#Load ticket model class file
+	$TM = new TicketsModel();
+	$tO = new stdClass(); 
+	$tO->tkt_id = "5";
+	$id = $TM->deleteTicket($tO);
+	return ( $id > 0 ) ? True : False;
+}
+
+function TicketUpdate(){
+	#Load ticket model class file
+	$TM = new TicketsModel();
+
+		//Populate ticket model instalate
+	$tO = new stdClass(); 
+	$tO->new_tkt_title    	 = "Title Update Test";
+	$tO->new_initial_message 	 = "Initial Message dasdfasdf";
+	$tO->tkt_customer_rating = "1";
+	$TM->updateTicket($tO);
 	return ( $id > 0 ) ? True : False;
 }
 
