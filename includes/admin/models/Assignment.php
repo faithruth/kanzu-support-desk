@@ -46,7 +46,7 @@ include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
 	public  function getAll( $filter = "" ){
-		return parent::getRow($filter = "");
+		return parent::getAll($filter = "");
 	}
  
 	/*

@@ -53,7 +53,7 @@
 		
 		$data = array();
 		$format = array();
-		foreach( $ticket as $key => $value) {
+		foreach( $rowObject as $key => $value) {
 			$data[$key] = $value;
 			array_push($format,$this->_formats[$key]);
 		}
@@ -71,7 +71,7 @@
 		$table = $this->_tablename;
 		$where = array();
 		$where_format = array();
-		foreach( $ticket as $key => $value) {
+		foreach( $rowObject as $key => $value) {
 			$where[$key] = $value;
 			array_push($where_format,$this->_formats[$key]);
 		}
@@ -93,7 +93,7 @@
 		$where = array();
 		$format = array();
 		$where_format = array();
-		foreach( $ticket as $key => $value) {
+		foreach( $rowObject as $key => $value) {
 			$pfx = substr($key,0,4); #new_
 			if( $pfx == "new_"){
 				$newkey = substr($key,4);
@@ -109,4 +109,4 @@
 	}
  }
  
- 
+ ?>

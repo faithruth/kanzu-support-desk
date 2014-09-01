@@ -15,12 +15,12 @@ include( $plugindir. $DS . "admin" . $DS."controllers".$DS."Tickets.php");
 #
 #####################################################################
 echo "<br /><br /><br />";
-echo "<b>TICKETS MODEL UNIT TETS</b>";
+echo "<b>TICKETS CONTROLLER UNIT TETS</b>";
 
 #Test suit
 ######################################################################
 $TestSuit = array(
-'logTicket' => False
+'logTicket' => True
 );
 
 

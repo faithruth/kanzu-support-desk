@@ -9,18 +9,21 @@
  * @file	  Controller.php
  */
 
-class TicketController extends Kanzu_Controller 
-{
-	
+$plugindir = plugin_dir_path( __FILE__ );
+
+$DS=DIRECTORY_SEPARATOR;
+$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
+include( $plugindir. $DS . "admin" . $DS."libs".$DS."Controller.php");
+
+class TicketsController extends Kanzu_Controller 
+{	
 	public function __construct(){
-		parent::_model_name = "Ticket";
+		$this->_model_name = "Tickets";
 		parent::__construct();
 	}
 	
 	public function logTicket(&$ticket){
-	
 		$id = $this->_model->addTicket( $ticket);
-		return ( $id > 0 ) ? True : False;
 	}
 	
 	public function replyTicket(int $ticket_id ){

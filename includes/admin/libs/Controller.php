@@ -9,11 +9,7 @@
  * @file	  Controller.php
  */
 
- $plugindir = plugin_dir_path( __FILE__ );
-
-
-
-
+$plugindir = plugin_dir_path( __FILE__ );
 
 class Kanzu_Controller 
 {
@@ -29,7 +25,7 @@ class Kanzu_Controller
 			$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
 			include( $plugindir. $DS . "admin" . $DS."models" . $DS . $this->_model_name . ".php");
 			$classname = $this->_model_name . "Model";
-			$_model =& new $classname();
+			$this->_model =& new $classname();
 		}
 	}
 }
