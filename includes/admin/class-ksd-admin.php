@@ -101,15 +101,6 @@ class Kanzu_Support_Admin {
 
 	
 	/**
-	 * Render the settings page for this plugin.
-	 *
-	 * @since    1.0.0
-	 */
-	public function display_plugin_admin_page() {
-		include_once( 'views/admin.php' );
-	}
-
-	/**
 	 * Add settings action link to the plugins page.
 	 *
 	 * @since    1.0.0
@@ -172,7 +163,7 @@ class Kanzu_Support_Admin {
 	}
 	
 	public function output_admin_menu_dashboard(){
-		include('views/html-admin-dashboard.php');
+		include('views/html-admin-wrapper.php');
 	}
 
 	public function output_admin_menu_settings() {
