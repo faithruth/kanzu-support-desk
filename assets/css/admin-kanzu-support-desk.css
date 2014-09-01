@@ -7,9 +7,25 @@ h2.admin-ksd-tab-title{
 	left: 10px;
 }
 #admin-kanzu-support-desk div.admin-ksd-container{
+	border: medium none;
 	padding-top: 50px;
+	width: 95%;
 }
-
+#admin-kanzu-support-desk ul.ui-tabs-nav{
+	width: 60px;
+}
+#admin-kanzu-support-desk ul.ui-tabs-nav li{
+	text-align: center;
+}
+#admin-kanzu-support-desk  .admin-ksd-content{
+	float: left;
+}
+#admin-kanzu-support-desk .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
+	background: #2ea2cc;
+}
+#admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
+	padding: 0.5em 0;
+}
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }
 .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
