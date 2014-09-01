@@ -14,10 +14,17 @@ h2.admin-ksd-tab-title{
 #admin-kanzu-support-desk ul.ui-tabs-nav{
 	width: 60px;
 }
+#admin-kanzu-support-desk ul.ui-tabs-nav li{
+	text-align: center;
+}
 #admin-kanzu-support-desk  .admin-ksd-content{
 	float: left;
 }
 #admin-kanzu-support-desk .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
+	background: #2ea2cc;
+}
+#admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
+	padding: 0.5em 0;
 }
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }
