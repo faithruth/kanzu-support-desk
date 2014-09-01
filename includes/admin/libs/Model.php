@@ -16,6 +16,11 @@
 	public function __construct(){
 	}
 	
+	public function execQuery( $query ){
+		global $wpdb;
+		return $wpdb->get_results( query, OBJECT );
+	}
+	
 	/*
 	*Get single row object 
 	*
