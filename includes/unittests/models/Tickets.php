@@ -22,7 +22,8 @@ echo "<b>TICKETS MODEL UNIT TETS</b>";
 $TestSuit = array(
 'TicketInsert' => False,
 'TicketDelete' => False,
-'TicketUpdate' => True
+'TicketUpdate' => False,
+'TicketGetTicket' => True,
 );
 
 
@@ -68,10 +69,15 @@ function TicketUpdate(){
 	$tO->new_initial_message 	 = "Initial Message dasdfasdf";
 	$tO->tkt_customer_rating = "1";
 	$TM->updateTicket($tO);
-	return ( $id > 0 ) ? True : False;
+	return true;
 }
 
+function TicketGetTicket(){
+	$TM = new TicketsModel();
 
+	$tO = $TM->getTicket( 6);
+	print_r( $tO);
+}
 
 #Run Test Suit
 ##################################################################

@@ -1,6 +1,5 @@
 <?php
 /**
- * Holds all installation & deactivation-related functionality.  
  *
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
@@ -9,12 +8,22 @@
  * @copyright 2014 Kanzu Code
  */
  
- global $wpdb;
- 
- class TicketsModel{
-	private $_tablename = "";
-	private $_id = "tkt_id";
-	private $_formats = array(
+$plugindir = plugin_dir_path( __FILE__ );
+
+$DS=DIRECTORY_SEPARATOR;
+$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
+include( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
+
+
+ class TicketsModel extends Kanzu_Model{
+
+	
+	public function __construct(){
+		global $wpdb;
+		$this->_tablename = $wpdb->prefix . "kanzusupport_tickets";	
+		$this->_id = "tkt_id";
+			
+		$this->_formats = array(
 		'tkt_title' => '%s', 
 		'tkt_initial_message'=> '%s',
 		'tkt_description' 	 => '%s' , 
@@ -29,10 +38,6 @@
 		'tkt_tags' 			 => '%s',
 		'tkt_customer_rating' => '%d'
 	);
-	
-	public function __construct(){
-		global $wpdb;
-		$this->_tablename = $wpdb->prefix . "kanzusupport_tickets";	
 	}
 	
 	/*
@@ -41,17 +46,16 @@
 	*@param userid
 	*/
 	public function getTicket( $id ){
-		$results = $wpdb->get_results( 'SELECT * FROM '. $this->_tablename .' WHERE '. $this->_id .' = ' . $id, OBJECT );
-		return $results;
+		return parent::getRow($id);
 	}
 	
 	/*
 	*Get all from users (kanzu-users) from wp users table
 	*
-	*@param $filter SQL filter 
+	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
 	public  function getAll( $filter = "" ){
-	
+		return parent::getRow($filter = "");
 	}
  
 	/*
@@ -60,67 +64,26 @@
 	*
 	*/
 	public function addTicket( &$ticket ){
-		global $wpdb;
-		
-		$data = array();
-		$format = array();
-		foreach( $ticket as $key => $value) {
-			$data[$key] = $value;
-			array_push($format,$this->_formats[$key]);
-		}
-		$wpdb->show_errors();
-		$wpdb->insert( $this->_tablename, $data, $format );
-		return $wpdb->insert_id;
+		return parent::addRow( $ticket );
 	}
 	
 	/*
 	*Add user to 
 	*
-	*@param $id User id
+	*@param Ticket object.
 	*/
 	public function deleteTicket(  &$ticket ){
-		global $wpdb;
-		$table = $this->_tablename;
-		$where = array();
-		$where_format = array();
-		foreach( $ticket as $key => $value) {
-			$where[$key] = $value;
-			array_push($where_format,$this->_formats[$key]);
-		}
-		
-		$wpdb->show_errors();
-		$wpdb->delete( $table, $where, $where_format = null );
-		
-		return True;
-		 
+		return parent::deleteRow( $ticket );
 	}
 	
-	
+
 	/*
-	*Save/update 
-	*
+	* Save/update 
+	*@param ticket object
 	* *new_* for new value
 	*/
 	public function updateTicket( &$ticket ){
-		global $wpdb;
-		$table = $this->_tablename;
-		$data = array();
-		$where = array();
-		$format = array();
-		$where_format = array();
-		foreach( $ticket as $key => $value) {
-			array_push($format,$this->_formats[$key]);
-			$pfx = substr($key,0,4); #new_
-			if( $pfx == "new_"){
-				$data[ substr($key,4)] = $value;
-			}else{
-				$where[$key] = $value;
-				array_push($where_format,$this->_formats[$key]);
-			}
-		}
-		$wpdb->show_errors();
-		$wpdb->update( $table, $data, $where, $format, $where_format); 
-		return True;
+		return parent::updateTicket( $ticket );
 	}
  }
  
