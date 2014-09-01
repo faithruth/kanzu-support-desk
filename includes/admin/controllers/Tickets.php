@@ -19,6 +19,8 @@ class TicketController extends Kanzu_Controller
 	
 	public function logTicket(&$ticket){
 	
+		$id = $this->_model->addTicket( $ticket);
+		return ( $id > 0 ) ? True : False;
 	}
 	
 	public function replyTicket(int $ticket_id ){
