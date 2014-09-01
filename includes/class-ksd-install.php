@@ -237,28 +237,76 @@ class Kanzu_Support_Install {
 			$wpdb->hide_errors();		            
              
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
-
+                //Our table only stores customer meta data
                 $kanzusupport_tables = "
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
-				`primkey` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-				`title` VARCHAR(512) NOT NULL, `initial_message` TEXT NOT NULL, 
-				`user_id` INT NOT NULL, `email` VARCHAR(256) NOT NULL, 
-				`assigned_to` INT NOT NULL DEFAULT '0', 
-				`severity` VARCHAR(64) NOT NULL, 
-				`resolution` VARCHAR(64) NOT NULL, 
-				`time_posted` VARCHAR(128) NOT NULL, 
-				`last_updated` VARCHAR(128) NOT NULL, 
-				`last_staff_reply` VARCHAR(128) NOT NULL, 
-				`target_response_time` VARCHAR(128) NOT NULL,
-                `type` VARCHAR( 255 ) NOT NULL
+				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+				`tkt_title` VARCHAR(512) NOT NULL, 
+                                `initial_message` TEXT NOT NULL, 
+				`tkt_description` TEXT ,
+				`tkt_channel` INT(10),
+				`tkt_status` ENUM{'OPEN','ASSIGNED','PENDING','RESOLVED'},
+				`tkt_logged_by` INT NOT NULL, 
+                                `email` VARCHAR(256) NOT NULL, 
+				`tkt_severity` ENUM {'URGENT', 'HIGH', 'MEDIUM','LOW'}, 
+				`tkt_resolution` VARCHAR(64) NOT NULL, 
+				`tkt_time_logged` VARCHAR(128) NOT NULL, 
+				`tkt_time_updated` VARCHAR(128) NOT NULL, 
+				`tkt_private_notes` TEXT,
+				`tkt_tags` VARCHAR(255),
+				`tkt_customer_rating INT`
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
-				`primkey` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				`ticket_id` INT NOT NULL ,
-				`user_id` INT NOT NULL ,
-				`timestamp` VARCHAR( 128 ) NOT NULL ,
-				`message` TEXT NOT NULL
+				`rep_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				`rep_tkt_id` INT NOT NULL ,
+				`rep_type` INT ,
+				 rep_is_cc VARCHAR(200),
+				 rep_is_bcc VARCHAR(200),
+				 rep_date_created TIMESTAMP,
+				 rep_created_by INT,
+				 rep_date_modified DATETIME,
+				 rep_message TEXT NOT NULL
 				);				
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` (
+				cust_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				cust_firstname VARCHAR(100) ,
+				cust_lastname VARCHAR(100),
+				cust_company_name VARCHAR(128),
+				cust_phone_number VARCHAR(100),
+				cust_about TEXT,
+				cust_creation_date DATETIME,
+				cust_created_by INT, 
+				cust_lastmodification_date DATETIME
+				cust_modified_by INT
+				);
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignment` (
+				assign_id INT,
+				assign_tkt_id INT,
+				assign_assigned_to INT,
+				assign_date_assigned DATETIME,
+				assign_assigned_by INT
+				);
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
+				att_id INT,
+				att_name VARCHAR(100),
+				att_filename VARCHAR(255),
+				att_tkt_id INT,
+				att_date_created DATETIME,
+				att_reply_id INT
+				);
+				
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_channeltypes` (
+				chantype_id INT ,
+				chantype_name VARCHAR(200),
+				chantype_description TEXT
+				);
+				
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_channels` (
+				chan_id INT ,
+				chan_chantype_id VARCHAR(200),
+				chan_handle VARCHAR(200),
+				chantype_description TEXT
+				);
 			";
 
       dbDelta( $kanzusupport_tables );
