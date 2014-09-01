@@ -242,19 +242,18 @@ class Kanzu_Support_Install {
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				`tkt_title` VARCHAR(512) NOT NULL, 
-                                `initial_message` TEXT NOT NULL, 
+                `initial_message` TEXT NOT NULL, 
 				`tkt_description` TEXT ,
 				`tkt_channel` INT(10),
-				`tkt_status` ENUM{'OPEN','ASSIGNED','PENDING','RESOLVED'},
+				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED'),
 				`tkt_logged_by` INT NOT NULL, 
-                                `email` VARCHAR(256) NOT NULL, 
-				`tkt_severity` ENUM {'URGENT', 'HIGH', 'MEDIUM','LOW'}, 
+				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW'), 
 				`tkt_resolution` VARCHAR(64) NOT NULL, 
 				`tkt_time_logged` VARCHAR(128) NOT NULL, 
 				`tkt_time_updated` VARCHAR(128) NOT NULL, 
 				`tkt_private_notes` TEXT,
 				`tkt_tags` VARCHAR(255),
-				`tkt_customer_rating INT`
+				tkt_customer_rating INT(10)
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -276,7 +275,7 @@ class Kanzu_Support_Install {
 				cust_about TEXT,
 				cust_creation_date DATETIME,
 				cust_created_by INT, 
-				cust_lastmodification_date DATETIME
+				cust_lastmodification_date DATETIME,
 				cust_modified_by INT
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignment` (
@@ -305,7 +304,7 @@ class Kanzu_Support_Install {
 				chan_id INT ,
 				chan_chantype_id VARCHAR(200),
 				chan_handle VARCHAR(200),
-				chantype_description TEXT
+				chan_description TEXT
 				);
 			";
 
