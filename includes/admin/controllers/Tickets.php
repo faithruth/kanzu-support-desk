@@ -22,20 +22,45 @@ class TicketsController extends Kanzu_Controller
 		parent::__construct();
 	}
 	
+	/*
+	*Logs new ticket
+	*
+	*@param $ticket ticket object to log
+	*/
 	public function logTicket(&$ticket){
-		$id = $this->_model->addTicket( $ticket);
+		return $this->_model->addTicket( $ticket);
 	}
 	
-	public function replyTicket(int $ticket_id ){
-	
-	}
-	
+	/*
+	*Close ticket
+	*
+	*@param $ticket_id ticket id of ticket to close
+	*
+	*/
 	public function closeTicket(int $ticket_id ){
-	
+		$tO = new stdClass();
+		$tO->tkt_id = $ticket_id;
+		$tO->new_tkt_status = "CLOSE";
+		$id = $this->_model->updateTicket( $tO );
 	}
 
-	public function getTicket(&$ticket){
+	/*
+	*Returns ticket object with specified id.
+	*
+	*@param  $ticket_id	ticket id
+	*@return ticket Object
+	*/
+	public function getTicket(int $ticket_id){
+		return $this->_model->getTicket( $ticket_id)
+	}
 	
+	/*
+	*Returns all tickets that through query
+	*
+	*@return Array Array of objects
+	*/
+	public function getTickets( $query ){
+		return $this->_model->getAll( $query);
 	}
 }
 ?>
