@@ -107,6 +107,10 @@
 		$wpdb->update( $table, $data, $where, $format, $where_format); 
 		return True;
 	}
+	
+	public function getObj{
+		return &new stdClass();
+	}
  }
  
  ?>
