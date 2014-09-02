@@ -59,13 +59,17 @@ class AssignmentsController extends Kanzu_Controller
 	* @param int 	$ticket_id Ticket ID of ticket to reassign
 	* @param int 	$agent_id ID of agent to reassign ticket to 
 	* @param int 	$assign_by ID of admin who reassigns 
+	* @param string	$notes New notes if provided, else old notes will be maintained.
 	*/
-	public function reassignTicket(int $ticket_id, int $agent_id, int $assign_by ){
+	public function reassignTicket(int $ticket_id, int $agent_id, int $assign_by, $notes = "" ){
 		$aO                = $this->_model->getObj();
 		$aO->assign_tkt_id = $ticket_id;
 		$aO->new_assign_to = $agent_id;
 		$aO->new_assign_by = $assign_by;
-		$this->_model->deleteReply( $aO );
+		if ( $notes != "" ){
+			$aO->new_notes = $notes;
+		}
+		$this->_model->updateReply( $aO );
 	}
 }
 ?>
