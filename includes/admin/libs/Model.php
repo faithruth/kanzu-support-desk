@@ -108,8 +108,8 @@
 		return True;
 	}
 	
-	public function getObj{
-		return &new stdClass();
+	public function getObj(){
+		return (new stdClass());
 	}
  }
  

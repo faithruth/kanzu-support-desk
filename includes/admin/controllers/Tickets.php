@@ -51,7 +51,7 @@ class TicketsController extends Kanzu_Controller
 	*@return ticket Object
 	*/
 	public function getTicket(int $ticket_id){
-		return $this->_model->getTicket( $ticket_id)
+		return $this->_model->getTicket( $ticket_id);
 	}
 	
 	/*
