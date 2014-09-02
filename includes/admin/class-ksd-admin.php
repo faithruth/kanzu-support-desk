@@ -97,8 +97,10 @@ class Kanzu_Support_Admin {
 	public function enqueue_admin_scripts() { 
 		
 		wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs' ), KSD_VERSION ); 
-		//Localization allows us to send variables to the JS script
-		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $_GET['page']));
+		if ( isset($_GET['page']) ) {
+			//Localization allows us to send variables to the JS script
+			wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $_GET['page']));
+		}
 	}
 
 	
@@ -153,7 +155,7 @@ class Kanzu_Support_Admin {
 	}
 	
 	public function output_admin_menu_dashboard(){
-		include('views/html-admin-wrapper.php');
+		include_once('views/html-admin-wrapper.php');
 	}
 
 	public function output_admin_menu_settings() {

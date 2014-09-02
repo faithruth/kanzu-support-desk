@@ -13,10 +13,9 @@ $plugindir = plugin_dir_path( __FILE__ );
 
 $DS=DIRECTORY_SEPARATOR;
 $plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-include( $plugindir. $DS . "admin" . $DS."libs".$DS."Controller.php");
+include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Controller.php");
 
-class TicketsController extends Kanzu_Controller 
-{	
+class TicketsController extends Kanzu_Controller {	
 	public function __construct(){
 		$this->_model_name = "Tickets";
 		parent::__construct();
