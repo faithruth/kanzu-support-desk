@@ -1,6 +1,10 @@
 jQuery( document ).ready(function() {
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+	
+	/**For the tickets tabs**/
+	jQuery( "#ticket-tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
+	jQuery( "#ticket-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 
 	/*Switch the active tab depending on what page has been selected*/
 	activetab=0;

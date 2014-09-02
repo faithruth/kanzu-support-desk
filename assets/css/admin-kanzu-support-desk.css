@@ -19,12 +19,24 @@ h2.admin-ksd-tab-title{
 }
 #admin-kanzu-support-desk  .admin-ksd-content{
 	float: left;
+    width: 90%;
 }
 #admin-kanzu-support-desk .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
 	background: #2ea2cc;
 }
 #admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
 	padding: 0.5em 0;
+}
+#ticket-tabs ul.ui-tabs-nav {
+	width: 15em;	
+}
+#admin-kanzu-support-desk div.admin-ksd-tickets-container{
+	border: medium none;
+	 width: 100%;
+}
+.admin-ksd-tickets-content{
+    float: left;
+    width: 70%;
 }
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }

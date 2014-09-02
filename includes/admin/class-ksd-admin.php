@@ -111,7 +111,7 @@ class Kanzu_Support_Admin {
 
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . KSD_SLUG ) . '">' . __( 'Settings', KSD_SLUG ) . '</a>'
+				'settings' => '<a href="' . admin_url( 'admin.php?page=' . KSD_SLUG ) . '">' . __( 'Settings', KSD_SLUG ) . '</a>'
 			),
 			$links
 		);

@@ -237,7 +237,6 @@ class Kanzu_Support_Install {
 			$wpdb->hide_errors();		            
              
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
-                //Our table only stores customer meta data
                 $kanzusupport_tables = "
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
@@ -252,8 +251,8 @@ class Kanzu_Support_Install {
 				`tkt_time_logged` VARCHAR(128) NOT NULL, 
 				`tkt_time_updated` VARCHAR(128) NOT NULL, 
 				`tkt_private_notes` TEXT,
-				`tkt_tags` VARCHAR(255),
-				tkt_customer_rating INT(10)
+				`tkt_tags` VARCHAR(255),   /*Uses WordPress tags*/
+				tkt_customer_rating INT(2) /*Uses NPS which rates from 0 to 10*/
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -266,7 +265,7 @@ class Kanzu_Support_Install {
 				 rep_date_modified DATETIME,
 				 rep_message TEXT NOT NULL
 				);				
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` (
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` ( /*We store only what's not in the WordPress users table*/
 				cust_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				cust_firstname VARCHAR(100) ,
 				cust_lastname VARCHAR(100),
@@ -286,7 +285,7 @@ class Kanzu_Support_Install {
 				assign_assigned_by INT
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
-				att_id INT,
+				att_id INT
 				att_name VARCHAR(100),
 				att_filename VARCHAR(255),
 				att_tkt_id INT,

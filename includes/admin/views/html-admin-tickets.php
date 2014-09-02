@@ -1,2 +1,29 @@
-<h2 class="admin-ksd-tab-title">Tickets</h2>
-<p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+<h2 class="admin-ksd-tab-title"><?php _e('Tickets','kanzu-support-desk'); ?></h2>
+	<div id="ticket-tabs" class="admin-ksd-tickets-container">
+		<ul>
+			<li><a href="#tickets-tab-1"><?php _e('My unresolved tickets','kanzu-support-desk'); ?></a></li>
+			<li><a href="#tickets-tab-2"><?php _e('All tickets','kanzu-support-desk'); ?></a></li>
+			<li><a href="#tickets-tab-3"><?php _e('Unassigned tickets','kanzu-support-desk'); ?></a></li>
+			<li><a href="#tickets-tab-4"><?php _e('Recently updated','kanzu-support-desk'); ?></a></li>
+			<li><a href="#tickets-tab-5"><?php _e('Recently resolved','kanzu-support-desk'); ?></a></li>
+			<li><a href="#tickets-tab-6"><?php _e('Closed','kanzu-support-desk'); ?></a></li>
+		</ul>
+		<div id="tickets-tab-1" class="admin-ksd-tickets-content">
+			<?php include('html-admin-tickets-list.php'); ?>
+		</div>
+		<div id="tickets-tab-2" class="admin-ksd-tickets-content">
+			<?php include('html-admin-tickets-list.php'); ?>
+		</div>
+		<div id="tickets-tab-3" class="admin-ksd-tickets-content">
+			<?php include('html-admin-tickets-list.php'); ?>
+		</div>
+		<div id="tickets-tab-4" class="admin-ksd-tickets-content">
+			<?php include('html-admin-tickets-list.php'); ?>
+		</div>
+		<div id="tickets-tab-5" class="admin-ksd-tickets-content">
+			<?php include('html-admin-tickets-list.php'); ?>
+		</div>
+		<div id="tickets-tab-6" class="admin-ksd-tickets-content">
+			<?php include('html-admin-tickets-list.php'); ?>
+		</div>
+	</div>
