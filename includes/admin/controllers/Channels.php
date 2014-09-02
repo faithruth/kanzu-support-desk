@@ -28,7 +28,7 @@ class ChannelsController extends Kanzu_Controller
 	*@param $channel channel object to log
 	*/
 	public function addChannel(&$channel){
-		return $this->_model->addReply( $channel);
+		return $this->_model->addChannel( $channel);
 		//TODO: Send email reply after logging reply in db, or do this in view
 	}
 	
