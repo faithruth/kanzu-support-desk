@@ -28,8 +28,8 @@ class UsersController extends Kanzu_Controller
 	*@param  $client_id	ticket id
 	*@return client Object
 	*/
-	public function getUser(int $user_id){
-		return $this->_model->getClient( $user_id)
+	public function getUser( $user_id = null){
+		return $this->_model->getUser( $user_id);
 	}
 	
 	/*

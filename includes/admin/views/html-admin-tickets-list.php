@@ -20,12 +20,15 @@
 	<tbody>
 	<?php	
 	  
-		$tickets = new TicketsController();		
+		$tickets = new TicketsController();	
+		$Users   = new UsersController();		
+		
 		$all = $tickets->getTickets("");
+
 			foreach ( $all as $ticket ): ?>
 		<tr>
 			<td><?php echo $ticket->tkt_title; ?></td>
-			<td><?php echo $ticket->tkt_logged_by; ?></td>
+			<td><?php echo $Users->getUser( $ticket->tkt_logged_by)->user_nicename; ?></td>
 			<td><?php echo $ticket->tkt_time_logged; ?></td>
 			<td><?php echo $ticket->tkt_status; ?></td>
 			<td><?php echo $ticket->tkt_severity; ?></td>

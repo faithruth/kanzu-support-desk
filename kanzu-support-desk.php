@@ -18,6 +18,14 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 if ( !class_exists( 'Kanzu_Support_Desk' ) ) :
 
+
+//Plugin Constants
+define(KANZU_DS, DIRECTORY_SEPARATOR );
+define(KANZU_PLUGIN_DIR, rtrim(plugin_dir_path( __FILE__ ),"/\\"));
+define(KANZU_PLUGIN_ADMIN_DIR, KANZU_PLUGIN_DIR . KANZU_DS . "includes" . KANZU_DS . "admin" );
+
+
+
 final class Kanzu_Support_Desk {
 
 	/**

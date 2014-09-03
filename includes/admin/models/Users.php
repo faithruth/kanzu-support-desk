@@ -8,19 +8,19 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
- 
- global $wpdb;
- 
- class UsersModel(){
-	$_tablename = ""
+
+ class UsersModel{
 	
 	/*
-	*Get user object
+	*Get user object (WP_User)
 	*
 	*@param userid
 	*/
-	public getUser( int $id ){
-		
+	public function getUser( $id = null){
+		if ( $id == null or $id == 0 ){
+			return wp_get_current_user();
+		}
+		return get_user_by( 'id', $id );
 	}
 	
 	/*
@@ -28,7 +28,7 @@
 	*
 	*@param $filter SQL filter 
 	*/
-	public  getAll( $filter = "" ){
+	public  function getAll( $filter = "" ){
 	
 	}
  
@@ -37,7 +37,7 @@
 	*
 	*
 	*/
-	public addUser( var &$userObj ){
+	public function addUser( &$userObj ){
 	
 	}
 	
@@ -46,7 +46,7 @@
 	*
 	*@param $id User id
 	*/
-	public deleteUser( int $id ){
+	public function deleteUser( int $id ){
 	
 	}
 	
@@ -55,7 +55,7 @@
 	*Save/update 
 	*
 	*/
-	public saveUser( &$userObject ){
+	public function updateUser( &$userObject ){
 	
 	}
  }
