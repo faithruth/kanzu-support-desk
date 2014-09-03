@@ -23,6 +23,9 @@ jQuery( document ).ready(function() {
 		break;
 	}
 	jQuery( "#tabs" ).tabs( "option", "active", activetab );
+	/**Add class .alternate to every other row in the tickets table.*/
+	jQuery("table.ksd-admin-tickets-list tr").filter(':even').addClass("alternate");
+	
 	/**Do AJAX calls for filtering tickets**/
 	jQuery( "#ticket-tabs li a" ).click(function() {
 		var current_tab = jQuery(this).attr('href');
@@ -32,10 +35,12 @@ jQuery( document ).ready(function() {
 				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
 				view : current_tab
 			};		
-			jQuery.post(ksd_admin.ajax_url, data, function(response) {
-				//alert('Got this from the server: ' + response);
-				console.log(JSON.parse(response));
-				jQuery(current_tab).html("Db response received");
+			jQuery.post(ksd_admin.ajax_url, data, function(response) {	
+				jQuery(current_tab).html("Db response received. Ticket IDs retrieved:");
+				jQuery.each( JSON.parse(response), function( key, value ) {
+					//console.log(value.tkt_id);
+					jQuery(current_tab).append(value.tkt_id+" ");
+				});				
 				jQuery(current_tab).removeClass("pending");
 			});
 		}

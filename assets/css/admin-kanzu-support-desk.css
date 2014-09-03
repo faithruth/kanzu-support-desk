@@ -30,6 +30,9 @@ h2.admin-ksd-tab-title{
 #ticket-tabs ul.ui-tabs-nav {
 	width: 15em;	
 }
+#ticket-tabs .admin-ksd-tickets-content{
+	width: 75%;
+}
 #admin-kanzu-support-desk div.admin-ksd-tickets-container{
 	border: medium none;
 	 width: 100%;

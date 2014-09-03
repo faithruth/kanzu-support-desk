@@ -1,4 +1,4 @@
-<table class="ksd-admin-tickets-list">
+<table class="ksd-admin-tickets-list wp-list-table widefat fixed posts">
 	<thead>
 		<tr>
 			<th><?php _e('Subject','kanzu-support-desk'); ?></th>
@@ -28,11 +28,11 @@
  
 			foreach ( $all as $ticket ): ?>
 		<tr>
-			<td><?php echo $ticket->tkt_title; ?></td>
-			<td><?php echo $Users->getUser( $ticket->tkt_logged_by)->user_nicename; ?></td>
-			<td><?php echo $ticket->tkt_time_logged; ?></td>
-			<td><?php echo $ticket->tkt_status; ?></td>
-			<td><?php echo $ticket->tkt_severity; ?></td>
+			<td id="title"><?php echo $ticket->tkt_title; ?></td>
+			<td id="user"><?php echo $Users->getUser( $ticket->tkt_logged_by)->user_nicename; ?></td>
+			<td id="time_logged"><?php echo $ticket->tkt_time_logged; ?></td>
+			<td id="status"><?php echo $ticket->tkt_status; ?></td>
+			<td id="severity"><?php echo $ticket->tkt_severity; ?></td>
 		</tr>
 		<?php
 			endforeach;		 
