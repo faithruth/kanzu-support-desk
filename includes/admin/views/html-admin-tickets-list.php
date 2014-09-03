@@ -19,9 +19,9 @@
 	</tfoot>
 	<tbody>
 	<?php	
-	  
-		$tickets = new TicketsController();		
-		$all = $tickets->getTickets("");
+		$ksd_admin = Kanzu_Support_Admin::get_instance();
+		$all = $ksd_admin->filter_ticket_view();
+		
 			foreach ( $all as $ticket ): ?>
 		<tr>
 			<td><?php echo $ticket->tkt_title; ?></td>

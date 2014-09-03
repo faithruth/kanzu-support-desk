@@ -6,11 +6,7 @@
 * 2) create function with the same name as the test name
 */
 
-$plugindir = plugin_dir_path( __FILE__ );
-
-$DS=DIRECTORY_SEPARATOR;
-$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-include_once( $plugindir. $DS . "admin" . $DS."controllers".$DS."Tickets.php");
+/*Includes removed. All done by do_admin_includes() in Kanzu_Support_Admin*/
 
 #
 #####################################################################

@@ -104,6 +104,9 @@ final class Kanzu_Support_Desk {
 		define( 'KSD_VERSION', $this->version );
 		define( 'KSD_DB_VERSION', $this->db_version );
 		define( 'KSD_SLUG', $this->ks_slug );
+		define('KSD_PLUGIN_NAME', trim(dirname(plugin_basename(__FILE__)), '/'));
+		define('KSD_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . KSD_PLUGIN_NAME);
+		define('KSD_PLUGIN_URL', WP_PLUGIN_URL . '/' . KSD_PLUGIN_NAME);
 		
 		//Store the Plugin version. We'll need this for upgrades
 		if (!defined('KANZU_SUPPORT_VERSION_KEY')) {
@@ -127,17 +130,11 @@ final class Kanzu_Support_Desk {
 		include_once( 'includes/class-ksd-install.php' );
 		
 		//Dashboard and Administrative Functionality 
-		if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+		if ( is_admin() ) {
 			require_once( plugin_dir_path( __FILE__ ) . 'includes/admin/class-ksd-admin.php' );
 			
 		}
-		/*
-		 * When we decide to include Ajax within the dashboard, we'll change the if above to
-		 *
-		 * if ( is_admin() ) {
-		 *   ...
-		 * } 
-		 */
+
 		 
 		}
 		

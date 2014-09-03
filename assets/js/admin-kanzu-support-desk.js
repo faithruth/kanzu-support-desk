@@ -23,4 +23,18 @@ jQuery( document ).ready(function() {
 		break;
 	}
 	jQuery( "#tabs" ).tabs( "option", "active", activetab );
+	/**Do AJAX calls for filtering tickets**/
+	jQuery( "#ticket-tabs li a" ).click(function() {
+		var data = {
+			action : 'ksd_admin_ajax_action',
+			ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
+			view : jQuery(this).attr('href')
+		};		
+		jQuery.post(ksd_admin.ajax_url, data, function(response) {
+			//alert('Got this from the server: ' + response);
+			console.log(JSON.parse(response));
+			jQuery("#tickets-tab-2").html("Db response received");
+		});
+	});
+	
 });

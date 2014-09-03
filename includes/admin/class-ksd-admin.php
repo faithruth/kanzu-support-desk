@@ -42,7 +42,10 @@ class Kanzu_Support_Admin {
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
 
 		// Add an action link pointing to the options page.
-		add_filter( 'plugin_action_links_' . plugin_basename(KSD_PLUGIN_FILE), array( $this, 'add_action_links' ) );		 
+		add_filter( 'plugin_action_links_' . plugin_basename(KSD_PLUGIN_FILE), array( $this, 'add_action_links' ) );		
+
+		//Handle AJAX calls
+		add_action( 'wp_ajax_ksd_admin_ajax_action', array( $this, 'handle_admin_ajax_callback' ));
 		
 		/*
 		 * Define custom functionality.
@@ -54,6 +57,7 @@ class Kanzu_Support_Admin {
 		//add_filter( '@TODO', array( $this, 'filter_method_name' ) );
 
 	}
+	
 
 	/**
 	 * Return an instance of this class.
@@ -96,11 +100,11 @@ class Kanzu_Support_Admin {
 	 */
 	public function enqueue_admin_scripts() { 
 		
-		wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs' ), KSD_VERSION ); 
-		if ( isset($_GET['page']) ) {
-			//Localization allows us to send variables to the JS script
-			wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $_GET['page']));
-		}
+		wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2' ), KSD_VERSION ); 
+		$ksd_admin_tab = (isset($_GET['page']) ? $_GET['page'] : "");	 //This determines which tab to show as active
+		//Localization allows us to send variables to the JS script
+		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' )));
+		 
 	}
 
 	
@@ -148,40 +152,45 @@ class Kanzu_Support_Admin {
 		$ticket_types['ksd-help']=__('Help','kanzu-support-desk');
 		
 		foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
-			$submenu_function = 'admin_menu_tickets';
 			add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array($this,$function));
 		}
 	
 	}
 	
+	/**
+	 * Display the main Kanzu Support Desk admin dashboard
+	 */
 	public function output_admin_menu_dashboard(){
+		$this->do_admin_includes();
 		include_once('views/html-admin-wrapper.php');
 	}
 
-	public function output_admin_menu_settings() {
-		if (!current_user_can('manage_options')) {
-			wp_die('You do not have sufficient permissions to access this page.');
-		}
-
-    // Render the HTML for the Settings page or include a file that does
-	}
-
-	public function output_admin_menu_help() {
-		if (!current_user_can('manage_options')) {
-			wp_die('You do not have sufficient permissions to access this page.');		}
-
-    // Render the HTML for the Help page or include a file that does
-	
-	}
-
-	/** 
-	 * Handle all the tickets requests
+	/**
+	 * Include the files we use in the admin dashboard
 	 */
-	 public function admin_menu_tickets($type){
-	 
-	 }
- 
+    public function do_admin_includes() {		
+		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Tickets.php");
 
+	}
+	/** 
+	 * Handle AJAX callbacks. Currently used to sort tickets 
+	 */
+	public function handle_admin_ajax_callback() {		 
+	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();	
+		//echo json_encode($_POST['view']);
+		echo json_encode($this->filter_ticket_view("'tkt_id' > 15"));
+		 
+		die();// IMPORTANT: don't leave this out
+	}
+	/**
+	 * Filters tickets based on the view chosen
+	 */
+	public function filter_ticket_view($filter=""){
+		$tickets = new TicketsController();		
+		return $tickets->getTickets($filter);
+	}
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
 	 *           lifecycle that WordPress fires.
