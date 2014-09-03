@@ -26,16 +26,19 @@ jQuery( document ).ready(function() {
 	/**Do AJAX calls for filtering tickets**/
 	jQuery( "#ticket-tabs li a" ).click(function() {
 		var current_tab = jQuery(this).attr('href');
-		var data = {
-			action : 'ksd_admin_ajax_action',
-			ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
-			view : current_tab
-		};		
-		jQuery.post(ksd_admin.ajax_url, data, function(response) {
-			//alert('Got this from the server: ' + response);
-			console.log(JSON.parse(response));
-			jQuery(current_tab).html("Db response received");
-		});
+		if(jQuery(current_tab).hasClass("pending")){//Check if the tab has been loaded before
+			var data = {
+				action : 'ksd_admin_ajax_action',
+				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
+				view : current_tab
+			};		
+			jQuery.post(ksd_admin.ajax_url, data, function(response) {
+				//alert('Got this from the server: ' + response);
+				console.log(JSON.parse(response));
+				jQuery(current_tab).html("Db response received");
+				jQuery(current_tab).removeClass("pending");
+			});
+		}
 	});
 	
 });
