@@ -244,12 +244,13 @@ class Kanzu_Support_Install {
                 `tkt_initial_message` TEXT NOT NULL, 
 				`tkt_description` TEXT ,
 				`tkt_channel` INT(10),
-				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED'),
-				`tkt_logged_by` INT NOT NULL, 
-				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW'), 
+				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
+				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
 				`tkt_resolution` VARCHAR(64) NOT NULL, 
-				`tkt_time_logged` VARCHAR(128) NOT NULL, 
-				`tkt_time_updated` VARCHAR(128) NOT NULL, 
+				`tkt_time_logged` TIMESTAMP, 
+				`tkt_logged_by` INT NOT NULL, 
+				`tkt_time_updated` DATETIME, 
+				`tkt_updated_by` INT NOT NULL, 
 				`tkt_private_notes` TEXT,
 				`tkt_tags` VARCHAR(255),   /*Uses WordPress tags*/
 				tkt_customer_rating INT(2) /*Uses NPS which rates from 0 to 10*/
@@ -267,12 +268,14 @@ class Kanzu_Support_Install {
 				);				
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` ( /*We store only what's not in the WordPress users table*/
 				cust_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				cust_user_id INT,
 				cust_firstname VARCHAR(100) ,
 				cust_lastname VARCHAR(100),
 				cust_company_name VARCHAR(128),
 				cust_phone_number VARCHAR(100),
 				cust_about TEXT,
-				cust_creation_date DATETIME,
+				cust_account_status ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
+				cust_creation_date TIMESTAMP, 
 				cust_created_by INT, 
 				cust_lastmodification_date DATETIME,
 				cust_modified_by INT
@@ -281,7 +284,7 @@ class Kanzu_Support_Install {
 				assign_id INT,
 				assign_tkt_id INT,
 				assign_assigned_to INT,
-				assign_date_assigned DATETIME,
+				assign_date_assigned TIMESTAMP,
 				assign_assigned_by INT
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
@@ -296,7 +299,9 @@ class Kanzu_Support_Install {
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_channeltypes` (
 				chantype_id INT ,
 				chantype_name VARCHAR(200),
-				chantype_description TEXT
+				chantype_description TEXT,
+				chantype_date_created TIMESTAMP,
+				chantype_created_by int
 				);
 				
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_channels` (

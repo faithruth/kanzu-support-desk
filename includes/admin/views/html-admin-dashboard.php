@@ -4,11 +4,9 @@
 	_e('Test');
 	$DS=DIRECTORY_SEPARATOR;
 	$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-	//include_once( $plugindir  . $DS . "unittests".$DS."models".$DS."Tickets.php");
-	include_once( $plugindir  . $DS . "unittests".$DS."controllers".$DS."Tickets.php"); 
-	
-	
-	
+	include_once( $plugindir  . $DS . "unittests".$DS."models".$DS."Tickets.php");
+	//include_once( KANZU_PLUGIN_ADMIN_DIR . KANZU_DS ."controllers". KANZU_DS ."Tickets.php"); 
+	//include_once( KANZU_PLUGIN_ADMIN_DIR . KANZU_DS ."controllers". KANZU_DS ."Users.php");
 
 
 	?>

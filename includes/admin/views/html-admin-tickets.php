@@ -12,18 +12,18 @@
 			<?php include_once('html-admin-tickets-list.php'); ?>
 		</div>
 		<div id="tickets-tab-2" class="admin-ksd-tickets-content">
-			<p>Tab 2</p>
+			<p>Loading...</p>
 		</div>
 		<div id="tickets-tab-3" class="admin-ksd-tickets-content">
-			<p>Tab 3</p>
+			<p>Loading..</p>
 		</div>
 		<div id="tickets-tab-4" class="admin-ksd-tickets-content">
-			<p>Tab 4</p>
+			<p>Loading..</p>
 		</div>
 		<div id="tickets-tab-5" class="admin-ksd-tickets-content">
-			<p>Tab 5</p>
+			<p>Loading..</p>
 		</div>
 		<div id="tickets-tab-6" class="admin-ksd-tickets-content">
-			<p>Tab 6</p>
+			<p>Loading..</p>
 		</div>
 	</div>

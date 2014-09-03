@@ -25,15 +25,16 @@ jQuery( document ).ready(function() {
 	jQuery( "#tabs" ).tabs( "option", "active", activetab );
 	/**Do AJAX calls for filtering tickets**/
 	jQuery( "#ticket-tabs li a" ).click(function() {
+		var current_tab = jQuery(this).attr('href');
 		var data = {
 			action : 'ksd_admin_ajax_action',
 			ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
-			view : jQuery(this).attr('href')
+			view : current_tab
 		};		
 		jQuery.post(ksd_admin.ajax_url, data, function(response) {
 			//alert('Got this from the server: ' + response);
 			console.log(JSON.parse(response));
-			jQuery("#tickets-tab-2").html("Db response received");
+			jQuery(current_tab).html("Db response received");
 		});
 	});
 	

@@ -170,6 +170,7 @@ class Kanzu_Support_Admin {
 	 */
     public function do_admin_includes() {		
 		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Tickets.php");
+		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Users.php");
 
 	}
 	/** 

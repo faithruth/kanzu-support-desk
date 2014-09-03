@@ -18,6 +18,11 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 if ( !class_exists( 'Kanzu_Support_Desk' ) ) :
 
+
+
+
+
+
 final class Kanzu_Support_Desk {
 
 	/**
@@ -100,6 +105,7 @@ final class Kanzu_Support_Desk {
 	 * Define Kanzu Support Constants
 	 */
 	private function define_constants() {
+		//We'll revise and reduce these to the bare minimums
 		define( 'KSD_PLUGIN_FILE', __FILE__ );
 		define( 'KSD_VERSION', $this->version );
 		define( 'KSD_DB_VERSION', $this->db_version );
@@ -107,6 +113,9 @@ final class Kanzu_Support_Desk {
 		define('KSD_PLUGIN_NAME', trim(dirname(plugin_basename(__FILE__)), '/'));
 		define('KSD_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . KSD_PLUGIN_NAME);
 		define('KSD_PLUGIN_URL', WP_PLUGIN_URL . '/' . KSD_PLUGIN_NAME);
+		define('KANZU_DS', DIRECTORY_SEPARATOR );
+		define('KANZU_PLUGIN_DIR', rtrim(plugin_dir_path( __FILE__ ),"/\\"));
+		define('KANZU_PLUGIN_ADMIN_DIR', KANZU_PLUGIN_DIR . KANZU_DS . "includes" . KANZU_DS . "admin" );
 		
 		//Store the Plugin version. We'll need this for upgrades
 		if (!defined('KANZU_SUPPORT_VERSION_KEY')) {
