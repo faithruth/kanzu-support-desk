@@ -12,13 +12,14 @@
  
 $plugindir = plugin_dir_path( __FILE__ );
 
-$DS=DIRECTORY_SEPARATOR;
-$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
+//$DS=DIRECTORY_SEPARATOR;
+//$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
+//include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
+include_once (KANZU_PLUGIN_ADMIN_DIR . KANZU_DS . "models" . KANZU_DS . "Users.php" )
 
+ class ClientsModel extends UsersModel{
 
- class ClientsModel extends Kanzu_Model{
-
+	private $wp_formats = array();
 	
 	public function __construct(){
 		global $wpdb;
@@ -26,23 +27,25 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 		$this->_id = "cust_id";
 			
 		$this->_formats = array(
-		'chan_id' 			 	=> '%d', 
+		'cust_id' 			 	=> '%d', 
+		'cust_user_id' 			=> '%d',
 		'cust_firstname'	 	=> '%s',
 		'cust_lastname'	 		=> '%s' , 
-		'cust_company_name' 	=> '%s'
+		'cust_company_name' 	=> '%s',
+		'cust_phone_number' 	=> '%s'
 		'cust_about' 	 		=> '%s'
 		'cust_creation_date' 	=> '%s'
-		'cust_created_by' 	 	=> '%s'
+		'cust_created_by' 	 	=> '%d'
 		);
 	}
 	
 	/*
 	*Get user object
 	*
-	*@param userid
+	*@param customerid
 	*/
 	public function getClient( $id ){
-		return parent::getRow($id);
+		return parent::getRow($id); ;
 	}
 	
 	/*
@@ -63,7 +66,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	
 	/*
 	*
-	*@param Channel object.
+	*@param client object.
 	*/
 	public function deleteClient(  &$obj ){
 		return parent::deleteRow( $obj );
@@ -72,7 +75,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 
 	/*
 	* Save/update 
-	*@param Channel object
+	*@param client object
 	* *new_* for new value
 	*/
 	public function updateClient( &$obj ){

@@ -37,8 +37,38 @@ class ClientsController extends Kanzu_Controller
 	*
 	*@return Array Array of objects
 	*/
-	public function getClients( $query ){
-		return $this->_model->getAll( $query);
+	public function getClients( $filter ){
+		return $this->_model->getAll( $filter);
+	}
+	
+	/*
+	* Disable client account
+	*
+	* @param int $client_id 
+	*/
+	public function disableAccount( int $client_id){
+		$cO = new stdClass();
+		$cO->cust_id = $client_id;
+		$cO->new_account_status = "DISABLED";
+		$this->_model->updateClient( $cO );
+	}
+	
+	/*
+	* Enable client account
+	*/
+	public function enableAccount( int $client_id){
+		$cO = new stdClass();
+		$cO->cust_id = $client_id;
+		$cO->new_account_status = "ENABLED";
+		$this->_model->updateClient( $cO );
+	}
+	
+	public function deleteClient( $client_id ){
+		
+		//Delete from customer table
+		//Delete from wp usertable
+		//Delete tickets
+		//delete replies
 	}
 }
 ?>

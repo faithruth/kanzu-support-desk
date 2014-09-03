@@ -50,7 +50,7 @@ class ChannelsController extends Kanzu_Controller
 	*/
 	public function deleteChannel(int $channel_id ){
 		$cO = new stdClass();
-		$cO->tkt_id = $Channel_id;
+		$cO->chan_id = $Channel_id;
 		$this->_model->deleteChannel( $cO );
 	}
 
@@ -66,11 +66,11 @@ class ChannelsController extends Kanzu_Controller
 	}
 	
 	/*
-	*Returns all Channels  through query
+	*Returns all Channels  
 	*
 	*@return Array of Channel objects
 	*/
-	public function getChannels( $query ){
+	public function getChannels( $query = ""){
 		return $this->_model->getAll( $query);
 	}
 }

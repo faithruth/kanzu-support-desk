@@ -268,12 +268,14 @@ class Kanzu_Support_Install {
 				);				
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` ( /*We store only what's not in the WordPress users table*/
 				cust_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				cust_user_id INT,
 				cust_firstname VARCHAR(100) ,
 				cust_lastname VARCHAR(100),
 				cust_company_name VARCHAR(128),
 				cust_phone_number VARCHAR(100),
 				cust_about TEXT,
-				cust_creation_date TIMESTAMP,
+				cust_account_status ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
+				cust_creation_date TIMESTAMP, 
 				cust_created_by INT, 
 				cust_lastmodification_date DATETIME,
 				cust_modified_by INT
