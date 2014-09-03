@@ -11,6 +11,10 @@
 
  class UsersModel{
 	
+	global $wpdb;
+	$this->_tablename = $wpdb->prefix . "users";	
+	$this->_id = "user_id";
+		
 	/*
 	*Get user object (WP_User)
 	*
@@ -29,34 +33,39 @@
 	*@param $filter SQL filter 
 	*/
 	public  function getAll( $filter = "" ){
-	
+		return parent::getAll($filter = "");
 	}
  
 	/*
-	*Add user to 
+	*Add users
 	*
 	*
 	*/
-	public function addUser( &$userObj ){
-	
+	public function addUser( &$userObject ){
+		$userdata = (array) $userObject;
+		$user_id = wp_insert_user( $userdata ) ;
+		
+		return ( $user_id > 0 ) ? $user_id : -1 ;
 	}
 	
 	/*
-	*Add user to 
 	*
 	*@param $id User id
 	*/
-	public function deleteUser( int $id ){
-	
+	public function deleteUser( int $id, $reassign = null){
+		 wp_delete_user( $id, $reassign ); 
 	}
 	
 	
 	/*
-	*Save/update 
 	*
+	* @param userObject
 	*/
 	public function updateUser( &$userObject ){
-	
+		$userdata = (array) $userObject;
+		$user_id  = wp_update_user( $userdata );
+		
+		return ( $user_id > 0 ) ? $user_id : -1 ;
 	}
  }
  
