@@ -39,8 +39,9 @@
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
 	public  function getAll( $filter = "" ){
+		global $wpdb;
 		$where = ( $filter == "" ) ? "" : " WHERE $filter" ;
-		$results = $wpdb->get_results( 'SELECT * FROM '. $this->_tablename . ' '. $filter , OBJECT );
+		$results = $wpdb->get_results( 'SELECT * FROM '. $this->_tablename . ' '. $where , OBJECT );
 	}
  
 	/*

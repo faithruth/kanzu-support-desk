@@ -23,7 +23,7 @@ class Kanzu_Controller
 		if( $this->_model_name != ""){
 			$DS=DIRECTORY_SEPARATOR;
 			$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-			include( $plugindir. $DS . "admin" . $DS."models" . $DS . $this->_model_name . ".php");
+			include_once( $plugindir. $DS . "admin" . $DS."models" . $DS . $this->_model_name . ".php");
 			$classname = $this->_model_name . "Model";
 			$this->_model =& new $classname();
 		}
