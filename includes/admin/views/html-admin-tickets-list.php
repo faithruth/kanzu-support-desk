@@ -19,6 +19,7 @@
 	</tfoot>
 	<tbody>
 	<?php	
+	    echo "Here";
 		$tickets = new TicketsController();		
 		$all = $tickets->getTickets("");
 		if (is_object($all) ):

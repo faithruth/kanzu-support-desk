@@ -58,7 +58,7 @@ class TicketsController extends Kanzu_Controller {
 	*
 	*@return Array Array of objects
 	*/
-	public function getTickets( $query ){
+	public function getTickets( $query = null){
 		return $this->_model->getAll( $query);
 	}
 }

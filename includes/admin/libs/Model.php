@@ -42,6 +42,7 @@
 		global $wpdb;
 		$where = ( $filter == "" ) ? "" : " WHERE $filter" ;
 		$results = $wpdb->get_results( 'SELECT * FROM '. $this->_tablename . ' '. $where , OBJECT );
+		return $results;
 	}
  
 	/*
