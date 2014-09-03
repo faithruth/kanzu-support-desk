@@ -95,7 +95,7 @@
 		$where_format = array();
 		foreach( $rowObject as $key => $value) {
 			$pfx = substr($key,0,4); #new_
-			if( $pfx == "new_"){
+			if( $pfx == "new_"){ //New value Record Update Pattern
 				$newkey = substr($key,4);
 				$data[ $newkey] = $value;
 				array_push($format,$this->_formats[$newkey]);
