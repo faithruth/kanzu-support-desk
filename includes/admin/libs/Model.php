@@ -40,7 +40,7 @@
 	*/
 	public  function getAll( $filter = "" ){
 		global $wpdb;
-		$where = ( $filter == "" ) ? "" : " WHERE $filter" ;
+		$where = ( $filter == "" || $filter == null ) ? "" : " WHERE " . $filter ;
 		$results = $wpdb->get_results( 'SELECT * FROM '. $this->_tablename . ' '. $where , OBJECT );
 		return $results;
 	}

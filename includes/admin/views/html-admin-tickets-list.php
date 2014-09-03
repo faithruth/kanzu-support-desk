@@ -19,11 +19,10 @@
 	</tfoot>
 	<tbody>
 	<?php	
-	    echo "Here";
+	  
 		$tickets = new TicketsController();		
 		$all = $tickets->getTickets("");
-		if (is_object($all) ):
-			foreach ( $all as $ticket ):?>
+			foreach ( $all as $ticket ): ?>
 		<tr>
 			<td><?php echo $ticket->tkt_title; ?></td>
 			<td><?php echo $ticket->tkt_logged_by; ?></td>
@@ -33,7 +32,6 @@
 		</tr>
 		<?php
 			endforeach;		 
-		 endif;
 	?>
 	</tbody>
 </table>
