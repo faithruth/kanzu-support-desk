@@ -180,8 +180,26 @@ class Kanzu_Support_Admin {
 	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
 			die ( 'Busted!');
 		$this->do_admin_includes();	
-		//echo json_encode($_POST['view']);
-		echo json_encode($this->filter_ticket_view(" tkt_id > 50"));
+		switch($_POST['view']):
+			case '#tickets-tab-2':
+				$filter="";
+			break;
+			case '#tickets-tab-3':
+				$filter=" tkt_id > 30"; //Dummy filter
+			break;
+			case '#tickets-tab-4':
+				$filter=" tkt_id > 60"; //Dummy filter
+			break;
+			case '#tickets-tab-5':
+				$filter=" tkt_id > 50"; //Dummy filter
+			break;
+			case '#tickets-tab-6':
+				$filter=" tkt_status != 'OPEN'";
+			break;
+			default:
+				$filter=" tkt_status = 'OPEN'";
+		endswitch;
+		echo json_encode($this->filter_ticket_view($filter));
 		 
 		die();// IMPORTANT: don't leave this out
 	}
