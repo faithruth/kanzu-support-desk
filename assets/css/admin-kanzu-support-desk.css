@@ -41,6 +41,12 @@ h2.admin-ksd-tab-title{
     float: left;
     width: 70%;
 }
+#ticket-tabs div.pending{
+	background-image: url("../images/loading.gif");
+	background-repeat: no-repeat;
+	background-position: center;
+	min-height: 350px;
+}
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }
 .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }

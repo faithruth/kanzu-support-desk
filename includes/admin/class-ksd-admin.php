@@ -181,7 +181,7 @@ class Kanzu_Support_Admin {
 			die ( 'Busted!');
 		$this->do_admin_includes();	
 		//echo json_encode($_POST['view']);
-		echo json_encode($this->filter_ticket_view("'tkt_id' > 15"));
+		echo json_encode($this->filter_ticket_view(" tkt_id > 50"));
 		 
 		die();// IMPORTANT: don't leave this out
 	}
