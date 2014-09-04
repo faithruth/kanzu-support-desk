@@ -22,28 +22,36 @@ jQuery( document ).ready(function() {
 			activetab=4;
 		break;
 	}
-	jQuery( "#tabs" ).tabs( "option", "active", activetab );
-	/**Add class .alternate to every other row in the tickets table.*/
-	jQuery("table.ksd-admin-tickets-list tr").filter(':even').addClass("alternate");
+	jQuery( "#tabs" ).tabs( "option", "active", activetab );	
 	
-	/**Do AJAX calls for filtering tickets**/
-	jQuery( "#ticket-tabs li a" ).click(function() {
-		var current_tab = jQuery(this).attr('href');
-		if(jQuery(current_tab).hasClass("pending")){//Check if the tab has been loaded before
+	/**Do an AJAX call to retrieve tickets from the Db**/
+	var get_tickets = function( current_tab ) {
+	if(jQuery(current_tab).hasClass("pending")){//Check if the tab has been loaded before
 			var data = {
 				action : 'ksd_admin_ajax_action',
 				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
 				view : current_tab
 			};		
 			jQuery.post(ksd_admin.ajax_url, data, function(response) {	
-				jQuery(current_tab).html("Db response received. Ticket IDs retrieved:");
 				jQuery.each( JSON.parse(response), function( key, value ) {
-					//console.log(value.tkt_id);
-					jQuery(current_tab).append(value.tkt_id+" ");
+					jQuery(current_tab).find('tbody').append('<tr><td id="title">'+value.tkt_title+'</td><td id="user"></td><td id="time_logged">'+value.tkt_time_logged+'</td><td id="status">'+value.tkt_status+'</td><td id="severity">'+value.tkt_severity+'</td></tr>');
 				});				
 				jQuery(current_tab).removeClass("pending");
+				/**Add class .alternate to every other row in the tickets table.*/
+				jQuery("table.ksd-admin-tickets-list tr").filter(':even').addClass("alternate");
 			});
 		}
+	};
+	
+	/**Pre-populate the first tab in the tickets view*/
+	if(jQuery("#tickets-tab-1").hasClass("pending")){
+		get_tickets("#tickets-tab-1");
+	}	
+	/**Do AJAX calls for filtering tickets on click of any of the tabs**/
+	jQuery( "#ticket-tabs li a" ).click(function() {
+		get_tickets( jQuery(this).attr('href'));
 	});
+	
+
 	
 });

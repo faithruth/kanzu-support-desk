@@ -9,21 +9,21 @@
 			<li><a href="#tickets-tab-6"><?php _e('Closed','kanzu-support-desk'); ?></a></li>
 		</ul>
 		<div id="tickets-tab-1" class="admin-ksd-tickets-content pending">
-			<?php include_once('html-admin-tickets-list.php'); ?>
+			<?php include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-2" class="admin-ksd-tickets-content pending">
-			<p>Loading...</p>
+			<?php include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-3" class="admin-ksd-tickets-content pending">
-			<p>Loading..</p>
+			<?php include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-4" class="admin-ksd-tickets-content pending">
-			<p>Loading..</p>
+			<?php include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-5" class="admin-ksd-tickets-content pending">
-			<p>Loading..</p>
+			<?php include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-6" class="admin-ksd-tickets-content pending">
-			<p>Loading..</p>
+			<?php include('html-admin-tickets-list-template.php'); ?>
 		</div>
 	</div>
