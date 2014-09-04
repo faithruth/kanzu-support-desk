@@ -1,37 +1,63 @@
 #admin-kanzu-support-desk{
 	position: relative;
 }
+h2.admin-ksd-title{
+	text-transform: capitalize;
+}
 h2.admin-ksd-tab-title{
-	position: absolute;
-	top: 0;
-	left: 10px;
+	display: none;
 }
 #admin-kanzu-support-desk div.admin-ksd-container{
 	border: medium none;
-	padding-top: 50px;
+	margin-top: 10px;
 	width: 95%;
+	background-image: url("../images/nav_bg.jpg");
+	background-repeat: repeat-y;
+	background-position: left top;
 }
 #admin-kanzu-support-desk ul.ui-tabs-nav{
 	width: 60px;
+	background-color: #E7E7E7;
+	border: none;
+	background-image: none;
+}
+#ticket-tabs ul.ui-tabs-nav{
+	background-color: #EFEFEF;
+	width: 15em;	
 }
 #admin-kanzu-support-desk ul.ui-tabs-nav li{
 	text-align: center;
 }
+#ticket-tabs ul.ui-tabs-nav li {
+  border-left: medium none;
+  border-right: medium none;
+  border-top: medium none;
+  margin-top: 0;
+  padding-left: 1em;
+  padding-top: 0;
+}
 #admin-kanzu-support-desk  .admin-ksd-content{
 	float: left;
     width: 90%;
+	padding-top: 0;
+	margin-top: 0;
+	padding-left: 21px;
+}
+#admin-kanzu-support-desk div#tickets {
+	padding-left: 0;
 }
 #admin-kanzu-support-desk .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
 	background: #2ea2cc;
 }
+#admin-kanzu-support-desk .ui-state-active a, .ui-widget-content .ui-state-active a, .ui-widget-header .ui-state-active a{
+	color: #FFF;
+}
 #admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
 	padding: 0.5em 0;
 }
-#ticket-tabs ul.ui-tabs-nav {
-	width: 15em;	
-}
 #ticket-tabs .admin-ksd-tickets-content{
 	width: 75%;
+	padding-top: 0;
 }
 #admin-kanzu-support-desk div.admin-ksd-tickets-container{
 	border: medium none;

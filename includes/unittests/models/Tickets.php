@@ -15,7 +15,7 @@ include_once( $plugindir. $DS . "admin" . $DS."models".$DS."Tickets.php");
 #
 #####################################################################
 echo "<br /><br /><br />";
-echo "<b>TICKETS MODEL UNIT TETS</b>";
+echo "<b>TICKETS MODEL UNIT TESTS</b>";
 
 #Test suit
 ######################################################################

@@ -52,6 +52,9 @@ jQuery( document ).ready(function() {
 		get_tickets( jQuery(this).attr('href'));
 	});
 	
-
+	/**Change the title onclick of a side navigation tab*/
+	jQuery( "#tabs li a" ).click(function() {
+		jQuery('h2.admin-ksd-title').html(jQuery(this).attr('href').replace("#",""));
+	});
 	
 });
