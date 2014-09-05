@@ -53,7 +53,7 @@ jQuery( document ).ready(function() {
 	});
 	
 	/**Change the title onclick of a side navigation tab*/
-	jQuery( "#tabs li a" ).click(function() {
+	jQuery( "#tabs .main-nav li a" ).click(function() {
 		jQuery('h2.admin-ksd-title').html(jQuery(this).attr('href').replace("#",""));
 	});
 	

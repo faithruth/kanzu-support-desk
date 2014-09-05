@@ -1,12 +1,13 @@
 <div id="admin-kanzu-support-desk">
 	<h2 class="admin-ksd-title"><?php _e('Dashboard','kanzu-support-desk'); ?></h2>
 	<div id="tabs" class="admin-ksd-container">
-		<ul>
+		<ul class="main-nav">
 			<li><a href="#dashboard"><img src="<?php echo plugins_url( '/assets/images/icons/dashboard.png', KSD_PLUGIN_FILE ) ?>" /></a></li>
 			<li><a href="#tickets"><img src="<?php echo plugins_url( '/assets/images/icons/tickets.png', KSD_PLUGIN_FILE ) ?>" /></a></li>
 			<li><a href="#settings"><img src="<?php echo plugins_url( '/assets/images/icons/settings.png', KSD_PLUGIN_FILE ) ?>" /></a></li>
 			<li><a href="#addons"><img src="<?php echo plugins_url( '/assets/images/icons/addons.png', KSD_PLUGIN_FILE ) ?>" /></a></li>
 			<li><a href="#help"><img src="<?php echo plugins_url( '/assets/images/icons/help.png', KSD_PLUGIN_FILE ) ?>" /></a></li>
+			<li><a href="#tests"><img src="<?php echo plugins_url( '/assets/images/icons/tests.png', KSD_PLUGIN_FILE ) ?>" /></a></li>
 		</ul>
 		<div id="dashboard" class="admin-ksd-content">
 			<!--NB: The first line of each of the following included files is the title. We need this for localization-->
@@ -23,6 +24,9 @@
 		</div>
 		<div id="help" class="admin-ksd-content">
 			<?php include_once('html-admin-help.php'); ?>
+		</div>
+		<div id="tests" class="admin-ksd-content">
+			<?php include_once('html-admin-tests.php'); ?>
 		</div>
 	</div>
 </div>
