@@ -8,9 +8,12 @@ h2.admin-ksd-tab-title{
 	display: none;
 }
 #admin-kanzu-support-desk div.admin-ksd-container{
-	border: medium none;
+	border-bottom: medium none;
+	border-right: medium none;
+	border-left: medium none;
+	border-top: 1px solid #E5E5E5;
 	margin-top: 10px;
-	width: 95%;
+	width: 100%;
 	background-image: url("../images/nav_bg.jpg");
 	background-repeat: repeat-y;
 	background-position: left top;
@@ -29,12 +32,12 @@ h2.admin-ksd-tab-title{
 	text-align: center;
 }
 #ticket-tabs ul.ui-tabs-nav li {
-  border-left: medium none;
-  border-right: medium none;
-  border-top: medium none;
-  margin-top: 0;
-  padding-left: 1em;
-  padding-top: 0;
+	border-left: medium none;
+	border-right: medium none;
+	border-top: medium none;
+	margin-top: 0;
+	padding-left: 1em;
+	padding-top: 0;
 }
 #admin-kanzu-support-desk  .admin-ksd-content{
 	float: left;
@@ -61,7 +64,7 @@ h2.admin-ksd-tab-title{
 }
 #admin-kanzu-support-desk div.admin-ksd-tickets-container{
 	border: medium none;
-	 width: 100%;
+	width: 100%;
 }
 .admin-ksd-tickets-content{
     float: left;
@@ -72,6 +75,21 @@ h2.admin-ksd-tab-title{
 	background-repeat: no-repeat;
 	background-position: center;
 	min-height: 350px;
+}
+.new-ticket {
+	background-color: #2ea2cc;
+	border: 1px solid #fff;
+	color: #fff;
+	padding: 5px 40px;
+	position: absolute;
+	right: 20px;
+	top: 0;
+}
+a.new-ticket {
+	text-decoration: none;
+}
+a.new-ticket:hover {
+	color: #333;
 }
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }

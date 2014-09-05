@@ -141,7 +141,7 @@ class Kanzu_Support_Admin {
 			 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.		 
 			 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
 			 */
-		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function),null,40);
+		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function),'dashicons-groups',40);
 		
 		//Add the ticket pages. This syntax, __('Word','domain'), allows us to do localization
 		$ticket_types = array();
