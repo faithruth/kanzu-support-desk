@@ -36,11 +36,11 @@ jQuery( document ).ready(function() {
 			};		
 			jQuery.post(ksd_admin.ajax_url, data, function(response) {	
 				jQuery.each( JSON.parse(response), function( key, value ) {
-					jQuery(current_tab).find('tbody').append('<tr><td id="title">'+value.tkt_title+'</td><td id="user"></td><td id="time_logged">'+value.tkt_time_logged+'</td><td id="status">'+value.tkt_status+'</td><td id="severity">'+value.tkt_severity+'</td></tr>');
+					jQuery(current_tab+' #ticket-list').append('<div id="ticket-list-item"><input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_"'+value.tkt_id+'><span class="subject">'+value.tkt_title+'</span><span class="description">-'+value.tkt_description+'</span><span class="ticket-time">'+value.tkt_time_logged+'</span></div>');                                            
 				});				
 				jQuery(current_tab).removeClass("pending");
 				/**Add class .alternate to every other row in the tickets table.*/
-				jQuery("table.ksd-admin-tickets-list tr").filter(':even').addClass("alternate");
+				jQuery("#ticket-list div").filter(':even').addClass("alternate");
 			});
 		}
 	};

@@ -137,6 +137,33 @@ a.new-ticket:hover {
 #new-ticket input.ksd-submit:hover{
    cursor: pointer; 
 }
+
+/**Style a ticket item*/
+#ticket-list{
+    background-color: #FFF;
+}
+#select-all-tickets{
+    padding: 5px 0 5px 8px;
+    font-weight: bold;
+}
+#ticket-list-item {
+    width: 98%;
+    padding: 7px 1%;
+    margin: 0;
+    height: 40px;
+    line-height: 40px;
+}
+#ticket-list-item .subject{
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+#ticket-list-item .ticket-time{
+    float: right;
+}
+#ticket-list-item .description{
+    font-style: normal;
+}
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }
 .ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
