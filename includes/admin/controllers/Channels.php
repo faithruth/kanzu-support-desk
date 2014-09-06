@@ -62,7 +62,7 @@ class ChannelsController extends Kanzu_Controller
 	*@return Channel Object
 	*/
 	public function getChannel(int $channel_id){
-		return $this->_model->getChannel( $channel_id)
+		return $this->_model->getChannel( $channel_id);
 	}
 	
 	/*

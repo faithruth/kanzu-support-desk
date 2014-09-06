@@ -29,7 +29,7 @@ class ClientsController extends Kanzu_Controller
 	*@return client Object
 	*/
 	public function getClient(int $client_id){
-		return $this->_model->getClient( $client_id)
+		return $this->_model->getClient( $client_id);
 	}
 	
 	/*

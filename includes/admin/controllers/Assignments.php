@@ -30,7 +30,7 @@ class AssignmentsController extends Kanzu_Controller
 	* @param $assign_by ID of admin who assigned ticket
 	* @param $notes 	Notes on ticket assignment
 	*/
-	public function assignTicket( int $ticket_id, int $assign_to,  int $assign_by, var $notes ){
+	public function assignTicket( int $ticket_id, int $assign_to,  int $assign_by, string $notes ){
 		$aO                = $this->_model->getObj();
 		$aO->assign_to     = $assign_to;
 		$aO->assign_by 	   = $assign_by;
