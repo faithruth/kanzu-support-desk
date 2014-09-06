@@ -12,7 +12,8 @@ h2.admin-ksd-tab-title{
 	border-right: medium none;
 	border-left: medium none;
 	border-top: 1px solid #E5E5E5;
-	margin-top: 10px;
+	margin: 10px 0 10px 0;
+        padding: 0;
 	width: 100%;
 	background-image: url("../images/nav_bg.jpg");
 	background-repeat: repeat-y;
@@ -90,6 +91,51 @@ a.new-ticket {
 }
 a.new-ticket:hover {
 	color: #333;
+}
+.ksd-new-ticket{
+    margin-top: 25px;
+}
+/*New Tickets*/
+#new-ticket input{
+    height: 35px;
+    border: 1px solid #d3d3d3;
+    margin: 5px 0;
+    float: left;
+}
+#new-ticket label{
+    font-weight: bold;
+}
+#new-ticket select{
+    width: 30%;
+    border: 1px solid #d3d3d3;
+}
+.ksd-subject,.ksd-description,.ksd-tags{
+    width: 100%;
+}
+.ksd-assign-to,.ksd-severity{
+    width: 50%;
+}
+.ksd-customer-email,.ksd-customer-name{
+    width: 45%;
+}
+.ksd-assign-to,#new-ticket .ksd-customer-email{
+    float: right;
+}
+.ksd-severity{
+    float: left;
+}
+.ksd-description{
+    margin-bottom: 10px;
+}
+#new-ticket .ksd-submit{
+    background-color: #2ea2cc;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 5px 40px;
+    float: right;
+}
+#new-ticket input.ksd-submit:hover{
+   cursor: pointer; 
 }
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }

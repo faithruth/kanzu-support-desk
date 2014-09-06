@@ -2,6 +2,8 @@ jQuery( document ).ready(function() {
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 	
+        //tinymce.execCommand('mceAddControl',true,'ticket_description');
+        
 	/**For the tickets tabs**/
 	jQuery( "#ticket-tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#ticket-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );

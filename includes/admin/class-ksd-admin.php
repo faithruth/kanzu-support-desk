@@ -46,6 +46,7 @@ class Kanzu_Support_Admin {
 
 		//Handle AJAX calls
 		add_action( 'wp_ajax_ksd_admin_ajax_action', array( $this, 'handle_admin_ajax_callback' ));
+
 		
 		/*
 		 * Define custom functionality.
@@ -147,6 +148,7 @@ class Kanzu_Support_Admin {
 		$ticket_types = array();
 		$ticket_types['ksd-dashboard']=__('Dashboard','kanzu-support-desk');
 		$ticket_types['ksd-tickets']=__('Tickets','kanzu-support-desk');
+                $ticket_types['ksd-new-ticket']=__('New Ticket','kanzu-support-desk');
 		$ticket_types['ksd-settings']=__('Settings','kanzu-support-desk');
 		$ticket_types['ksd-addons']=__('Add-ons','kanzu-support-desk');
 		$ticket_types['ksd-help']=__('Help','kanzu-support-desk');
@@ -162,7 +164,15 @@ class Kanzu_Support_Admin {
 	 */
 	public function output_admin_menu_dashboard(){
 		$this->do_admin_includes();
-		include_once('views/html-admin-wrapper.php');
+                if( isset($_POST['ksd-submit']) ) {//If it's a form submission
+                    //@TODO Switch this to AJAX        
+                    $this->log_new_ticket("MANUAL",$_POST['subject'],$_POST['description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign_to'],"OPEN");
+                    wp_redirect(admin_url('admin.php?page=ksd-tickets'));
+                    exit;
+                }
+                else {//Output the dashboard
+                    include_once('views/html-admin-wrapper.php');
+                }
 	}
 
 	/**
@@ -210,6 +220,30 @@ class Kanzu_Support_Admin {
 		$tickets = new TicketsController();		
 		return $tickets->getTickets($filter);
 	}
+        
+        /**
+         * Log new tickets
+         * @param type $channel
+         * @param type $title
+         * @param type $description
+         * @param type $customer_name
+         * @param type $customer_email
+         * @param type $assign_to
+         * @param type $status
+         * @return type
+         */
+        public function log_new_ticket($channel,$title,$description,$customer_name,$customer_email,$assign_to,$status){
+            	$tO = new stdClass(); 
+                $tO->tkt_title    	     = $title;
+                $tO->tkt_initial_message 	 = $description;
+                $tO->tkt_description 	 = $description;
+                $tO->tkt_channel     	 = $channel;
+                $tO->tkt_status 	 	 = $status;
+
+                $TC = new TicketsController();
+               $response = $TC->logTicket( $tO );
+               return ( $response > 0 ) ? True : False;
+        }
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
 	 *           lifecycle that WordPress fires.
@@ -219,6 +253,7 @@ class Kanzu_Support_Admin {
 	 *
 	 * @since    1.0.0
 	 */
+
 	public function action_method_name() {
 		// @TODO: Define your action hook callback here
 	}

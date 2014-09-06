@@ -29,7 +29,6 @@
 		</div>
 		<div id="tests" class="admin-ksd-content">
 			<?php include_once('html-admin-tests.php'); ?>
-		</div>
-	</div>
-	<?php  include_once('html-admin-new-ticket.php');  ?>
+		</div>            
+                <?php  include_once('html-admin-new-ticket.php');  ?>
 </div>
