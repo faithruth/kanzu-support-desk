@@ -218,7 +218,17 @@ class Kanzu_Support_Admin {
 	 */
 	public function filter_ticket_view($filter=""){
 		$tickets = new TicketsController();		
-		return $tickets->getTickets($filter);
+		$tickets_raw = $tickets->getTickets($filter);
+                //Process the tickets for viewing on the view. Replace the username and the time with cleaner versions
+                foreach ( $tickets_raw as $ticket_key => $ticket_value) {
+                    //Replace the username
+                    $users = new UsersController();
+                    $ticket_value->tkt_logged_by = str_replace($ticket_value->tkt_logged_by,$users->getUser($ticket_value->tkt_logged_by)->user_nicename,$ticket_value->tkt_logged_by);
+                    //Replace the date 
+                    $ticket_value->tkt_time_logged = date('M d',strtotime($ticket_value->tkt_time_logged));
+                }
+                
+                return $tickets_raw;
 	}
         
         /**
