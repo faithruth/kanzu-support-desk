@@ -67,6 +67,7 @@
 	*Add delete row/s 
 	*
 	*@param $rowObject 
+	* @return Number of rows deleted or false 
 	*/
 	public function deleteRow(  &$rowObject ){
 		global $wpdb;
@@ -77,8 +78,8 @@
 			$where[$key] = $value;
 			array_push($where_format,$this->_formats[$key]);
 		}
-		$wpdb->delete( $table, $where, $where_format = null );
-		return True;
+		
+		return $wpdb->delete( $table, $where, $where_format = null ); ;
 		 
 	}
 	

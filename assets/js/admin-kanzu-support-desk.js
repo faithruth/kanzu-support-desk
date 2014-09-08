@@ -36,11 +36,11 @@ jQuery( document ).ready(function() {
 			};		
 			jQuery.post(ksd_admin.ajax_url, data, function(response) {	
 				jQuery.each( JSON.parse(response), function( key, value ) {
-					jQuery(current_tab+' #ticket-list').append('<div id="ticket-list-item"><input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'"><span class="customer_name">'+value.tkt_logged_by+'</span><span class="subject">'+value.tkt_title+'</span><span class="description">-'+value.tkt_description+'</span><span class="ticket-time">'+value.tkt_time_logged+'</span></div>');                                            
+					jQuery(current_tab+' #ticket-list').append('<div id="ticket-list-item"><div class="ticket-info"><input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'"><span class="customer_name">'+value.tkt_logged_by+'</span><span class="subject">'+value.tkt_title+'</span><span class="description">-'+value.tkt_description+'</span><span class="ticket-time">'+value.tkt_time_logged+'</span></div><div class="ticket-actions"><a href="'+ksd_admin.ksd_tickets_url+'&action=edit&tkt_id='+value.tkt_id+'">Edit</a> | <a href="'+ksd_admin.ksd_tickets_url+'&action=trash&tkt_id='+value.tkt_id+'">Trash</a> | <a href="'+ksd_admin.ksd_tickets_url+'&action=change_status&tkt_id='+value.tkt_id+'">Change Status</a> | <a href="'+ksd_admin.ksd_tickets_url+'&action=assign_to&tkt_id='+value.tkt_id+'">Assign To</a></div></div>');                                            
 				});				
 				jQuery(current_tab).removeClass("pending");
 				/**Add class .alternate to every other row in the tickets table.*/
-				jQuery("#ticket-list div").filter(':even').addClass("alternate");
+				jQuery("#ticket-list div#ticket-list-item").filter(':even').addClass("alternate");
 			});
 		}
 	};

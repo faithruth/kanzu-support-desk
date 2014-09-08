@@ -104,7 +104,7 @@ class Kanzu_Support_Admin {
 		wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2' ), KSD_VERSION ); 
 		$ksd_admin_tab = (isset($_GET['page']) ? $_GET['page'] : "");	 //This determines which tab to show as active
 		//Localization allows us to send variables to the JS script
-		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' )));
+		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets')));
 		 
 	}
 
@@ -145,10 +145,11 @@ class Kanzu_Support_Admin {
 		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function),'dashicons-groups',40);
 		
 		//Add the ticket pages. This syntax, __('Word','domain'), allows us to do localization
+		//@TODO Move this to separate functions
 		$ticket_types = array();
 		$ticket_types['ksd-dashboard']=__('Dashboard','kanzu-support-desk');
 		$ticket_types['ksd-tickets']=__('Tickets','kanzu-support-desk');
-                $ticket_types['ksd-new-ticket']=__('New Ticket','kanzu-support-desk');
+        $ticket_types['ksd-new-ticket']=__('New Ticket','kanzu-support-desk');
 		$ticket_types['ksd-settings']=__('Settings','kanzu-support-desk');
 		$ticket_types['ksd-addons']=__('Add-ons','kanzu-support-desk');
 		$ticket_types['ksd-help']=__('Help','kanzu-support-desk');
@@ -161,6 +162,8 @@ class Kanzu_Support_Admin {
 	
 	/**
 	 * Display the main Kanzu Support Desk admin dashboard
+	 * @TODO Move output logic to separate functions
+	 * @TODO Move some of this logic to ajax; like ticket deletion
 	 */
 	public function output_admin_menu_dashboard(){
 		$this->do_admin_includes();
@@ -170,6 +173,14 @@ class Kanzu_Support_Admin {
                     wp_redirect(admin_url('admin.php?page=ksd-tickets'));
                     exit;
                 }
+				elseif( isset($_GET['action']) && isset($_GET['tkd_id']) ){//Currently used to edit/delete tickets
+					if ( $_GET['action'] == "trash" ) {//Delete a ticket
+						$tickets = new TicketsController();		
+						$tickets->deleteTicket( array( 'tkt_id' =>$_GET['tkd_id'] ) );
+						wp_redirect(admin_url('admin.php?page=ksd-tickets'));
+						exit;
+					}
+				}
                 else {//Output the dashboard
                     include_once('views/html-admin-wrapper.php');
                 }

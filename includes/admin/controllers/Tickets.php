@@ -61,5 +61,12 @@ class TicketsController extends Kanzu_Controller {
 	public function getTickets( $query = null){
 		return $this->_model->getAll( $query);
 	}
+	
+	/**
+	 * Delete the ticket with the specified ID
+	 */
+	 public function deleteTicket(int $ticket_id){
+		return $this->_model->deleteTicket( $ticket_id);
+	}
 }
 ?>

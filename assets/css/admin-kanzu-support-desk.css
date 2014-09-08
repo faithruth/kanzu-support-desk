@@ -137,6 +137,17 @@ a.new-ticket:hover {
 #new-ticket input.ksd-submit:hover{
    cursor: pointer; 
 }
+.ticket-actions {
+	visibility: hidden;
+	font-size: 0.8em;
+}
+.ticket-actions a,.ticket-actions a:visited{
+	color: #0074a2;
+	text-decoration: none;
+}
+div#ticket-list-item:hover .ticket-actions {
+	visibility: visible;
+}
 
 /**Style a ticket item*/
 #ticket-list{
@@ -148,14 +159,13 @@ a.new-ticket:hover {
 }
 #ticket-list-item {
     width: 98%;
-    padding: 7px 1%;
+    padding: 10px 1% 8px;
     margin: 0;
-    height: 40px;
-    line-height: 40px;
+    line-height: 20px;
 }
 #ticket-list-item input{
     float: left;
-    margin-top: 13px;
+    margin-top: 3px;
     margin-right: 5px;
 }
 #ticket-list-item span.customer_name{
