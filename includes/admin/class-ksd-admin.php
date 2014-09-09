@@ -45,7 +45,8 @@ class Kanzu_Support_Admin {
 		add_filter( 'plugin_action_links_' . plugin_basename(KSD_PLUGIN_FILE), array( $this, 'add_action_links' ) );		
 
 		//Handle AJAX calls
-		add_action( 'wp_ajax_ksd_admin_ajax_action', array( $this, 'handle_admin_ajax_callback' ));
+		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
+		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
 
 		
 		/*
@@ -173,14 +174,6 @@ class Kanzu_Support_Admin {
                     wp_redirect(admin_url('admin.php?page=ksd-tickets'));
                     exit;
                 }
-				elseif( isset($_GET['action']) && isset($_GET['tkd_id']) ){//Currently used to edit/delete tickets
-					if ( $_GET['action'] == "trash" ) {//Delete a ticket
-						$tickets = new TicketsController();		
-						$tickets->deleteTicket( array( 'tkt_id' =>$_GET['tkd_id'] ) );
-						wp_redirect(admin_url('admin.php?page=ksd-tickets'));
-						exit;
-					}
-				}
                 else {//Output the dashboard
                     include_once('views/html-admin-wrapper.php');
                 }
@@ -197,7 +190,7 @@ class Kanzu_Support_Admin {
 	/** 
 	 * Handle AJAX callbacks. Currently used to sort tickets 
 	 */
-	public function handle_admin_ajax_callback() {		 
+	public function filter_tickets() {		 
 	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
 			die ( 'Busted!');
 		$this->do_admin_includes();	
@@ -240,6 +233,20 @@ class Kanzu_Support_Admin {
                 }
                 
                 return $tickets_raw;
+	}
+	
+	
+	/**
+	 * Delete a ticket
+	 */
+	public function delete_ticket(){
+			  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();	
+		$tickets = new TicketsController();		
+		$status = ( $tickets->deleteTicket( array( 'tkt_id' =>$_POST['tkt_id'] ) ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		echo json_encode($status);
+		die();// IMPORTANT: don't leave this out
 	}
         
         /**

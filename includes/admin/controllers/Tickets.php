@@ -33,10 +33,10 @@ class TicketsController extends Kanzu_Controller {
 	/*
 	*Close ticket
 	*
-	*@param $ticket_id ticket id of ticket to close
+	*@param int $ticket_id ticket id of ticket to close
 	*
 	*/
-	public function closeTicket(int $ticket_id ){
+	public function closeTicket($ticket_id ){
 		$tO = new stdClass();
 		$tO->tkt_id = $ticket_id;
 		$tO->new_tkt_status = "CLOSE";
@@ -46,10 +46,10 @@ class TicketsController extends Kanzu_Controller {
 	/*
 	*Returns ticket object with specified id.
 	*
-	*@param  $ticket_id	ticket id
+	*@param  int $ticket_id	ticket id
 	*@return ticket Object
 	*/
-	public function getTicket(int $ticket_id){
+	public function getTicket($ticket_id){
 		return $this->_model->getTicket( $ticket_id);
 	}
 	
@@ -64,9 +64,11 @@ class TicketsController extends Kanzu_Controller {
 	
 	/**
 	 * Delete the ticket with the specified ID
+	 * @param int $ticket_id Ticket ID
 	 */
-	 public function deleteTicket(int $ticket_id){
-		return $this->_model->deleteTicket( $ticket_id);
+	 public function deleteTicket($ticket_id){
+		$where = array ('tkt_id'=>$ticket_id);
+		return $this->_model->deleteTicket( $where);
 	}
 }
 ?>

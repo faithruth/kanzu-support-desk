@@ -77,8 +77,7 @@
 		foreach( $rowObject as $key => $value) {
 			$where[$key] = $value;
 			array_push($where_format,$this->_formats[$key]);
-		}
-		
+		}	
 		return $wpdb->delete( $table, $where, $where_format = null ); ;
 		 
 	}

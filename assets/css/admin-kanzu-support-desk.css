@@ -141,7 +141,7 @@ a.new-ticket:hover {
 	visibility: hidden;
 	font-size: 0.8em;
 }
-.ticket-actions a,.ticket-actions a:visited{
+#ticket-list-item .ticket-actions a{
 	color: #0074a2;
 	text-decoration: none;
 }
