@@ -244,7 +244,7 @@ class Kanzu_Support_Admin {
 			die ( 'Busted!');
 		$this->do_admin_includes();	
 		$tickets = new TicketsController();		
-		$status = ( $tickets->deleteTicket( array( 'tkt_id' =>$_POST['tkt_id'] ) ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		$status = ( $tickets->deleteTicket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode($status);
 		die();// IMPORTANT: don't leave this out
 	}
