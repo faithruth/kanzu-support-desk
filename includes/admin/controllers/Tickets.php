@@ -53,7 +53,7 @@ class TicketsController extends Kanzu_Controller {
 		$tO = new stdClass();
 		$tO->tkt_id = $ticket_id;
 		$tO->new_tkt_status = $new_status;
-		$id = $this->_model->updateTicket( $tO );
+		return $this->_model->updateTicket( $tO );
 	}
 
 	/*
