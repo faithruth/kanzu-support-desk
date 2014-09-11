@@ -148,6 +148,12 @@ a.new-ticket:hover {
 div#ticket-list-item:hover .ticket-actions {
 	visibility: visible;
 }
+.ticket-actions ul.status li:hover{
+	background-color: #FFF;
+}
+.alternate .ticket-actions ul.status li:hover{
+	background-color: #f9f9f9;
+}
 
 /**Style a ticket item*/
 #ticket-list{

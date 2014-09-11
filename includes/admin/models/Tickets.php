@@ -84,7 +84,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	* *new_* for new value
 	*/
 	public function updateTicket( &$ticket ){
-		return parent::updateTicket( $ticket );
+		return parent::updateRow( $ticket );
 	}
  }
  

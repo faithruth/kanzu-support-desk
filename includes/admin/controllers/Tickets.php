@@ -42,6 +42,19 @@ class TicketsController extends Kanzu_Controller {
 		$tO->new_tkt_status = "CLOSE";
 		$id = $this->_model->updateTicket( $tO );
 	}
+	
+	/*
+	* Change ticket status
+	*
+	*@param int $ticket_id ticket id of ticket to close
+	*
+	*/
+	public function changeTicketStatus($ticket_id,$new_status ){
+		$tO = new stdClass();
+		$tO->tkt_id = $ticket_id;
+		$tO->new_tkt_status = $new_status;
+		$id = $this->_model->updateTicket( $tO );
+	}
 
 	/*
 	*Returns ticket object with specified id.

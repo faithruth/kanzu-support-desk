@@ -47,6 +47,7 @@ class Kanzu_Support_Admin {
 		//Handle AJAX calls
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
+		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
 
 		
 		/*
@@ -245,6 +246,19 @@ class Kanzu_Support_Admin {
 		$this->do_admin_includes();	
 		$tickets = new TicketsController();		
 		$status = ( $tickets->deleteTicket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		echo json_encode($status);
+		die();// IMPORTANT: don't leave this out
+	}
+	
+	/**
+	 * Change a ticket's status
+	 */
+	public function change_status(){
+		 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();	
+		$tickets = new TicketsController();		
+		$status = ( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ? __("Updated","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode($status);
 		die();// IMPORTANT: don't leave this out
 	}

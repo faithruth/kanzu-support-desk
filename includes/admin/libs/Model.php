@@ -85,7 +85,7 @@
 
 	/*
 	*Save/update row(s)
-	*
+	* @return The number of rows updated or false
 	* *new_* for new value
 	*/
 	public function updateRow( &$rowObject ){
@@ -106,8 +106,7 @@
 				array_push($where_format,$this->_formats[$key]);
 			}
 		}
-		$wpdb->update( $table, $data, $where, $format, $where_format); 
-		return True;
+		return $wpdb->update( $table, $data, $where, $format, $where_format); 		 
 	}
 	
 	public function getObj(){
