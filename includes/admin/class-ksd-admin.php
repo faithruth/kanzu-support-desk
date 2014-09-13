@@ -105,8 +105,13 @@ class Kanzu_Support_Admin {
 		
 		wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2' ), KSD_VERSION ); 
 		$ksd_admin_tab = (isset($_GET['page']) ? $_GET['page'] : "");	 //This determines which tab to show as active
-		//Localization allows us to send variables to the JS script
-		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets')));
+                $agents_list = "<ul class='assign_to hidden'>";
+                foreach (  get_users() as $agent ) {
+                    $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
+                }
+                $agents_list .= "</ul>";
+                //Localization allows us to send variables to the JS script
+		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets'),'ksd_agents_list'=>$agents_list));
 		 
 	}
 
