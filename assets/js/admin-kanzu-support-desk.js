@@ -34,6 +34,10 @@ jQuery( document ).ready(function() {
 			};		
 			jQuery.post(ksd_admin.ajax_url, data, function(response) {	
 				jQuery.each( JSON.parse(response), function( key, value ) {
+				
+					tr = "<tr>";
+					tr = tr + "</tr>";
+				
 					jQuery(current_tab).find('tbody').append('<tr><td id="title">'+value.tkt_title+'</td><td id="user"></td><td id="time_logged">'+value.tkt_time_logged+'</td><td id="status">'+value.tkt_status+'</td><td id="severity">'+value.tkt_severity+'</td></tr>');
 				});				
 				jQuery(current_tab).removeClass("pending");

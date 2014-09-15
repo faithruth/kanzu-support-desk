@@ -1,5 +1,3 @@
-<input type="textbox" name="tkt_search" value="search tickets"/><input type="button" value="search"/>
-
 <table class="ksd-admin-tickets-list wp-list-table widefat fixed posts">
 	<thead>
 		<tr>
@@ -21,7 +19,7 @@
 	</tfoot>
 	<tbody>
 	<?php	
- /*		//Using AJAX for this call now
+ 
 		$ksd_admin = Kanzu_Support_Admin::get_instance();
 		$all = $ksd_admin->filter_ticket_view();
  
@@ -37,7 +35,7 @@
 			<td id="severity"><?php echo $ticket->tkt_severity; ?></td>
 		</tr>
 		<?php
-			endforeach;		 */
+			endforeach;		 
 	?>
 	</tbody>
 </table>

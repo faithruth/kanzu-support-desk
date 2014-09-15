@@ -51,7 +51,7 @@ class ChannelsController extends Kanzu_Controller
 	public function deleteChannel(int $channel_id ){
 		$cO = new stdClass();
 		$cO->chan_id = $Channel_id;
-		$this->_model->deleteChannel( $cO );
+		$this->_model->deleteChannel( $cO );	
 	}
 
 	
