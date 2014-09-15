@@ -61,8 +61,8 @@ class ChannelTypesController extends Kanzu_Controller
 	*@param  $channelTypes_id	ChannelTypes id
 	*@return Channel Object
 	*/
-	public function getChannelTypes(int $channel_id){
-		return $this->_model->getChannelTypes( $channel_id)
+	public function getChannelType(int $channel_id){
+		return $this->_model->getChannelTypes( $channel_id);
 	}
 	
 	/*

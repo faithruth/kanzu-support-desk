@@ -1,41 +1,71 @@
 #admin-kanzu-support-desk{
 	position: relative;
 }
+h2.admin-ksd-title{
+	text-transform: capitalize;
+}
 h2.admin-ksd-tab-title{
-	position: absolute;
-	top: 0;
-	left: 10px;
+	display: none;
 }
 #admin-kanzu-support-desk div.admin-ksd-container{
-	border: medium none;
-	padding-top: 50px;
-	width: 95%;
+	border-bottom: medium none;
+	border-right: medium none;
+	border-left: medium none;
+	border-top: 1px solid #E5E5E5;
+	margin: 10px 0 10px 0;
+        padding: 0;
+	width: 100%;
+	background-image: url("../images/nav_bg.jpg");
+	background-repeat: repeat-y;
+	background-position: left top;
 }
 #admin-kanzu-support-desk ul.ui-tabs-nav{
 	width: 60px;
+	background-color: #E7E7E7;
+	border: none;
+	background-image: none;
+}
+#ticket-tabs ul.ui-tabs-nav{
+	background-color: #EFEFEF;
+	width: 15em;	
 }
 #admin-kanzu-support-desk ul.ui-tabs-nav li{
 	text-align: center;
 }
+#ticket-tabs ul.ui-tabs-nav li {
+	border-left: medium none;
+	border-right: medium none;
+	border-top: medium none;
+	margin-top: 0;
+	padding-left: 1em;
+	padding-top: 0;
+}
 #admin-kanzu-support-desk  .admin-ksd-content{
 	float: left;
     width: 90%;
+	padding-top: 0;
+	margin-top: 0;
+	padding-left: 21px;
+}
+#admin-kanzu-support-desk div#tickets {
+	padding-left: 0;
 }
 #admin-kanzu-support-desk .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
 	background: #2ea2cc;
 }
+#admin-kanzu-support-desk .ui-state-active a, .ui-widget-content .ui-state-active a, .ui-widget-header .ui-state-active a{
+	color: #FFF;
+}
 #admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
 	padding: 0.5em 0;
 }
-#ticket-tabs ul.ui-tabs-nav {
-	width: 15em;	
-}
 #ticket-tabs .admin-ksd-tickets-content{
 	width: 75%;
+	padding-top: 0;
 }
 #admin-kanzu-support-desk div.admin-ksd-tickets-container{
 	border: medium none;
-	 width: 100%;
+	width: 100%;
 }
 .admin-ksd-tickets-content{
     float: left;
@@ -46,6 +76,118 @@ h2.admin-ksd-tab-title{
 	background-repeat: no-repeat;
 	background-position: center;
 	min-height: 350px;
+}
+.new-ticket {
+	background-color: #2ea2cc;
+	border: 1px solid #fff;
+	color: #fff;
+	padding: 5px 40px;
+	position: absolute;
+	right: 20px;
+	top: 0;
+}
+a.new-ticket {
+	text-decoration: none;
+}
+a.new-ticket:hover {
+	color: #333;
+}
+.ksd-new-ticket{
+    margin-top: 25px;
+}
+/*New Tickets*/
+#new-ticket input{
+    height: 35px;
+    border: 1px solid #d3d3d3;
+    margin: 5px 0;
+    float: left;
+}
+#new-ticket label{
+    font-weight: bold;
+}
+#new-ticket select{
+    width: 30%;
+    border: 1px solid #d3d3d3;
+}
+.ksd-subject,.ksd-description,.ksd-tags{
+    width: 100%;
+}
+.ksd-assign-to,.ksd-severity{
+    width: 50%;
+}
+.ksd-customer-email,.ksd-customer-name{
+    width: 45%;
+}
+.ksd-assign-to,#new-ticket .ksd-customer-email{
+    float: right;
+}
+.ksd-severity{
+    float: left;
+}
+.ksd-description{
+    margin-bottom: 10px;
+}
+#new-ticket .ksd-submit{
+    background-color: #2ea2cc;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 5px 40px;
+    float: right;
+}
+#new-ticket input.ksd-submit:hover{
+   cursor: pointer; 
+}
+.ticket-actions {
+	visibility: hidden;
+	font-size: 0.8em;
+}
+#ticket-list-item .ticket-actions a{
+	color: #0074a2;
+	text-decoration: none;
+}
+div#ticket-list-item:hover .ticket-actions {
+	visibility: visible;
+}
+.ticket-actions ul.status li:hover{
+	background-color: #FFF;
+}
+.alternate .ticket-actions ul.status li:hover{
+	background-color: #f9f9f9;
+}
+
+/**Style a ticket item*/
+#ticket-list{
+    background-color: #FFF;
+}
+#select-all-tickets{
+    padding: 5px 0 5px 8px;
+    font-weight: bold;
+}
+#ticket-list-item {
+    width: 98%;
+    padding: 10px 1% 8px;
+    margin: 0;
+    line-height: 20px;
+}
+#ticket-list-item input{
+    float: left;
+    margin-top: 3px;
+    margin-right: 5px;
+}
+#ticket-list-item span.customer_name{
+    width: 25%;
+    float: left; /*This is important otherwise the width element won't work*/
+}
+#ticket-list-item .subject{
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+}
+#ticket-list-item .ticket-time{
+    float: right;
+}
+#ticket-list-item .description{
+    font-style: normal;
 }
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }

@@ -29,9 +29,9 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 		'rep_id' 			 	=> '%d', 
 		'rep_tkt_id'	 		=> '%s',
 		'rep_type'	 			=> '%s' , 
-		'rep_is_cc' 			=> '%s'
-		'rep_is_bcc' 	 		=> '%s'
-		'rep_date_created' 		=> '%s'
+		'rep_is_cc' 			=> '%s',
+		'rep_is_bcc' 	 		=> '%s',
+		'rep_date_created' 		=> '%s',
 		'rep_created_by' 	 	=> '%s',
 		'rep_date_modified' 	=> '%s'
 		);

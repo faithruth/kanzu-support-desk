@@ -67,6 +67,7 @@
 	*Add delete row/s 
 	*
 	*@param $rowObject 
+	* @return Number of rows deleted or false 
 	*/
 	public function deleteRow(  &$rowObject ){
 		global $wpdb;
@@ -76,16 +77,15 @@
 		foreach( $rowObject as $key => $value) {
 			$where[$key] = $value;
 			array_push($where_format,$this->_formats[$key]);
-		}
-		$wpdb->delete( $table, $where, $where_format = null );
-		return True;
+		}	
+		return $wpdb->delete( $table, $where, $where_format = null ); ;
 		 
 	}
 	
 
 	/*
 	*Save/update row(s)
-	*
+	* @return The number of rows updated or false
 	* *new_* for new value
 	*/
 	public function updateRow( &$rowObject ){
@@ -106,8 +106,7 @@
 				array_push($where_format,$this->_formats[$key]);
 			}
 		}
-		$wpdb->update( $table, $data, $where, $format, $where_format); 
-		return True;
+		return $wpdb->update( $table, $data, $where, $format, $where_format); 		 
 	}
 	
 	public function getObj(){

@@ -15,7 +15,7 @@ $plugindir = plugin_dir_path( __FILE__ );
 //$DS=DIRECTORY_SEPARATOR;
 //$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
 //include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
-include_once (KANZU_PLUGIN_ADMIN_DIR . KANZU_DS . "models" . KANZU_DS . "Users.php" )
+include_once (KANZU_PLUGIN_ADMIN_DIR . KANZU_DS . "models" . KANZU_DS . "Users.php" );
 
  class ClientsModel extends UsersModel{
 
@@ -32,9 +32,9 @@ include_once (KANZU_PLUGIN_ADMIN_DIR . KANZU_DS . "models" . KANZU_DS . "Users.p
 		'cust_firstname'	 	=> '%s',
 		'cust_lastname'	 		=> '%s' , 
 		'cust_company_name' 	=> '%s',
-		'cust_phone_number' 	=> '%s'
-		'cust_about' 	 		=> '%s'
-		'cust_creation_date' 	=> '%s'
+		'cust_phone_number' 	=> '%s',
+		'cust_about' 	 		=> '%s',
+		'cust_creation_date' 	=> '%s',
 		'cust_created_by' 	 	=> '%d'
 		);
 	}

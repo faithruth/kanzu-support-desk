@@ -22,7 +22,6 @@
  
 		$ksd_admin = Kanzu_Support_Admin::get_instance();
 		$all = $ksd_admin->filter_ticket_view();
- 
 		$Users   = new UsersController();		
 		
  

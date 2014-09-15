@@ -45,7 +45,10 @@ class Kanzu_Support_Admin {
 		add_filter( 'plugin_action_links_' . plugin_basename(KSD_PLUGIN_FILE), array( $this, 'add_action_links' ) );		
 
 		//Handle AJAX calls
-		add_action( 'wp_ajax_ksd_admin_ajax_action', array( $this, 'handle_admin_ajax_callback' ));
+		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
+		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
+		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
+
 		
 		/*
 		 * Define custom functionality.
@@ -102,8 +105,13 @@ class Kanzu_Support_Admin {
 		
 		wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2' ), KSD_VERSION ); 
 		$ksd_admin_tab = (isset($_GET['page']) ? $_GET['page'] : "");	 //This determines which tab to show as active
-		//Localization allows us to send variables to the JS script
-		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' )));
+                $agents_list = "<ul class='assign_to hidden'>";
+                foreach (  get_users() as $agent ) {
+                    $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
+                }
+                $agents_list .= "</ul>";
+                //Localization allows us to send variables to the JS script
+		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets'),'ksd_agents_list'=>$agents_list));
 		 
 	}
 
@@ -141,12 +149,14 @@ class Kanzu_Support_Admin {
 			 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.		 
 			 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
 			 */
-		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function),null,40);
+		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function),'dashicons-groups',40);
 		
 		//Add the ticket pages. This syntax, __('Word','domain'), allows us to do localization
+		//@TODO Move this to separate functions
 		$ticket_types = array();
 		$ticket_types['ksd-dashboard']=__('Dashboard','kanzu-support-desk');
 		$ticket_types['ksd-tickets']=__('Tickets','kanzu-support-desk');
+        $ticket_types['ksd-new-ticket']=__('New Ticket','kanzu-support-desk');
 		$ticket_types['ksd-settings']=__('Settings','kanzu-support-desk');
 		$ticket_types['ksd-addons']=__('Add-ons','kanzu-support-desk');
 		$ticket_types['ksd-help']=__('Help','kanzu-support-desk');
@@ -159,10 +169,20 @@ class Kanzu_Support_Admin {
 	
 	/**
 	 * Display the main Kanzu Support Desk admin dashboard
+	 * @TODO Move output logic to separate functions
+	 * @TODO Move some of this logic to ajax; like ticket deletion
 	 */
 	public function output_admin_menu_dashboard(){
 		$this->do_admin_includes();
-		include_once('views/html-admin-wrapper.php');
+                if( isset($_POST['ksd-submit']) ) {//If it's a form submission
+                    //@TODO Switch this to AJAX        
+                    $this->log_new_ticket("MANUAL",$_POST['subject'],$_POST['description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign_to'],"OPEN");
+                    wp_redirect(admin_url('admin.php?page=ksd-tickets'));
+                    exit;
+                }
+                else {//Output the dashboard
+                    include_once('views/html-admin-wrapper.php');
+                }
 	}
 
 	/**
@@ -176,7 +196,7 @@ class Kanzu_Support_Admin {
 	/** 
 	 * Handle AJAX callbacks. Currently used to sort tickets 
 	 */
-	public function handle_admin_ajax_callback() {		 
+	public function filter_tickets() {		 
 	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
 			die ( 'Busted!');
 		$this->do_admin_includes();	
@@ -208,8 +228,69 @@ class Kanzu_Support_Admin {
 	 */
 	public function filter_ticket_view($filter=""){
 		$tickets = new TicketsController();		
-		return $tickets->getTickets($filter);
+		$tickets_raw = $tickets->getTickets($filter);
+                //Process the tickets for viewing on the view. Replace the username and the time with cleaner versions
+                foreach ( $tickets_raw as $ticket_key => $ticket_value) {
+                    //Replace the username
+                    $users = new UsersController();
+                    $ticket_value->tkt_logged_by = str_replace($ticket_value->tkt_logged_by,$users->getUser($ticket_value->tkt_logged_by)->user_nicename,$ticket_value->tkt_logged_by);
+                    //Replace the date 
+                    $ticket_value->tkt_time_logged = date('M d',strtotime($ticket_value->tkt_time_logged));
+                }
+                
+                return $tickets_raw;
 	}
+	
+	
+	/**
+	 * Delete a ticket
+	 */
+	public function delete_ticket(){
+			  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();	
+		$tickets = new TicketsController();		
+		$status = ( $tickets->deleteTicket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		echo json_encode($status);
+		die();// IMPORTANT: don't leave this out
+	}
+	
+	/**
+	 * Change a ticket's status
+	 */
+	public function change_status(){
+		 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();	
+		$tickets = new TicketsController();		
+		$status = ( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ? __("Updated","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		echo json_encode($status);
+		die();// IMPORTANT: don't leave this out
+	}
+        
+        /**
+         * Log new tickets
+         * @param type $channel
+         * @param type $title
+         * @param type $description
+         * @param type $customer_name
+         * @param type $customer_email
+         * @param type $assign_to
+         * @param type $status
+         * @return type
+         */
+        public function log_new_ticket($channel,$title,$description,$customer_name,$customer_email,$assign_to,$status){
+            	$tO = new stdClass(); 
+                $tO->tkt_title    	     = $title;
+                $tO->tkt_initial_message 	 = $description;
+                $tO->tkt_description 	 = $description;
+                $tO->tkt_channel     	 = $channel;
+                $tO->tkt_status 	 	 = $status;
+
+                $TC = new TicketsController();
+               $response = $TC->logTicket( $tO );
+               return ( $response > 0 ) ? True : False;
+        }
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
 	 *           lifecycle that WordPress fires.
@@ -219,6 +300,7 @@ class Kanzu_Support_Admin {
 	 *
 	 * @since    1.0.0
 	 */
+
 	public function action_method_name() {
 		// @TODO: Define your action hook callback here
 	}
