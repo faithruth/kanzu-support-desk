@@ -25,7 +25,7 @@ jQuery( document ).ready(function() {
 		break;
 	}
 	jQuery( "#tabs" ).tabs( "option", "active", activetab );	
-       /**Show update/error/Loading dialog*/
+       /**Show update/error/Loading dialog while performing AJAX calls and on completion*/
 	var ksd_show_dialog = function(dialog_type,message){           
             message = message || "Loading...";//Set default message
             jQuery('.'+dialog_type).html(message);//Set the message
@@ -39,7 +39,8 @@ jQuery( document ).ready(function() {
 				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
 				view : current_tab
 			};		
-			jQuery.post(ksd_admin.ajax_url, data, function(response) {	
+			jQuery.post(ksd_admin.ajax_url, data, function(response) {
+                            if(jQuery.isArray(JSON.parse(response))){
 				jQuery.each( JSON.parse(response), function( key, value ) {
 					rws = 		'<div id="ticket-list-item" class="ticket_'+value.tkt_id+'">';
 					rws = rws + 	'<div class="ticket-info">';
@@ -58,10 +59,15 @@ jQuery( document ).ready(function() {
 					rws = rws + 	'</div>';
 					rws = rws + '</div>';
 					jQuery(current_tab+' #ticket-list').append( rws);                                            
-				});				
-				jQuery(current_tab).removeClass("pending");
+				});
 				/**Add class .alternate to every other row in the tickets table.*/
 				jQuery("#ticket-list div#ticket-list-item").filter(':even').addClass("alternate");
+                                }
+                            else{
+                               jQuery(current_tab+' #select-all-tickets').remove();  
+                               jQuery(current_tab+' #ticket-list').addClass("empty").append(JSON.parse(response));   
+                            }
+                           jQuery(current_tab).removeClass("pending");
 			});
 		}
 	};
@@ -83,9 +89,9 @@ jQuery( document ).ready(function() {
 	/*All check box.
 	* control_id: tkt_chkbx_all
 	*/
-	jQuery( "#tkt_chkbx_all" ).on( "click", function() {
+	jQuery( "#ticket-tabs #tkt_chkbx_all" ).on( "click", function() {
 		//TODO:Show all options
-		if ( jQuery(this).prop('checked') == true){
+		if ( jQuery(this).prop('checked') === true){
 			jQuery("#tkt_all_options").removeClass("ticket-actions");
 			jQuery('input:checkbox').not(this).prop('checked', this.checked);
 		}else{
@@ -96,14 +102,12 @@ jQuery( document ).ready(function() {
 	});
 
 	/**AJAX: Delete a ticket **/
-	jQuery("#ticket-list").on('click','.ticket-actions a.trash',function() {
+	jQuery("#ticket-tabs").on('click','.ticket-actions a.trash',function(event) {
+            event.preventDefault();
              var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
              jQuery( "#delete-dialog" ).dialog({
                 modal: true,
                 buttons: {
-                    No : function() {
-                    jQuery( this ).dialog( "close" );
-                    },
                     Yes : function() {
                             jQuery( this ).dialog( "close" );
                             ksd_show_dialog("loading");                           
@@ -116,19 +120,22 @@ jQuery( document ).ready(function() {
                                     jQuery('#ticket-list .ticket_'+tkt_id).remove();
                                     ksd_show_dialog("success",JSON.parse(response));  				                                
 				});	
-                    }                            
+                    },                           
+                    No : function() {
+                    jQuery( this ).dialog( "close" );
+                    }               
                 }
             });	
 	});	
 
         /**Hide/Show the change ticket options on click of a ticket's 'change status' item**/
-	jQuery("#ticket-list").on('click','.ticket-actions a.change_status',function(event) {
+	jQuery("#ticket-tabs").on('click','.ticket-actions a.change_status',function(event) {
 		event.preventDefault();//Important otherwise the page skips around
 		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
 		jQuery(".ticket_"+tkt_id+" ul.status").toggleClass("hidden");
 	});
 	/**AJAX: Send the AJAX request when a new status is chosen**/
-	jQuery("#ticket-list").on('click','.ticket-actions ul.status li',function() {
+	jQuery("#ticket-tabs").on('click','.ticket-actions ul.status li',function() {
 		ksd_show_dialog("loading");
                 var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
 		var tkt_status = jQuery(this).text();
@@ -144,13 +151,13 @@ jQuery( document ).ready(function() {
 	});
         
          /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
-	jQuery("#ticket-list").on('click','.ticket-actions a.assign_to',function(event) {
+	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
 		event.preventDefault();//Important otherwise the page skips around
 		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
 		jQuery(".ticket_"+tkt_id+" ul.assign_to").toggleClass("hidden");
 	});
         /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
-	jQuery("#ticket-list").on('click','.ticket-actions ul.assign_to li',function() {
+	jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to li',function() {
                 ksd_show_dialog("loading");
 		var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
 		var assign_assigned_to = jQuery(this).attr("id");

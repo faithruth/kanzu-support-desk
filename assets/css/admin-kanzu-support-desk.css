@@ -154,6 +154,13 @@ div#ticket-list-item:hover .ticket-actions {
 .alternate .ticket-actions ul.status li:hover{
 	background-color: #f9f9f9;
 }
+#ticket-tabs .empty{
+    text-align: center;
+    background: #efefef;
+    padding-top:  10%;
+    font-size: 1.2em;
+    font-weight: bold;
+}
 
 /**Style a ticket item*/
 #ticket-list{

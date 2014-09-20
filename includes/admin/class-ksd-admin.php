@@ -221,7 +221,9 @@ class Kanzu_Support_Admin {
 			default:
 				$filter=" tkt_status = 'OPEN'";
 		endswitch;
-		echo json_encode($this->filter_ticket_view($filter));
+                $raw_tickets = $this->filter_ticket_view($filter);
+                $response = ( !empty($raw_tickets) ? $raw_tickets : __("Nothing to see here. Great work!","kanzu-support-desk") );
+		echo json_encode($response);
 		 
 		die();// IMPORTANT: don't leave this out
 	}
