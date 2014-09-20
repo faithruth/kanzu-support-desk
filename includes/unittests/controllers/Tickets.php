@@ -35,11 +35,9 @@ function logTicket(){
 	$tO->tkt_customer_rating = "1";
 
 	$TC = new TicketsController();
-	$TC->logTicket( $tO );
+	$id = $TC->logTicket( $tO );
 	
-	
-	
-	$id = 1;
+
 	return ( $id > 0 ) ? True : False;
 }
 

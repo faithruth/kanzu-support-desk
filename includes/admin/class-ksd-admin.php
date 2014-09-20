@@ -48,6 +48,7 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
+                add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
 
 		
 		/*
@@ -111,7 +112,7 @@ class Kanzu_Support_Admin {
                 }
                 $agents_list .= "</ul>";
                 //Localization allows us to send variables to the JS script
-		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets'),'ksd_agents_list'=>$agents_list));
+		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets'),'ksd_agents_list'=>$agents_list,'ksd_current_user_id'=>get_current_user_id()));
 		 
 	}
 
@@ -191,6 +192,7 @@ class Kanzu_Support_Admin {
     public function do_admin_includes() {		
 		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Tickets.php");
 		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Users.php");
+                include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Assignments.php");           
 
 	}
 	/** 
@@ -264,6 +266,19 @@ class Kanzu_Support_Admin {
 		$this->do_admin_includes();	
 		$tickets = new TicketsController();		
 		$status = ( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ? __("Updated","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		echo json_encode($status);
+		die();// IMPORTANT: don't leave this out
+	}
+        
+        /**
+	 * Change a ticket's assignment
+	 */
+	public function assign_to(){
+		 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();	
+		$assign_ticket = new AssignmentsController();		
+		$status = ( $assign_ticket->assignTicket( $_POST['tkt_id'],$_POST['tkt_assign_assigned_to'],$_POST['ksd_current_user_id'] ) ? __("Updated","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode($status);
 		die();// IMPORTANT: don't leave this out
 	}

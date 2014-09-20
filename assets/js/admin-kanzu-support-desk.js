@@ -25,7 +25,12 @@ jQuery( document ).ready(function() {
 		break;
 	}
 	jQuery( "#tabs" ).tabs( "option", "active", activetab );	
-	
+       /**Show update/error/Loading dialog*/
+	var ksd_show_dialog = function(dialog_type,message){           
+            message = message || "Loading...";//Set default message
+            jQuery('.'+dialog_type).html(message);//Set the message
+            jQuery('.'+dialog_type).fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
+        };
     /**Do an AJAX call to retrieve tickets from the Db**/
 	var get_tickets = function( current_tab ) {
 	if(jQuery(current_tab).hasClass("pending")){//Check if the tab has been loaded before
@@ -92,14 +97,16 @@ jQuery( document ).ready(function() {
 
 	/**AJAX: Delete a ticket **/
 	jQuery("#ticket-list").on('click','.ticket-actions a.trash',function() {
+                ksd_show_dialog("loading");
 		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
 		jQuery.post(	ksd_admin.ajax_url, 
 						{ 	action : 'ksd_delete_ticket',
 							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
 							tkt_id : tkt_id
 						}, 
-				function(response) {	
-				console.log(JSON.parse(response) );                                             
+				function(response) {
+                                    jQuery('#ticket-list .ticket_'+tkt_id).remove();
+                                    ksd_show_dialog("success",JSON.parse(response));  				                                
 				});		
 	});	
 
@@ -111,7 +118,8 @@ jQuery( document ).ready(function() {
 	});
 	/**AJAX: Send the AJAX request when a new status is chosen**/
 	jQuery("#ticket-list").on('click','.ticket-actions ul.status li',function() {
-		var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
+		ksd_show_dialog("loading");
+                var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
 		var tkt_status = jQuery(this).text();
 		jQuery.post(	ksd_admin.ajax_url, 
 						{ 	action : 'ksd_change_status',
@@ -120,7 +128,7 @@ jQuery( document ).ready(function() {
 							tkt_status : tkt_status
 						}, 
 				function(response) {	
-				console.log(JSON.parse(response) );                                             
+                                    ksd_show_dialog("success",JSON.parse(response));				                            
 				});		
 	});
         
@@ -130,6 +138,22 @@ jQuery( document ).ready(function() {
 		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
 		jQuery(".ticket_"+tkt_id+" ul.assign_to").toggleClass("hidden");
 	});
+        /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
+	jQuery("#ticket-list").on('click','.ticket-actions ul.assign_to li',function() {
+                ksd_show_dialog("loading");
+		var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
+		var assign_assigned_to = jQuery(this).attr("id");
+		jQuery.post(	ksd_admin.ajax_url, 
+						{ 	action : 'ksd_assign_to',
+							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
+							tkt_id : tkt_id,
+                                                        ksd_current_user_id : ksd_admin.ksd_current_user_id,
+							tkt_assign_assigned_to : assign_assigned_to
+						}, 
+				function(response) {	
+                                ksd_show_dialog("success",JSON.parse(response));
+				});		
+	});       
 	
 	/**Change the title onclick of a side navigation tab*/
 	jQuery( "#tabs .main-nav li a" ).click(function() {

@@ -31,4 +31,7 @@
 			<?php include_once('html-admin-tests.php'); ?>
 		</div>            
                 <?php  include_once('html-admin-new-ticket.php');  ?>
+            <div class="ksd-dialog loading hidden">Loading...</div>
+            <div class="ksd-dialog error hidden">Error</div>
+            <div class="ksd-dialog success hidden">Success</div>
 </div>

@@ -1,4 +1,4 @@
-<h2 class="admin-ksd-tab-title"><?php _e('Tickets','kanzu-support-desk'); ?></h2>
+<h2 class="admin-ksd-tab-title"><?php __('Tickets','kanzu-support-desk'); ?></h2>
 	<div id="ticket-tabs" class="admin-ksd-tickets-container">
 		<ul>
 			<li><a href="#tickets-tab-1"><?php _e('My unresolved tickets','kanzu-support-desk'); ?></a></li>

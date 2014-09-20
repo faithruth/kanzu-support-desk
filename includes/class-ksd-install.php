@@ -281,14 +281,14 @@ class Kanzu_Support_Install {
 				cust_modified_by INT
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignment` (
-				assign_id INT,
+				assign_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				assign_tkt_id INT,
 				assign_assigned_to INT,
 				assign_date_assigned TIMESTAMP,
 				assign_assigned_by INT
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
-				att_id INT
+				att_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				att_name VARCHAR(100),
 				att_filename VARCHAR(255),
 				att_tkt_id INT,

@@ -1,4 +1,4 @@
-<h2 class="admin-ksd-tab-title"><?php _e('Tests','kanzu-support-desk'); ?></h2>
+<h2 class="admin-ksd-tab-title"><?php __('Tests','kanzu-support-desk'); ?></h2>
 <p><?php _e('Kanzu Support Desk Test Suite','kanzu-support-desk');  
  
 	 
