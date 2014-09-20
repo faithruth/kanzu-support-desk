@@ -204,6 +204,11 @@ div#ticket-list-item:hover .ticket-actions {
     left: 50%;
     text-align: center;
 }
+.wp-admin .ui-widget-header{
+    background: none repeat scroll 0 0 #2ea2cc;
+    border: 1px solid #2ea2cc;
+    color: #fff;
+}
 
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }

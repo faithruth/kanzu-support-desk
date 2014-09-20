@@ -26,4 +26,7 @@
 		<div id="tickets-tab-6" class="admin-ksd-tickets-content pending">
 			<?php include('html-admin-tickets-list-template.php'); ?>
 		</div>
+            <div id="delete-dialog" class="hidden" title="<?php _e("Delete ticket","kanzu-support-desk"); ?>">
+                <?php _e("Are you sure you want to delete this ticket and all data related to it?","kanzu-support-desk"); ?>
+             </div>
 	</div>

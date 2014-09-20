@@ -97,9 +97,17 @@ jQuery( document ).ready(function() {
 
 	/**AJAX: Delete a ticket **/
 	jQuery("#ticket-list").on('click','.ticket-actions a.trash',function() {
-                ksd_show_dialog("loading");
-		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-		jQuery.post(	ksd_admin.ajax_url, 
+             var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
+             jQuery( "#delete-dialog" ).dialog({
+                modal: true,
+                buttons: {
+                    No : function() {
+                    jQuery( this ).dialog( "close" );
+                    },
+                    Yes : function() {
+                            jQuery( this ).dialog( "close" );
+                            ksd_show_dialog("loading");                           
+                            jQuery.post(	ksd_admin.ajax_url, 
 						{ 	action : 'ksd_delete_ticket',
 							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
 							tkt_id : tkt_id
@@ -107,7 +115,10 @@ jQuery( document ).ready(function() {
 				function(response) {
                                     jQuery('#ticket-list .ticket_'+tkt_id).remove();
                                     ksd_show_dialog("success",JSON.parse(response));  				                                
-				});		
+				});	
+                    }                            
+                }
+            });	
 	});	
 
         /**Hide/Show the change ticket options on click of a ticket's 'change status' item**/
