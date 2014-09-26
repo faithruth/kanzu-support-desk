@@ -164,22 +164,23 @@ final class Kanzu_Support_Desk {
 	
 	/**
 	 * Register and enqueue public-facing style sheet.
-	 *
+         * Be sure to use the word 'public' in the identifier to distinguish
+         * them from the admin-side scripts and prevent collision
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
-		//wp_enqueue_style( KSD_SLUG . '-plugin-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), $this->version );
+	public function enqueue_public_styles() {
+		//wp_enqueue_style( KSD_SLUG . '-plugin-public-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), $this->version );
 	}
 
 	/**
 	 * Register and enqueues public-facing JavaScript files.
+         * Be sure to use the word 'public' in the identifier to distinguish
+         * them from the admin-side scripts and prevent collision
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
-		
-		wp_enqueue_script( KSD_SLUG . '-plugin-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
-		wp_enqueue_script( KSD_SLUG . '-plugin-chart', plugins_url( '/assets/js/Chart.min.js', __FILE__ ), array( 'jquery' ), $this->version );
+	public function enqueue_public_scripts() {		
+		//wp_enqueue_script( KSD_SLUG . '-plugin-public-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
 		
 	}
 
@@ -197,15 +198,11 @@ final class Kanzu_Support_Desk {
 
 		// Activate plugin when new blog is added. Leave this out for now
 		//add_action( 'wpmu_new_blog', array( Kanzu_Support_Install, 'activate_new_site' ) );
-
-		// Load public-facing style sheet and JavaScript.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
-
-		//TODO: Temporarily added this because I could not get above actions to work
-		$this->enqueue_scripts();
 		
+                //Load public-facing styles and JS. Commented out for now; not required
+               // add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_public_styles' ) );
+		//add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_public_scripts' ) );
+                
 		/* Define custom functionality. Commented out for now
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */

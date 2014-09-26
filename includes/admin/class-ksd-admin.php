@@ -86,7 +86,6 @@ class Kanzu_Support_Admin {
 	 *
 	 * @since     1.0.0
 	 *
-	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_styles() {
 	
@@ -100,7 +99,6 @@ class Kanzu_Support_Admin {
 	 *
 	 * @since     1.0.0
 	 *
-	 * @return    null    Return early if no settings page is registered.
 	 */
 	public function enqueue_admin_scripts() { 
 		
@@ -114,6 +112,8 @@ class Kanzu_Support_Admin {
                 //Localization allows us to send variables to the JS script
 		wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets'),'ksd_agents_list'=>$agents_list,'ksd_current_user_id'=>get_current_user_id()));
 		 
+                //Load the script for charts
+                wp_enqueue_script( KSD_SLUG . '-admin-charts', plugins_url( '../../assets/js/Chart.min.js', __FILE__ ), array( 'jquery' ), KSD_VERSION ); 
 	}
 
 	
