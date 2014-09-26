@@ -4,7 +4,9 @@
         <input type="text" value="<?php _e('Customer Name','kanzu-support-desk'); ?>" size="30" name="customer_name" label="Customer Name" class="ksd-customer-name"/>
         <input type="text" value="<?php _e('Customer Email','kanzu-support-desk'); ?>" size="30" name="customer_email" label="Customer Email" class="ksd-customer-email"/>
         <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="subject" label="Subject" class="ksd-subject"/>
-        <textarea value="<?php _e('Description','kanzu-support-desk'); ?>" rows="7" class="ksd-description" name="description"></textarea>
+        <!--<textarea value="<?php ; ?>" rows="7" class="ksd-description" name="description"></textarea>-->
+        <?php wp_editor( __('Description','kanzu-support-desk'), 'ksd-ticket-description'); ?> 
+        
         <div class="ksd-severity">
             <label for="severity"><?php _e('Severity','kanzu-support-desk'); ?></label>
             <select name="severity">
