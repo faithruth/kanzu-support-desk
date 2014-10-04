@@ -177,5 +177,28 @@ jQuery( document ).ready(function() {
 	jQuery( "#tabs .main-nav li a" ).click(function() {
 		jQuery('h2.admin-ksd-title').html(jQuery(this).attr('href').replace("#",""));
 	});
+        
+        
 	
 });
+
+/**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Month', 'New Tickets', 'Closed Tickets'],
+          ['Jan',  1000,      400],
+          ['Feb',  1170,      460],
+          ['Mar',  660,       1120],
+          ['Apr',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Support Metrics'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
