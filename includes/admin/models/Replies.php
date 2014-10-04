@@ -22,7 +22,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	
 	public function __construct(){
 		global $wpdb;
-		$this->_tablename = $wpdb->prefix . "kanzusupport_customers";	
+		$this->_tablename = $wpdb->prefix . "kanzusupport_replies";	
 		$this->_id = "rep_id";
 			
 		$this->_formats = array(

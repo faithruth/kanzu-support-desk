@@ -241,19 +241,19 @@ class Kanzu_Support_Install {
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				`tkt_title` VARCHAR(512) NOT NULL, 
-                `tkt_initial_message` TEXT NOT NULL, 
+                                `tkt_initial_message` TEXT NOT NULL, 
 				`tkt_description` TEXT ,
-				`tkt_channel` INT(10),
+				`tkt_channel` ENUM('STAFF','FACEBOOK','TWITTER','SUPPORT_TAB','EMAIL','CONTACT_FORM') DEFAULT 'STAFF',
 				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
 				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
 				`tkt_resolution` VARCHAR(64) NOT NULL, 
 				`tkt_time_logged` TIMESTAMP, 
 				`tkt_logged_by` INT NOT NULL, 
 				`tkt_time_updated` DATETIME, 
-				`tkt_updated_by` INT NOT NULL, 
-				`tkt_private_notes` TEXT,
+				`tkt_updated_by` INT NOT NULL,                                 
+				`tkt_private_notes` TEXT,       
 				`tkt_tags` VARCHAR(255),   /*Uses WordPress tags*/
-				tkt_customer_rating INT(2) /*Uses NPS which rates from 0 to 10*/
+				`tkt_customer_rating` INT(2) /*Uses NPS scoring system which rates from 0 to 10*/
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -296,7 +296,7 @@ class Kanzu_Support_Install {
 				att_reply_id INT
 				);
 				
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_channeltypes` (
+				/*CREATE TABLE `{$wpdb->prefix}kanzusupport_channeltypes` (
 				chantype_id INT ,
 				chantype_name VARCHAR(200),
 				chantype_description TEXT,
@@ -309,7 +309,7 @@ class Kanzu_Support_Install {
 				chan_chantype_id VARCHAR(200),
 				chan_handle VARCHAR(200),
 				chan_description TEXT
-				);
+				);*/
 			";
 
       dbDelta( $kanzusupport_tables );

@@ -1,4 +1,7 @@
-<h2 class="admin-ksd-tab-title"><?php __('Tickets','kanzu-support-desk'); ?></h2>
+<?php if ( isset($_GET['ticket']) ):  
+        include_once('html-admin-single-ticket.php');
+  else: ?>
+    <h2 class="admin-ksd-tab-title"><?php __('Tickets','kanzu-support-desk'); ?></h2>
 	<div id="ticket-tabs" class="admin-ksd-tickets-container">
 		<ul>
 			<li><a href="#tickets-tab-1"><?php _e('My unresolved tickets','kanzu-support-desk'); ?></a></li>
@@ -30,3 +33,7 @@
                 <?php _e("Are you sure you want to delete this ticket and all data related to it?","kanzu-support-desk"); ?>
              </div>
 	</div>
+    
+<?php endif; ?>
+    
+    

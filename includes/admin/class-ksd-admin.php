@@ -49,6 +49,7 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
                 add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
+                add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
 
 		
 		/*
@@ -181,11 +182,11 @@ class Kanzu_Support_Admin {
 		$this->do_admin_includes();
                 if( isset($_POST['ksd-submit']) ) {//If it's a form submission
                     //@TODO Switch this to AJAX        
-                    $this->log_new_ticket("MANUAL",$_POST['subject'],$_POST['description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign_to'],"OPEN");
+                    $this->log_new_ticket("STAFF",$_POST['subject'],$_POST['description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign_to'],"OPEN");
                     wp_redirect(admin_url('admin.php?page=ksd-tickets'));
                     exit;
                 }
-                else {//Output the dashboard
+               else {//Output the dashboard
                     include_once('views/html-admin-wrapper.php');
                 }
 	}
@@ -196,7 +197,8 @@ class Kanzu_Support_Admin {
     public function do_admin_includes() {		
 		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Tickets.php");
 		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Users.php");
-                include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Assignments.php");           
+                include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Assignments.php");  
+                include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Replies.php");  
 
 	}
 	/** 
@@ -290,6 +292,25 @@ class Kanzu_Support_Admin {
 	}
         
         /**
+         * Add a reply to a single ticket
+         */
+        
+        public function reply_ticket(){
+                if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();
+                
+                $tO = new stdClass(); 
+                $tO->rep_tkt_id    	     = $_POST['tkt_id'];
+                $tO->rep_message 	 = $_POST['ksd_ticket_reply'];
+
+               $TC = new RepliesController();
+               $response = $TC->addReply( $tO );
+               $status = ( $response > 0  ? $tO->rep_message : __("Error", 'kanzu-support-desk') );
+               echo json_encode($tO->rep_message);
+                die();// IMPORTANT: don't leave this out
+        }
+        /**
          * Log new tickets
          * @param type $channel
          * @param type $title
@@ -312,6 +333,8 @@ class Kanzu_Support_Admin {
                $response = $TC->logTicket( $tO );
                return ( $response > 0 ) ? True : False;
         }
+        
+                        
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process
 	 *           lifecycle that WordPress fires.

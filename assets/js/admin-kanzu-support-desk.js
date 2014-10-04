@@ -42,22 +42,23 @@ jQuery( document ).ready(function() {
 			jQuery.post(ksd_admin.ajax_url, data, function(response) {
                             if(jQuery.isArray(JSON.parse(response))){
 				jQuery.each( JSON.parse(response), function( key, value ) {
-					rws = 		'<div id="ticket-list-item" class="ticket_'+value.tkt_id+'">';
-					rws = rws + 	'<div class="ticket-info">';
-					rws = rws + 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
-					rws = rws + 	'<span class="customer_name">'+value.tkt_logged_by+'</span>';
-					rws = rws + 	'<span class="subject">'+value.tkt_title+'</span>';
-					rws = rws + 	'<span class="description">-'+value.tkt_description+'</span>';
-					rws = rws + 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
-					rws = rws + 	'</div>';
-					rws = rws + 	'<div class="ticket-actions" id="tkt_'+value.tkt_id+'">';
-					rws = rws + 	'<a href="#" class="trash" id="tkt_'+value.tkt_id+'">Trash</a> | ';
-					rws = rws + 	'<a href="#" id="tkt_'+value.tkt_id+'" class="change_status">Change Status</a> | ';
-					rws = rws + 	'<a href="#" id="tkt_'+value.tkt_id+'" class="assign_to">Assign To</a>';
-					rws = rws + 	ksd_admin.ksd_agents_list;
-					rws = rws + 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
-					rws = rws + 	'</div>';
-					rws = rws + '</div>';
+					rws = 	'<div id="ticket-list-item" class="ticket_'+value.tkt_id+'">';
+					rws += 	'<div class="ticket-info">';
+					rws += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
+					rws += 	'<span class="customer_name">'+value.tkt_logged_by+'</span>';
+					rws +=	'<span class="subject"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_title+'</a></span>';
+					rws += 	'<span class="description">-'+value.tkt_description+'</span>';
+					rws += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
+					rws += 	'</div>';
+					rws += 	'<div class="ticket-actions" id="tkt_'+value.tkt_id+'">';
+                                        rws += 	'<a href="#" class="edit" id="tkt_'+value.tkt_id+'">Edit</a> | ';
+					rws += 	'<a href="#" class="trash" id="tkt_'+value.tkt_id+'">Trash</a> | ';
+					rws += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="change_status">Change Status</a> | ';
+					rws += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="assign_to">Assign To</a>';
+					rws += 	ksd_admin.ksd_agents_list;
+					rws += 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
+					rws += 	'</div>';
+					rws +=  '</div>';
 					jQuery(current_tab+' #ticket-list').append( rws);                                            
 				});
 				/**Add class .alternate to every other row in the tickets table.*/
@@ -150,6 +151,22 @@ jQuery( document ).ready(function() {
 				});		
 	});
         
+        /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
+       //@TODO Fix bug that returns stale data with each submission      
+        jQuery('form#edit-ticket').submit( function(e){
+            e.preventDefault();
+           // console.log(jQuery('textarea[name=ksd-ticket-reply]').val());
+            
+           // console.log(jQuery("textarea[name=ksd-ticket-reply]").length);
+           // console.log(jQuery('input[name=action]').val());
+            console.log(jQuery(this).serialize());
+           /* jQuery.post(	ksd_admin.ajax_url, 
+                                jQuery(this).serialize(), 
+		function(response) {//@TODO Check for error 	
+                    jQuery("#ticket-replies").append(JSON.parse(response));				                            
+            });*/
+        });
+        
          /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
 	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
 		event.preventDefault();//Important otherwise the page skips around
@@ -177,8 +194,12 @@ jQuery( document ).ready(function() {
 	jQuery( "#tabs .main-nav li a" ).click(function() {
 		jQuery('h2.admin-ksd-title').html(jQuery(this).attr('href').replace("#",""));
 	});
-        
-        
+       
+        /**While working on a single ticket, switch between reply/forward and Add note modes**/
+        jQuery('ul.edit-ticket-options li').click(function(e){
+        jQuery('ul.edit-ticket-options li').removeClass('selected');//make all tabs inactive        
+        jQuery(this).addClass('selected');    //then make the clicked tab active
+        });
 	
 });
 

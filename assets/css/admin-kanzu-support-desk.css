@@ -126,12 +126,16 @@ a.new-ticket:hover {
 }
 .ksd-description{
     margin-bottom: 10px;
+    clear: both;
 }
 #new-ticket .ksd-submit{
     background-color: #2ea2cc;
     border: 1px solid #fff;
     color: #fff;
     padding: 5px 40px;
+    float: right;
+}
+#ksd-single-ticket .ksd-submit{
     float: right;
 }
 #new-ticket input.ksd-submit:hover{
@@ -190,11 +194,25 @@ div#ticket-list-item:hover .ticket-actions {
     padding: 0;
     font-weight: bold;
 }
+#ticket-list-item .subject a{
+    text-decoration: none;
+}
 #ticket-list-item .ticket-time{
     float: right;
 }
 #ticket-list-item .description{
     font-style: normal;
+}
+ul.edit-ticket-options {
+  height: 35px;
+  line-height: 35px;
+}
+ul.edit-ticket-options li{
+    float: left;
+    padding-left: 10px;
+}
+ul.edit-ticket-options li.selected{
+    font-weight: bold;
 }
 /*Loading items*/
 .ksd-dialog{
