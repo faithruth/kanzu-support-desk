@@ -25,7 +25,7 @@ $TestSuit = array(
 function logTicket(){
 	//Populate ticket model instalate
 	$tO = new stdClass(); 
-	$tO->tkt_title    	     = "Title";
+	$tO->tkt_subject    	     = "Title";
 	$tO->tkt_initial_message 	 = "Initial Message";
 	$tO->tkt_description 	 = "NEW TICKET";
 	$tO->tkt_channel     	 = "EMAIL";

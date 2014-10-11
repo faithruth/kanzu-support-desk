@@ -152,8 +152,13 @@ a.new-ticket:hover {
 #ksd-single-ticket .ksd-submit{
     float: right;
 }
-.ticket-reply{
-    padding: 7px 5px;
+#ticket-replies{
+    margin-top: 10px;
+    border-top: 1px solid #ccc;
+}
+.ticket-reply {
+  border-bottom: 1px solid #ccc;
+  padding: 15px 5px;
 }
 #new-ticket input.ksd-submit:hover{
    cursor: pointer; 

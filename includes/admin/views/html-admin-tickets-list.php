@@ -27,7 +27,7 @@
  
 			foreach ( $all as $ticket ): ?>
 		<tr>
-			<td id="title"><?php echo $ticket->tkt_title; ?></td>
+			<td id="title"><?php echo $ticket->tkt_subject; ?></td>
 			<td id="user"><?php echo $Users->getUser( $ticket->tkt_logged_by)->user_nicename; ?></td>
 			<td id="time_logged"><?php echo $ticket->tkt_time_logged; ?></td>
 			<td id="status"><?php echo $ticket->tkt_status; ?></td>

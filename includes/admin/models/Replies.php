@@ -33,7 +33,8 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 		'rep_is_bcc' 	 		=> '%s',
 		'rep_date_created' 		=> '%s',
 		'rep_created_by' 	 	=> '%s',
-		'rep_date_modified' 	=> '%s'
+		'rep_date_modified' 	=> '%s',
+                'rep_message'    => '%s'
 		);
 	}
 	

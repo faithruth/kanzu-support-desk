@@ -181,13 +181,15 @@ class Kanzu_Support_Admin {
 	 * Display the main Kanzu Support Desk admin dashboard
 	 * @TODO Move output logic to separate functions
 	 * @TODO Move some of this logic to ajax; like ticket deletion
+         * @TODO Change $_POST field names for the form to match the table field names
+         *       to use a forloop to do the ticket logging
 	 */
 	public function output_admin_menu_dashboard(){
 		$this->do_admin_includes();
                 if( isset($_POST['ksd-submit']) ) {//If it's a form submission
-                    //@TODO Switch this to AJAX        
-                    $this->log_new_ticket("STAFF",$_POST['subject'],$_POST['ksd-ticket-description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign_to'],"OPEN");
-                    wp_redirect(admin_url('admin.php?page=ksd-tickets'));
+                   // @TODO Switch this to AJAX        
+                   $this->log_new_ticket("STAFF",$_POST['tkt_subject'],$_POST['ksd-ticket-description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign-to'],$_POST['tkt_severity'],"OPEN");
+                   wp_redirect(admin_url('admin.php?page=ksd-tickets'));
                     exit;
                 }
                else {//Output the dashboard
@@ -336,7 +338,7 @@ class Kanzu_Support_Admin {
                $TC = new RepliesController();
                $response = $TC->addReply( $tO );
                $status = ( $response > 0  ? $tO->rep_message : __("Error", 'kanzu-support-desk') );
-               echo json_encode($tO->rep_message);
+               echo json_encode($status);
                 die();// IMPORTANT: don't leave this out
         }
         /**
@@ -347,15 +349,17 @@ class Kanzu_Support_Admin {
          * @param type $customer_name
          * @param type $customer_email
          * @param type $assign_to
+         * @param type $severity Ticket's severity
          * @param type $status
          * @return type
          */
-        public function log_new_ticket($channel,$title,$description,$customer_name,$customer_email,$assign_to,$status){
+        public function log_new_ticket($channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$status){
             	$tO = new stdClass(); 
-                $tO->tkt_title    	     = $title;
+                $tO->tkt_subject    	     = $title;
                 $tO->tkt_initial_message 	 = $description;
                 $tO->tkt_description 	 = $description;
                 $tO->tkt_channel     	 = $channel;
+                $tO->tkt_severity     	 = $severity;
                 $tO->tkt_status 	 	 = $status;
 
                 $TC = new TicketsController();
