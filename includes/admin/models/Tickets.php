@@ -42,16 +42,16 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	}
 	
 	/*
-	*Get user object
+	*Get Tickets object
 	*
-	*@param userid
+	*@param Ticket ID
 	*/
 	public function getTicket( $id ){
 		return parent::getRow($id);
 	}
 	
 	/*
-	*Get all from users (kanzu-users) from wp users table
+	*Get all from Tickets table
 	*
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
@@ -60,7 +60,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	}
  
 	/*
-	*Add user to 
+	*Add Ticket to 
 	*
 	*
 	*/

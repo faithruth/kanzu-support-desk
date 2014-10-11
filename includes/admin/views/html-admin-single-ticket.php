@@ -1,9 +1,10 @@
 <div id="ksd-single-ticket">
-    <div class="author_and_subject">Loading..</div>
+    <div class="author_and_subject"><?php  _e('Loading...','kanzu-support-desk');?></div>
     <div class="description pending">
-        Loading...
+        <?php  _e('Loading...','kanzu-support-desk');?>
     </div>
     <div id="ticket-replies">
+        <?php  _e('Loading...','kanzu-support-desk');?>
     </div>
     <div class="edit-ticket">
     <form id="edit-ticket" method="POST">

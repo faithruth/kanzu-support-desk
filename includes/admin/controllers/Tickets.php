@@ -66,7 +66,9 @@ class TicketsController extends Kanzu_Controller {
 		return $this->_model->getTicket( $ticket_id);
 	}
         /**
-         * Get a ticket and its replies
+         * Get a ticket and its replies. We use a JOIN instead of 
+         * performing 2 SQL queries (one for the tickets, one for their replies)
+         * The tests showed marginally faster performance for the JOIN
          * @param type $ticket_id The ticket's ID
          */
         public function getTicketAndReplies($ticket_id){

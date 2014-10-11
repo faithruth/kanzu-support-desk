@@ -61,7 +61,7 @@ class RepliesController extends Kanzu_Controller
 	*@param  $reply_id	Reply id
 	*@return Reply Object
 	*/
-	public function getReply(int $reply_id){
+	public function getReply($reply_id){
 		return $this->_model->getReply( $reply_id);
 	}
 	

@@ -257,14 +257,15 @@ class Kanzu_Support_Install {
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				`rep_tkt_id` INT NOT NULL ,
+				`rep_tkt_id` BIGINT(20) NOT NULL ,
 				`rep_type` INT ,
-				 rep_is_cc VARCHAR(200),
-				 rep_is_bcc VARCHAR(200),
-				 rep_date_created TIMESTAMP,
-				 rep_created_by INT,
-				 rep_date_modified DATETIME,
-				 rep_message TEXT NOT NULL
+				`rep_is_cc` BOOLEAN DEFAULT FALSE,
+				`rep_is_bcc` BOOLEAN DEFAULT FALSE,
+				`rep_date_created` TIMESTAMP,
+				`rep_created_by` INT,
+				`rep_date_modified` DATETIME,
+				`rep_message` TEXT NOT NULL,
+                                 INDEX (`rep_tkt_id`)
 				);				
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` ( /*We store only what's not in the WordPress users table*/
 				cust_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -282,18 +283,20 @@ class Kanzu_Support_Install {
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignment` (
 				assign_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				assign_tkt_id INT,
+				assign_tkt_id BIGINT(20),
 				assign_assigned_to INT,
 				assign_date_assigned TIMESTAMP,
-				assign_assigned_by INT
+				assign_assigned_by INT,
+                                INDEX (`assign_tkt_id`)
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
 				att_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				att_name VARCHAR(100),
 				att_filename VARCHAR(255),
-				att_tkt_id INT,
+				att_tkt_id BIGINT(20),
 				att_date_created DATETIME,
-				att_reply_id INT
+				att_reply_id INT,
+                                INDEX (`att_tkt_id`)
 				);
 				
 				/*CREATE TABLE `{$wpdb->prefix}kanzusupport_channeltypes` (

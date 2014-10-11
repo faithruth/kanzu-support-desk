@@ -174,10 +174,8 @@ jQuery( document ).ready(function() {
                                 jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
 		function(response) {//@TODO Check for error 	
                     jQuery("#ticket-replies").append("<div class='ticket-reply'>"+JSON.parse(response)+"</div>");	
-                    //Empy the reply field
-                    jQuery("textarea[name=ksd-ticket-reply]").val("");
-                    //Toggle the color of the reply background
-                    jQuery("#ticket-replies div#ticket-reply").filter(':even').addClass("alternate");
+                    //Clear the reply field
+                    jQuery("textarea[name=ksd_ticket_reply]").val(" ");                    
             });
         });
         
@@ -216,8 +214,7 @@ jQuery( document ).ready(function() {
         });
         
         /**AJAX: In single ticket view mode, get the current ticket's description, sender and subject*/
-        if(jQuery("#ksd-single-ticket .description").hasClass("pending")){
-            console.log(jQuery.urlParam('ticket'));  
+        if(jQuery("#ksd-single-ticket .description").hasClass("pending")){             
             jQuery.post(    ksd_admin.ajax_url, 
                             { 	action : 'ksd_get_single_ticket',
 				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
@@ -227,13 +224,25 @@ jQuery( document ).ready(function() {
                             the_ticket = JSON.parse(response);
                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_title);
                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_description);
-                            //Pick the replies                            
-                            jQuery.each( the_ticket, function( key, value ) {
-                                jQuery("#ticket-replies").append("<div class='ticket-reply'>"+value.rep_message+"</div>");
-                            });
-                            
+                            jQuery("#ticket-replies").html("Any minute now...") ; //@TODO Add this to Localization                         
                             //Make the 'Back' button visible
                             jQuery(".top-nav li.back").removeClass("hidden");
+                            
+                            //Now get the responses. For cleaner code and to remove reptition in the returned results, we use multiple
+                            //queries instead of a JOIN. The impact on speed is negligible
+                            jQuery.post(    ksd_admin.ajax_url, 
+                            { 	action : 'ksd_get_ticket_replies',
+				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
+				tkt_id : jQuery.urlParam('ticket')//We get the ticket ID from the URL
+                            }, 
+                                function(the_replies) {       
+                                    jQuery("#ticket-replies").html("") ; //Clear the replies div
+                                    jQuery.each( JSON.parse(the_replies), function( key, value ) {
+                                    jQuery("#ticket-replies").append("<div class='ticket-reply'>"+value.rep_message+"</div>");                                    
+                                    });
+                                    //Toggle the color of the reply background
+                                    jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
+                                });
                         });	
         }
 	

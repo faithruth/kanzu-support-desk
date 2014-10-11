@@ -50,7 +50,9 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
                 add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
                 add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
-                add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));             
+                add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));   
+                add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies' ));   
+                
                 
 
 		
@@ -258,11 +260,25 @@ class Kanzu_Support_Admin {
 			die ( 'Busted!');
             $this->do_admin_includes();	
             $tickets = new TicketsController();	
-            $ticket = $tickets->getTicketAndReplies($_POST['tkt_id']);
+            $ticket = $tickets->getTicket($_POST['tkt_id']);
             $this->format_ticket_for_viewing($ticket);
             echo json_encode($ticket);
             die();
             
+        }
+        
+        /**
+         * Retrieve a ticket's replies
+         */
+        public function get_ticket_replies(){
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+            $this->do_admin_includes();	
+            $replies = new RepliesController();
+            $query = " rep_tkt_id = ".$_POST['tkt_id'];
+            $response = $replies->getReplies($query);
+            echo json_encode($response);
+            die();
         }
 	
 	/**

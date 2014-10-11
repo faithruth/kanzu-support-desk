@@ -27,8 +27,8 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 			
 		$this->_formats = array(
 		'rep_id' 			 	=> '%d', 
-		'rep_tkt_id'	 		=> '%s',
-		'rep_type'	 			=> '%s' , 
+		'rep_tkt_id'	 		=> '%d',
+		'rep_type'	 			=> '%d' , 
 		'rep_is_cc' 			=> '%s',
 		'rep_is_bcc' 	 		=> '%s',
 		'rep_date_created' 		=> '%s',
@@ -38,7 +38,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	}
 	
 	/*
-	*Get user object
+	*Get Replies object
 	*
 	*@param userid
 	*/
@@ -47,12 +47,12 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	}
 	
 	/*
-	*Get all from users (kanzu-users) from wp users table
+	*Get all from the replies table
 	*
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
 	public  function getAll( $filter = "" ){
-		return parent::getRow($filter = "");
+		return parent::getAll($filter);
 	}
  
 	/*
@@ -64,7 +64,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	
 	/*
 	*
-	*@param Channel object.
+	*@param Replies object.
 	*/
 	public function deleteReply(  &$obj ){
 		return parent::deleteRow( $obj );
@@ -73,7 +73,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 
 	/*
 	* Save/update 
-	*@param Channel object
+	*@param Replies object
 	* *new_* for new value
 	*/
 	public function updateReply( &$obj ){
