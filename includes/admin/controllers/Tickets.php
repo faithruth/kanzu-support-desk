@@ -65,6 +65,14 @@ class TicketsController extends Kanzu_Controller {
 	public function getTicket($ticket_id){
 		return $this->_model->getTicket( $ticket_id);
 	}
+        /**
+         * Get a ticket and its replies
+         * @param type $ticket_id The ticket's ID
+         */
+        public function getTicketAndReplies($ticket_id){
+            $query = "SELECT * FROM `wp_kanzusupport_tickets` AS TICKETS INNER JOIN `wp_kanzusupport_replies` AS REPLIES  on TICKETS.tkt_id = REPLIES.rep_tkt_id  WHERE TICKETS.tkt_id =".$ticket_id;
+            return $this->_model->execQuery( $query);
+        }
 	
 	/*
 	*Returns all tickets that through query
@@ -83,5 +91,13 @@ class TicketsController extends Kanzu_Controller {
 		$where = array ('tkt_id'=>$ticket_id);
 		return $this->_model->deleteTicket( $where);
 	}
+        
+        /**
+         * Run a custom query
+         * @param type $query The query to run
+         */
+        public function execQuery($query){
+            return $this->_model->execQuery( $query);
+        }
 }
 ?>

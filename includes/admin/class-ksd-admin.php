@@ -229,6 +229,7 @@ class Kanzu_Support_Admin {
 			default:
 				$filter=" tkt_status = 'OPEN'";
 		endswitch;
+                $filter.= " ORDER BY tkt_time_logged DESC ";
                 $raw_tickets = $this->filter_ticket_view($filter);
                 $response = ( !empty($raw_tickets) ? $raw_tickets : __("Nothing to see here. Great work!","kanzu-support-desk") );
 		echo json_encode($response);
@@ -257,7 +258,7 @@ class Kanzu_Support_Admin {
 			die ( 'Busted!');
             $this->do_admin_includes();	
             $tickets = new TicketsController();	
-            $ticket = $tickets->getTicket($_POST['tkt_id']);
+            $ticket = $tickets->getTicketAndReplies($_POST['tkt_id']);
             $this->format_ticket_for_viewing($ticket);
             echo json_encode($ticket);
             die();

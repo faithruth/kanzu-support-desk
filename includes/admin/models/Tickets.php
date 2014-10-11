@@ -86,6 +86,11 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	public function updateTicket( &$ticket ){
 		return parent::updateRow( $ticket );
 	}
+        
+        
+        public function execQuery( $query ){
+		return parent::execQuery( $query );
+	}
  }
  
  

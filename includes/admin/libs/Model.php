@@ -18,7 +18,7 @@
 	
 	public function execQuery( $query ){
 		global $wpdb;
-		return $wpdb->get_results( query, OBJECT );
+		return $wpdb->get_results( $query, OBJECT );
 	}
 	
 	/*

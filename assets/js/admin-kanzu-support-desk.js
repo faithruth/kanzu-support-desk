@@ -163,19 +163,22 @@ jQuery( document ).ready(function() {
 	});
         
         /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
-       //@TODO Fix bug that returns stale data with each submission      
+       //@TODO Fix wp_editor bug that returns stale data with each submission      
         jQuery('form#edit-ticket').submit( function(e){
             e.preventDefault();
            // console.log(jQuery('textarea[name=ksd-ticket-reply]').val());
             
            // console.log(jQuery("textarea[name=ksd-ticket-reply]").length);
-           // console.log(jQuery('input[name=action]').val());
-            console.log(jQuery(this).serialize());
-           /* jQuery.post(	ksd_admin.ajax_url, 
-                                jQuery(this).serialize(), 
+           // console.log(jQuery('input[name=action]').val());             
+            jQuery.post(	ksd_admin.ajax_url, 
+                                jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
 		function(response) {//@TODO Check for error 	
-                    jQuery("#ticket-replies").append(JSON.parse(response));				                            
-            });*/
+                    jQuery("#ticket-replies").append("<div class='ticket-reply'>"+JSON.parse(response)+"</div>");	
+                    //Empy the reply field
+                    jQuery("textarea[name=ksd-ticket-reply]").val("");
+                    //Toggle the color of the reply background
+                    jQuery("#ticket-replies div#ticket-reply").filter(':even').addClass("alternate");
+            });
         });
         
          /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
@@ -224,6 +227,11 @@ jQuery( document ).ready(function() {
                             the_ticket = JSON.parse(response);
                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_title);
                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_description);
+                            //Pick the replies                            
+                            jQuery.each( the_ticket, function( key, value ) {
+                                jQuery("#ticket-replies").append("<div class='ticket-reply'>"+value.rep_message+"</div>");
+                            });
+                            
                             //Make the 'Back' button visible
                             jQuery(".top-nav li.back").removeClass("hidden");
                         });	
