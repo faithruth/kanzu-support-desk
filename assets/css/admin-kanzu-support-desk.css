@@ -1,11 +1,11 @@
 #admin-kanzu-support-desk{
 	position: relative;
 }
-h2.admin-ksd-title{
-	text-transform: capitalize;
+.admin-ksd-title{
+    position: relative;
 }
-h2.admin-ksd-tab-title{
-	display: none;
+.admin-ksd-title h2{
+	text-transform: capitalize;
 }
 #admin-kanzu-support-desk div.admin-ksd-container{
 	border-bottom: medium none;
@@ -58,6 +58,17 @@ h2.admin-ksd-tab-title{
 }
 #admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
 	padding: 0.5em 0;
+}
+ul.top-nav{
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 5%;
+    top: 0;
+}
+ul.top-nav li{
+    display: inline;
+    padding: 0 10px;    
 }
 #ticket-tabs .admin-ksd-tickets-content{
 	width: 75%;
@@ -134,6 +145,9 @@ a.new-ticket:hover {
     color: #fff;
     padding: 5px 40px;
     float: right;
+}
+#ksd-single-ticket{
+    padding-left: 15px;
 }
 #ksd-single-ticket .ksd-submit{
     float: right;

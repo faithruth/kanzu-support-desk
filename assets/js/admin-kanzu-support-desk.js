@@ -12,14 +12,16 @@ jQuery( document ).ready(function() {
 		case "ksd-tickets":
 			activetab=1;
 		break;
-		case "ksd-settings":
+                case "ksd-new-ticket":
 			activetab=2;
-		break;
-		case "ksd-addons":
+		case "ksd-settings":
 			activetab=3;
 		break;
-		case "ksd-help":
+		case "ksd-addons":
 			activetab=4;
+		break;
+		case "ksd-help":
+			activetab=5;
 		break;
 	}
 	jQuery( "#tabs" ).tabs( "option", "active", activetab );	
@@ -222,6 +224,8 @@ jQuery( document ).ready(function() {
                             the_ticket = JSON.parse(response);
                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_title);
                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_description);
+                            //Make the 'Back' button visible
+                            jQuery(".top-nav li.back").removeClass("hidden");
                         });	
         }
 	

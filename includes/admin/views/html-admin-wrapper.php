@@ -1,7 +1,12 @@
 <div id="admin-kanzu-support-desk">
-	<h2 class="admin-ksd-title"><?php _e('Dashboard','kanzu-support-desk'); ?></h2>
-	<a href="#TB_inline?width=600&height=550&inlineId=ksd-new-ticket" class="new-ticket thickbox"><?php _e('New Ticket','kanzu-support-desk'); ?></a>
-	<?php add_thickbox(); //This is required for the new ticket dialog to pop-up?>	
+    <div class="admin-ksd-title">
+        <h2><?php _e('Dashboard','kanzu-support-desk'); ?></h2>
+        <!--@TODO Implement topnav as a filter and add content to it from the various tabs using filters-->
+	<ul class="top-nav">
+            <li class="back hidden"><a href="<?php echo admin_url('admin.php?page=ksd-tickets'); ?>"><?php _e('Back','kanzu-support-desk'); ?></a></li>
+            <li><a href="<?php echo admin_url('admin.php?page=ksd-new-ticket'); ?>"><?php _e('New Ticket','kanzu-support-desk'); ?></a></li>
+        </ul>
+    </div>
 	<div id="tabs" class="admin-ksd-container">
 		<ul class="main-nav">
 			<li><a href="#dashboard"><img src="<?php echo plugins_url( '/assets/images/icons/dashboard.png', KSD_PLUGIN_FILE ) ?>" /></a></li>

@@ -164,7 +164,7 @@ class Kanzu_Support_Admin {
 		$ticket_types = array();
 		$ticket_types['ksd-dashboard']=__('Dashboard','kanzu-support-desk');
 		$ticket_types['ksd-tickets']=__('Tickets','kanzu-support-desk');
-        $ticket_types['ksd-new-ticket']=__('New Ticket','kanzu-support-desk');
+                $ticket_types['ksd-new-ticket']=__('New Ticket','kanzu-support-desk');
 		$ticket_types['ksd-settings']=__('Settings','kanzu-support-desk');
 		$ticket_types['ksd-addons']=__('Add-ons','kanzu-support-desk');
 		$ticket_types['ksd-help']=__('Help','kanzu-support-desk');
@@ -184,7 +184,7 @@ class Kanzu_Support_Admin {
 		$this->do_admin_includes();
                 if( isset($_POST['ksd-submit']) ) {//If it's a form submission
                     //@TODO Switch this to AJAX        
-                    $this->log_new_ticket("STAFF",$_POST['subject'],$_POST['description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign_to'],"OPEN");
+                    $this->log_new_ticket("STAFF",$_POST['subject'],$_POST['ksd-ticket-description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign_to'],"OPEN");
                     wp_redirect(admin_url('admin.php?page=ksd-tickets'));
                     exit;
                 }
