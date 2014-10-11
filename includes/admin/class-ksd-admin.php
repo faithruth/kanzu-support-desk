@@ -188,7 +188,7 @@ class Kanzu_Support_Admin {
 		$this->do_admin_includes();
                 if( isset($_POST['ksd-submit']) ) {//If it's a form submission
                    // @TODO Switch this to AJAX        
-                   $this->log_new_ticket("STAFF",$_POST['tkt_subject'],$_POST['ksd-ticket-description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign-to'],$_POST['tkt_severity'],"OPEN");
+                   $this->log_new_ticket("STAFF",$_POST['tkt_subject'],$_POST['ksd-ticket-description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign-to'],$_POST['tkt_severity'],$_POST['tkt_logged_by'],"OPEN");
                    wp_redirect(admin_url('admin.php?page=ksd-tickets'));
                     exit;
                 }
@@ -353,18 +353,30 @@ class Kanzu_Support_Admin {
          * @param type $status
          * @return type
          */
-        public function log_new_ticket($channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$status){
+        public function log_new_ticket($channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$tkt_logged_by,$status){
             	$tO = new stdClass(); 
-                $tO->tkt_subject    	     = $title;
-                $tO->tkt_initial_message 	 = $description;
-                $tO->tkt_description 	 = $description;
-                $tO->tkt_channel     	 = $channel;
-                $tO->tkt_severity     	 = $severity;
-                $tO->tkt_status 	 	 = $status;
+                $tO->tkt_subject    	    = $title;
+                $tO->tkt_initial_message    = $description;
+                $tO->tkt_description        = $description;
+                $tO->tkt_channel            = $channel;
+                $tO->tkt_severity           = $severity;
+                $tO->tkt_status             = $status;
+                $tO->tkt_logged_by          = $tkt_logged_by;
 
                 $TC = new TicketsController();
-               $response = $TC->logTicket( $tO );
-               return ( $response > 0 ) ? True : False;
+               $new_ticket_id = $TC->logTicket( $tO );
+               $this->do_ticket_assignment($new_ticket_id,$assign_to,$tkt_logged_by);
+               return ( $new_ticket_id > 0 ) ? True : False;
+        }
+        
+        /**
+         * Assign the ticket 
+         * @TODO Add error check
+         */
+        private function do_ticket_assignment($ticket_id,$assign_to,$assign_by){
+           $assignment = new AssignmentsController();
+           $assignment->assignTicket($ticket_id, $assign_to, $assign_by);                       
+            
         }
         
         /**

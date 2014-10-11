@@ -31,6 +31,7 @@
             ?>
             </select>
         </div> 
+        <input name="tkt_logged_by" type="hidden" value="<?php echo get_current_user_id(); ?>" />
         <input type="submit" value="Submit" name="ksd-submit" class="ksd-submit"/>
     </form>
 </div>

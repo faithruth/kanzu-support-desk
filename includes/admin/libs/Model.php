@@ -59,8 +59,8 @@
 			$data[$key] = $value;
 			array_push($format,$this->_formats[$key]);
 		}
-		return $wpdb->insert( $this->_tablename, $data, $format );
-		//return $wpdb->insert_id;
+		$wpdb->insert( $this->_tablename, $data, $format );
+		return $wpdb->insert_id;
 	}
 	
 	/*
