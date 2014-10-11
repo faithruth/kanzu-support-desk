@@ -1,8 +1,6 @@
 jQuery( document ).ready(function() {
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
-	
-     //tinymce.execCommand('mceAddControl',true,'ticket_description');
         
 	/**For the tickets tabs**/
 	jQuery( "#ticket-tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
@@ -72,6 +70,17 @@ jQuery( document ).ready(function() {
 			});
 		}
 	};
+        
+        /*Get URL parameters*/
+        jQuery.urlParam = function(name){
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results==null){
+               return null;
+            }
+            else{
+               return results[1] || 0;
+            }
+        }
 	
 	/**Pre-populate the first tab in the tickets view*/
 	if(jQuery("#tickets-tab-1").hasClass("pending")){
@@ -200,6 +209,21 @@ jQuery( document ).ready(function() {
         jQuery('ul.edit-ticket-options li').removeClass('selected');//make all tabs inactive        
         jQuery(this).addClass('selected');    //then make the clicked tab active
         });
+        
+        /**AJAX: In single ticket view mode, get the current ticket's description, sender and subject*/
+        if(jQuery("#ksd-single-ticket .description").hasClass("pending")){
+            console.log(jQuery.urlParam('ticket'));  
+            jQuery.post(    ksd_admin.ajax_url, 
+                            { 	action : 'ksd_get_single_ticket',
+				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
+				tkt_id : jQuery.urlParam('ticket')//We get the ticket ID from the URL
+                            }, 
+			function(response) {
+                            the_ticket = JSON.parse(response);
+                            jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_title);
+                            jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_description);
+                        });	
+        }
 	
 });
 

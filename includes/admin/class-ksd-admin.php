@@ -50,6 +50,8 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
                 add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
                 add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
+                add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));             
+                
 
 		
 		/*
@@ -240,17 +242,27 @@ class Kanzu_Support_Admin {
 		$tickets = new TicketsController();		
 		$tickets_raw = $tickets->getTickets($filter);
                 //Process the tickets for viewing on the view. Replace the username and the time with cleaner versions
-                foreach ( $tickets_raw as $ticket_key => $ticket_value) {
-                    //Replace the username
-                    $users = new UsersController();
-                    $ticket_value->tkt_logged_by = str_replace($ticket_value->tkt_logged_by,$users->getUser($ticket_value->tkt_logged_by)->user_nicename,$ticket_value->tkt_logged_by);
-                    //Replace the date 
-                    $ticket_value->tkt_time_logged = date('M d',strtotime($ticket_value->tkt_time_logged));
+                foreach ( $tickets_raw as $ksd_ticket) {
+                    $this->format_ticket_for_viewing($ksd_ticket);
                 }
                 
                 return $tickets_raw;
 	}
-	
+        
+	/**
+         * Retrieve a single ticket and all its replies
+         */
+        public function get_single_ticket(){
+             if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+            $this->do_admin_includes();	
+            $tickets = new TicketsController();	
+            $ticket = $tickets->getTicket($_POST['tkt_id']);
+            $this->format_ticket_for_viewing($ticket);
+            echo json_encode($ticket);
+            die();
+            
+        }
 	
 	/**
 	 * Delete a ticket
@@ -333,6 +345,24 @@ class Kanzu_Support_Admin {
                $response = $TC->logTicket( $tO );
                return ( $response > 0 ) ? True : False;
         }
+        
+        /**
+         * Replace a ticket's logged_by field with the nicename of the user who logged it
+         * Replace the tkt_time_logged with a date better-suited for viewing
+         * NB: Because we use {@link UsersController}, call this function after {@link do_admin_includes} has been called.   
+         * @param type $ticket The ticket to modify
+         */
+        private function format_ticket_for_viewing($ticket){
+            //Replace the username
+            $users = new UsersController();
+            $ticket->tkt_logged_by = str_replace($ticket->tkt_logged_by,$users->getUser($ticket->tkt_logged_by)->user_nicename,$ticket->tkt_logged_by);
+            //Replace the date 
+            $ticket->tkt_time_logged = date('M d',strtotime($ticket->tkt_time_logged));
+            
+            return $ticket;
+        }
+        
+
         
                         
 	/**
