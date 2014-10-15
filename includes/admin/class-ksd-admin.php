@@ -48,11 +48,11 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
-                add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
-                add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
-                add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));   
-                add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies' ));   
-                
+        add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
+        add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
+        add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));   
+        add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies' ));   
+		add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' ));                   
                 
 
 		
@@ -394,6 +394,25 @@ class Kanzu_Support_Admin {
             
             return $ticket;
         }
+		
+		/**
+		 * Generate the ticket volumes displayed in the graph in the dashboard
+		 */
+		public function get_dashboard_ticket_volume(){
+			 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+				die ( 'Busted!');
+			$this->do_admin_includes();
+			$tickets = new TicketsController();		
+			$tickets_raw = $tickets->getDashboardTicketVolumes();	
+			$output_array = array();
+			$output_array[] = array ( "Ticket Volume","Date Logged");
+			foreach ( $tickets_raw as $ticket ) {
+				$output_array[] = array ($ticket->ticket_volume,$ticket->date_logged);			
+			}
+			
+			echo json_encode($output_array);
+			die();//Important
+		}
         
 
         

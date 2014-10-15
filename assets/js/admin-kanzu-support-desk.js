@@ -248,20 +248,24 @@ jQuery( document ).ready(function() {
 	
 });
 
-/**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
+/**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});
+@TODO Pick arrayToDataTable data from DB**/
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Month', 'New Tickets', 'Closed Tickets'],
-          ['Jan',  1000,      400],
-          ['Feb',  1170,      460],
-          ['Mar',  660,       1120],
-          ['Apr',  1030,      540]
-        ]);
+      function drawChart() {		 
+		var jsonData;
+				jQuery.post(	ksd_admin.ajax_url, 
+						{ 	action : 'ksd_dashboard_ticket_volume',
+							ksd_admin_nonce : ksd_admin.ksd_admin_nonce
+						}, 
+				function(response) {	
+                    jsonData=response;					
+				});	
+	  
+        var data = google.visualization.arrayToDataTable(JSON.parse(jsonData), false);
 
         var options = {
-          title: 'Support Metrics'
+          title: 'Incoming Tickets'
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));

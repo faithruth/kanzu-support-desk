@@ -93,6 +93,14 @@ class TicketsController extends Kanzu_Controller {
 		$where = array ('tkt_id'=>$ticket_id);
 		return $this->_model->deleteTicket( $where);
 	}
+	
+	/**
+	 * Get the ticket volumes for display on the dashboard
+	 */
+	public function getDashboardTicketVolumes(){
+	 $query = 'select count(tkt_id) as "ticket_volume",date(tkt_time_logged) as "date_logged" from wp_kanzusupport_tickets group by date(tkt_time_logged);';
+		return $this->_model->execQuery( $query);
+	}
         
         /**
          * Run a custom query
