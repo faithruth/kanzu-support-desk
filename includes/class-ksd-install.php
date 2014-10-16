@@ -247,9 +247,9 @@ class Kanzu_Support_Install {
 				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
 				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
 				`tkt_resolution` VARCHAR(64) NOT NULL, 
-				`tkt_time_logged` TIMESTAMP, 
+				`tkt_time_logged` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 				`tkt_logged_by` INT NOT NULL, 
-				`tkt_time_updated` DATETIME, 
+				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
 				`tkt_updated_by` INT NOT NULL,                                 
 				`tkt_private_notes` TEXT,       
 				`tkt_tags` VARCHAR(255),   /*Uses WordPress tags*/
@@ -261,9 +261,9 @@ class Kanzu_Support_Install {
 				`rep_type` INT ,
 				`rep_is_cc` BOOLEAN DEFAULT FALSE,
 				`rep_is_bcc` BOOLEAN DEFAULT FALSE,
-				`rep_date_created` TIMESTAMP,
+				`rep_date_created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 				`rep_created_by` INT,
-				`rep_date_modified` DATETIME,
+				`rep_date_modified` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
 				`rep_message` TEXT NOT NULL,
                                  INDEX (`rep_tkt_id`)
 				);				
@@ -276,16 +276,16 @@ class Kanzu_Support_Install {
 				cust_phone_number VARCHAR(100),
 				cust_about TEXT,
 				cust_account_status ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
-				cust_creation_date TIMESTAMP, 
+				cust_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
 				cust_created_by INT, 
-				cust_lastmodification_date DATETIME,
+				cust_lastmodification_date DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
 				cust_modified_by INT
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignment` (
 				assign_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				assign_tkt_id BIGINT(20),
 				assign_assigned_to INT,
-				assign_date_assigned TIMESTAMP,
+				assign_date_assigned TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 				assign_assigned_by INT,
                                 INDEX (`assign_tkt_id`)
 				);
@@ -294,25 +294,10 @@ class Kanzu_Support_Install {
 				att_name VARCHAR(100),
 				att_filename VARCHAR(255),
 				att_tkt_id BIGINT(20),
-				att_date_created DATETIME,
+				att_date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
 				att_reply_id INT,
                                 INDEX (`att_tkt_id`)
 				);
-				
-				/*CREATE TABLE `{$wpdb->prefix}kanzusupport_channeltypes` (
-				chantype_id INT ,
-				chantype_name VARCHAR(200),
-				chantype_description TEXT,
-				chantype_date_created TIMESTAMP,
-				chantype_created_by int
-				);
-				
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_channels` (
-				chan_id INT ,
-				chan_chantype_id VARCHAR(200),
-				chan_handle VARCHAR(200),
-				chan_description TEXT
-				);*/
 			";
 
       dbDelta( $kanzusupport_tables );

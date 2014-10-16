@@ -48,10 +48,10 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
-        add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
-        add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
-        add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));   
-        add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies' ));   
+                add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
+                add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
+                add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));   
+                add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies' ));   
 		add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' ));                   
                 
 
@@ -405,10 +405,27 @@ class Kanzu_Support_Admin {
 			$tickets = new TicketsController();		
 			$tickets_raw = $tickets->getDashboardTicketVolumes();	
 			$output_array = array();
-			$output_array[] = array ( "Ticket Volume","Date Logged");
-			foreach ( $tickets_raw as $ticket ) {
-				$output_array[] = array ($ticket->ticket_volume,$ticket->date_logged);			
-			}
+			$output_array["cols"] = array (
+                            array(
+                                "label"=>"Ticket Volume",
+                                "type"=>"number"),
+                            array(
+                                "label"=>"Date",
+                                "type"=>"date")                            
+                        );
+                        $output_array["rows"] = array ();
+			//foreach ( $tickets_raw as $ticket ) {
+			//	$output_array[] = array ($ticket->ticket_volume,$ticket->date_logged);			
+			//}
+                        foreach($tickets_raw as $ticket) {
+                             $output_array["rows"] = array("c"=>array(array(
+                            "v"=>$ticket->ticket_volume,
+                            "f"=>null
+                            ),array(
+                            "v"=>$ticket->date_logged,
+                            "f"=>null
+                            )));
+                        }
 			
 			echo json_encode($output_array);
 			die();//Important
