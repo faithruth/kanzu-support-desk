@@ -247,7 +247,7 @@ class Kanzu_Support_Install {
 				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
 				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
 				`tkt_resolution` VARCHAR(64) NOT NULL, 
-				`tkt_time_logged` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+				`tkt_time_logged` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 				`tkt_logged_by` INT NOT NULL, 
 				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
 				`tkt_updated_by` INT NOT NULL,                                 
@@ -261,7 +261,7 @@ class Kanzu_Support_Install {
 				`rep_type` INT ,
 				`rep_is_cc` BOOLEAN DEFAULT FALSE,
 				`rep_is_bcc` BOOLEAN DEFAULT FALSE,
-				`rep_date_created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				`rep_date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				`rep_created_by` INT,
 				`rep_date_modified` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
 				`rep_message` TEXT NOT NULL,
@@ -276,7 +276,7 @@ class Kanzu_Support_Install {
 				cust_phone_number VARCHAR(100),
 				cust_about TEXT,
 				cust_account_status ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
-				cust_creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+				cust_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 				cust_created_by INT, 
 				cust_lastmodification_date DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
 				cust_modified_by INT
@@ -285,7 +285,7 @@ class Kanzu_Support_Install {
 				assign_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				assign_tkt_id BIGINT(20),
 				assign_assigned_to INT,
-				assign_date_assigned TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				assign_date_assigned TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				assign_assigned_by INT,
                                 INDEX (`assign_tkt_id`)
 				);
@@ -294,7 +294,7 @@ class Kanzu_Support_Install {
 				att_name VARCHAR(100),
 				att_filename VARCHAR(255),
 				att_tkt_id BIGINT(20),
-				att_date_created DATETIME DEFAULT CURRENT_TIMESTAMP,
+				att_date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				att_reply_id INT,
                                 INDEX (`att_tkt_id`)
 				);

@@ -253,16 +253,14 @@ jQuery( document ).ready(function() {
       google.load("visualization", "1", {packages:["corechart"]});
       google.setOnLoadCallback(drawChart);
       function drawChart() {		 
-		var jsonData;
+		//var jsonData;
 				jQuery.post(	ksd_admin.ajax_url, 
 						{ 	action : 'ksd_dashboard_ticket_volume',
 							ksd_admin_nonce : ksd_admin.ksd_admin_nonce
 						}, 
 				function(response) {	
-                    jsonData=response;					
-				});	
-	  
-        var data = google.visualization.arrayToDataTable(JSON.parse(jsonData), false);
+              		
+                            var data =  google.visualization.arrayToDataTable(JSON.parse(response));
 
         var options = {
           title: 'Incoming Tickets'
@@ -271,4 +269,7 @@ jQuery( document ).ready(function() {
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
 
         chart.draw(data, options);
+				});	
+	  
+
       }

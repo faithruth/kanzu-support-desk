@@ -405,29 +405,14 @@ class Kanzu_Support_Admin {
 			$tickets = new TicketsController();		
 			$tickets_raw = $tickets->getDashboardTicketVolumes();	
 			$output_array = array();
-			$output_array["cols"] = array (
-                            array(
-                                "label"=>"Ticket Volume",
-                                "type"=>"number"),
-                            array(
-                                "label"=>"Date",
-                                "type"=>"date")                            
-                        );
-                        $output_array["rows"] = array ();
-			//foreach ( $tickets_raw as $ticket ) {
-			//	$output_array[] = array ($ticket->ticket_volume,$ticket->date_logged);			
-			//}
-                        foreach($tickets_raw as $ticket) {
-                             $output_array["rows"] = array("c"=>array(array(
-                            "v"=>$ticket->ticket_volume,
-                            "f"=>null
-                            ),array(
-                            "v"=>$ticket->date_logged,
-                            "f"=>null
-                            )));
-                        }
+                        $output_array[] = array("Day","Ticket Volume");
+                        
+			foreach ( $tickets_raw as $ticket ) {
+				$output_array[] = array ($ticket->date_logged,$ticket->ticket_volume);			
+			}
+                        
 			
-			echo json_encode($output_array);
+			echo json_encode($output_array, JSON_NUMERIC_CHECK);
 			die();//Important
 		}
         
