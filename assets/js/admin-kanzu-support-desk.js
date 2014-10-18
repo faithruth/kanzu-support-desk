@@ -264,7 +264,34 @@ jQuery( document ).ready(function() {
                                 });
                         });	
         }
-	
+        
+        /**Validate New Tickets**/
+        //@TODO Add server side validation too
+        jQuery("form#new-ticket").validate();
+        
+        /**Toggle the form field values for new tickets on click**/
+        function toggle_form_field_input ( event ){
+                if(jQuery(this).val() === event.data.old_value){
+                    jQuery(this).val(event.data.new_value);                    
+            }      
+        };
+        //The fields
+        var new_form_fields = {
+            "tkt_subject" : "Subject",
+            "customer_name" : "Customer Name",
+            "customer_email" : "Customer Email"
+        };
+        //Attach events to the fields
+        jQuery.each( new_form_fields, function( field_name, form_value ) {
+            jQuery('input[name='+field_name+']').on('focus',{
+                                                        old_value: form_value,
+                                                        new_value: ""
+                                                     }, toggle_form_field_input);
+            jQuery('input[name='+field_name+']').on('blur',{
+                                                        old_value: "",
+                                                        new_value: form_value
+                                                     }, toggle_form_field_input);
+        });        	
 });
 
 /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});
