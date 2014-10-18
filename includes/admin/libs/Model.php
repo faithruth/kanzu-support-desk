@@ -8,6 +8,7 @@
  * @copyright 2014 Kanzu Code
  */
  
+//@TODO Add $wpdb->prepare to wrap the queries
  class Kanzu_Model{
 	protected $_tablename = "";
 	protected $_id = "";
@@ -32,6 +33,18 @@
 		
 		return ( count($results) > 0 ) ? $results[0]: null;
 	}
+        
+        /**
+         * Get a single variable from the database
+         * 
+         * @param String $variable The variable you'd like to retrieve. e.g. count(tkt_id),sum(tkt_id), etc
+         * @param String $where The WHERE clause
+         */
+        
+        public function get_var( $variable, $where="" ) {
+            global $wpdb;
+            return $wpdb->get_var( "SELECT ".$variable." FROM ". $this->_tablename." ".$where );
+        }
 	
 	/*
 	*Get all from rows from table.

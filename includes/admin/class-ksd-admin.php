@@ -52,7 +52,8 @@ class Kanzu_Support_Admin {
                 add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
                 add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));   
                 add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies' ));   
-		add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' ));                   
+		add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' )); 
+                add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ));                   
                 
 
 		
@@ -140,7 +141,8 @@ class Kanzu_Support_Admin {
 			$links
 		);
 
-	}
+	}        
+                        
 	
 	/**
 	 * Add menu items in the admin panel 
@@ -403,7 +405,7 @@ class Kanzu_Support_Admin {
 				die ( 'Busted!');
 			$this->do_admin_includes();
 			$tickets = new TicketsController();		
-			$tickets_raw = $tickets->getDashboardTicketVolumes();	
+			$tickets_raw = $tickets->get_dashboard_graph_statistics();	
 			$output_array = array();
                         $output_array[] = array("Day","Ticket Volume");
                         
@@ -415,8 +417,23 @@ class Kanzu_Support_Admin {
 			echo json_encode($output_array, JSON_NUMERIC_CHECK);
 			die();//Important
 		}
-        
+                //@TODO Optimize the way the average response time is calculated
+                public function get_dashboard_summary_stats(){
+                    if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+				die ( 'Busted!');
+                    $this->do_admin_includes();
+                    $tickets = new TicketsController();	
+                    $summary_stats = $tickets->get_dashboard_statistics_summary();
+                    //Compute the average
+                    $total_response_time = 0;
+                    foreach ( $summary_stats["response_times"] as $response_time ) {
+                        $total_response_time+=$response_time->time_difference;
+                    }
+                    $summary_stats["average_response_time"] = date('H:i:s', $total_response_time/count($summary_stats["response_times"]) ) ;
 
+                    echo json_encode ( $summary_stats , JSON_NUMERIC_CHECK);                    
+                    die();//Important
+                }
         
                         
 	/**

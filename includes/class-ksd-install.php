@@ -237,6 +237,7 @@ class Kanzu_Support_Install {
 			$wpdb->hide_errors();		            
              
 			require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
+                //@TODO Add foreign key constraint        
                 $kanzusupport_tables = "
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
