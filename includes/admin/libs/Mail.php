@@ -64,7 +64,7 @@ class Kanzu_Mail {
 	* get message
 	* @param mid message id
 	*/
-	public function getBody( $mid)
+	public function getMessage( $mid)
 	{
 		return $this->getmsg( $this->imap, $mid);
 	}

@@ -64,7 +64,7 @@ class Kanzu_Mail {
 	* get message
 	* @param mid message id
 	*/
-	public function getBody( $mid)
+	public function getMail( $mid)
 	{
 		return $this->getmsg( $this->imap, $mid);
 	}
@@ -99,7 +99,7 @@ class Kanzu_Mail {
 		    $this->getpart($mbox,$mid,$p,$partno0+1);
 	    }
 	
-	    return array('html'=>$htmlmsg, 'charset'=>$charset, 'text'=> $plainmsg, 'attachments'=>$attachments ];
+	    return array('html'=>$htmlmsg, 'charset'=>$charset, 'text'=> $plainmsg, 'attachments'=>$attachments );
 	}
 
 	private function getpart($mbox,$mid,$p,$partno) 
