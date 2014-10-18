@@ -65,16 +65,7 @@ class TicketsController extends Kanzu_Controller {
 	public function getTicket($ticket_id){
 		return $this->_model->getTicket( $ticket_id);
 	}
-        /**
-         * Get a ticket and its replies. We use a JOIN instead of 
-         * performing 2 SQL queries (one for the tickets, one for their replies)
-         * The tests showed marginally faster performance for the JOIN
-         * @param type $ticket_id The ticket's ID
-         */
-        public function getTicketAndReplies($ticket_id){
-            $query = "SELECT * FROM `wp_kanzusupport_tickets` AS TICKETS INNER JOIN `wp_kanzusupport_replies` AS REPLIES  on TICKETS.tkt_id = REPLIES.rep_tkt_id  WHERE TICKETS.tkt_id =".$ticket_id;
-            return $this->_model->execQuery( $query);
-        }
+        
 	
 	/*
 	*Returns all tickets that through query
@@ -97,11 +88,14 @@ class TicketsController extends Kanzu_Controller {
 	/**
 	 * Get the ticket volumes for display on the dashboard
 	 */
-	public function getDashboardTicketVolumes(){
-	 $query = 'select count(tkt_id) as "ticket_volume",date(tkt_time_logged) as "date_logged" from wp_kanzusupport_tickets group by date(tkt_time_logged);';
-		return $this->_model->execQuery( $query);
+	public function get_dashboard_graph_statistics(){	
+		return $this->_model->get_dashboard_graph_statistics();
 	}
         
+        
+        public function get_dashboard_statistics_summary(){
+            return $this->_model->get_dashboard_statistics_summary();
+        }
         /**
          * Run a custom query
          * @param type $query The query to run
@@ -109,5 +103,7 @@ class TicketsController extends Kanzu_Controller {
         public function execQuery($query){
             return $this->_model->execQuery( $query);
         }
+        
+
 }
 ?>

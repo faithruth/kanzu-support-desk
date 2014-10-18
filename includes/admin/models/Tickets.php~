@@ -25,7 +25,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 			
 		$this->_formats = array(
 		'tkt_id' 		 => '%d', 
-		'tkt_subject' 		 => '%s', 
+		'tkt_title' 		 => '%s', 
 		'tkt_initial_message'	 => '%s',
 		'tkt_description' 	 => '%s' , 
 		'tkt_channel' 		 => '%s',
@@ -91,6 +91,37 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
         public function execQuery( $query ){
 		return parent::execQuery( $query );
 	}
+        
+        public function get_dashboard_graph_statistics(){
+            $query = 'SELECT COUNT(tkt_id) AS "ticket_volume",DATE(tkt_time_logged) AS "date_logged" FROM '.$this->_tablename.' GROUP BY date_logged;';
+            return parent::execQuery( $query );
+        }
+        
+        /**
+         * Retrieve the summary statistics that show on the dashboard
+         */
+        //@TODO Optimize the retrieval of average response time
+        public function get_dashboard_statistics_summary(){
+            $summary_statistics = array();
+             $response_time_query='SELECT TIMESTAMPDIFF(
+                        SECOND , TICKETS.tkt_time_logged, REPLIES.rep_date_created ) AS time_difference
+                        FROM wp_kanzusupport_tickets AS TICKETS
+                        INNER JOIN `wp_kanzusupport_replies` AS REPLIES ON TICKETS.tkt_id = REPLIES.rep_tkt_id
+                        WHERE TICKETS.tkt_status = "OPEN"
+                        GROUP BY replies.rep_tkt_id';
+             $summary_statistics["response_times"] = parent::execQuery( $response_time_query );
+             
+             $open_tickets_query = 'SELECT COUNT(tkt_id) AS open_tickets FROM '.$this->_tablename;
+             $summary_statistics["open_tickets"] = parent::execQuery( $open_tickets_query );
+             
+             $unassigned_tickets_query = 'SELECT COUNT(T.tkt_id) AS unassigned_tickets
+                        FROM `wp_kanzusupport_tickets` AS T
+                        LEFT JOIN `wp_kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
+                        WHERE A.`assign_assigned_to` IS NULL';
+             $summary_statistics["unassigned_tickets"]  = parent::execQuery( $unassigned_tickets_query );
+              
+             return $summary_statistics;
+         }
  }
  
  

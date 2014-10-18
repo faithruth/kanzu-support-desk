@@ -7,24 +7,25 @@ jQuery( document ).ready(function() {
 	jQuery( "#ticket-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 
 	/*Switch the active tab depending on what page has been selected*/
-	activetab=0;
+	activeTab=0;
 	switch(ksd_admin.admin_tab){
 		case "ksd-tickets":
-			activetab=1;
+			activeTab=1;
 		break;
                 case "ksd-new-ticket":
-			activetab=2;
+			activeTab=2;
 		case "ksd-settings":
-			activetab=3;
+			activeTab=3;
 		break;
 		case "ksd-addons":
-			activetab=4;
+			activeTab=4;
 		break;
 		case "ksd-help":
-			activetab=5;
+			activeTab=5;
 		break;
 	}
-	jQuery( "#tabs" ).tabs( "option", "active", activetab );	
+	jQuery( "#tabs" ).tabs( "option", "active", activeTab );
+        
        /**Show update/error/Loading dialog while performing AJAX calls and on completion*/
 	var ksd_show_dialog = function(dialog_type,message){           
             message = message || "Loading...";//Set default message
@@ -165,11 +166,7 @@ jQuery( document ).ready(function() {
         /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
        //@TODO Fix wp_editor bug that returns stale data with each submission      
         jQuery('form#edit-ticket').submit( function(e){
-            e.preventDefault();
-           // console.log(jQuery('textarea[name=ksd-ticket-reply]').val());
-            
-           // console.log(jQuery("textarea[name=ksd-ticket-reply]").length);
-           // console.log(jQuery('input[name=action]').val());             
+            e.preventDefault();          
             jQuery.post(	ksd_admin.ajax_url, 
                                 jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
 		function(response) {//@TODO Check for error 	
@@ -200,8 +197,27 @@ jQuery( document ).ready(function() {
 				function(response) {	
                                 ksd_show_dialog("success",JSON.parse(response));
 				});		
-	});       
-	
+	});
+        
+	/**AJAX: Retrieve summary statistics for the dashboard**/
+         if(jQuery("ul.dashboard-statistics-summary").hasClass("pending")){  
+             		jQuery.post(	ksd_admin.ajax_url, 
+						{ 	action : 'ksd_get_dashboard_summary_stats',
+							ksd_admin_nonce : ksd_admin.ksd_admin_nonce					
+						}, 
+				function(response) {	
+                                   jQuery("ul.dashboard-statistics-summary").removeClass("pending");
+                                    var raw_response = JSON.parse(response);
+                                    var the_summary_stats = "";
+                                    the_summary_stats+= "<li>"+raw_response.open_tickets[0].open_tickets+" <span>Total Open Tickets</span></li>";
+                                    the_summary_stats+= "<li>"+raw_response.unassigned_tickets[0].unassigned_tickets+" <span>Unassigned Tickets</span></li>";
+                                    the_summary_stats+= "<li>"+raw_response.average_response_time+" <span>Avg. Response Time</span></li>";
+                                    jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
+				});	
+             
+             
+         }
+        
 	/**Change the title onclick of a side navigation tab*/
 	jQuery( "#tabs .main-nav li a" ).click(function() {
 		jQuery('h2.admin-ksd-title').html(jQuery(this).attr('href').replace("#",""));
@@ -245,31 +261,50 @@ jQuery( document ).ready(function() {
                                 });
                         });	
         }
-	
+        
+        /**Validate New Tickets**/
+        //@TODO Add server side validation too
+        jQuery("form#new-ticket").validate();
+        
+        /**Toggle the form field values for new tickets on click**/
+        function toggle_form_field_input ( event ){
+                if(jQuery(this).val() === event.data.old_value){
+                    jQuery(this).val(event.data.new_value);                    
+            }      
+        };
+        //The fields
+        var new_form_fields = {
+            "tkt_subject" : "Subject",
+            "customer_name" : "Customer Name",
+            "customer_email" : "Customer Email"
+        };
+        //Attach events to the fields @TODO Modify this to handle localization
+        jQuery.each( new_form_fields, function( field_name, form_value ) {
+            jQuery('input[name='+field_name+']').on('focus',{
+                                                        old_value: form_value,
+                                                        new_value: ""
+                                                     }, toggle_form_field_input);
+            jQuery('input[name='+field_name+']').on('blur',{
+                                                        old_value: "",
+                                                        new_value: form_value
+                                                     }, toggle_form_field_input);
+        });
 });
 
-/**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});
-@TODO Pick arrayToDataTable data from DB**/
+/**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
       google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawChart);
-      function drawChart() {		 
-		//var jsonData;
+      google.setOnLoadCallback(drawDashboardGraph);
+      function drawDashboardGraph() {	
 				jQuery.post(	ksd_admin.ajax_url, 
 						{ 	action : 'ksd_dashboard_ticket_volume',
 							ksd_admin_nonce : ksd_admin.ksd_admin_nonce
 						}, 
-				function(response) {	
-              		
+				function(response) {	              		
                             var data =  google.visualization.arrayToDataTable(JSON.parse(response));
-
         var options = {
           title: 'Incoming Tickets'
         };
-
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-
         chart.draw(data, options);
-				});	
-	  
-
-      }
+				});
+                            }

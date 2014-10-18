@@ -188,13 +188,13 @@ div#ticket-list-item:hover .ticket-actions {
     font-weight: bold;
 }
 /*The dashboard indicators*/
-ul.dashboard-statistics {
+ul.dashboard-statistics-summary {
   border: 1px solid #ccc;
   height: 70px;
   text-align: center;
   width: 100%;
 }
-ul.dashboard-statistics li {
+ul.dashboard-statistics-summary li {
   float: left;
   line-height: 70px;
   width: 25%;
