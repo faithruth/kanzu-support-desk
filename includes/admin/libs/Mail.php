@@ -32,14 +32,21 @@ class Kanzu_Mail {
 	*
 	* @return 	  TRUE/FALSE
 	*/
-	public function connect(  $protocol, $server, $user_id, $password, $port=null, $mailbox="INBOX" )
+	public function connect(  $protocol, $server, $user_id, $password, $port=null, $mailbox="INBOX", $validate_certificate="no" )
 	{
 		if(is_null($port))
 		{
 			$port= $this->defualt_ports[$protocol];
 		}
-		//TODO: Add self-signed certificate.
-		$this->imap = imap_open("{" . "$server:$port/$protocol"."}"."$mailbox", $user_id, $password);
+		//Cater for self-signed certificates
+                if( $validate_certificate == "yes" ) {
+                    $the_mailbox = "{" . "$server:$port/$protocol"."}"."$mailbox";
+                }
+                else {
+                    $the_mailbox = "{" . "$server:$port/$protocol"."/novalidate-cert}"."$mailbox";
+                }
+                    
+		$this->imap = imap_open($the_mailbox, $user_id, $password);
 		
 		if( $this->imap != FALSE)
 		{

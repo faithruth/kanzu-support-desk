@@ -16,15 +16,16 @@ error_reporting(-1);
 require(dirname(__FILE__) . '/admin/libs/Mail.php');
 
 
-$kanzuserver_url    = 'pop.gmail.com'; //get_option('kanzu_supportemail')
-$kanzueserver_login = 'ssegga@gmail.com'; //get_option('mailserver_login')
-$kanzuserver_pass   =  '';
+$kanzuserver_url    = 'mail.kanzucode.com'; //get_option('kanzu_supportemail')
+$kanzueserver_login = 'support@kanzucode.com'; //get_option('mailserver_login')
+$kanzuserver_pass   =  'b0GKn(Z7_LUi';
+$kanzu_validate_certificate = 'no';//get_option('kanzu_validateSSL')
 
 $MBox = new Kanzu_Mail();
 
 echo "1\n";
 
-if( !$MBox->connect('pop3/ssl', $kanzuserver_url, $kanzueserver_login, $kanzuserver_pass) ){
+if( !$MBox->connect('pop3', $kanzuserver_url, $kanzueserver_login, $kanzuserver_pass,$kanzu_validate_certificate) ){
 	echo "Can not connect to mailbox.";
 	exit;
 }
