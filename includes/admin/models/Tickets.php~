@@ -25,7 +25,7 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 			
 		$this->_formats = array(
 		'tkt_id' 		 => '%d', 
-		'tkt_title' 		 => '%s', 
+		'tkt_subject' 		 => '%s', 
 		'tkt_initial_message'	 => '%s',
 		'tkt_description' 	 => '%s' , 
 		'tkt_channel' 		 => '%s',

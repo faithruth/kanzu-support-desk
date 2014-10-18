@@ -81,12 +81,13 @@ class Kanzu_Mail {
 	private function getmsg($mbox,$mid) {
 	    // input $mbox = IMAP stream, $mid = message id
 	    // output all the following:
-	    global $charset,$htmlmsg,$plainmsg,$attachments;
+	    global $charset,$htmlmsg,$plainmsg,$attachments, $headers;
 	    $htmlmsg = $plainmsg = $charset = '';
 	    $attachments = array();
 
 	    // HEADER
-	    $h = imap_header($mbox,$mid);
+	    $headers = imap_header($mbox,$mid);
+
 	    // add code here to get date, from, to, cc, subject...
 	    //echo $h;
 
@@ -99,7 +100,7 @@ class Kanzu_Mail {
 		    $this->getpart($mbox,$mid,$p,$partno0+1);
 	    }
 	
-	    return array('html'=>$htmlmsg, 'charset'=>$charset, 'text'=> $plainmsg, 'attachments'=>$attachments );
+	    return array('html'=>$htmlmsg, 'charset'=>$charset, 'text'=> $plainmsg, 'attachments'=>$attachments, 'headers'=>$headers );
 	}
 
 	private function getpart($mbox,$mid,$p,$partno) 
