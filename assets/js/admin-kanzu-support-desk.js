@@ -7,13 +7,14 @@ jQuery( document ).ready(function() {
 	jQuery( "#ticket-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
 
 	/*Switch the active tab depending on what page has been selected*/
-	activeTab=0;
+	activeTab=0;        
 	switch(ksd_admin.admin_tab){
 		case "ksd-tickets":
 			activeTab=1;
 		break;
                 case "ksd-new-ticket":
 			activeTab=2;
+                break;        
 		case "ksd-settings":
 			activeTab=3;
 		break;
@@ -175,6 +176,17 @@ jQuery( document ).ready(function() {
             });
         });
         
+        /**AJAX: Update settings @TODO Handle errors**/
+        jQuery('form#update-settings').submit( function(e){
+            e.preventDefault();   
+            ksd_show_dialog("loading");  
+            jQuery.post(	ksd_admin.ajax_url, 
+                                jQuery(this).serialize(), //The action and nonce are hidden fields in the form
+		function(response) {//@TODO Check for errors 	
+                    ksd_show_dialog("success",JSON.parse(response));                  
+            });
+        });
+        
          /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
 	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
 		event.preventDefault();//Important otherwise the page skips around
@@ -288,6 +300,8 @@ jQuery( document ).ready(function() {
                                                         new_value: form_value
                                                      }, toggle_form_field_input);
         });
+        //Add Tooltips for the settings panel
+         jQuery( ".help_tip" ).tooltip();
 });
 
 /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/

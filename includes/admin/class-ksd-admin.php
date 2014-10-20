@@ -53,7 +53,8 @@ class Kanzu_Support_Admin {
                 add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));   
                 add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies' ));   
 		add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' )); 
-                add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ));                   
+                add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ));  
+                add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' )); 
                 
 
 		
@@ -113,8 +114,8 @@ class Kanzu_Support_Admin {
                 //wp_enqueue_script( KSD_SLUG . '-admin-charts', '//google.com/jsapi', array(), KSD_VERSION ); 
                 wp_enqueue_script( KSD_SLUG . '-admin-charts', plugins_url( '../../assets/js/jsapi.js', __FILE__ ), array(), KSD_VERSION ); 
                 
-                wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog' ), KSD_VERSION ); 
-		$ksd_admin_tab = (isset($_GET['page']) ? $_GET['page'] : "");	 //This determines which tab to show as active
+                wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION ); 
+		$ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );	 //This determines which tab to show as active
                 $agents_list = "<ul class='assign_to hidden'>";
                 foreach (  get_users() as $agent ) {
                     $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
@@ -436,6 +437,31 @@ class Kanzu_Support_Admin {
                     echo json_encode ( $summary_stats , JSON_NUMERIC_CHECK);                    
                     die();//Important
                 }
+         
+         /**
+          * Set a particular option
+          * @param String $option_name Options name
+          * @param String $new_value The new option value
+          */
+         public function update_option ( $option_name, $new_value ){
+             
+         }  
+         
+         /**
+          * Update all settings
+          */
+         public function update_settings(){
+            if ( ! wp_verify_nonce( $_POST['update-settings-nonce'], 'ksd-update-settings' ) )
+                die ( 'Busted!');
+            $updated_settings = array();
+            //Iterate through the new settings and save them. 
+            foreach ( Kanzu_Support_Install::get_default_options() as $option_name => $default_value ) {
+                $updated_settings[] = $_POST[$option_name];
+            }
+            $status = update_option( Kanzu_Support_Install::$ksd_options_name, $updated_settings );
+            echo json_encode ( ( $status ? __("Settings Updated") : __("Update failed. Please retry") ) );
+            die();
+         }
         
                         
 	/**

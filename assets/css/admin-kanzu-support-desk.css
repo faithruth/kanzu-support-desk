@@ -268,6 +268,45 @@ ul.edit-ticket-options li.selected{
     border: 1px solid #2ea2cc;
     color: #fff;
 }
+/*The settings panel*/
+#update-settings label {
+  cursor: pointer;
+  float: left;
+  font-weight: bold;
+  width: 200px;
+}
+#update-settings input {
+  padding: 10px;
+}
+#update-settings div.setting {
+  margin: 10px 0;
+}
+#update-settings .ksd-submit {
+  bottom: 120px;
+  position: fixed;
+  right: 120px;
+  padding: 0 12px 2px;
+}
+.ui-tooltip {
+	padding: 8px !important;
+	position: absolute;
+	z-index: 9999;
+	max-width: 300px;
+        font-size:11px !important;
+        color:#fff !important;
+        background:#464646 !important; 
+        -webkit-border-radius:3px;
+        -moz-border-radius:3px;
+        border-radius:3px;
+        -webkit-box-shadow:1px 1px 3px rgba(0,0,0,.1);
+        -moz-box-shadow:1px 1px 3px rgba(0,0,0,.1);
+        box-shadow:1px 1px 3px rgba(0,0,0,.1);
+        text-align:center;
+} 
+ 
+.help_tip{
+    cursor: help;
+}
 
 /*Style our navigation*/
 .ui-tabs-vertical { width: 55em; }
@@ -1099,17 +1138,7 @@ button.ui-button::-moz-focus-inner {
 	padding: 1em 1.4em;
 	background: none;
 }
-.ui-tooltip {
-	padding: 8px;
-	position: absolute;
-	z-index: 9999;
-	max-width: 300px;
-	-webkit-box-shadow: 0 0 5px #aaa;
-	box-shadow: 0 0 5px #aaa;
-}
-body .ui-tooltip {
-	border-width: 2px;
-}
+ 
 
 /* Component containers
 ----------------------------------*/

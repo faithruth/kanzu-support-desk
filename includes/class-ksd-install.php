@@ -25,6 +25,12 @@ class Kanzu_Support_Install {
 	 * @var      object
 	 */
 	protected static $instance = null;
+        
+        /**
+         * The options name in the WP Db. We store all
+         * options using a single options key
+         */
+        public static $ksd_options_name = "kanzu_support_desk";
 
 	/**
 	 * Initialize the plugin by setting localization and loading public scripts
@@ -211,7 +217,8 @@ class Kanzu_Support_Install {
 	private static function single_activate() {
 	
 
-		self::ks_create_tables();
+		self::ksd_create_tables();
+                self::set_default_options();
 		
 		//add_action( 'admin_init', array( $this, 'install_actions' ) );
 		//add_action( 'admin_init', array( $this, 'check_version' ), 5 );
@@ -232,14 +239,14 @@ class Kanzu_Support_Install {
 	/**
 	* Install Kanzu Support
 	*/
-   private static function ks_create_tables() {
+   private static function ksd_create_tables() {
             global $wpdb;        
-			$wpdb->hide_errors();		            
+		$wpdb->hide_errors();		            
              
-			require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
+                require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
                 //@TODO Add foreign key constraint        
                 $kanzusupport_tables = "
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
+				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				`tkt_subject` VARCHAR(512) NOT NULL, 
                                 `tkt_initial_message` TEXT NOT NULL, 
@@ -256,7 +263,7 @@ class Kanzu_Support_Install {
 				`tkt_tags` VARCHAR(255),   /*Uses WordPress tags*/
 				`tkt_customer_rating` INT(2) /*Uses NPS scoring system which rates from 0 to 10*/
 				);	
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
+				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 				`rep_tkt_id` BIGINT(20) NOT NULL ,
 				`rep_type` INT ,
@@ -268,7 +275,7 @@ class Kanzu_Support_Install {
 				`rep_message` TEXT NOT NULL,
                                  INDEX (`rep_tkt_id`)
 				);				
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` ( /*We store only what's not in the WordPress users table*/
+				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_customers` ( /*We store only what's not in the WordPress users table*/
 				cust_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				cust_user_id INT,
 				cust_firstname VARCHAR(100) ,
@@ -282,7 +289,7 @@ class Kanzu_Support_Install {
 				cust_lastmodification_date DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
 				cust_modified_by INT
 				);
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignment` (
+				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_assignment` (
 				assign_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				assign_tkt_id BIGINT(20),
 				assign_assigned_to INT,
@@ -290,7 +297,7 @@ class Kanzu_Support_Install {
 				assign_assigned_by INT,
                                 INDEX (`assign_tkt_id`)
 				);
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
+				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_attachments` (
 				att_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				att_name VARCHAR(100),
 				att_filename VARCHAR(255),
@@ -304,6 +311,30 @@ class Kanzu_Support_Install {
       dbDelta( $kanzusupport_tables );
   
  }
+ 
+             private static function set_default_options() {                    
+                
+                 add_option( self::$ksd_options_name, self::get_default_options() );
+                    
+            }
+            
+            /**
+             * Get default settings
+             */
+            public static function get_default_options(){
+                return  array (
+                        /** DB Version ********************************************************/
+                        'db_version'                        => KSD_VERSION,
+                     
+                        /** Mail Settings ****************************************************/
+                        'mail_server'                       => null,    
+                        'mail_account'                      => null,         
+                        'mail_password'                     => null,  
+                        'mail_protocol'                     => "imap",      
+                        'mail_useSSL'                       => true,         
+                        'mail_validate_certificate'         => "no"    
+                    );
+            }
  
  
 	
