@@ -331,7 +331,7 @@ class Kanzu_Support_Install {
                         'mail_account'                      => null,         
                         'mail_password'                     => null,  
                         'mail_protocol'                     => "imap",      
-                        'mail_useSSL'                       => true,         
+                        'mail_useSSL'                       => "no",         
                         'mail_validate_certificate'         => "no"    
                     );
             }

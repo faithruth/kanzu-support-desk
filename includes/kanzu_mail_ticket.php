@@ -31,11 +31,11 @@ $protocol			= ( $kanzu_useSSL ? $kanzu_mail_protocol.'/ssl' : $kanzu_mail_protoc
 
 $MBox = new Kanzu_Mail();
 
-if( !$MBox->connect($protocol, $kanzuserver_url, $kanzueserver_login, $kanzu_serverport, 
-		    $kanzuserver_pass, $kanzu_serverport, $kanzu_mailbox,$kanzu_validate_certificate) 
+if( !$MBox->connect( $protocol, $kanzuserver_url, $kanzueserver_login, $kanzu_serverport, 
+		    $kanzuserver_pass, $kanzu_serverport, $kanzu_mailbox,$kanzu_validate_certificate ) ) 
 {
 
-	echo "Can not connect to mailbox.";
+	echo __( "Can not connect to mailbox.","kanzu-support-desk" );
 	exit;
 }
 

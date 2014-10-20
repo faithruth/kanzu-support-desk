@@ -11,7 +11,7 @@
 
 class Kanzu_Mail { 	
 
-	protected $defualt_ports = array('pop3'=>'110', 'imap'=>'143', 'pop3/ssl'=>'995', 'imap/ssl'=>'993');
+	protected $default_ports = array('pop3'=>'110', 'imap'=>'143', 'pop3/ssl'=>'995', 'imap/ssl'=>'993');
 	protected $imap=null;
 	private   $num_msgs = 0;
 
@@ -36,7 +36,7 @@ class Kanzu_Mail {
 	{
 		if(is_null($port))
 		{
-			$port= $this->defualt_ports[$protocol];
+			$port= $this->default_ports[$protocol];
 		}
 
 		$the_mailbox="";

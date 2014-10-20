@@ -198,6 +198,7 @@ class Kanzu_Support_Admin {
                     exit;
                 }
                else {//Output the dashboard
+                   $settings = $this->get_settings();//We'll need these for the settings page
                     include_once('views/html-admin-wrapper.php');
                 }
 	}
@@ -456,11 +457,18 @@ class Kanzu_Support_Admin {
             $updated_settings = array();
             //Iterate through the new settings and save them. 
             foreach ( Kanzu_Support_Install::get_default_options() as $option_name => $default_value ) {
-                $updated_settings[] = $_POST[$option_name];
+                $updated_settings[$option_name] = $_POST[$option_name];
             }
             $status = update_option( Kanzu_Support_Install::$ksd_options_name, $updated_settings );
             echo json_encode ( ( $status ? __("Settings Updated") : __("Update failed. Please retry") ) );
             die();
+         }
+         
+         /**
+          * Get all settings
+          */
+         public static function get_settings(){
+             return get_option(Kanzu_Support_Install::$ksd_options_name);
          }
         
                         
