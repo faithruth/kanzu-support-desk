@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * The tickets model
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
  * @license   GPL-2.0+
@@ -8,12 +8,7 @@
  * @copyright 2014 Kanzu Code
  */
  
-$plugindir = plugin_dir_path( __FILE__ );
-
-$DS=DIRECTORY_SEPARATOR;
-$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
-
+include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
 
  class TicketsModel extends Kanzu_Model{
 
@@ -122,7 +117,18 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
               
              return $summary_statistics;
          }
+         
+         /**
+          * Get all assigned tickets
+          * @param String $filter Filter the assigned tickets.
+          * @TODO Replace table names with variables
+          */
+         public function get_assigned_tickets( $filter = null ){
+             $filter = ( is_null( $filter ) ? " IS NULL " : $filter );
+             $assigned_tickets_query = 'SELECT * 
+                        FROM '.$this->_tablename.' AS T
+                        LEFT JOIN `wp_kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
+                        WHERE A.`assign_assigned_to` '.$filter;
+             return parent::execQuery( $assigned_tickets_query );
+         }
  }
- 
- 
- ?>

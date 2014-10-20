@@ -9,11 +9,7 @@
  * @file	  Controller.php
  */
 
-$plugindir = plugin_dir_path( __FILE__ );
-
-$DS=DIRECTORY_SEPARATOR;
-$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Controller.php");
+include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Controller.php' );
 
 class TicketsController extends Kanzu_Controller {	
 	public function __construct(){
@@ -70,10 +66,20 @@ class TicketsController extends Kanzu_Controller {
 	/*
 	*Returns all tickets that through query
 	*
+        *@param String $query The Query to run on the table(s)
+        *@param String $check_ticket_assignments Whether the ticket assignments should also be checked
 	*@return Array Array of objects
 	*/
-	public function getTickets( $query = null){
-		return $this->_model->getAll( $query);
+	public function getTickets( $query = null, $check_ticket_assignments ){
+                if ( "yes" == $check_ticket_assignments ) { 
+                    $query.= " ORDER BY T.tkt_time_logged DESC ";
+                    return $this->_model->get_assigned_tickets( $query );
+                }
+                else{
+                    $query.= " ORDER BY tkt_time_logged DESC ";
+                    return $this->_model->getAll( $query );
+                }
+		
 	}
 	
 	/**

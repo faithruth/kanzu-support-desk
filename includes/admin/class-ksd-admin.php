@@ -217,44 +217,44 @@ class Kanzu_Support_Admin {
 	public function filter_tickets() {		 
 	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
 			die ( 'Busted!');
-		$this->do_admin_includes();	
-		switch($_POST['view']):
-			case '#tickets-tab-2':
-				$filter="";
+		$this->do_admin_includes();
+                $check_ticket_assignments = "no";//This comes into play when we need to check the assignments table
+		switch( $_POST['view'] ):
+                        case '#tickets-tab-2': //'All Tickets'
+				$filter=" tkt_status != 'RESOLVED'";
 			break;
-			case '#tickets-tab-3':
-				$filter=" tkt_id > 30"; //Dummy filter
+			case '#tickets-tab-3'://'Unassigned Tickets'
+                                $filter = " IS NULL ";
+				$check_ticket_assignments = "yes"; 
 			break;
-			case '#tickets-tab-4':
-				$filter=" tkt_id > 60"; //Dummy filter
+			case '#tickets-tab-4'://'Recently Updated' i.e. Updated in the last hour. @TODO Make the '1 hour' configurable 
+				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL 1 HOUR)"; 
 			break;
-			case '#tickets-tab-5':
-				$filter=" tkt_id > 50"; //Dummy filter
+			case '#tickets-tab-5'://'Recently Resolved'.i.e Resolved in the last hour. Make this configurable
+				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL 1 HOUR) AND tkt_status = 'RESOLVED'"; 
 			break;
-			case '#tickets-tab-6':
-				$filter=" tkt_status != 'OPEN'";
+			case '#tickets-tab-6'://'Resolved'
+				$filter=" tkt_status = 'RESOLVED'";
 			break;
-			default:
-				$filter=" tkt_status = 'OPEN'";
+			default://'My Unresolved'
+                                $filter = " = ".get_current_user_id()." AND T.tkt_status != 'RESOLVED'";
+				$check_ticket_assignments = "yes"; 
 		endswitch;
-                $filter.= " ORDER BY tkt_time_logged DESC ";
-                $raw_tickets = $this->filter_ticket_view($filter);
-                $response = ( !empty($raw_tickets) ? $raw_tickets : __("Nothing to see here. Great work!","kanzu-support-desk") );
-		echo json_encode($response);
-		 
+                $raw_tickets = $this->filter_ticket_view( $filter, $check_ticket_assignments );
+                $response = ( empty( $raw_tickets ) ? __( "Nothing to see here. Great work!","kanzu-support-desk" ) : $raw_tickets );
+		echo json_encode($response);		 
 		die();// IMPORTANT: don't leave this out
 	}
 	/**
 	 * Filters tickets based on the view chosen
 	 */
-	public function filter_ticket_view($filter=""){
-		$tickets = new TicketsController();		
-		$tickets_raw = $tickets->getTickets($filter);
+	public function filter_ticket_view( $filter = "" , $check_ticket_assignments = "no" ) {
+		$tickets = new TicketsController();                 
+                $tickets_raw = $tickets->getTickets( $filter, $check_ticket_assignments ); 	
                 //Process the tickets for viewing on the view. Replace the username and the time with cleaner versions
-                foreach ( $tickets_raw as $ksd_ticket) {
-                    $this->format_ticket_for_viewing($ksd_ticket);
-                }
-                
+                foreach ( $tickets_raw as $ksd_ticket ) {
+                    $this->format_ticket_for_viewing( $ksd_ticket );
+                }                
                 return $tickets_raw;
 	}
         
