@@ -264,20 +264,20 @@ class Kanzu_Support_Install {
 				`tkt_customer_rating` INT(2) /*Uses NPS scoring system which rates from 0 to 10*/
 				);	
 				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_replies` (
-				`rep_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				`rep_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 				`rep_tkt_id` BIGINT(20) NOT NULL ,
-				`rep_type` INT ,
+				`rep_type` INT ,/*To hold forwards*/
 				`rep_is_cc` BOOLEAN DEFAULT FALSE,
 				`rep_is_bcc` BOOLEAN DEFAULT FALSE,
 				`rep_date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				`rep_created_by` INT,
+				`rep_created_by` BIGINT(20) NOT NULL,
 				`rep_date_modified` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
 				`rep_message` TEXT NOT NULL,
                                  INDEX (`rep_tkt_id`)
 				);				
 				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_customers` ( /*We store only what's not in the WordPress users table*/
-				cust_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				cust_user_id INT,
+				cust_id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				cust_user_id BIGINT(20),
 				cust_firstname VARCHAR(100) ,
 				cust_lastname VARCHAR(100),
 				cust_company_name VARCHAR(128),
@@ -285,25 +285,25 @@ class Kanzu_Support_Install {
 				cust_about TEXT,
 				cust_account_status ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
 				cust_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-				cust_created_by INT, 
+				cust_created_by BIGINT(20), 
 				cust_lastmodification_date DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
-				cust_modified_by INT
+				cust_modified_by BIGINT(20)
 				);
 				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_assignment` (
-				assign_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				assign_id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				assign_tkt_id BIGINT(20),
-				assign_assigned_to INT,
+				assign_assigned_to BIGINT(20),
 				assign_date_assigned TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				assign_assigned_by INT,
+				assign_assigned_by BIGINT(20),
                                 INDEX (`assign_tkt_id`)
 				);
 				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_attachments` (
-				att_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+				att_id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				att_name VARCHAR(100),
 				att_filename VARCHAR(255),
 				att_tkt_id BIGINT(20),
 				att_date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				att_reply_id INT,
+				att_reply_id BIGINT(20),
                                 INDEX (`att_tkt_id`)
 				);
 			";

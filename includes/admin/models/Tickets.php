@@ -12,7 +12,7 @@ include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
 
  class TicketsModel extends Kanzu_Model{
 
-	
+	//@TODO Change tkt_description to tkt_message
 	public function __construct(){
 		global $wpdb;
 		$this->_tablename = $wpdb->prefix . "kanzusupport_tickets";	
@@ -20,7 +20,7 @@ include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
 			
 		$this->_formats = array(
 		'tkt_id' 		 => '%d', 
-		'tkt_title' 		 => '%s', 
+		'tkt_subject' 		 => '%s', 
 		'tkt_initial_message'	 => '%s',
 		'tkt_description' 	 => '%s' , 
 		'tkt_channel' 		 => '%s',
@@ -112,7 +112,7 @@ include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
              $unassigned_tickets_query = 'SELECT COUNT(T.tkt_id) AS unassigned_tickets
                         FROM `wp_kanzusupport_tickets` AS T
                         LEFT JOIN `wp_kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
-                        WHERE A.`assign_assigned_to` IS NULL';
+                        WHERE A.`assign_assigned_to` = 0';
              $summary_statistics["unassigned_tickets"]  = parent::execQuery( $unassigned_tickets_query );
               
              return $summary_statistics;

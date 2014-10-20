@@ -191,7 +191,7 @@ class Kanzu_Support_Admin {
 	 */
 	public function output_admin_menu_dashboard(){
 		$this->do_admin_includes();
-                if( isset($_POST['ksd-submit']) ) {//If it's a form submission
+                if( isset( $_POST['ksd-submit'] ) ) {//If it's a form submission
                    // @TODO Switch this to AJAX        
                    $this->log_new_ticket("STAFF",$_POST['tkt_subject'],$_POST['ksd-ticket-description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign-to'],$_POST['tkt_severity'],$_POST['tkt_logged_by'],"OPEN");
                    wp_redirect(admin_url('admin.php?page=ksd-tickets'));
@@ -226,7 +226,7 @@ class Kanzu_Support_Admin {
 				$filter=" tkt_status != 'RESOLVED'";
 			break;
 			case '#tickets-tab-3'://'Unassigned Tickets'
-                                $filter = " IS NULL ";
+                                $filter = " = 0 ";
 				$check_ticket_assignments = "yes"; 
 			break;
 			case '#tickets-tab-4'://'Recently Updated' i.e. Updated in the last hour. @TODO Make the '1 hour' configurable 
@@ -359,7 +359,7 @@ class Kanzu_Support_Admin {
          * @param type $status
          * @return type
          */
-        public function log_new_ticket($channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$tkt_logged_by,$status){
+        public function log_new_ticket ( $channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$tkt_logged_by,$status ){
             	$tO = new stdClass(); 
                 $tO->tkt_subject    	    = $title;
                 $tO->tkt_initial_message    = $description;
@@ -371,7 +371,7 @@ class Kanzu_Support_Admin {
 
                 $TC = new TicketsController();
                $new_ticket_id = $TC->logTicket( $tO );
-               $this->do_ticket_assignment($new_ticket_id,$assign_to,$tkt_logged_by);
+               $this->do_ticket_assignment( $new_ticket_id,$assign_to,$tkt_logged_by );
                return ( $new_ticket_id > 0 ) ? True : False;
         }
         
@@ -381,7 +381,7 @@ class Kanzu_Support_Admin {
          */
         private function do_ticket_assignment($ticket_id,$assign_to,$assign_by){
            $assignment = new AssignmentsController();
-           $assignment->assignTicket($ticket_id, $assign_to, $assign_by);                       
+           $assignment->assignTicket( $ticket_id, $assign_to, $assign_by );                
             
         }
         
