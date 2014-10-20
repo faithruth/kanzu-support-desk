@@ -38,9 +38,10 @@ class Kanzu_Mail {
 		{
 			$port= $this->defualt_ports[$protocol];
 		}
+
 		$the_mailbox="";
 		//Cater for self-signed certificates
-                if( $validate_certificate == "yes" ) {
+                if( "yes" == $validate_certificate ) {
                     $the_mailbox = "{" . "$server:$port/$protocol"."}"."$mailbox";
                 }
                 else {
