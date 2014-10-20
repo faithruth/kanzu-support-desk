@@ -223,6 +223,7 @@ ul.dashboard-statistics-summary li {
     width: 25%;
     float: left; /*This is important otherwise the width element won't work*/
 }
+
 #ticket-list-item .subject{
     margin: 0;
     padding: 0;

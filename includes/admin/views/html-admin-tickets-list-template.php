@@ -1,4 +1,5 @@
 <div id="select-all-tickets">
+ 
       <input type="checkbox" id="tkt_chkbx_all" checked=""><span><?php _e('All ','kanzu-support-desk'); ?></span>
 	  <!-- TODO: Options -->
 		<div class="ticket-actions" id="tkt_all_options">

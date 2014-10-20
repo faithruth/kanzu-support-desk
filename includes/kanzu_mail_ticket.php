@@ -23,19 +23,20 @@ require(dirname(__FILE__) . '/admin/controllers/Users.php');
 $kanzuserver_url    = 'mail.kanzucode.com'; //get_option('kanzu_supportemail')
 $kanzueserver_login = 'support@kanzucode.com'; //get_option('mailserver_login')
 $kanzuserver_pass   =  'b0GKn(Z7_LUi';
+$kanzu_mailbox   =  'INBOX'; //get_option('kanzu_mailbox')
 $kanzu_validate_certificate = 'no';//get_option('kanzu_validateSSL')
 
 $MBox = new Kanzu_Mail();
 
 
-if( !$MBox->connect('pop3', $kanzuserver_url, $kanzueserver_login, $kanzuserver_pass,$kanzu_validate_certificate) ){
+if( !$MBox->connect('pop3', $kanzuserver_url, $kanzueserver_login, $kanzuserver_pass,$kanzu_mailbox,$kanzu_validate_certificate) ){
 	echo "Can not connect to mailbox.";
 	exit;
 }
 
 $count = $MBox->numMsgs();
 
-for( $i=1; $i <= $count; $++)
+for( $i=1; $i <= $count; $i++)
 {
 
 	$msg=array();
