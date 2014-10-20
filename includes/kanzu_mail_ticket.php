@@ -1,6 +1,6 @@
 <?php
 /**
- * Holds all installation & deactivation-related functionality.  
+ * Retrieves new mail and logs a ticket 
  *
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
@@ -23,19 +23,23 @@ require(dirname(__FILE__) . '/admin/controllers/Users.php');
 $kanzuserver_url    = 'mail.kanzucode.com'; //get_option('kanzu_supportemail')
 $kanzueserver_login = 'support@kanzucode.com'; //get_option('mailserver_login')
 $kanzuserver_pass   =  'b0GKn(Z7_LUi';
-$kanzu_validate_certificate = 'no';//get_option('kanzu_validateSSL')
+$kanzu_useSSL   = TRUE;//get_option('kanzu_useSSL')
+$kanzu_validate_certificate = 'no';//get_option('kanzu_validateSSL'). If use_SSL is true
+$kanzu_mail_protocol = 'imap';//get_option('kanzu_mail_protocol'). Can be imap or pop3
+
+$protocol = ( $kanzu_useSSL ? $kanzu_mail_protocol.'/ssl' : $kanzu_mail_protocol);
 
 $MBox = new Kanzu_Mail();
 
 
-if( !$MBox->connect('pop3', $kanzuserver_url, $kanzueserver_login, $kanzuserver_pass,$kanzu_validate_certificate) ){
+if( !$MBox->connect($protocol, $kanzuserver_url, $kanzueserver_login, $kanzuserver_pass,$kanzu_validate_certificate) ){
 	echo "Can not connect to mailbox.";
 	exit;
 }
 
 $count = $MBox->numMsgs();
 
-for( $i=1; $i <= $count; $++)
+for( $i=1; $i <= $count; $i++)
 {
 
 	$msg=array();
