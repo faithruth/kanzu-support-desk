@@ -47,9 +47,10 @@ jQuery( document ).ready(function() {
 					rws = 	'<div id="ticket-list-item" class="ticket_'+value.tkt_id+'">';
 					rws += 	'<div class="ticket-info">';
 					rws += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
-					rws += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
+
 					rws +=	'<span class="subject"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a></span>';
-					rws += 	'<span class="description">-'+value.tkt_description+'</span>';
+					rws += 	'<span class="">'+value.tkt_channel+'</span>';
+					rws += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
 					rws += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
 					rws += 	'</div>';
 					rws += 	'<div class="ticket-actions" id="tkt_'+value.tkt_id+'">';

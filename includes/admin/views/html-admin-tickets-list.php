@@ -8,15 +8,6 @@
 			<th><?php _e('Priority','kanzu-support-desk'); ?></th>
 		</tr>	
 	</thead>
-	<tfoot>
-		<tr>
-			<th><?php _e('Subject','kanzu-support-desk'); ?></th>
-			<th><?php _e('Requester','kanzu-support-desk'); ?></th>		
-			<th><?php _e('Requested','kanzu-support-desk'); ?></th>
-			<th><?php _e('Type','kanzu-support-desk'); ?></th>
-			<th><?php _e('Priority','kanzu-support-desk'); ?></th>	
-		</tr>	
-	</tfoot>
 	<tbody>
 	<?php	
  
@@ -37,4 +28,14 @@
 			endforeach;		 
 	?>
 	</tbody>
+	<tfoot>
+		<tr>
+			<th><?php _e('Subject','kanzu-support-desk'); ?></th>
+			<th><?php _e('Requester','kanzu-support-desk'); ?></th>		
+			<th><?php _e('Requested','kanzu-support-desk'); ?></th>
+			<th><?php _e('Type','kanzu-support-desk'); ?></th>
+			<th><?php _e('Priority','kanzu-support-desk'); ?></th>	
+		</tr>	
+	</tfoot>
+
 </table>
