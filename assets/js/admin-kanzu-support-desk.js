@@ -1,4 +1,5 @@
 jQuery( document ).ready(function() {
+        /**For the general navigation tabs**/
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
         
@@ -78,13 +79,13 @@ jQuery( document ).ready(function() {
         /*Get URL parameters*/
         jQuery.urlParam = function(name){
             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-            if (results==null){
+            if (results===null){
                return null;
             }
             else{
                return results[1] || 0;
             }
-        }
+        };
 	
 	/**Pre-populate the first tab in the tickets view*/
 	if(jQuery("#tickets-tab-1").hasClass("pending")){
@@ -232,7 +233,7 @@ jQuery( document ).ready(function() {
         
 	/**Change the title onclick of a side navigation tab*/
 	jQuery( "#tabs .main-nav li a" ).click(function() {
-		jQuery('h2.admin-ksd-title').html(jQuery(this).attr('href').replace("#",""));
+		jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#","").replace("_"," "));
 	});
        
         /**While working on a single ticket, switch between reply/forward and Add note modes**/

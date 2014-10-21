@@ -187,6 +187,24 @@ div#ticket-list-item:hover .ticket-actions {
     font-size: 1.2em;
     font-weight: bold;
 }
+/**Add-ons**/
+ul.add-ons {
+  margin: 0;
+  padding: 15px 0;
+}
+ul.add-ons li {
+  background: none repeat scroll 0 0 #fff;
+  border: 1px solid #ccc;
+  padding: 15px;
+  text-align: center;
+  width: 230px;
+}
+ul.add-ons li a{
+    text-decoration: none;
+}
+ul.add-ons li p{
+    text-align: left;
+}
 /*The dashboard indicators*/
 ul.dashboard-statistics-summary {
   border: 1px solid #ccc;
