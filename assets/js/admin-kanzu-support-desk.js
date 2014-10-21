@@ -233,7 +233,7 @@ jQuery( document ).ready(function() {
         
 	/**Change the title onclick of a side navigation tab*/
 	jQuery( "#tabs .main-nav li a" ).click(function() {
-		jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#","").replace("_"," "));
+		jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#","").replace("_"," "));//Remove the hashtag, replace _ with a space
 	});
        
         /**While working on a single ticket, switch between reply/forward and Add note modes**/

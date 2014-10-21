@@ -323,7 +323,7 @@ class Kanzu_Support_Admin {
 			die ( 'Busted!');
 		$this->do_admin_includes();	
 		$assign_ticket = new AssignmentsController();		
-		$status = ( $assign_ticket->assignTicket( $_POST['tkt_id'],$_POST['tkt_assign_assigned_to'],$_POST['ksd_current_user_id'] ) ? __("Updated","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		$status = ( $assign_ticket->assignTicket( $_POST['tkt_id'],$_POST['tkt_assign_assigned_to'],$_POST['ksd_current_user_id'] ) ? __("Re-assigned","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode($status);
 		die();// IMPORTANT: don't leave this out
 	}

@@ -72,7 +72,8 @@ class TicketsController extends Kanzu_Controller {
 	*/
 	public function getTickets( $query = null, $check_ticket_assignments ){
                 if ( "yes" == $check_ticket_assignments ) { 
-                    $query.= " ORDER BY T.tkt_time_logged DESC ";
+                    //@TODO Fix assignment check. A single ticket has multiple entries so the query should take that into account
+                    $query.= " ORDER BY T.tkt_time_logged DESC  ";
                     return $this->_model->get_assigned_tickets( $query );
                 }
                 else{

@@ -108,11 +108,11 @@ include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
              
              $open_tickets_query = 'SELECT COUNT(tkt_id) AS open_tickets FROM '.$this->_tablename;
              $summary_statistics["open_tickets"] = parent::execQuery( $open_tickets_query );
-             
-             $unassigned_tickets_query = 'SELECT COUNT(T.tkt_id) AS unassigned_tickets
+             //@TODO Optimize this query
+             $unassigned_tickets_query = 'SELECT COUNT(*) AS unassigned_tickets FROM ( SELECT T.tkt_id AS unassigned_ticketids
                         FROM `wp_kanzusupport_tickets` AS T
                         LEFT JOIN `wp_kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
-                        WHERE A.`assign_assigned_to` = 0';
+                        WHERE A.`assign_assigned_to` = 0 GROUP BY A.`assign_assigned_to`) as temp';
              $summary_statistics["unassigned_tickets"]  = parent::execQuery( $unassigned_tickets_query );
               
              return $summary_statistics;
