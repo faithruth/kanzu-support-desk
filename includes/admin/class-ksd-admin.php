@@ -113,7 +113,7 @@ class Kanzu_Support_Admin {
                 //@TODO Uncomment the following line to use GoogleCharts online version for production. Using local for dev
                 //wp_enqueue_script( KSD_SLUG . '-admin-charts', '//google.com/jsapi', array(), KSD_VERSION ); 
                 wp_enqueue_script( KSD_SLUG . '-admin-charts', plugins_url( '../../assets/js/jsapi.js', __FILE__ ), array(), KSD_VERSION ); 
-                
+                wp_enqueue_script( KSD_SLUG . '-admin-settings', plugins_url( '../../assets/js/ksd-settings.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
                 wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION ); 
 		$ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );	 //This determines which tab to show as active
                 $agents_list = "<ul class='assign_to hidden'>";
@@ -416,7 +416,7 @@ class Kanzu_Support_Admin {
 			foreach ( $tickets_raw as $ticket ) {
 				$output_array[] = array ($ticket->date_logged,$ticket->ticket_volume);			
 			}
-                        
+        
 			
 			echo json_encode($output_array, JSON_NUMERIC_CHECK);
 			die();//Important

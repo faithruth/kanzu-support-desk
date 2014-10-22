@@ -178,7 +178,13 @@ jQuery( document ).ready(function() {
             });
         });
         
+        //Settings
+        Settings = new KSDSettings();
+        Settings.init();
+        
+        
         /**AJAX: Update settings @TODO Handle errors**/
+        /*
         jQuery('form#update-settings').submit( function(e){
             e.preventDefault();   
             ksd_show_dialog("loading");  
@@ -187,7 +193,7 @@ jQuery( document ).ready(function() {
 		function(response) {//@TODO Check for errors 	
                     ksd_show_dialog("success",JSON.parse(response));                  
             });
-        });
+        }); */
         
          /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
 	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
