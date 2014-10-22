@@ -1,7 +1,7 @@
 /*Load jQuery before this file.*/
 KSDSettings = function(){
 	this.init = function(){
-
+		
 		//Mail settings
 		this.submitMailForm();
 	}
@@ -11,6 +11,7 @@ KSDSettings = function(){
         jQuery('.'+dialog_type).html(message);//Set the message
         jQuery('.'+dialog_type).fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
     };
+    
     
 	/*
 	 * Submit Mail Settings form.
