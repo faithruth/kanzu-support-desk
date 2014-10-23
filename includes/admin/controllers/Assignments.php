@@ -34,9 +34,6 @@ class AssignmentsController extends Kanzu_Controller
 		$aO                = $this->_model->getObj();
 		$aO->assign_assigned_to     = $assign_to;
 		$aO->assign_assigned_by 	   = $assign_by;
-                if ( $notes != "" ){
-                    $aO->assign_notes  = $notes;
-                }
 		$aO->assign_tkt_id = $ticket_id;
 		return $this->_model->addAssignment( $aO );
 	}

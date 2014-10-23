@@ -194,8 +194,8 @@ class Kanzu_Support_Admin {
                 if( isset( $_POST['ksd-submit'] ) ) {//If it's a form submission
                    // @TODO Switch this to AJAX        
                    $this->log_new_ticket("STAFF",$_POST['tkt_subject'],$_POST['ksd-ticket-description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign-to'],$_POST['tkt_severity'],$_POST['tkt_logged_by'],"OPEN");
-                   wp_redirect(admin_url('admin.php?page=ksd-tickets'));
-                    exit;
+                   wp_redirect(admin_url('admin.php?page=ksd-tickets'));                   
+                   exit;
                 }
                else {//Output the dashboard
                    $settings = $this->get_settings();//We'll need these for the settings page
@@ -320,8 +320,12 @@ class Kanzu_Support_Admin {
 		 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
 			die ( 'Busted!');
 		$this->do_admin_includes();	
-		$assign_ticket = new AssignmentsController();		
-		$status = ( $assign_ticket->assignTicket( $_POST['tkt_id'],$_POST['tkt_assign_assigned_to'],$_POST['ksd_current_user_id'] ) ? __("Re-assigned","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+                $updated_ticket = new stdClass();
+                $updated_ticket->tkt_id = $_POST['tkt_id'];
+                $updated_ticket->new_tkt_assigned_to = $_POST['tkt_assign_assigned_to'];
+                $updated_ticket->new_tkt_logged_by = $_POST['ksd_current_user_id'];
+		$assign_ticket = new TicketsController();		
+		$status = ( $assign_ticket->update_ticket( $updated_ticket ) ? __("Re-assigned","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode($status);
 		die();// IMPORTANT: don't leave this out
 	}
@@ -366,11 +370,10 @@ class Kanzu_Support_Admin {
                 $tO->tkt_severity           = $severity;
                 $tO->tkt_status             = $status;
                 $tO->tkt_logged_by          = $tkt_logged_by;
+                $to->tkt_assigned_to        = $assign_to;
 
                 $TC = new TicketsController();
-               $new_ticket_id = $TC->logTicket( $tO );
-               $this->do_ticket_assignment( $new_ticket_id,$assign_to,$tkt_logged_by );
-               return ( $new_ticket_id > 0 ) ? True : False;
+               return ( $TC->logTicket( $tO ) > 0 ) ? True : False;
         }
         
         /**
