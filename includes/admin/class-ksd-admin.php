@@ -112,6 +112,7 @@ class Kanzu_Support_Admin {
 		//Load the script for charts. Load this before the next script. 
                 //@TODO Uncomment the following line to use GoogleCharts online version for production. Using local for dev
                 //wp_enqueue_script( KSD_SLUG . '-admin-charts', '//google.com/jsapi', array(), KSD_VERSION ); 
+                wp_enqueue_script( KSD_SLUG . '-admin-utils', plugins_url( '../../assets/js/ksd-utils.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
                 wp_enqueue_script( KSD_SLUG . '-admin-settings', plugins_url( '../../assets/js/ksd-settings.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
                 wp_enqueue_script( KSD_SLUG . '-admin-dashboard', plugins_url( '../../assets/js/ksd-dashboard.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
                 wp_enqueue_script( KSD_SLUG . '-admin-tickets', plugins_url( '../../assets/js/ksd-tickets.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
