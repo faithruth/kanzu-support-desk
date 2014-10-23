@@ -21,13 +21,11 @@ KSDSettings = function(){
         jQuery('form#update-settings').submit( function(e){
             e.preventDefault();   
             KSDUtils.showDialog("loading");  
-            alert('ggggdddd');
-            jQuery.post(	ksd_admin.ajax_url, 
-                                jQuery(this).serialize(), //The action and nonce are hidden fields in the form
-		function(response) {//@TODO Check for errors 	
-                    alert('ggggdddd');
-                    KSDUtils.showDialog("success",JSON.parse(response));       
-            });
+            jQuery.post(ksd_admin.ajax_url, 
+                        jQuery(this).serialize(), //The action and nonce are hidden fields in the form
+                        function(response) {//@TODO Check for errors 	
+                        KSDUtils.showDialog("success",JSON.parse(response));       
+                        });
         });
         
         

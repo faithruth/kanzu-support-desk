@@ -36,9 +36,8 @@ KSDDashboard = function(){
 	this.charts = function(){
             try{
             /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
-                  google.load("visualization", "1", {packages:["corechart"]});
                   
-                  google.setOnLoadCallback(drawDashboardGraph);
+                 
                   function drawDashboardGraph() {	
                         jQuery.post( ksd_admin.ajax_url, 
                                 {action : 'ksd_dashboard_ticket_volume',
@@ -53,6 +52,10 @@ KSDDashboard = function(){
                                     chart.draw(data, options);
                         });//eof: jQuery.port
                   }
+                  
+                   google.setOnLoadCallback(drawDashboardGraph);
+                  
+                  
               }catch(err){
                   //console.log(err);
               }

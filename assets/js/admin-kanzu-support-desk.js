@@ -1,3 +1,6 @@
+
+google.load("visualization", "1", {packages:["corechart"]});
+
 jQuery( document ).ready(function() {
     
         /**For the general navigation tabs**/
@@ -24,7 +27,7 @@ jQuery( document ).ready(function() {
         Dashboard = new KSDDashboard();
         Dashboard.init();
         
-        //Dashboard
+        //Tickets
         Tickets = new KSDTickets();
         Tickets.init();
         
