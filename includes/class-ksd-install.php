@@ -333,7 +333,8 @@ class Kanzu_Support_Install {
                         'mail_protocol'                     => "imap",      
                         'mail_useSSL'                       => "no",         
                         'mail_validate_certificate'         => "no",
-                		'mail_port'         			    => "143"
+                	'mail_port'                         => "143",
+                        'mail_mailbox'         	            => "INBOX"
                     );
             }
  
