@@ -24,7 +24,7 @@ KSDSettings = function(){
             jQuery.post(ksd_admin.ajax_url, 
                         jQuery(this).serialize(), //The action and nonce are hidden fields in the form
                         function(response) {//@TODO Check for errors 	
-                        KSDUtils.showDialog("success",JSON.parse(response));       
+                            KSDUtils.showDialog("success",JSON.parse(response));       
                         });
         });
         

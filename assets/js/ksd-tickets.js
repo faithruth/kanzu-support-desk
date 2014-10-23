@@ -206,12 +206,14 @@ KSDTickets = function(){
         
         }	
 	
+        
+        
 	this.newTicket = function(){
 	       
         /**While working on a single ticket, switch between reply/forward and Add note modes**/
         jQuery('ul.edit-ticket-options li').click(function(e){
-        jQuery('ul.edit-ticket-options li').removeClass('selected');//make all tabs inactive        
-        jQuery(this).addClass('selected');    //then make the clicked tab active
+            jQuery('ul.edit-ticket-options li').removeClass('selected');//make all tabs inactive        
+            jQuery(this).addClass('selected');    //then make the clicked tab active
         });
         
         /**AJAX: In single ticket view mode, get the current ticket's description, sender and subject*/
@@ -245,39 +247,22 @@ KSDTickets = function(){
                                     jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
                                 });
                         });	
-                        
+        }//eof:if(jQuery("#ksd-single-ticket .description").hasClass("pending")){ 
+        
+        
+            /*On focus, Toggle customer name, email and subject */
+            _toggleFieldValues();
+        
+        
             /**Validate New Tickets**/
             //@TODO Add server side validation too
             jQuery("form#new-ticket").validate();
 
-            /**Toggle the form field values for new tickets on click**/
-            function toggle_form_field_input ( event ){
-                    if(jQuery(this).val() === event.data.old_value){
-                        jQuery(this).val(event.data.new_value);                    
-                }      
-            };
-            //The fields
-            var new_form_fields = {
-                "tkt_subject" : "Subject",
-                "customer_name" : "Customer Name",
-                "customer_email" : "Customer Email"
-            };
-            //Attach events to the fields @TODO Modify this to handle localization
-            jQuery.each( new_form_fields, function( field_name, form_value ) {
-                jQuery('input[name='+field_name+']').on('focus',{
-                                                            old_value: form_value,
-                                                            new_value: ""
-                                                         }, toggle_form_field_input);
-                jQuery('input[name='+field_name+']').on('blur',{
-                                                            old_value: "",
-                                                            new_value: form_value
-                                                         }, toggle_form_field_input);
-            });
-
-
-        }
 		
 	}//eof:newTicket()
+        
+        
+        
         
         this.uiTabs = function(){
 
@@ -418,5 +403,34 @@ KSDTickets = function(){
                          });	
          }
         }//eof:this.uiSingleTicketView
+        
+        
+        _toggleFieldValues = function(){
+
+            /**Toggle the form field values for new tickets on click**/
+            function toggle_form_field_input ( event ){
+                    if(jQuery(this).val() === event.data.old_value){
+                        jQuery(this).val(event.data.new_value);      
+                        
+                }      
+            };
+            //The fields
+            var new_form_fields = {
+                "tkt_subject" : "Subject",
+                "customer_name" : "Customer Name",
+                "customer_email" : "Customer Email"
+            };
+            //Attach events to the fields @TODO Modify this to handle localization
+            jQuery.each( new_form_fields, function( field_name, form_value ) {
+                jQuery('input[name='+field_name+']').on('focus',{
+                                                            old_value: form_value,
+                                                            new_value: ""
+                                                         }, toggle_form_field_input);
+                jQuery('input[name='+field_name+']').on('blur',{
+                                                            old_value: "",
+                                                            new_value: form_value
+                                                         }, toggle_form_field_input);
+            });
+        }
         
 }

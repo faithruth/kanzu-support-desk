@@ -1,4 +1,4 @@
-
+/*Load google chart first. */
 google.load("visualization", "1", {packages:["corechart"]});
 
 jQuery( document ).ready(function() {
@@ -7,7 +7,6 @@ jQuery( document ).ready(function() {
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
         
-
         /*Get URL parameters*/
         jQuery.urlParam = function(name){
             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
