@@ -124,11 +124,11 @@ include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
           * @TODO Replace table names with variables
           */
          public function get_assigned_tickets( $filter = null ){
-             $filter = ( is_null( $filter ) ? " IS NULL " : $filter );
+             $where = ( is_null( $filter ) ? " IS NULL " : $filter );
              $assigned_tickets_query = 'SELECT * 
                         FROM '.$this->_tablename.' AS T
-                        LEFT JOIN `wp_kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
-                        WHERE A.`assign_assigned_to` '.$filter;
+                        INNER JOIN `wp_kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
+                        WHERE A.`assign_assigned_to` '.$where;
              return parent::execQuery( $assigned_tickets_query );
          }
  }

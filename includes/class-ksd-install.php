@@ -254,19 +254,21 @@ class Kanzu_Support_Install {
 				`tkt_channel` ENUM('STAFF','FACEBOOK','TWITTER','SUPPORT_TAB','EMAIL','CONTACT_FORM') DEFAULT 'STAFF',
 				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
 				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
-				`tkt_resolution` VARCHAR(64) NOT NULL, 
+				`tkt_resolution` VARCHAR(64) NOT NULL, /*@TODO Remove this field. Don't see its use*/
 				`tkt_time_logged` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-				`tkt_logged_by` INT NOT NULL, 
+				`tkt_logged_by` BIGINT(20) NOT NULL, 
+                                `tkt_assigned_to` BIGINT(20) NULL, 
 				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
-				`tkt_updated_by` INT NOT NULL,                                 
+				`tkt_updated_by` BIGINT(20) NOT NULL,                                 
 				`tkt_private_notes` TEXT,       
-				`tkt_tags` VARCHAR(255),   /*Uses WordPress tags*/
-				`tkt_customer_rating` INT(2) /*Uses NPS scoring system which rates from 0 to 10*/
+				`tkt_tags` VARCHAR(255),   /*@TODO Use WordPress tags*/
+				`tkt_customer_rating` INT(2), /*@TODO Use NPS scoring system which rates from 0 to 10*/
+                                INDEX (`tkt_assigned_to`)
 				);	
 				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 				`rep_tkt_id` BIGINT(20) NOT NULL ,
-				`rep_type` INT ,/*To hold forwards*/
+				`rep_type` INT ,/*@TODO To hold forwards*/
 				`rep_is_cc` BOOLEAN DEFAULT FALSE,
 				`rep_is_bcc` BOOLEAN DEFAULT FALSE,
 				`rep_date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

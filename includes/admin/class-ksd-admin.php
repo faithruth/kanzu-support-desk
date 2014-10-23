@@ -226,21 +226,19 @@ class Kanzu_Support_Admin {
 				$filter=" tkt_status != 'RESOLVED'";
 			break;
 			case '#tickets-tab-3'://'Unassigned Tickets'
-                                $filter = " = 0 ";
-				$check_ticket_assignments = "yes"; 
+                                $filter = " tkt_assigned_to IS NULL ";			
 			break;
 			case '#tickets-tab-4'://'Recently Updated' i.e. Updated in the last hour. @TODO Make the '1 hour' configurable 
 				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL 1 HOUR)"; 
 			break;
-			case '#tickets-tab-5'://'Recently Resolved'.i.e Resolved in the last hour. Make this configurable
+			case '#tickets-tab-5'://'Recently Resolved'.i.e Resolved in the last hour. @TODO Make the '1 hour' configurable
 				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL 1 HOUR) AND tkt_status = 'RESOLVED'"; 
 			break;
 			case '#tickets-tab-6'://'Resolved'
 				$filter=" tkt_status = 'RESOLVED'";
 			break;
 			default://'My Unresolved'
-                                $filter = " = ".get_current_user_id()." AND T.tkt_status != 'RESOLVED'";
-				$check_ticket_assignments = "yes"; 
+                                $filter = " tkt_assigned_to = ".get_current_user_id()." AND tkt_status != 'RESOLVED'";				
 		endswitch;
                 $raw_tickets = $this->filter_ticket_view( $filter, $check_ticket_assignments );
                 $response = ( empty( $raw_tickets ) ? __( "Nothing to see here. Great work!","kanzu-support-desk" ) : $raw_tickets );

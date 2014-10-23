@@ -79,8 +79,7 @@ class TicketsController extends Kanzu_Controller {
                 else{
                     $query.= " ORDER BY tkt_time_logged DESC ";
                     return $this->_model->getAll( $query );
-                }
-		
+                }		
 	}
 	
 	/**
