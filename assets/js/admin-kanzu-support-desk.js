@@ -6,6 +6,12 @@ jQuery( document ).ready(function() {
 	/**For the tickets tabs**/
 	jQuery( "#ticket-tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#ticket-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+        
+        /**For the Reply/Forward/Private Note tabs that appear when viewing a single ticket.*/
+        //First check if the element exists
+        if (jQuery("ul.edit-ticket-options").length){
+            jQuery("#edit-ticket-tabs").tabs();            
+        }
 
 	/*Switch the active tab depending on what page has been selected*/
 	activeTab=0;        
@@ -235,15 +241,10 @@ jQuery( document ).ready(function() {
 	/**Change the title onclick of a side navigation tab*/
 	jQuery( "#tabs .main-nav li a" ).click(function() {
 		jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#","").replace("_"," "));//Remove the hashtag, replace _ with a space
-	});
-       
-        /**While working on a single ticket, switch between reply/forward and Add note modes**/
-        jQuery('ul.edit-ticket-options li').click(function(e){
-        jQuery('ul.edit-ticket-options li').removeClass('selected');//make all tabs inactive        
-        jQuery(this).addClass('selected');    //then make the clicked tab active
-        });
+	});       
+
         
-        /**AJAX: In single ticket view mode, get the current ticket's description, sender and subject*/
+        /**AJAX: In single ticket view mode, get the current ticket's description, sender, subject and any private notes*/
         if(jQuery("#ksd-single-ticket .description").hasClass("pending")){             
             jQuery.post(    ksd_admin.ajax_url, 
                             { 	action : 'ksd_get_single_ticket',
@@ -254,11 +255,12 @@ jQuery( document ).ready(function() {
                             the_ticket = JSON.parse(response);
                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_description);
+                            jQuery("#ksd-single-ticket textarea[name=ksd_ticket_private_note]").val(the_ticket.tkt_private_notes);
                             jQuery("#ticket-replies").html("Any minute now...") ; //@TODO Add this to Localization                         
                             //Make the 'Back' button visible
                             jQuery(".top-nav li.back").removeClass("hidden");
                             
-                            //Now get the responses. For cleaner code and to remove reptition in the returned results, we use multiple
+                            //Now get the responses. For cleaner code and to remove repetition in the returned results, we use multiple
                             //queries instead of a JOIN. The impact on speed is negligible
                             jQuery.post(    ksd_admin.ajax_url, 
                             { 	action : 'ksd_get_ticket_replies',
