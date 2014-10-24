@@ -175,14 +175,14 @@ KSDTickets = function(){
            //@TODO Fix wp_editor bug that returns stale data with each submission      
             jQuery('form#edit-ticket').submit( function(e){
                 e.preventDefault(); 
-                var action = "ksd_"+jQuery("input[name=edit-ticket]").attr("value");
-                ksd_show_dialog("loading");//Show a dialog message
+                var action = jQuery("input[name=action]").attr("value");
+                KSDUtils.showDialog("loading");//Show a dialog message
                 jQuery.post(	ksd_admin.ajax_url, 
                                     jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
                     function(response) {//@TODO Check for errors 
                         switch(action){
                             case "ksd_update_private_note":
-                               ksd_show_dialog("success",JSON.parse(response));
+                               KSDUtils.showDialog("success",JSON.parse(response));
                             break;
                             default:
                                 jQuery("#ticket-replies").append("<div class='ticket-reply'>"+JSON.parse(response)+"</div>");	
