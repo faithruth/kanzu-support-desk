@@ -314,8 +314,8 @@ class Kanzu_Support_Install {
                                 CREATE TRIGGER `after_insert_new_ticket` 
                                     AFTER INSERT ON `{$wpdb->prefix}kanzusupport_tickets` FOR EACH ROW 
                                         BEGIN 
-                                            INSERT INTO `{$wpdb->prefix}kanzusupport_assignments` 
-                                                ( assign_tkt_id, assign_tkt_assigned_to, assign_tkt_assigned_by ) 
+                                            INSERT INTO `{$wpdb->prefix}kanzusupport_assignment` 
+                                                ( assign_tkt_id, assign_assigned_to, assign_assigned_by ) 
                                                     VALUES 
                                                 ( NEW.tkt_id, NEW.tkt_assigned_to, NEW.tkt_logged_by ); 
                                         END ;
@@ -324,8 +324,8 @@ class Kanzu_Support_Install {
                                         BEGIN 
                                             IF NEW.tkt_assigned_to <=> OLD.tkt_assigned_to 
                                                 THEN 
-                                                INSERT INTO `{$wpdb->prefix}kanzusupport_assignments` 
-                                                    ( assign_tkt_id, assign_tkt_assigned_to, assign_tkt_assigned_by ) 
+                                                INSERT INTO `{$wpdb->prefix}kanzusupport_assignment` 
+                                                    ( assign_tkt_id, assign_assigned_to, assign_assigned_by ) 
                                                         VALUES 
                                                     ( NEW.tkt_id, NEW.tkt_assigned_to, NEW.tkt_logged_by ); 
                                                 END IF ; 

@@ -55,7 +55,7 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' )); 
                 add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ));  
                 add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' )); 
-                
+                add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));                 
 
 		
 		/*
@@ -466,6 +466,24 @@ class Kanzu_Support_Admin {
             $status = update_option( Kanzu_Support_Install::$ksd_options_name, $updated_settings );
             echo json_encode ( ( $status ? __("Settings Updated") : __("Update failed. Please retry") ) );
             die();
+         }
+         
+         /**
+          * Update a ticket's private note
+          * @TODO Change tkt_private_notes to tkt_private_note
+          * @TODO IMPORTANT: Escape user input
+          */
+         public function update_private_note(){
+               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();
+                $updated_ticket = new stdClass();
+                $updated_ticket->tkt_id = $_POST['tkt_id'];
+                $updated_ticket->new_tkt_private_notes = $_POST['tkt_private_note'];
+                $tickets = new TicketsController();		
+		$status = ( $tickets->update_ticket( $updated_ticket  ) ? __("Noted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		echo json_encode( $status );
+		die();// IMPORTANT: don't leave this out             
          }
          
          /**
