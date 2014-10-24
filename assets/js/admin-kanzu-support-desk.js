@@ -1,8 +1,13 @@
+/*Load google chart first. */
+google.load("visualization", "1", {packages:["corechart"]});
+
 jQuery( document ).ready(function() {
+    
         /**For the general navigation tabs**/
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
         
+<<<<<<< HEAD
 	/**For the tickets tabs**/
 	jQuery( "#ticket-tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#ticket-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
@@ -82,6 +87,8 @@ jQuery( document ).ready(function() {
 		}
 	};
         
+=======
+>>>>>>> 6d234f6512385596bd6eac40236b2424b2cdf746
         /*Get URL parameters*/
         jQuery.urlParam = function(name){
             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -92,98 +99,8 @@ jQuery( document ).ready(function() {
                return results[1] || 0;
             }
         };
-	
-	/**Pre-populate the first tab in the tickets view*/
-	if(jQuery("#tickets-tab-1").hasClass("pending")){
-		get_tickets("#tickets-tab-1");
-	}	
-	/**Do AJAX calls for filtering tickets on click of any of the tabs**/
-	jQuery( "#ticket-tabs li a" ).click(function() {
-		get_tickets( jQuery(this).attr('href'));
-	});	
-	
-	jQuery( "input[type=checkbox]" ).on( "click", function() {
-	//alert("Checked");
-		
-	});
-	
-	/*All check box.
-	* control_id: tkt_chkbx_all
-	*/
-	jQuery( "#ticket-tabs #tkt_chkbx_all" ).on( "click", function() {
-		//TODO:Show all options
-		if ( jQuery(this).prop('checked') === true){
-			jQuery("#tkt_all_options").removeClass("ticket-actions");
-			jQuery('input:checkbox').not(this).prop('checked', this.checked);
-		}else{
-			jQuery("#tkt_all_options").addClass("ticket-actions");
-			jQuery('input:checkbox').not(this).prop('checked', this.checked);
-		}
-		
-	});
-
-	/**AJAX: Delete a ticket **/
-	jQuery("#ticket-tabs").on('click','.ticket-actions a.trash',function(event) {
-            event.preventDefault();
-             var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-             jQuery( "#delete-dialog" ).dialog({
-                modal: true,
-                buttons: {
-                    Yes : function() {
-                            jQuery( this ).dialog( "close" );
-                            ksd_show_dialog("loading");                           
-                            jQuery.post(	ksd_admin.ajax_url, 
-						{ 	action : 'ksd_delete_ticket',
-							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
-							tkt_id : tkt_id
-						}, 
-				function(response) {
-                                    jQuery('#ticket-list .ticket_'+tkt_id).remove();
-                                    ksd_show_dialog("success",JSON.parse(response));  				                                
-				});	
-                    },                           
-                    No : function() {
-                    jQuery( this ).dialog( "close" );
-                    }               
-                }
-            });	
-	});	
-
-        /**Hide/Show the change ticket options on click of a ticket's 'change status' item**/
-	jQuery("#ticket-tabs").on('click','.ticket-actions a.change_status',function(event) {
-		event.preventDefault();//Important otherwise the page skips around
-		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-		jQuery(".ticket_"+tkt_id+" ul.status").toggleClass("hidden");
-	});
-	/**AJAX: Send the AJAX request when a new status is chosen**/
-	jQuery("#ticket-tabs").on('click','.ticket-actions ul.status li',function() {
-		ksd_show_dialog("loading");
-                var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
-		var tkt_status = jQuery(this).text();
-		jQuery.post(	ksd_admin.ajax_url, 
-						{ 	action : 'ksd_change_status',
-							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
-							tkt_id : tkt_id,
-							tkt_status : tkt_status
-						}, 
-				function(response) {	
-                                    ksd_show_dialog("success",JSON.parse(response));				                            
-				});		
-	});
         
-        /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
-       //@TODO Fix wp_editor bug that returns stale data with each submission      
-        jQuery('form#edit-ticket').submit( function(e){
-            e.preventDefault();          
-            jQuery.post(	ksd_admin.ajax_url, 
-                                jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
-		function(response) {//@TODO Check for error 	
-                    jQuery("#ticket-replies").append("<div class='ticket-reply'>"+JSON.parse(response)+"</div>");	
-                    //Clear the reply field
-                    jQuery("textarea[name=ksd_ticket_reply]").val(" ");                    
-            });
-        });
-        
+<<<<<<< HEAD
         
         /**AJAX: Update settings @TODO Handle errors**/
         jQuery('form#update-settings').submit( function(e){
@@ -307,22 +224,18 @@ jQuery( document ).ready(function() {
         });
         //Add Tooltips for the settings panel
          jQuery( ".help_tip" ).tooltip();
+=======
+        //Settings
+        Settings = new KSDSettings();
+        Settings.init();
+        
+        //Dashboard
+        Dashboard = new KSDDashboard();
+        Dashboard.init();
+        
+        //Tickets
+        Tickets = new KSDTickets();
+        Tickets.init();
+        
+>>>>>>> 6d234f6512385596bd6eac40236b2424b2cdf746
 });
-
-/**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
-      google.load("visualization", "1", {packages:["corechart"]});
-      google.setOnLoadCallback(drawDashboardGraph);
-      function drawDashboardGraph() {	
-				jQuery.post(	ksd_admin.ajax_url, 
-						{ 	action : 'ksd_dashboard_ticket_volume',
-							ksd_admin_nonce : ksd_admin.ksd_admin_nonce
-						}, 
-				function(response) {	              		
-                            var data =  google.visualization.arrayToDataTable(JSON.parse(response));
-        var options = {
-          title: 'Incoming Tickets'
-        };
-        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-				});
-                            }

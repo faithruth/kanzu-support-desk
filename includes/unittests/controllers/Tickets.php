@@ -16,7 +16,7 @@ echo "<b>TICKETS CONTROLLER UNIT TESTS</b>";
 #Test suit
 ######################################################################
 $TestSuit = array(
-'logTicket' => True
+'logTicket' => False
 );
 
 
