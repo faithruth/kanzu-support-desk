@@ -262,8 +262,6 @@ KSDTickets = function(){
 	}//eof:newTicket()
         
         
-        
-        
         this.uiTabs = function(){
 
             /**For the tickets tabs**/

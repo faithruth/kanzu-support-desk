@@ -1,5 +1,10 @@
 /*Load jQuery before this file.
  * @requires KSDUtils
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
  * */
 KSDDashboard = function(){
     _this = this;
@@ -28,7 +33,6 @@ KSDDashboard = function(){
                        the_summary_stats+= "<li>"+raw_response.average_response_time+" <span>Avg. Response Time</span></li>";
                        jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
                 });	
-
         }
     }//eof:statistics
 	
@@ -36,7 +40,6 @@ KSDDashboard = function(){
 	this.charts = function(){
             try{
             /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
-
                   function drawDashboardGraph() {	
                         jQuery.post( ksd_admin.ajax_url, 
                                 {action : 'ksd_dashboard_ticket_volume',
