@@ -51,6 +51,16 @@ class TicketsController extends Kanzu_Controller {
 		$tO->new_tkt_status = $new_status;
 		return $this->_model->updateTicket( $tO );
 	}
+        
+      	/*
+	* Update a ticket
+	*
+	*@param Object $ticket the Updated ticket
+	*
+	*/
+	public function update_ticket( $ticket ){
+		return $this->_model->updateTicket( $ticket );
+	}
 
 	/*
 	*Returns ticket object with specified id.
@@ -79,8 +89,7 @@ class TicketsController extends Kanzu_Controller {
                 else{
                     $query.= " ORDER BY tkt_time_logged DESC ";
                     return $this->_model->getAll( $query );
-                }
-		
+                }		
 	}
 	
 	/**
