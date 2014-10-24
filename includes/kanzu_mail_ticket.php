@@ -19,14 +19,14 @@ require(dirname(__FILE__) . '/admin/libs/Model.php');
 require(dirname(__FILE__) . '/admin/controllers/Users.php');
 
 
-$kanzuserver_url    		= 'mail.kanzucode.com'; //get_option('kanzu_mailhost')
-$kanzueserver_login 		= 'support@kanzucode.com'; //get_option(kanzu_maillogin')
-$kanzuserver_pass   		= 'b0GKn(Z7_LUi'; //get_option(kanzu_mailpass')
-$kanzu_mailbox   		= 'INBOX'; //get_option('kanzu_mailbox')
-$kanzu_serverport		= null; //get_option(kanzu_mailport')
-$kanzu_useSSL   		= TRUE;//get_option('kanzu_useSSL')
-$kanzu_validate_certificate 	= 'no';//get_option('kanzu_validateSSL'). If use_SSL is true
-$kanzu_mail_protocol 		= 'imap';//get_option('kanzu_mail_protocol'). Can be imap or pop3
+$kanzuserver_url    		= get_option('mail_server');
+$kanzueserver_login 		= get_option('mail_account');
+$kanzuserver_pass   		= get_option('mail_password');
+$kanzu_mailbox   		= get_option('mail_mailbox');
+$kanzu_serverport		= get_option('mail_port');
+$kanzu_useSSL   		= get_option('mail_useSSL');
+$kanzu_validate_certificate 	= get_option('mail_validate_certificate'); //If use_SSL is true
+$kanzu_mail_protocol 		= get_option('mail_protocol'); // Can be imap or pop3
 $protocol			= ( $kanzu_useSSL ? $kanzu_mail_protocol.'/ssl' : $kanzu_mail_protocol);
 
 $MBox = new Kanzu_Mail();

@@ -20,7 +20,7 @@ echo "<b>TICKETS MODEL UNIT TESTS</b>";
 #Test suit
 ######################################################################
 $TestSuit = array(
-'TicketInsert' => True,
+'TicketInsert' => FALSE,
 'TicketDelete' => False,
 'TicketUpdate' => False,
 'TicketGetTicket' => False,
