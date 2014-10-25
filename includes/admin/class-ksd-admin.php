@@ -374,7 +374,7 @@ class Kanzu_Support_Admin {
                 $tO->tkt_severity           = $severity;
                 $tO->tkt_status             = $status;
                 $tO->tkt_logged_by          = $tkt_logged_by;
-                $to->tkt_assigned_to        = $assign_to;
+                $t0->tkt_assigned_to        = $assign_to;
 
                 $TC = new TicketsController();
                return ( $TC->logTicket( $tO ) > 0 ) ? True : False;
