@@ -187,8 +187,10 @@ a.new-ticket:hover {
    cursor: pointer; 
 }
 .ticket-actions {
-	visibility: hidden;
-	font-size: 0.8em;
+  clear: left;
+  font-size: 0.8em;
+  visibility: hidden;
+  width: 100%;
 }
 #ticket-list-item .ticket-actions a{
 	color: #0074a2;
@@ -265,16 +267,19 @@ ul.dashboard-statistics-summary li {
     float: left; /*This is important otherwise the width element won't work*/
 }
 
-#ticket-list-item .subject{
-    margin: 0;
-    padding: 0;
-    font-weight: bold;
+#ticket-list-item .subject-and-message-excerpt {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 64%;
 }
-#ticket-list-item .subject a,#ticket-list-item .customer_name a{
+#ticket-list-item .subject-and-message-excerpt a,#ticket-list-item .customer_name a{
     text-decoration: none;
 }
-#ticket-list-item .ticket-time{
-    float: right;
+#ticket-list-item .ticket-time {
+  float: right;
+  text-align: right;
+  width: 10%;
 }
 #ticket-list-item .description{
     font-style: normal;
