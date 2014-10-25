@@ -20,9 +20,9 @@ include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
 			
 		$this->_formats = array(
 		'tkt_id' 		 => '%d', 
-		'tkt_subject' 		 => '%s', 
-		'tkt_initial_message'	 => '%s',
-		'tkt_description' 	 => '%s' , 
+		'tkt_subject' 		 => '%s', 		
+		'tkt_description' 	 => '%s', 
+                'tkt_message_excerpt'	 => '%s',
 		'tkt_channel' 		 => '%s',
 		'tkt_status' 		 => '%s',
 		'tkt_logged_by' 	 => '%s',  

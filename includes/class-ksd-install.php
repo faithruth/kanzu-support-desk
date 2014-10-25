@@ -250,9 +250,9 @@ class Kanzu_Support_Install {
                 $kanzusupport_tables = "
 				CREATE TABLE IF NOT EXISTS`{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-				`tkt_subject` VARCHAR(512) NOT NULL, 
-                                `tkt_initial_message` TEXT NOT NULL, 
-				`tkt_description` TEXT ,
+				`tkt_subject` VARCHAR(512) NOT NULL,                                 
+				`tkt_description` TEXT NOT NULL,
+                                `tkt_message_excerpt` TEXT NOT NULL, 
 				`tkt_channel` ENUM('STAFF','FACEBOOK','TWITTER','SUPPORT_TAB','EMAIL','CONTACT_FORM') DEFAULT 'STAFF',
 				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
 				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 

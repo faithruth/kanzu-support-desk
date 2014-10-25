@@ -367,7 +367,7 @@ class Kanzu_Support_Admin {
         public function log_new_ticket ( $channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$tkt_logged_by,$status ){
             	$tO = new stdClass(); 
                 $tO->tkt_subject    	    = $title;
-                $tO->tkt_initial_message    = $description;
+                $tO->tkt_message_excerpt    = $description;
                 $tO->tkt_description        = $description;
                 $tO->tkt_channel            = $channel;
                 $tO->tkt_severity           = $severity;
