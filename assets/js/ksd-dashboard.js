@@ -27,10 +27,13 @@ KSDDashboard = function(){
                             function(response) {
                       jQuery("ul.dashboard-statistics-summary").removeClass("pending");
                        var raw_response = JSON.parse(response);
+                       var unassignedTickets = ( 'undefined' !== typeof raw_response.unassigned_tickets[0] ? raw_response.unassigned_tickets[0].unassigned_tickets : 0 );
+                       var openTickets = ( 'undefined' !== typeof raw_response.open_tickets[0] ? raw_response.open_tickets[0].open_tickets : 0)
+                       var averageResponseTime = ( 'undefined' !== typeof raw_response.average_response_time ? raw_response.average_response_time : '00:00' );
                        var the_summary_stats = "";
-                       the_summary_stats+= "<li>"+raw_response.open_tickets[0].open_tickets+" <span>Total Open Tickets</span></li>";
-                       the_summary_stats+= "<li>"+raw_response.unassigned_tickets[0].unassigned_tickets+" <span>Unassigned Tickets</span></li>";
-                       the_summary_stats+= "<li>"+raw_response.average_response_time+" <span>Avg. Response Time</span></li>";
+                       the_summary_stats+= "<li>"+openTickets+" <span>Total Open Tickets</span></li>";
+                       the_summary_stats+= "<li>"+unassignedTickets+" <span>Unassigned Tickets</span></li>";
+                       the_summary_stats+= "<li>"+averageResponseTime+" <span>Avg. Response Time</span></li>";
                        jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
                 });	
         }
