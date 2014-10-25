@@ -338,7 +338,11 @@ class Kanzu_Support_Install {
                         'mail_useSSL'                       => "no",         
                         'mail_validate_certificate'         => "no",
                 	'mail_port'                         => "143",
-                        'mail_mailbox'         	            => "INBOX"
+                        'mail_mailbox'         	            => "INBOX",
+                    
+                        /** Autoreplies ****************************************************/
+                    
+                        'auto_enable_autoreplies'           => "no"
                     );
             }
  

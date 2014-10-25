@@ -52,6 +52,7 @@
 }
 #admin-kanzu-support-desk .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
 	background: #2ea2cc;
+        color: #FFF;
 }
 #admin-kanzu-support-desk .ui-state-active a, .ui-widget-content .ui-state-active a, .ui-widget-header .ui-state-active a{
 	color: #FFF;
@@ -333,6 +334,9 @@ ul.edit-ticket-options li.selected{
   position: fixed;
   right: 120px;
   padding: 0 12px 2px;
+}
+#settings-accordion{
+  padding-top: 12px;
 }
 .ui-tooltip {
 	padding: 8px !important;
