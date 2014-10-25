@@ -36,7 +36,7 @@ KSDTickets = function(){
                                                 rws += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
                                                 rws += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
                                                 rws +=	'<span class="subject-and-message-excerpt"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit"><strong>'+value.tkt_subject+'</strong>';
-                                                rws += 	' - '+value.tkt_description; 
+                                                rws += 	' - '+value.tkt_message_excerpt; 
                                                 rws += 	'</a></span>';
                                                 rws += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
                                                 rws += 	'</div>';
