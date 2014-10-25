@@ -8,7 +8,7 @@
         <!--<textarea value="<?php ; ?>" rows="7" class="ksd-description" name="description"></textarea>-->
         </div>
         <div class="ksd-description">
-        <?php wp_editor( __('Ticket Description','kanzu-support-desk'), 'ksd-ticket-description', array( "media_buttons" => false) ); ?> 
+        <?php wp_editor(  '' , 'ksd-ticket-description', array( "media_buttons" => false, "textarea_rows" => 5 ) ); ?> 
         </div>
         <div class="ksd-severity">
             <label for="tkt_severity"><?php _e('Severity','kanzu-support-desk'); ?></label>

@@ -142,7 +142,7 @@ class Kanzu_Support_Admin {
 
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'admin.php?page=' . KSD_SLUG ) . '">' . __( 'Settings', KSD_SLUG ) . '</a>'
+				'settings' => '<a href="' . admin_url( 'admin.php?page=ksd-settings' ) . '">' . __( 'Settings', KSD_SLUG ) . '</a>'
 			),
 			$links
 		);
@@ -365,9 +365,10 @@ class Kanzu_Support_Admin {
          * @return type
          */
         public function log_new_ticket ( $channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$tkt_logged_by,$status ){
-            	$tO = new stdClass(); 
+            	$ksd_excerpt_length = 30;
+                $tO = new stdClass(); 
                 $tO->tkt_subject    	    = $title;
-                $tO->tkt_message_excerpt    = $description;
+                $tO->tkt_message_excerpt    =  wp_trim_words( $description, $ksd_excerpt_length );
                 $tO->tkt_description        = $description;
                 $tO->tkt_channel            = $channel;
                 $tO->tkt_severity           = $severity;
