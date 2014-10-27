@@ -14,21 +14,7 @@
 </div>
 
 <div class="ksd-grid-container">
-    <div class="ksd-row">
-        <table class="ksd-table" border="0" cellspacing="0" >
-            <thead>
-            <th class="">
-                    <input type="checkbox" class="tkt_chkbx_all" id="tkt_chkbx_all_<?php echo $tab_id;?>" checked="">
-            </th>
-            <th class="">Subject</th>
-            <th class="">Channel</th>
-            <th class="">Logged by</th>
-            <th class="">Time logged</th>
-            </thead>
-            <tbody id="ticket-list">
-            </tbody>
-                
-        </table>
+    <div id="ticket-list">
     </div>
 </div>    
   
@@ -45,5 +31,5 @@
         </div>
     </div>
 </div>
-
+ 
 

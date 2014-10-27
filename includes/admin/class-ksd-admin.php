@@ -306,12 +306,12 @@ class Kanzu_Support_Admin {
                 
                 //We now pick the limit from screen options
 
-                $per_page = get_user_meta(get_current_user_id(), $this->tickets_per_page_options_key, true);
-
+              //  $per_page = get_user_meta(get_current_user_id(), $this->tickets_per_page_options_key, true);
+                //Switched back to $limit to address AJAX issue first
                         
                 //limit
                 $count_filter = $filter; //Query without limit to get the total number of rows
-                $filter .= " LIMIT $offset , $per_page " ;
+                $filter .= " LIMIT $offset , $limit " ;
                 
                 //Results count
                 $tickets = new TicketsController(); 

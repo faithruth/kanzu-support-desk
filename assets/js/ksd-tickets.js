@@ -25,15 +25,15 @@ KSDTickets = function(){
         this.TicketPagination();
     }
 
-    this.getTickets = function( current_tab, search, limit, offset){
+    this.getTickets = function( current_tab, search, limit, offset ){
         
         //Default values
-        if(typeof(search)==='undefined')  search = "";
-        if(typeof(limit) ==='undefined')  limit = 5;
-        if(typeof(offset)==='undefined')  offset = 0;
+        if( typeof(search)=== 'undefined' )  search = "";
+        if( typeof(limit) === 'undefined' )  limit = 5;
+        if( typeof(offset)=== 'undefined' )  offset = 0;
         
-                    if(jQuery(current_tab).hasClass("pending"))
-                    {//Check if the tab has been loaded before
+                    if(jQuery(current_tab).hasClass("pending"))//Check if the tab has been loaded before
+                    {
                         var data = {
                                 action : 'ksd_filter_tickets',
                                 ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
@@ -48,22 +48,19 @@ KSDTickets = function(){
                             if(jQuery.isArray(JSON.parse(response))){
                                     
                                 
-                                     jQuery(current_tab+' #ticket-list tr').remove();
+                                   //  jQuery(current_tab+' #ticket-list').remove();
                                      
-                                     tab_id = "#tickets-tab-2".replace("#tickets-tab-","");
+                                   tab_id = current_tab.replace("#tickets-tab-","");
                                      rws2 = "";
-                                     rws2 += '<tr class="ksd-row-all-hide" id="ksd_row_all_'+tab_id+'">';
-                                     rws2 += '<td>&nbsp;</td>';
-                                     rws2 += '<td colspan="4"> \
-                                            <div  id="tkt_all_options"> \
-                                            <a href="#" class="trash" id="#">Trash All</a> | \
-                                            <a href="#" id="#" class="change_status">Change All Statuses</a> | \
-                                            <a href="#" id="#" class="assign_to">Assign All To</a> \
-                                            </div>' ;
-                                     rws2 += '</td>';
-                                     rws2 += '</tr>';
+                                     rws2 += '<div class="ksd-row-all-hide" id="ksd_row_all_'+tab_id+'">';
+                                     rws2 +=    '<div  id="tkt_all_options"> \
+                                                    <a href="#" class="trash" id="#">Trash All</a> | \
+                                                    <a href="#" id="#" class="change_status">Change All Statuses</a> | \
+                                                    <a href="#" id="#" class="assign_to">Assign All To</a> \
+                                                </div>' ;
+                                     rws2 += '</div>';
                                      
-                                     jQuery(current_tab+' #ticket-list').append( rws2);
+                                     jQuery(current_tab+' #ticket-list').html( rws2);
                                      
                                     jQuery.each( JSON.parse(response)[0], function( key, value ) {
                                             /*
@@ -83,33 +80,27 @@ KSDTickets = function(){
                                             rws += 	ksd_admin.ksd_agents_list;
                                             rws += 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
                                             rws += 	'</div>';
-                                            rws +=  '</div>';
+                                            rws +=      '</div>';
                                             jQuery(current_tab+' #ticket-list2').append( rws);
                                             */
 
                                             /*@todo: for testing template 2 */
-                                            rws2 = '<tr class="ksd-row-data" id="ksd_tkt_id_'+value.tkt_id+'">';
-                                            rws2 += '<td class=""><input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'"></td>';
-                                            rws2 += '<td class=""><span class="subject"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a></span></td>';
-                                            rws2 += '<td class="">'+value.tkt_channel+'</td>';
-                                            rws2 +=  '            <td class=""><span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span></td>';
-                                            rws2 +=  '            <td class=""><span class="ticket-time">'+value.tkt_time_logged+'</span></td>';
-                                            rws2 +=  '</tr>';
-                                            rws2 +=  '<tr class="ksd-row-ctrl" id="ksd_tkt_ctrl_'+value.tkt_id+'">';
-                                            rws2 +=  '<td>&nbsp;</td>';
-                                            rws2 +=  '<td colspan="4">';
-                                            rws2 += '<span id="ksd_trash_'+value.tkt_id+'">Trash</span> | \
-                                                     <span>Change Status</span> | \
-                                                     <span>Assign To</span>';
-                                            //rws2 += '   <div class="ticket-actions" id="tkt_'+value.tkt_id+'">';
-                                            //rws2 += '   <div>';
-                                            //rws2 += 	'<a href="#" class="trash" id="tkt_'+value.tkt_id+'">Trash</a> | ';
-                                            //rws2 += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="change_status">Change Status</a> | ';
-                                            //rws2 += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="assign_to">Assign To</a>';
-                                            //rws2 += 	ksd_admin.ksd_agents_list;
-                                            //rws2 += 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
-                                            //rws2 +=     '</div>';
-                                            rws2 =  rws2 + '</td></tr>';
+                                            rws2 = '<div class="ksd-row-data ticket-list-item" id="ksd_tkt_id_'+value.tkt_id+'">';
+                                            rws2 += 	'<div class="ticket-info">';
+                                            rws2 += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
+                                            rws2 += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
+                                            rws2 +=	'<span class="subject-and-message-excerpt"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject;
+                                            rws2 += 	' - '+value.tkt_message_excerpt+'</span></a>';                                            
+                                            rws2 += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
+                                            rws2 += 	'</div>';
+                                            rws2 += 	'<div class="ticket-actions" id="tkt_'+value.tkt_id+'">';
+                                            rws2 += 	'<a href="#" class="trash" id="tkt_'+value.tkt_id+'">Trash</a> | ';
+                                            rws2 += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="change_status">Change Status</a> | ';
+                                            rws2 += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="assign_to">Assign To</a>';
+                                            rws2 += 	ksd_admin.ksd_agents_list;
+                                            rws2 += 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
+                                            rws2 += 	'</div>';
+                                            rws2 +=     '</div>';
                                             jQuery(current_tab+' #ticket-list').append( rws2);
                                             
                                             
@@ -123,18 +114,18 @@ KSDTickets = function(){
                                     RowCtrlEffects();
                             }
                             else{
-                                jQuery(current_tab+' #ticket-list tr').remove();
+                              //  jQuery(current_tab+' #ticket-list tr').remove();
 
-                                     rws2 = ' \
+                                     /*rws2 = ' \
                                               <tr class="ksd-row-nodata"> \
                                               <td colspan="5">\
                                               ' + JSON.parse(response) + ' \
                                               </td> \
-                                              </tr>';
+                                              </tr>';*/
                                      
-                                //jQuery(current_tab+' #select-all-tickets').remove();  
-                                //jQuery(current_tab+' #ticket-list').addClass("empty").append(JSON.parse(response));   
-                                jQuery(current_tab+' #ticket-list').append( rws2);
+                                jQuery(current_tab+' #select-all-tickets').remove();  
+                                jQuery(current_tab+' #ticket-list').addClass("empty").append(JSON.parse(response));   
+                              //  jQuery(current_tab+' #ticket-list').append( rws2);
                             }//eof:if
 
                             jQuery(current_tab).removeClass("pending");
@@ -437,7 +428,7 @@ KSDTickets = function(){
             }	
             /**Do AJAX calls for filtering tickets on click of any of the tabs**/
             jQuery( "#ticket-tabs li a" ).click(function() {
-                    _this.getTickets( jQuery(this).attr('href'));
+                    _this.getTickets( jQuery(this).attr('href') );
             });	
 
             jQuery( "input[type=checkbox]" ).on( "click", function() {
@@ -556,7 +547,8 @@ KSDTickets = function(){
             
             
             //start:Limit
-            jQuery(".ksd-pagination-limit").bind("mouseleave mouseout", function(){
+            //Removed mouseout. Was sending multiple AJAX calls at the same time. 
+            jQuery(".ksd-pagination-limit").bind("mouseleave", function(){
                 var limit = jQuery(this).val();
                 
                 var tab_id = jQuery(this).attr("id").replace("ksd_pagination_limit_","");
@@ -564,7 +556,7 @@ KSDTickets = function(){
                 var tab_id_name="#tickets-tab-"+tab_id;
                 //alert("limit:" + limit + " search:" + search_text);
                 jQuery(tab_id_name).addClass("pending");
-                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit);
+                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );
                 
             });
             
@@ -578,7 +570,7 @@ KSDTickets = function(){
                 var tab_id_name="#tickets-tab-"+tab_id;
                 //alert("limit:" + limit + " search:" + search_text);
                 jQuery(tab_id_name).addClass("pending");
-                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit);                   
+                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );                   
                 }
 
                 
@@ -607,7 +599,6 @@ KSDTickets = function(){
                     var tab_id = jQuery(this).attr("name").replace("ksd_tkt_search_input_","");
                     var search_text = jQuery("input[name=ksd_tkt_search_input_"+tab_id+"]").val();
                     var tab_id_name="#tickets-tab-"+tab_id;
-
                     //get pagination
                     var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
 

@@ -193,11 +193,11 @@ a.new-ticket:hover {
   visibility: hidden;
   width: 100%;
 }
-#ticket-list-item .ticket-actions a{
+.ticket-list-item .ticket-actions a{
 	color: #0074a2;
 	text-decoration: none;
 }
-div#ticket-list-item:hover .ticket-actions {
+div.ticket-list-item:hover .ticket-actions {
 	visibility: visible;
 }
 .ticket-actions ul.status li:hover{
@@ -252,37 +252,39 @@ ul.dashboard-statistics-summary li {
     padding: 5px 0 5px 8px;
     font-weight: bold;
 }
-#ticket-list-item {
-    width: 98%;
-    padding: 10px 1% 8px;
+.ticket-list-item {
+    width: 100%;
+    padding: 10px 0 8px;
     margin: 0;
     line-height: 20px;
 }
-#ticket-list-item input{
+.ticket-list-item input{
     float: left;
     margin-top: 3px;
     margin-right: 5px;
+    margin-left: 1%;
 }
-#ticket-list-item span.customer_name{
+.ticket-list-item span.customer_name{
     width: 25%;
     float: left; /*This is important otherwise the width element won't work*/
 }
 
-#ticket-list-item .subject-and-message-excerpt {
+.ticket-list-item .subject-and-message-excerpt {
   float: left;
   margin: 0;
   padding: 0;
-  width: 64%;
+  width: 63%;
 }
-#ticket-list-item .subject-and-message-excerpt a,#ticket-list-item .customer_name a{
+.ticket-list-item .subject-and-message-excerpt a,.ticket-list-item .customer_name a{
     text-decoration: none;
 }
-#ticket-list-item .ticket-time {
+.ticket-list-item .ticket-time {
   float: right;
   text-align: right;
-  width: 10%;
+  width: 9%;
+  padding-right: 1%;
 }
-#ticket-list-item .description{
+.ticket-list-item .description{
     font-style: normal;
 }
 ul.edit-ticket-options {
