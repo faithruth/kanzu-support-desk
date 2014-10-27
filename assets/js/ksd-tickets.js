@@ -736,7 +736,7 @@ KSDTickets = function(){
                             cpage = current_page + 1;
                         }
                         if(cpage == ">>" || cpage=='&gt;&gt;'){
-                            cpage = (total_results/limit);
+                            cpage = Math.Ceil(total_results/limit);
                         }
                         if(cpage == "<" || cpage == '&lt;'){
                             cpage = current_page - 1;
