@@ -680,6 +680,12 @@ KSDTickets = function(){
             return parseInt(curpage);
         }
         
+        
+        _getPagLimt = function(tab_id){
+            var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
+            return limit;
+        }
+        
         /**
          * Renders the table pagination
          * 
@@ -691,7 +697,9 @@ KSDTickets = function(){
          */
         _loadTicketPagination = function( tab_id, current_page, total_results, limit){
                     
-                    if( parseInt(total_results) < 1 ) return;
+                    //@TODO: Why is this coming as o instead of 0.
+                    if( total_results == "o" || total_results == "0"  ) return; 
+                    
                     console.log('total_results:' + total_results);
             
                     var pages = (total_results/limit);
@@ -719,6 +727,8 @@ KSDTickets = function(){
                     jQuery("#ksd_pagination_"+ tab_id + " ul li a").click(function(){
                         var cpage = jQuery(this).html() ;
                         var current_page = _getCurrentPage(tab_id);
+                        var limit = _getPagLimt(tab_id);
+                        var pages = total_results/limit;
                         
                         //console.log( "cpage:" + cpage);
                         //Prev, Next
@@ -735,6 +745,9 @@ KSDTickets = function(){
                             cpage = 1;
                         }
                         
+                        if( cpage <  1 || cpage > pages ){
+                            return;
+                        }
                         
                         cpage=parseInt(cpage);
                         cpage = (cpage == "NaN")?1 : cpage;

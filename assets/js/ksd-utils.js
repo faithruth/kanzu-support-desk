@@ -20,3 +20,34 @@ KSDUtils.showDialog = function(dialog_type,message){
 KSDUtils.isNumber = function(){
     return typeof n== "number" && isFinite(n) && n%1===0;
 }
+/*
+KSDUtils.LOGLEVEL = 1;//0:INFO|1:DEBUG|2:ERROR|3:WARNING|4:ALL|-1:NONE
+KSDUtils.LOGLEVELS=['KSDINFO','KSDDEBUG','KSDERROR','KSDWARNING','KSDALL','NONE']; 
+KSDUtils.log = function(msg, level){ //DEGUG, INFO
+    if(typeof level === 'undefined') level = 1; //defualt
+    if( KSDUtils.LOGLEVEL == 0 && level == KSDUtils.LOGLEVEL){
+        console.log( KSDUtils.LOGLEVELS[level] + ": " + msg);
+        return;
+    }
+    
+    if( KSDUtils.LOGLEVEL == 1 && level == KSDUtils.LOGLEVEL){
+        console.log( KSDUtils.LOGLEVELS[level] + ": " + msg);
+        return;
+    }
+    
+    if( KSDUtils.LOGLEVEL == 2 && level == KSDUtils.LOGLEVEL){
+        console.log( KSDUtils.LOGLEVELS[level] + ": " + msg);
+        return;
+    }
+    
+    if( KSDUtils.LOGLEVEL == 3 ){
+        lvl= (level > -1 && level < KSDUtils.LOGLEVELS.length) ? 
+        KSDUtils.LOGLEVELS[level] : "KSDLOG";
+        console.log( KSDUtils.LOGLEVELS[level] + ": " + msg);
+        return;
+    }
+    
+    if( KSDUtils.LOGLEVEL == -1){
+        return;
+    }
+}*/
