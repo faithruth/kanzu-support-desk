@@ -730,6 +730,8 @@ KSDTickets = function(){
                         var limit = _getPagLimt(tab_id);
                         var pages = Math.ceil(total_results/limit);
                         
+                        
+                            
                         //console.log( "cpage:" + cpage);
                         //Prev, Next
                         if(cpage == ">" || cpage == "&gt;"){
@@ -745,7 +747,7 @@ KSDTickets = function(){
                             cpage = 1;
                         }
                         
-                        if( cpage <  1 || cpage > pages ){
+                        if( cpage <  1 || cpage > pages || cpage == current_page ){
                             return;
                         }
                         console.log("cpage:" + cpage 
