@@ -1,4 +1,6 @@
-<?php if ( isset($_GET['ticket']) ):  
+<?php
+global $tab_id;
+if ( isset($_GET['ticket']) ):  
         include_once('html-admin-single-ticket.php');
   else: ?>
     <h2 class="admin-ksd-tab-title"><?php __('Tickets','kanzu-support-desk'); ?></h2>
@@ -12,22 +14,22 @@
 			<li><a href="#tickets-tab-6"><?php _e('Resolved','kanzu-support-desk'); ?></a></li>
 		</ul>
 		<div id="tickets-tab-1" class="admin-ksd-tickets-content pending">
-			<?php include('html-admin-tickets-list-template.php'); ?>
+			<?php $tab_id=1; include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-2" class="admin-ksd-tickets-content pending">
-			<?php include('html-admin-tickets-list-template.php'); ?>
+			<?php $tab_id=2; include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-3" class="admin-ksd-tickets-content pending">
-			<?php include('html-admin-tickets-list-template.php'); ?>
+			<?php $tab_id=3; include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-4" class="admin-ksd-tickets-content pending">
-			<?php include('html-admin-tickets-list-template.php'); ?>
+			<?php $tab_id=4; include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-5" class="admin-ksd-tickets-content pending">
-			<?php include('html-admin-tickets-list-template.php'); ?>
+			<?php $tab_id=6; include('html-admin-tickets-list-template.php'); ?>
 		</div>
 		<div id="tickets-tab-6" class="admin-ksd-tickets-content pending">
-			<?php include('html-admin-tickets-list-template.php'); ?>
+			<?php $tab_id=6; include('html-admin-tickets-list-template.php'); ?>
 		</div>
             <div id="delete-dialog" class="hidden" title="<?php _e("Delete ticket","kanzu-support-desk"); ?>">
                 <?php _e("Are you sure you want to delete this ticket and all data related to it?","kanzu-support-desk"); ?>

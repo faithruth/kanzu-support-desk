@@ -16,3 +16,7 @@ KSDUtils.showDialog = function(dialog_type,message){
     jQuery('.'+dialog_type).html(message);//Set the message
     jQuery('.'+dialog_type).fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
 }
+
+KSDUtils.isNumber = function(){
+    return typeof n== "number" && isFinite(n) && n%1===0;
+}

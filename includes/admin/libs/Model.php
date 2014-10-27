@@ -127,6 +127,21 @@
 	public function getObj(){
 		return (new stdClass());
 	}
+        
+        public function getCount( $filter="", $table=""){
+            global $wpdb;
+                
+            $where = ( $filter != "" )? " WHERE " : "" ;
+            $table = ( $table != "" )? $table : $this->_tablename ;
+            $filter = " SELECT * FROM $table $where $filter ";
+            
+            $query = " SELECT COUNT(*) AS count FROM ( $filter ) t";
+            $obj = $wpdb->get_results( $query, OBJECT );
+            return $obj[0]->count;
+            return $query;
+            
+                
+        }
  }
  
  ?>

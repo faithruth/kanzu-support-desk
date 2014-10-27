@@ -97,6 +97,7 @@ class Kanzu_Support_Admin {
 	public function enqueue_admin_styles() {
 	
 		wp_enqueue_style( KSD_SLUG .'-admin-styles', plugins_url( '../../assets/css/admin-kanzu-support-desk.css', __FILE__ ), array(), KSD_VERSION );
+                wp_enqueue_style( KSD_SLUG .'-admin-css', plugins_url( '../../assets/css/ksd.css', __FILE__ ), array(), KSD_VERSION );
 
 	}
 
@@ -243,8 +244,41 @@ class Kanzu_Support_Admin {
 			default://'My Unresolved'
                                 $filter = " tkt_assigned_to = ".get_current_user_id()." AND tkt_status != 'RESOLVED'";				
 		endswitch;
+                
+                
+                $offset = $_POST['offset'];
+                $limit  = $_POST['limit'];
+                $search = $_POST['search'];
+                
+                //search
+                if( $search != "" && $search !="Search..."){
+                    $filter .= " AND UPPER(tkt_subject) LIKE UPPER('%$search%') ";
+                }
+                
+                //order
+                $filter .= " ORDER BY tkt_time_logged DESC ";
+                
+                //limit
+                $count_filter = $filter; //Query without limit to get the total number of rows
+                $filter .= " LIMIT $offset , $limit " ;
+                
+                //Results count
+                $tickets = new TicketsController(); 
+                $count   = $tickets->get_count( $count_filter );
                 $raw_tickets = $this->filter_ticket_view( $filter, $check_ticket_assignments );
-                $response = ( empty( $raw_tickets ) ? __( "Nothing to see here. Great work!","kanzu-support-desk" ) : $raw_tickets );
+                
+                //$response = ( empty( $raw_tickets ) ? __( "Nothing to see here. Great work!","kanzu-support-desk" ) : $raw_tickets );
+                
+                $response = null;
+                if( empty( $raw_tickets ) ){
+                    $response = __( "Nothing to see here. Great work!","kanzu-support-desk" );
+                }    else{
+                    $response = array(
+                        0 => $raw_tickets,
+                        1 => $count
+                    );
+                }
+                
 		echo json_encode($response);		 
 		die();// IMPORTANT: don't leave this out
 	}

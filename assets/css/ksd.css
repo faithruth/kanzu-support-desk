@@ -1,0 +1,341 @@
+/* * @requires KSDUtils
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ * */
+/* * @requires KSDUtils
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ * */
+.shadow {
+  box-shadow: 0 1px 2px 0 #555555;
+}
+.divider {
+  border-style: solid;
+  border-width: 0 1px 0 1px;
+  border-color: transparent #444444 transparent #888888;
+}
+.gradient {
+  background: linear-gradient(top, #7a7a7a 0%, #6c6c6c 50%, #545454 51%, #6a6a6a 100%);
+}
+.hovereffect {
+  background: linear-gradient(top, #545454 0%, #434343 50%, #333333 51%, #505050 100%);
+}
+/* * @requires KSDUtils
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ * */
+.ksd-grid-container {
+  width: 100%;
+  max-width: 1200px;
+}
+.ksd-row:before,
+.ksd-row:after {
+  content: "";
+  display: table ;
+  clear: both;
+}
+[class*='ksd-col-'] {
+  float: left;
+  min-height: 1px;
+  width: 16.66%;
+  padding: 2px;
+}
+.ksd-col-1 {
+  width: 16.66%;
+}
+.ksd-col-2 {
+  width: 33.33%;
+}
+.ksd-col-3 {
+  width: 50%;
+}
+.ksd-col-4 {
+  width: 66.66%;
+}
+.ksd-col-5 {
+  width: 83.33%;
+}
+.ksd-col-6 {
+  width: 100%;
+}
+/*Gutters*/
+.ksd-grid-container * {
+  box-sizing: border-box;
+}
+/*Responsive*/
+/*Screens < 800px*/
+@media all and (max-width: 650px) {
+  .ksd-col-1 {
+    width: 50%;
+  }
+  .ksd-col-2 {
+    width: 100%;
+  }
+  .ksd-col-3 {
+    width: 100%;
+  }
+  .ksd-col-4 {
+    width: 100%;
+  }
+  .ksd-col-5 {
+    width: 100%;
+  }
+  .ksd-col-6 {
+    width: 100%;
+  }
+}
+@media all and (max-width: 800px) {
+  .ksd-col-1 {
+    width: 33.33%;
+  }
+  .ksd-col-2 {
+    width: 50%;
+  }
+  .ksd-col-3 {
+    width: 83.33%;
+  }
+  .ksd-col-4 {
+    width: 100%;
+  }
+  .ksd-col-5 {
+    width: 100%;
+  }
+  .ksd-col-6 {
+    width: 100%;
+  }
+  .ksd-row .ksd-col-2:last-of-type {
+    width: 100%;
+  }
+  .ksd-row .ksd-col-5 ~ .col-1 {
+    width: 100%;
+  }
+}
+/*
+*KSD (Tickets) Table
+*===============================================================
+*/
+.ksd-table {
+  width: 100%;
+  border: 0px;
+  padding: 0px;
+  cellspacing: 0px;
+}
+.ksd-table th {
+  text-align: left;
+  font-weight: bold;
+  margin: 0px;
+  padding: 2px;
+  color: white;
+}
+.ksd-table thead:first-child {
+  width: 10px;
+}
+.ksd-table thead {
+  background-color: #2ea2cc;
+  height: 35px;
+}
+.ksd-table tbody tr {
+  height: 30px;
+}
+.ksd-table tbody tr a {
+  text-decoration: none;
+}
+.ksd-table tbody .ksd-row-all {
+  display: none;
+}
+.ksd-table tbody .ksd-row-data {
+  /*Display controls when curser is hovered of row*/
+}
+.ksd-table tbody .ksd-row-data:hover td {
+  border-top: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-data:hover td:first-child {
+  border-left: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-data:hover td:last-child {
+  border-right: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-data:hover + .ksd-row-ctrl {
+  font-size: 11px;
+  color: #2ea2cc;
+  display: table-row;
+  font-weight: bold;
+}
+.ksd-table tbody .ksd-row-data:hover + .ksd-row-ctrl td {
+  border-bottom: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-data:hover + .ksd-row-ctrl td:first-child {
+  border-left: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-data:hover + .ksd-row-ctrl td:last-child {
+  border-right: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-ctrl {
+  /*Initially hide the ticket management controls*/
+  display: none;
+}
+.ksd-table tbody .ksd-row-ctrl:hover {
+  /*keep controls*/
+  display: table-row;
+  font-size: 11px;
+  color: #2ea2cc;
+  font-weight: bold;
+}
+.ksd-table tbody .ksd-row-ctrl:hover td {
+  border-bottom: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-ctrl:hover td:first-child {
+  border-left: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-ctrl:hover td:last-child {
+  border-right: solid 2px #2ea2cc;
+}
+.ksd-table tbody .ksd-row-ctrl span:hover {
+  text-decoration: underline;
+}
+.ksd-tbl-header {
+  font-weight: bold;
+  border-top: 1px solid #555555;
+  border-bottom: 1px solid #555555;
+  border-left: 1px solid #555555;
+  height: 25px;
+  padding: 0px;
+}
+.ksd-tbl-header [class*='ksd-col-'] {
+  border-right: 1px solid #555555;
+  padding: 0px;
+}
+.ksd-tbl-rows {
+  font-weight: bold;
+  border-top: 1px solid #555555;
+  border-bottom: 1px solid #555555;
+  border-left: 1px solid #555555;
+  height: 25px;
+  padding: 0px;
+}
+.ksd-tbl-rows [class*='ksd-col-'] {
+  border-right: 1px solid #555555;
+  padding: 0px;
+}
+.ksd-row-ctrl-hover {
+  /*to be appended to ksd-row-data when hovering over ksd-row-ctrl*/
+}
+.ksd-row-ctrl-hover td {
+  border-top: solid 2px #2ea2cc;
+}
+.ksd-row-ctrl-hover td span:hover {
+  text-decoration: underline;
+}
+.ksd-row-ctrl-hover td:first-child {
+  border-left: solid 2px #2ea2cc;
+}
+.ksd-row-ctrl-hover td:last-child {
+  border-right: solid 2px #2ea2cc;
+}
+.ksd-row-all-show {
+  display: table-row;
+}
+.ksd-row-all-show td {
+  font-size: 11px;
+  color: #2ea2cc;
+  font-weight: bold;
+}
+.ksd-row-all-show td a {
+  font-size: 11px;
+  color: #2ea2cc;
+  font-weight: bold;
+}
+.ksd-row-all-show td a:hover {
+  text-decoration: underline;
+}
+.ksd-row-all-hide {
+  display: none;
+}
+.ksd-row-nodata {
+  text-align: center;
+  border: 1px solid #2ea2cc;
+}
+/*Search
+*=============================================================
+*/
+.ksd-ticket-search {
+  text-align: right;
+}
+.ksd-ticket-search span {
+  font-weight: bold;
+}
+.ksd-ticket-search span:hover {
+  color: #2ea2cc;
+}
+.ksd-ticket-search input {
+  border: 1px solid #555555;
+  box-shadow: 0 1px 2px 0 #555555;
+  border-radius: 3px;
+  border: 1px solid #505050;
+}
+.ksd-ticket-search input:hover {
+  border: 1px solid #2ea2cc;
+  box-shadow: 0 1px 2px 0 #555555;
+  border-radius: 3px;
+  border: 1px solid #505050;
+}
+/*Table Pagination
+*=============================================================
+*/
+.ksd-ticket-nav nav {
+  margin: 0px;
+  height: 40px;
+}
+.ksd-ticket-nav nav ul {
+  padding: 0;
+  margin: 0;
+}
+.ksd-ticket-nav nav ul li {
+  display: inline;
+}
+.ksd-ticket-nav nav ul li a {
+  text-decoration: none;
+  display: inline-block;
+  float: left;
+  width: 30px;
+  height: 35px;
+  text-align: center;
+  line-height: 250%;
+  color: #555555;
+  text-shadow: 1px 1px 0px #ffffff;
+  border: none;
+}
+.ksd-ticket-nav nav ul li a:hover {
+  background: linear-gradient(top, #545454 0%, #434343 50%, #333333 51%, #505050 100%);
+}
+.ksd-ticket-nav nav ul li a:hover {
+  border: 1px solid #555555;
+  box-shadow: 0 1px 2px 0 #555555;
+}
+.ksd-ticket-nav nav ul li:first-child a {
+  border-left: none;
+}
+.ksd-ticket-nav nav ul li:last-child a {
+  border-right: none;
+}
+.ksd-ticket-nav nav ul .current-nav {
+  color: #2ea2cc;
+  font-weight: bold;
+  border: 1px solid #2ea2cc;
+  text-align: center;
+  box-shadow: 0 1px 2px 0 #555555;
+}
+.ksd-pagination-limit {
+  width: 50px;
+  border-radius: 3px;
+  border: 1px solid #505050;
+}

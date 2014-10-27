@@ -18,22 +18,26 @@ KSDDashboard = function(){
      * Show statistics summary.
      */
     this.statistics = function(){
-         /**AJAX: Retrieve summary statistics for the dashboard**/
-        if(jQuery("ul.dashboard-statistics-summary").hasClass("pending")){  
-                    jQuery.post(	ksd_admin.ajax_url, 
-                        { 	action : 'ksd_get_dashboard_summary_stats',
-                                ksd_admin_nonce : ksd_admin.ksd_admin_nonce					
-                        }, 
-                            function(response) {
-                      jQuery("ul.dashboard-statistics-summary").removeClass("pending");
-                       var raw_response = JSON.parse(response);
-                       var the_summary_stats = "";
-                       the_summary_stats+= "<li>"+raw_response.open_tickets[0].open_tickets+" <span>Total Open Tickets</span></li>";
-                       the_summary_stats+= "<li>"+raw_response.unassigned_tickets[0].unassigned_tickets+" <span>Unassigned Tickets</span></li>";
-                       the_summary_stats+= "<li>"+raw_response.average_response_time+" <span>Avg. Response Time</span></li>";
-                       jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
-                });	
-        }
+        try{
+            /**AJAX: Retrieve summary statistics for the dashboard**/
+           if(jQuery("ul.dashboard-statistics-summary").hasClass("pending")){  
+                       jQuery.post(	ksd_admin.ajax_url, 
+                           { 	action : 'ksd_get_dashboard_summary_stats',
+                                   ksd_admin_nonce : ksd_admin.ksd_admin_nonce					
+                           }, 
+                               function(response) {
+                         jQuery("ul.dashboard-statistics-summary").removeClass("pending");
+                          var raw_response = JSON.parse(response);
+                          var the_summary_stats = "";
+                          the_summary_stats+= "<li>"+raw_response.open_tickets[0].open_tickets+" <span>Total Open Tickets</span></li>";
+                          the_summary_stats+= "<li>"+raw_response.unassigned_tickets[0].unassigned_tickets+" <span>Unassigned Tickets</span></li>";
+                          the_summary_stats+= "<li>"+raw_response.average_response_time+" <span>Avg. Response Time</span></li>";
+                          jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
+                   });	
+           }
+       }catch(err){
+           console.log(err);
+       }
     }//eof:statistics
 	
 	/*Initialise charts*/

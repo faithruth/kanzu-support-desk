@@ -134,4 +134,14 @@ include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
                         WHERE A.`assign_assigned_to` '.$where;
              return parent::execQuery( $assigned_tickets_query );
          }
+         
+         
+         /*
+          * Return number of rows in query
+          * @param string filter
+          */
+         public function get_count($filter){
+             return parent::getCount($filter);
+             
+         }
  }

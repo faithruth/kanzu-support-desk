@@ -1,0 +1,49 @@
+/* * @requires KSDUtils
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ * */
+@theme: #555;  
+@theme2: #2EA2CC;
+@border-color: #444;
+
+.shadow {  
+    box-shadow: 0 1px 2px 0 @theme;  
+}  
+
+.border(@radius:3px) {  
+    border-radius: @radius;  
+    border: 1px solid @theme - #050505;  
+}  
+
+.divider {  
+    border-style: solid;  
+    border-width: 0 1px 0 1px;  
+    border-color: transparent @theme - #111 transparent @theme + #333;  
+}  
+
+.gradient {  
+    background: linear-gradient(top, @theme + #252525 0%, @theme + #171717 50%, @theme - #010101 51%, @theme + #151515 100%);  
+}  
+
+.gradient_mixin(@color:@theme2) {
+    background: linear-gradient(top, @color + #252525 0%, @color + #171717 50%, @color - #010101 51%, @color + #151515 100%);  }
+
+
+
+.hovereffect {  
+    background: linear-gradient(top, @theme - #010101 0%, @theme - #121212 50%, @theme - #222222 51%, @theme - #050505 100%);  
+}  
+
+.textcolor(@txtcolor) when (lightness(@txtcolor) >= 50%) {  
+    color: @txtcolor;  
+    text-shadow: 1px 1px 0px #000000;  
+}  
+
+.textcolor(@txtcolor) when (lightness(@txtcolor) < 50%) {  
+    color: @txtcolor;  
+    text-shadow: 1px 1px 0px #ffffff;  
+    
+}  
