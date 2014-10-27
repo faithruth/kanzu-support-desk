@@ -728,7 +728,7 @@ KSDTickets = function(){
                         var cpage = jQuery(this).html() ;
                         var current_page = _getCurrentPage(tab_id);
                         var limit = _getPagLimt(tab_id);
-                        var pages = total_results/limit;
+                        var pages = Math.ceil(total_results/limit);
                         
                         //console.log( "cpage:" + cpage);
                         //Prev, Next
@@ -748,11 +748,9 @@ KSDTickets = function(){
                         if( cpage <  1 || cpage > pages ){
                             return;
                         }
-                        
-                        cpage=parseInt(cpage);
-                        cpage = (cpage == "NaN")?1 : cpage;
-                        //cpage = (KSDUtils.isNumber(cpage)) ? cpage : 1;
-                        //console.log( "cpage:" + cpage);
+                        console.log("cpage:" + cpage 
+                                + "limit:" + limit
+                                + "pages:" + pages);
                         //get pagination
                         var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
                         
