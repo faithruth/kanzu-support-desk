@@ -52,6 +52,7 @@
 }
 #admin-kanzu-support-desk .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active{
 	background: #2ea2cc;
+        color: #FFF;
 }
 #admin-kanzu-support-desk .ui-state-active a, .ui-widget-content .ui-state-active a, .ui-widget-header .ui-state-active a{
 	color: #FFF;
@@ -164,9 +165,13 @@ a.new-ticket:hover {
 }
 #ksd-single-ticket #edit-ticket-tabs ul li {
   clear: none;
-  width: 10%;
+  width: 12%;
+  border-radius: 0;
 }
-#edit-ticket-tabs #reply,#edit-ticket-tabs #forward,#edit-ticket-tabs #private-note {
+#ksd-single-ticket #edit-ticket-tabs ul li a{
+    padding: 0 15%;
+}
+#edit-ticket-tabs #reply_ticket,#edit-ticket-tabs #forward_ticket,#edit-ticket-tabs #update_private_note {
     float: left;
     margin-top: 20px;
     padding-left: 0;
@@ -183,8 +188,10 @@ a.new-ticket:hover {
    cursor: pointer; 
 }
 .ticket-actions {
-	visibility: hidden;
-	font-size: 0.8em;
+  clear: left;
+  font-size: 0.8em;
+  visibility: hidden;
+  width: 100%;
 }
 #ticket-list-item .ticket-actions a{
 	color: #0074a2;
@@ -261,16 +268,19 @@ ul.dashboard-statistics-summary li {
     float: left; /*This is important otherwise the width element won't work*/
 }
 
-#ticket-list-item .subject{
-    margin: 0;
-    padding: 0;
-    font-weight: bold;
+#ticket-list-item .subject-and-message-excerpt {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 64%;
 }
-#ticket-list-item .subject a,#ticket-list-item .customer_name a{
+#ticket-list-item .subject-and-message-excerpt a,#ticket-list-item .customer_name a{
     text-decoration: none;
 }
-#ticket-list-item .ticket-time{
-    float: right;
+#ticket-list-item .ticket-time {
+  float: right;
+  text-align: right;
+  width: 10%;
 }
 #ticket-list-item .description{
     font-style: normal;
@@ -324,6 +334,9 @@ ul.edit-ticket-options li.selected{
   position: fixed;
   right: 120px;
   padding: 0 12px 2px;
+}
+#settings-accordion{
+  padding-top: 12px;
 }
 .ui-tooltip {
 	padding: 8px !important;

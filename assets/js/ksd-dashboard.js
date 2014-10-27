@@ -18,32 +18,32 @@ KSDDashboard = function(){
      * Show statistics summary.
      */
     this.statistics = function(){
-        try{
-            /**AJAX: Retrieve summary statistics for the dashboard**/
-           if(jQuery("ul.dashboard-statistics-summary").hasClass("pending")){  
-                       jQuery.post(	ksd_admin.ajax_url, 
-                           { 	action : 'ksd_get_dashboard_summary_stats',
-                                   ksd_admin_nonce : ksd_admin.ksd_admin_nonce					
-                           }, 
-                               function(response) {
-                         jQuery("ul.dashboard-statistics-summary").removeClass("pending");
-                          var raw_response = JSON.parse(response);
-                          var the_summary_stats = "";
-                          the_summary_stats+= "<li>"+raw_response.open_tickets[0].open_tickets+" <span>Total Open Tickets</span></li>";
-                          the_summary_stats+= "<li>"+raw_response.unassigned_tickets[0].unassigned_tickets+" <span>Unassigned Tickets</span></li>";
-                          the_summary_stats+= "<li>"+raw_response.average_response_time+" <span>Avg. Response Time</span></li>";
-                          jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
-                   });	
-           }
-       }catch(err){
-           console.log(err);
-       }
+         /**AJAX: Retrieve summary statistics for the dashboard**/
+        if(jQuery("ul.dashboard-statistics-summary").hasClass("pending")){  
+                    jQuery.post(	ksd_admin.ajax_url, 
+                        { 	action : 'ksd_get_dashboard_summary_stats',
+                                ksd_admin_nonce : ksd_admin.ksd_admin_nonce					
+                        }, 
+                            function(response) {
+                      jQuery("ul.dashboard-statistics-summary").removeClass("pending");
+                       var raw_response = JSON.parse(response);
+                       var unassignedTickets = ( 'undefined' !== typeof raw_response.unassigned_tickets[0] ? raw_response.unassigned_tickets[0].unassigned_tickets : 0 );
+                       var openTickets = ( 'undefined' !== typeof raw_response.open_tickets[0] ? raw_response.open_tickets[0].open_tickets : 0)
+                       var averageResponseTime = ( 'undefined' !== typeof raw_response.average_response_time ? raw_response.average_response_time : '00:00' );
+                       var the_summary_stats = "";
+                       the_summary_stats+= "<li>"+openTickets+" <span>Total Open Tickets</span></li>";
+                       the_summary_stats+= "<li>"+unassignedTickets+" <span>Unassigned Tickets</span></li>";
+                       the_summary_stats+= "<li>"+averageResponseTime+" <span>Avg. Response Time</span></li>";
+                       jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
+                });	
+        }
     }//eof:statistics
 	
 	/*Initialise charts*/
 	this.charts = function(){
             try{
             /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
+ 
                   function drawDashboardGraph() {	
                         jQuery.post( ksd_admin.ajax_url, 
                                 {action : 'ksd_dashboard_ticket_volume',

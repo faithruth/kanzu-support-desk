@@ -36,7 +36,7 @@ function TicketInsert(){
 	//Populate ticket model instalate
 	$tO = new stdClass(); 
 	$tO->tkt_subject    	 = "Title";
-	$tO->tkt_initial_message 	 = "Initial Message";
+	$tO->tkt_message_excerpt 	 = "Initial Message";
 	$tO->tkt_description 	 = "NEW TICKET";
 	$tO->tkt_channel     	 = "EMAIL";
 	$tO->tkt_status 	 	 = "OPEN";
@@ -66,7 +66,7 @@ function TicketUpdate(){
 		//Populate ticket model instalate
 	$tO = new stdClass(); 
 	$tO->new_tkt_subject    	 = "Title Update Test";
-	$tO->new_tkt_initial_message 	 = "Initial Message dasdfasdf";
+	$tO->new_tkt_message_excerpt 	 = "Initial Message dasdfasdf";
 	$tO->tkt_customer_rating = "1";
 	$TM->updateTicket($tO);
 	return true;

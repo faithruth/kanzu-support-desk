@@ -55,7 +55,7 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' )); 
                 add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ));  
                 add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' )); 
-                
+                add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));                 
 
 		
 		/*
@@ -114,11 +114,11 @@ class Kanzu_Support_Admin {
                 //@TODO Uncomment the following line to use GoogleCharts online version for production. Using local for dev
                 //wp_enqueue_script( KSD_SLUG . '-admin-charts', '//google.com/jsapi', array(), KSD_VERSION ); 
                 wp_enqueue_script( KSD_SLUG . '-admin-charts', plugins_url( '../../assets/js/jsapi.js', __FILE__ ), array(), KSD_VERSION );
-                wp_enqueue_script( KSD_SLUG . '-admin-utils', plugins_url( '../../assets/js/ksd-utils.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
-                wp_enqueue_script( KSD_SLUG . '-admin-settings', plugins_url( '../../assets/js/ksd-settings.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
-                wp_enqueue_script( KSD_SLUG . '-admin-dashboard', plugins_url( '../../assets/js/ksd-dashboard.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
-                wp_enqueue_script( KSD_SLUG . '-admin-tickets', plugins_url( '../../assets/js/ksd-tickets.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION );
-                wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip' ), KSD_VERSION ); 
+                wp_enqueue_script( KSD_SLUG . '-admin-utils', plugins_url( '../../assets/js/ksd-utils.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION );
+                wp_enqueue_script( KSD_SLUG . '-admin-settings', plugins_url( '../../assets/js/ksd-settings.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION );
+                wp_enqueue_script( KSD_SLUG . '-admin-dashboard', plugins_url( '../../assets/js/ksd-dashboard.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION );
+                wp_enqueue_script( KSD_SLUG . '-admin-tickets', plugins_url( '../../assets/js/ksd-tickets.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION );
+                wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION ); 
 		$ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );	 //This determines which tab to show as active
                 $agents_list = "<ul class='assign_to hidden'>";
                 foreach (  get_users() as $agent ) {
@@ -143,7 +143,7 @@ class Kanzu_Support_Admin {
 
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'admin.php?page=' . KSD_SLUG ) . '">' . __( 'Settings', KSD_SLUG ) . '</a>'
+				'settings' => '<a href="' . admin_url( 'admin.php?page=ksd-settings' ) . '">' . __( 'Settings', KSD_SLUG ) . '</a>'
 			),
 			$links
 		);
@@ -399,15 +399,16 @@ class Kanzu_Support_Admin {
          * @return type
          */
         public function log_new_ticket ( $channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$tkt_logged_by,$status ){
-            	$tO = new stdClass(); 
+            	$ksd_excerpt_length = 30;
+                $tO = new stdClass(); 
                 $tO->tkt_subject    	    = $title;
-                $tO->tkt_initial_message    = $description;
+                $tO->tkt_message_excerpt    =  wp_trim_words( $description, $ksd_excerpt_length );
                 $tO->tkt_description        = $description;
                 $tO->tkt_channel            = $channel;
                 $tO->tkt_severity           = $severity;
                 $tO->tkt_status             = $status;
                 $tO->tkt_logged_by          = $tkt_logged_by;
-                $to->tkt_assigned_to        = $assign_to;
+                $t0->tkt_assigned_to        = $assign_to;
 
                 $TC = new TicketsController();
                return ( $TC->logTicket( $tO ) > 0 ) ? True : False;
@@ -500,6 +501,24 @@ class Kanzu_Support_Admin {
             $status = update_option( Kanzu_Support_Install::$ksd_options_name, $updated_settings );
             echo json_encode ( ( $status ? __("Settings Updated") : __("Update failed. Please retry") ) );
             die();
+         }
+         
+         /**
+          * Update a ticket's private note
+          * @TODO Change tkt_private_notes to tkt_private_note
+          * @TODO IMPORTANT: Escape user input
+          */
+         public function update_private_note(){
+               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();
+                $updated_ticket = new stdClass();
+                $updated_ticket->tkt_id = $_POST['tkt_id'];
+                $updated_ticket->new_tkt_private_notes = $_POST['tkt_private_note'];
+                $tickets = new TicketsController();		
+		$status = ( $tickets->update_ticket( $updated_ticket  ) ? __("Noted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		echo json_encode( $status );
+		die();// IMPORTANT: don't leave this out             
          }
          
          /**

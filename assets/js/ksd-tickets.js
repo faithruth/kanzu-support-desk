@@ -150,7 +150,6 @@ KSDTickets = function(){
                            });//eof:jQuery.post	
                     }//eof:if                
     }
-
 	/*
 	 * List all tickets
 	 */
@@ -205,21 +204,8 @@ KSDTickets = function(){
 				function(response) {	
 							KSDUtils.showDialog("success",JSON.parse(response));				                            
 				});		
-	});
-        
-		//---------------------------------------------------------------------------------
-        /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
-       //@TODO Fix wp_editor bug that returns stale data with each submission      
-        jQuery('form#edit-ticket').submit( function(e){
-            e.preventDefault();          
-            jQuery.post(	ksd_admin.ajax_url, 
-                                jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
-		function(response) {//@TODO Check for error 	
-                    jQuery("#ticket-replies").append("<div class='ticket-reply'>"+JSON.parse(response)+"</div>");	
-                    //Clear the reply field
-                    jQuery("textarea[name=ksd_ticket_reply]").val(" ");                    
-            });
-        });
+	});       
+
         
       //---------------------------------------------------------------------------------
         /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
@@ -279,24 +265,46 @@ KSDTickets = function(){
 		});	
         }
         this.editTicketForm = function(){
-
+            //--------------------------------------------------------------------------------------
             /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
            //@TODO Fix wp_editor bug that returns stale data with each submission      
             jQuery('form#edit-ticket').submit( function(e){
-                e.preventDefault();          
+                e.preventDefault(); 
+                var action = jQuery("input[name=action]").attr("value");
+                KSDUtils.showDialog("loading");//Show a dialog message
                 jQuery.post(	ksd_admin.ajax_url, 
                                     jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
-                    function(response) {//@TODO Check for error 	
-                        jQuery("#ticket-replies").append("<div class='ticket-reply'>"+JSON.parse(response)+"</div>");	
-                        //Clear the reply field
-                        jQuery("textarea[name=ksd_ticket_reply]").val(" ");                    
+                    function(response) {//@TODO Check for errors 
+                        switch(action){
+                            case "ksd_update_private_note":
+                               KSDUtils.showDialog("success",JSON.parse(response));
+                            break;
+                            default:
+                                jQuery("#ticket-replies").append("<div class='ticket-reply'>"+JSON.parse(response)+"</div>");	
+                                 //Clear the reply field
+                                 jQuery("textarea[name=ksd_ticket_reply]").val(" ");      
+                        }
                 });
             });
             
-        /**While working on a single ticket, switch between reply/forward and Add note modes**/
-         jQuery('ul.edit-ticket-options li').click(function(e){
-         jQuery('ul.edit-ticket-options li').removeClass('selected');//make all tabs inactive        
-         jQuery(this).addClass('selected');    //then make the clicked tab active
+        /**While working on a single ticket, switch between reply/forward and Add note modes
+         * We define the action (used by AJAX) and change the submit button's text
+         * @TODO Move submitButtonText to PHP so it can be localized**/
+         jQuery('ul.edit-ticket-options li a').click(function(e){
+             e.preventDefault();
+             action = jQuery(this).attr("href").replace("#","");
+          switch(action){
+              case "forward_ticket":
+                 submitButtonText = "Forward";
+                  break;
+              case "update_private_note":
+                  submitButtonText = "Update Note";
+              break;
+          default:
+                submitButtonText   = "Reply";
+          }
+          jQuery("input[name=action]").attr("value","ksd_"+action);
+          jQuery("input[name=edit-ticket]").attr("value",submitButtonText);
          });
 
         /**For the Reply/Forward/Private Note tabs that appear when viewing a single ticket.*/
@@ -365,6 +373,7 @@ KSDTickets = function(){
 	}//eof:newTicket()
         
         
+ 
         this.uiTabs = function(){
 
             /**For the tickets tabs**/

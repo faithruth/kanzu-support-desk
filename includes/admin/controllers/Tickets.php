@@ -41,7 +41,7 @@ class TicketsController extends Kanzu_Controller {
 	
 	/*
 	* Change ticket status
-	*
+	* @TODO update_ticket should handle this
 	*@param int $ticket_id ticket id of ticket to close
 	*
 	*/

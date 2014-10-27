@@ -7,6 +7,11 @@ jQuery( document ).ready(function() {
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 	jQuery( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
         
+        /**Add tooltips to the main navigation**/
+        jQuery('ul.main-nav li img').tooltip({
+            track: true
+            });
+ 
         /*Get URL parameters*/
         jQuery.urlParam = function(name){
             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -18,6 +23,7 @@ jQuery( document ).ready(function() {
             }
         };
         
+ 
         //Settings
         Settings = new KSDSettings();
         Settings.init();
@@ -29,5 +35,5 @@ jQuery( document ).ready(function() {
         //Tickets
         Tickets = new KSDTickets();
         Tickets.init();
-        
+ 
 });
