@@ -1,4 +1,3 @@
-<h2 class="admin-ksd-tab-title"><?php __('Help','kanzu-support-desk'); ?></h2>
 <h3>Initial Configuration</h3>
 
  

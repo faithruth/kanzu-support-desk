@@ -25,14 +25,7 @@ class Kanzu_Support_Admin {
 	protected static $instance = null;   
 
         
-        /**
-         * The key used to store the number of tickets per page
-         * in the WP usermeta table
-         * 
-         * @since 1.0.0
-         * @var String 
-         */
-        private $tickets_per_page_options_key = 'ksd_tickets_per_page';
+                        
 
 
 
@@ -54,8 +47,6 @@ class Kanzu_Support_Admin {
 
 		// Add an action link pointing to the options page.
 		add_filter( 'plugin_action_links_' . plugin_basename(KSD_PLUGIN_FILE), array( $this, 'add_action_links' ) );		
-                //Add a screen option to the tickets page
-                add_filter('set-screen-option', array ( $this, 'set_tickets_screen_option' ), 10, 3);
 
 		//Handle AJAX calls
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
@@ -181,7 +172,7 @@ class Kanzu_Support_Admin {
 			 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.		 
 			 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
 			 */
-                //We use the tickets hook to add a screeen option to get the number of tickets to display
+                        
 		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function),'dashicons-groups',40);
 		
 		//Add the ticket pages. This syntax, __('Word','domain'), allows us to do internalization
@@ -196,8 +187,8 @@ class Kanzu_Support_Admin {
 		
 		foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
                     
-                    $tickets_hook = add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array($this,$function));                        		
-                    add_action( "load-$tickets_hook", array ( $this, 'add_tickets_screen_option' ) );
+                    add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array($this,$function));                        		
+      
                 }
                 
 	}
@@ -225,7 +216,7 @@ class Kanzu_Support_Admin {
         
         /**
          * Add a screen option to the tickets sub-page
-         */
+         
         public function add_tickets_screen_option(){
             $option = 'per_page';
  
@@ -236,13 +227,13 @@ class Kanzu_Support_Admin {
                     );
  
             add_screen_option( $option, $args );
-        }
+        }*/
         
         /**
          * Set the tickets screen option when the user does a save
          * The tickets screen option tells us how many tickets the user
          * would like to view per page
-         */
+         
         
         public function set_tickets_screen_option($status, $option, $value) {
  
@@ -250,7 +241,7 @@ class Kanzu_Support_Admin {
  
         return $status;
  
-        }
+        }*/
         
 
 	/**

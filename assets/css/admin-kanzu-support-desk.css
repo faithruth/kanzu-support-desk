@@ -46,6 +46,7 @@
 	border-top: medium none;
 	margin-top: 0;
 	padding-left: 1em;
+        padding-right: 1em;
 	padding-top: 0;
         border-radius: 0;
         -webkit-border-radius:0;
@@ -78,7 +79,7 @@ ul.top-nav{
     margin: 0;
     padding: 0;
     position: absolute;
-    right: 5%;
+    left: 10%;
     top: 0;
 }
 ul.top-nav li{
@@ -88,6 +89,17 @@ ul.top-nav li{
 #ticket-tabs .admin-ksd-tickets-content{
 	width: 100%;
 	padding-top: 0;
+        padding-left: 0;
+}
+.ksd-ticket-extras {
+  position: absolute;
+  right: 0;
+  top: -35px;
+  width: 50%;
+}
+.ksd-pagination-field{
+    float: left;
+    
 }
 #admin-kanzu-support-desk div.admin-ksd-tickets-container{
 	border: medium none;

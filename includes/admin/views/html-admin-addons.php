@@ -1,4 +1,3 @@
-<h2 class="admin-ksd-tab-title"><?php __('Add-ons','kanzu-support-desk'); ?></h2>
 <?php _e("Take your Kanzu Support Desk experience to the next level by activating one of these add-ons","kanzu-support-desk"); ?>
 <ul class="add-ons">
     <li><!--@TODO Replace this link with actual one-->

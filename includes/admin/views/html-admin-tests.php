@@ -1,6 +1,3 @@
-<h2 class="admin-ksd-tab-title"><?php __('Tests','kanzu-support-desk'); ?></h2>
-
-
 <div class="ksd-grid-container outline">
    <div class="ksd-row">
         <div class="ksd-col-1"><p>col-1</p></div> 

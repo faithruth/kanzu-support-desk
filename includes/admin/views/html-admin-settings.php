@@ -1,4 +1,3 @@
-<h2 class="admin-ksd-tab-title"><?php __('Settings','kanzu-support-desk'); ?></h2>
 <?php _e("Customize your Kanzu Support Desk experience","kanzu-support-desk"); ?>
 <form method="POST" id="update-settings" class="ksd-settings pending"> 
     <div id="settings-accordion">
