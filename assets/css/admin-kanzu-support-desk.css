@@ -1,6 +1,9 @@
 #admin-kanzu-support-desk{
 	position: relative;
 }
+#admin-kanzu-support-desk .ui-widget-content {
+  background-color: #f1f1f1;
+}
 .admin-ksd-title{
     position: relative;
 }
@@ -18,12 +21,14 @@
 	background-image: url("../images/nav_bg.jpg");
 	background-repeat: repeat-y;
 	background-position: left top;
+        background-color: #F1F1F1;
 }
-#admin-kanzu-support-desk ul.ui-tabs-nav{
-	width: 60px;
-	background-color: #E7E7E7;
-	border: none;
-	background-image: none;
+#admin-kanzu-support-desk ul.ui-tabs-nav {
+        background-color: #e7e7e7;
+        background-image: none;
+        border: medium none;
+        float: left;
+        width: 6%;
 }
 #ticket-tabs ul.ui-tabs-nav{
 	background-color: #EFEFEF;
@@ -32,6 +37,9 @@
 #admin-kanzu-support-desk ul.ui-tabs-nav li{
 	text-align: center;
 }
+#ticket-tabs ul.ui-tabs-nav{
+    width: 100%;
+}
 #ticket-tabs ul.ui-tabs-nav li {
 	border-left: medium none;
 	border-right: medium none;
@@ -39,13 +47,19 @@
 	margin-top: 0;
 	padding-left: 1em;
 	padding-top: 0;
+        border-radius: 0;
+        -webkit-border-radius:0;
+        -moz-border-radius:0;
 }
-#admin-kanzu-support-desk  .admin-ksd-content{
-	float: left;
-    width: 90%;
-	padding-top: 0;
-	margin-top: 0;
-	padding-left: 21px;
+#tickets .ui-tabs ul.ui-tabs-nav li a.ui-tabs-anchor{
+    padding: 0.5em;
+}
+#admin-kanzu-support-desk .admin-ksd-content {
+        float: left;
+        margin-top: 0;
+        padding-left: 1%;
+        padding-top: 0;
+        width: 90%;
 }
 #admin-kanzu-support-desk div#tickets {
 	padding-left: 0;
@@ -72,7 +86,7 @@ ul.top-nav li{
     padding: 0 10px;    
 }
 #ticket-tabs .admin-ksd-tickets-content{
-	width: 75%;
+	width: 100%;
 	padding-top: 0;
 }
 #admin-kanzu-support-desk div.admin-ksd-tickets-container{
@@ -362,16 +376,16 @@ ul.edit-ticket-options li.selected{
 }
 
 /*Style our navigation*/
-.ui-tabs-vertical { width: 55em; }
-.ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
-.ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
-.ui-tabs-vertical .ui-tabs-nav li a { display:block; }
-.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
-.ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
+.ksd-main-nav .ui-tabs-vertical { width: 55em; }
+.ksd-main-nav .ui-tabs-vertical > .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 12em; }
+.ksd-main-nav .ui-tabs-vertical > .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
+.ksd-main-nav .ui-tabs-vertical > .ui-tabs-nav li >  a { display:block; }
+.ksd-main-nav .ui-tabs-vertical > .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
+.ksd-main-nav .ui-tabs-vertical > .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
 
 
 /**
- * Jquery UI CSS. Will edit this to remove all excess CSS
+ * Jquery UI CSS. @TODO Edit this to remove all excess CSS
  */
 
 /*! jQuery UI - v1.11.1 - 2014-08-13

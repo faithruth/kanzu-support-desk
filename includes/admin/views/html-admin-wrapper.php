@@ -8,7 +8,7 @@
         </ul>
     </div>
 	<div id="tabs" class="admin-ksd-container">
-		<ul class="main-nav">
+		<ul class="ksd-main-nav">
 			<li><a href="#dashboard"><img src="<?php echo plugins_url( '/assets/images/icons/dashboard.png', KSD_PLUGIN_FILE ) ?>" title="<?php _e('Home','kanzu-support-desk'); ?>" /></a></li>
 			<li><a href="#tickets"><img src="<?php echo plugins_url( '/assets/images/icons/tickets.png', KSD_PLUGIN_FILE ) ?>" title="<?php _e('Inbox','kanzu-support-desk'); ?>" /></a></li>
                         <li><a href="#new_ticket"><img src="<?php echo plugins_url( '/assets/images/icons/newticket.png', KSD_PLUGIN_FILE ) ?>" title="<?php _e('New Ticket','kanzu-support-desk'); ?>" /></a></li>

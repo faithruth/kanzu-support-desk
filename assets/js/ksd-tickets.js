@@ -368,8 +368,7 @@ KSDTickets = function(){
         this.uiTabs = function(){
 
             /**For the tickets tabs**/
-            jQuery( "#ticket-tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-            jQuery( "#ticket-tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+            jQuery( "#ticket-tabs").tabs();
 
             /*Switch the active tab depending on what page has been selected*/
             activeTab=0;        
@@ -418,7 +417,7 @@ KSDTickets = function(){
 
 
             /**Change the title onclick of a side navigation tab*/
-            jQuery( "#tabs .main-nav li a" ).click(function() {
+            jQuery( "#tabs .ksd-main-nav li a" ).click(function() {
                     jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#","").replace("_"," "));//Remove the hashtag, replace _ with a space
             });
             

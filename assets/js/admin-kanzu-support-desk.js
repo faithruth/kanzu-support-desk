@@ -5,10 +5,10 @@ jQuery( document ).ready(function() {
     
         /**For the general navigation tabs**/
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-	jQuery( "#tabs li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+	jQuery( "#tabs > ul > li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
         
         /**Add tooltips to the main navigation**/
-        jQuery('ul.main-nav li img').tooltip({
+        jQuery('ul.ksd-main-nav li img').tooltip({
             track: true
             });
  

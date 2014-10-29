@@ -231,7 +231,7 @@ class Kanzu_Support_Admin {
  
             $args = array(
                 'label' => __('Tickets', 'kanzu-support-desk'),
-                'default' => 20,
+                'default' => 20,//The default number of tickets to display per page
                 'option' => $this->tickets_per_page_options_key            
                     );
  

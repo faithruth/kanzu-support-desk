@@ -3,7 +3,7 @@
     <div class="ksd-row">
 
         <div class="ksd-col-2">
-            Show: <input type="input" value="5" class="ksd-pagination-limit" id="ksd_pagination_limit_<?php echo $tab_id; ?>"/>
+            Show: <input type="number" value="5" maxlength="3"  class="ksd-pagination-limit" id="ksd_pagination_limit_<?php echo $tab_id; ?>" max="999" min="1" step="1"/>
         </div>
         <div class="ksd-col-2"></div>
         <div class="ksd-col-2 ksd-ticket-search">
