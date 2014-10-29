@@ -390,6 +390,8 @@ KSDTickets = function(){
                     break;
             }
             jQuery( "#tabs" ).tabs( "option", "active", activeTab );
+            //Set the title
+            jQuery('.admin-ksd-title h2').html(ksd_admin.admin_tab.replace("ksd-","").replace("-"," "));
 
             /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
             jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
