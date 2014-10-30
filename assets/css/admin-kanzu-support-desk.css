@@ -144,11 +144,22 @@ ul.ksd-top-nav li{
     width: 70%;
 }
 #ticket-tabs div.pending{
-	background-image: url("../images/loading.gif");
+}
+
+.ksd-hide-pending{
+    display:none;
+}
+#admin-kanzu-support-desk div.ksd-pending2{
+   	background-image: url("../images/loading.gif");
 	background-repeat: no-repeat;
 	background-position: center;
 	min-height: 350px;
+        z-index: 10000;
+       position: relative;
+       width:100%;
+       height: 100% 
 }
+
 .new-ticket {
 	background-color: #2ea2cc;
 	border: 1px solid #fff;

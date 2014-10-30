@@ -131,6 +131,7 @@ KSDTickets = function(){
                             }//eof:if
 
                             jQuery(current_tab).removeClass("pending");
+                            _ShowLoadingImage(false);
                             
                             
                             //Add Navigation
@@ -341,6 +342,7 @@ KSDTickets = function(){
                             the_ticket = JSON.parse(response);
                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_description);
+                            _ShowLoadingImage(false);
                             jQuery("#ticket-replies").html("Any minute now...") ; //@TODO Add this to Localization                         
                             //Make the 'Back' button visible
                             jQuery(".top-nav li.back").removeClass("hidden");
@@ -569,6 +571,7 @@ KSDTickets = function(){
                 var tab_id_name="#tickets-tab-"+tab_id;
                 //alert("limit:" + limit + " search:" + search_text);
                 jQuery(tab_id_name).addClass("pending");
+                _ShowLoadingImage(true);
                  _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );
                 
             });
@@ -583,13 +586,31 @@ KSDTickets = function(){
                 var tab_id_name="#tickets-tab-"+tab_id;
                 //alert("limit:" + limit + " search:" + search_text);
                 jQuery(tab_id_name).addClass("pending");
+                _ShowLoadingImage(true);
                  _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );                   
                 }
 
                 
             });
-            //End:Limit
+            //End:Limitr
             
+        }
+        
+        /*
+         * Show loading image.
+         * classes used in css - ksd-pending2,  ksd-hide-pending
+         * @returns {undefined}
+         */
+        _ShowLoadingImage = function(show){
+             if (typeof(show) === 'undefined') show=false;
+                         
+             if ( show == true){
+                 
+                jQuery("div.ksd-pending2").removeClass('ksd-hide-pending');
+            }
+             else{
+                jQuery("div.ksd-pending2").addClass('ksd-hide-pending');
+            }
         }
         
         //AJAX:: When the refresh button is hit
@@ -600,6 +621,7 @@ KSDTickets = function(){
                 var limit = jQuery( currentTabID+" .ksd-pagination-limit" ).val();                
                 var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
                 jQuery( currentTabID ).addClass("pending");
+                _ShowLoadingImage(true);
                 var curPage = _getCurrentPage( tab_id);
                  _this.getTickets( currentTabID,search_text,limit, curPage-1);                   
                 });
@@ -616,6 +638,7 @@ KSDTickets = function(){
                 var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
                 
                 jQuery(tab_id_name).addClass("pending");
+                _ShowLoadingImage(true);
                  _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit);
                  
             });
@@ -629,6 +652,7 @@ KSDTickets = function(){
                     var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
 
                     jQuery(tab_id_name).addClass("pending");
+                    _ShowLoadingImage(true);
                      _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit);
                 }
             });
@@ -773,6 +797,7 @@ KSDTickets = function(){
                         var search_text = jQuery("input[name=ksd_tkt_search_input_"+tab_id+"]").val();
                         
                          jQuery( _getTabId(tab_id) ).addClass("pending");
+                         _ShowLoadingImage(true);
                           _this.getTickets( _getTabId(tab_id), search_text, limit, cpage-1);
                         
                     });
