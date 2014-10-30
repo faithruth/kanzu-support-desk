@@ -124,8 +124,7 @@ KSDTickets = function(){
                                               </tr>';*/
                                      
                                 jQuery(current_tab+' #select-all-tickets').remove();  
-                                jQuery(current_tab+' #ticket-list').html("");
-                                jQuery(current_tab+' #ticket-list').addClass("empty").append(JSON.parse(response));   
+                                jQuery(current_tab+' #ticket-list').addClass("empty").html(JSON.parse(response));
                               //  jQuery(current_tab+' #ticket-list').append( rws2);
                             }//eof:if
 
