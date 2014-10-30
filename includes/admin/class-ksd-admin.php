@@ -124,7 +124,7 @@ class Kanzu_Support_Admin {
                 wp_enqueue_script( KSD_SLUG . '-admin-tickets', plugins_url( '../../assets/js/ksd-tickets.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION );
                 wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION ); 
 		$ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );	 //This determines which tab to show as active
-                $agents_list = "<ul class='assign_to hidden'>";
+                $agents_list = "<ul class='assign_to2 hidden'>";
                 foreach (  get_users() as $agent ) {
                     $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
                 }

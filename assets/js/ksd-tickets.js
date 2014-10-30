@@ -128,7 +128,6 @@ KSDTickets = function(){
                                      
                                 jQuery(current_tab+' #select-all-tickets').remove();  
                                 jQuery(current_tab+' #ticket-list').addClass("empty").html(JSON.parse(response));
-                              //  jQuery(current_tab+' #ticket-list').append( rws2);
                             }//eof:if
 
                             jQuery(current_tab).removeClass("pending");
@@ -137,8 +136,7 @@ KSDTickets = function(){
                             //Add Navigation
                             var tab_id = current_tab.replace("#tickets-tab-","");
                             var total_rows = JSON.parse(response)[1];
-                            var currentpage = offset+1; //_getCurrentPage( tab_id );
-                                      //console.log("current_page:" + currentpage + "current_tab.replace:" + );
+                            var currentpage = offset+1; 
                             _loadTicketPagination(tab_id, currentpage, total_rows, limit);
                             
                            });//eof:jQuery.post	
@@ -209,13 +207,13 @@ KSDTickets = function(){
     	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
     		event.preventDefault();//Important otherwise the page skips around
     		var tkt_id= jQuery(this).parent().attr('id').replace("tkt_",""); //Get the ticket ID
-    		jQuery("#tkt_"+tkt_id+" ul.assign_to").toggleClass("hidden");
+    		jQuery("#tkt_"+tkt_id+" ul.assign_to2").toggleClass("hidden");
                 
     	});
     	
     	//---------------------------------------------------------------------------------
             /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
-    	jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to li',function() {
+    	jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to2 li',function() {
             console.log("ASSIGN_TO 2");
                 KSDUtils.showDialog("loading");
     		var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
@@ -718,8 +716,6 @@ KSDTickets = function(){
                     
                     //@TODO: Why is this coming as o instead of 0.
                     if( total_results == "o" || total_results == "0"  ) return; 
-                    
-                    console.log('total_results:' + total_results);
             
                     var pages = (total_results/limit);
                     jQuery("#ksd_pagination_"+ tab_id + " ul li").remove()
@@ -769,9 +765,7 @@ KSDTickets = function(){
                         if( cpage <  1 || cpage > pages || cpage == current_page ){
                             return;
                         }
-                        console.log("cpage:" + cpage 
-                                + "limit:" + limit
-                                + "pages:" + pages);
+
                         //get pagination
                         var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
                         
