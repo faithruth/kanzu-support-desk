@@ -92,14 +92,14 @@
 #admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
 	padding: 0.5em 0;
 }
-ul.top-nav{
+ul.ksd-top-nav{
     margin: 0;
     padding: 0;
     position: absolute;
-    left: 10%;
-    top: 0;
+    right: 0;
+    top: -35px;
 }
-ul.top-nav li{
+ul.ksd-top-nav li{
     display: inline;
     padding: 0 10px;    
 }

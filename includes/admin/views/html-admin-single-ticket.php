@@ -1,3 +1,7 @@
+<ul class="ksd-top-nav wrap">
+    <li class="back"><a href="<?php echo admin_url('admin.php?page=ksd-tickets'); ?>" class="add-new-h2"><?php _e('Back','kanzu-support-desk'); ?></a></li>
+    <li><a href="<?php echo admin_url('admin.php?page=ksd-new-ticket'); ?>" class="add-new-h2"><?php _e('New Ticket','kanzu-support-desk'); ?></a></li>
+</ul>
 <div id="ksd-single-ticket">
     <div class="author_and_subject"><?php  _e('Loading...','kanzu-support-desk');?></div>
     <div class="description pending">
