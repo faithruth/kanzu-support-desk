@@ -177,7 +177,8 @@ KSDTickets = function(){
 	jQuery("#ticket-tabs").on('click','.ticket-actions a.change_status',function(event) {
 		event.preventDefault();//Important otherwise the page skips around
 		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-		jQuery(".ticket_"+tkt_id+" ul.status").toggleClass("hidden");
+		jQuery("#tkt_"+tkt_id+" ul.status").toggleClass("hidden");
+                
 	});
 	
 	//---------------------------------------------------------------------------------
@@ -193,7 +194,9 @@ KSDTickets = function(){
 							tkt_status : tkt_status
 						}, 
 				function(response) {	
-							KSDUtils.showDialog("success",JSON.parse(response));				                            
+                                    
+							KSDUtils.showDialog("success",JSON.parse(response));
+                                                        jQuery('#ticket-list div#ksd_tkt_id_'+tkt_id).remove();
 				});		
 	});       
 
