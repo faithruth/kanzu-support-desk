@@ -25,7 +25,7 @@ KSDTickets = function(){
         this.TicketPagination();
         
         //Page Refresh
-        this.refreshPage();
+        this.ksdRefreshTicketsPage();
     }
 
     this.getTickets = function( current_tab, search, limit, offset ){
@@ -543,7 +543,7 @@ KSDTickets = function(){
                 "ksd_tkt_search_input_4" : "Search...",
                 "ksd_tkt_search_input_5" : "Search..."*/
             };
-            //Attach events to the fields @TODO Modify this to handle localization
+            //Attach events to the fields @TODO Modify this to handle internalization
             jQuery.each( new_form_fields, function( field_name, form_value ) {
                 jQuery('input[name='+field_name+']').on('focus',{
                                                             old_value: form_value,
@@ -593,15 +593,14 @@ KSDTickets = function(){
         }
         
         //AJAX:: When the refresh button is hit
-        this.refreshPage = function() {
-            jQuery('.ksd-ticket-refresh').click(function(){
-                var limit = jQuery(".ksd-pagination-limit").val();                
-                var tab_id = jQuery(".ksd-pagination-limit").attr("id").replace("ksd_pagination_limit_","");
-                var search_text = jQuery("input[name=ksd_tkt_search_input_"+tab_id+"]").val();
-                var tab_id_name="#tickets-tab-"+tab_id;
-                //alert("limit:" + limit + " search:" + search_text);
-                jQuery(tab_id_name).addClass("pending");
-                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );                   
+        this.ksdRefreshTicketsPage = function() {           
+            jQuery('.ksd-ticket-refresh button').click(function(){ 
+                var currentTabID = "#"+jQuery(this).parents('div.admin-ksd-tickets-content').attr("id");//Get the tab we are in. Traverse up the DOM to pick which admin-ksd-tickets-content we are in               
+                var tab_id = currentTabID.replace("#tickets-tab-","");//Don't need this actually. We know the current tab so no need for the ID
+                var limit = jQuery( currentTabID+" .ksd-pagination-limit" ).val();                
+                var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
+                jQuery( currentTabID ).addClass("pending");
+                 _this.getTickets( currentTabID,search_text,limit );                   
                 });
         }
         

@@ -119,12 +119,21 @@ ul.ksd-top-nav li{
   width: 23%;
 }
 .ksd-ticket-refresh {
-  background-color: #d3d3d3;
   cursor: pointer;
   float: left;
   height: 24px;
   text-align: center;
-  width: 5%;
+  width: 7%;
+}
+.ksd-ticket-refresh button.button{
+  background-image: url("../images/icons/refresh.png");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.ksd-ticket-refresh button.button:hover,.ksd-ticket-refresh button.button:focus{
+  background-image: url("../images/icons/refresh.png");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 #admin-kanzu-support-desk div.admin-ksd-tickets-container{
 	border: medium none;
