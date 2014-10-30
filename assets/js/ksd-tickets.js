@@ -231,13 +231,15 @@ KSDTickets = function(){
 		/**AJAX: Delete a ticket **/
 		jQuery("#ticket-tabs").on('click','.ticket-actions a.trash',function(event) {
 	            event.preventDefault();
+                    
 	             var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
+
 	             jQuery( "#delete-dialog" ).dialog({
 	                modal: true,
 	                buttons: {
 	                    Yes : function() {
 	                            jQuery( this ).dialog( "close" );
-	                            ksd_show_dialog("loading");                           
+	                            KSDUtils.showDialog("loading");                           
 	                            jQuery.post(	ksd_admin.ajax_url, 
 							{ 	action : 'ksd_delete_ticket',
 								ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
@@ -245,7 +247,7 @@ KSDTickets = function(){
 							}, 
 					function(response) {
 	                                    jQuery('#ticket-list .ticket_'+tkt_id).remove();
-	                                    ksd_show_dialog("success",JSON.parse(response));  				                                
+	                                    KSDUtils.showDialog("success",JSON.parse(response));  				                                
 					});	
 	                    },                           
 	                    No : function() {
@@ -253,6 +255,9 @@ KSDTickets = function(){
 	                    }               
 	                }
 	            });	
+                    jQuery("div.ui-widget-overlay").remove();
+                    
+                    
 		});	
         }
         this.editTicketForm = function(){
