@@ -112,11 +112,19 @@ ul.ksd-top-nav li{
   position: absolute;
   right: 0;
   top: -35px;
-  width: 43%;
+  width: 45%;
 }
-.ksd-pagination-field{
-    float: left;
-    
+.ksd-pagination-field {
+  float: left;
+  width: 23%;
+}
+.ksd-ticket-refresh {
+  background-color: #d3d3d3;
+  cursor: pointer;
+  float: left;
+  height: 24px;
+  text-align: center;
+  width: 5%;
 }
 #admin-kanzu-support-desk div.admin-ksd-tickets-container{
 	border: medium none;

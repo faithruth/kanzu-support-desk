@@ -23,6 +23,9 @@ KSDTickets = function(){
         
         //Pagination
         this.TicketPagination();
+        
+        //Page Refresh
+        this.refreshPage();
     }
 
     this.getTickets = function( current_tab, search, limit, offset ){
@@ -457,7 +460,7 @@ KSDTickets = function(){
         this.changeTicketStatus = function(){
             /**AJAX: Send the AJAX request when a new status is chosen**/
             jQuery("#ticket-tabs").on('click','.ticket-actions ul.status li',function() {
-                    ksd_show_dialog("loading");
+                    KSDUtils.showDialog("loading");
                     var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
                     var tkt_status = jQuery(this).text();
                     jQuery.post(	ksd_admin.ajax_url, 
@@ -589,6 +592,19 @@ KSDTickets = function(){
             });
             //End:Limit
             
+        }
+        
+        //AJAX:: When the refresh button is hit
+        this.refreshPage = function() {
+            jQuery('.ksd-ticket-refresh').click(function(){
+                var limit = jQuery(".ksd-pagination-limit").val();                
+                var tab_id = jQuery(".ksd-pagination-limit").attr("id").replace("ksd_pagination_limit_","");
+                var search_text = jQuery("input[name=ksd_tkt_search_input_"+tab_id+"]").val();
+                var tab_id_name="#tickets-tab-"+tab_id;
+                //alert("limit:" + limit + " search:" + search_text);
+                jQuery(tab_id_name).addClass("pending");
+                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );                   
+                });
         }
         
         this.TicketSearch = function(){
