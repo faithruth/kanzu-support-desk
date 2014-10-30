@@ -124,6 +124,7 @@ KSDTickets = function(){
                                               </tr>';*/
                                      
                                 jQuery(current_tab+' #select-all-tickets').remove();  
+                                jQuery(current_tab+' #ticket-list').html("");
                                 jQuery(current_tab+' #ticket-list').addClass("empty").append(JSON.parse(response));   
                               //  jQuery(current_tab+' #ticket-list').append( rws2);
                             }//eof:if
@@ -205,16 +206,19 @@ KSDTickets = function(){
         /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
     	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
     		event.preventDefault();//Important otherwise the page skips around
-    		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-    		jQuery(".ticket_"+tkt_id+" ul.assign_to").toggleClass("hidden");
+    		var tkt_id= jQuery(this).parent().attr('id').replace("tkt_",""); //Get the ticket ID
+    		jQuery("#tkt_"+tkt_id+" ul.assign_to").toggleClass("hidden");
+                
     	});
     	
     	//---------------------------------------------------------------------------------
             /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
     	jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to li',function() {
-                    KSDUtils.showDialog("loading");
+            console.log("ASSIGN_TO 2");
+                KSDUtils.showDialog("loading");
     		var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
     		var assign_assigned_to = jQuery(this).attr("id");
+                console.log("DEBUG:" + " tkt_id:" + tkt_id + " assign_assigned_to:" + assign_assigned_to);
     		jQuery.post(	ksd_admin.ajax_url, 
     						{ 	action : 'ksd_assign_to',
     							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
