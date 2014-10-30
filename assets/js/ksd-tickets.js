@@ -596,11 +596,12 @@ KSDTickets = function(){
         this.ksdRefreshTicketsPage = function() {           
             jQuery('.ksd-ticket-refresh button').click(function(){ 
                 var currentTabID = "#"+jQuery(this).parents('div.admin-ksd-tickets-content').attr("id");//Get the tab we are in. Traverse up the DOM to pick which admin-ksd-tickets-content we are in               
-                var tab_id = currentTabID.replace("#tickets-tab-","");//Don't need this actually. We know the current tab so no need for the ID
+                var tab_id = currentTabID.replace("#tickets-tab-","");
                 var limit = jQuery( currentTabID+" .ksd-pagination-limit" ).val();                
                 var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
                 jQuery( currentTabID ).addClass("pending");
-                 _this.getTickets( currentTabID,search_text,limit );                   
+                var curPage = _getCurrentPage( tab_id);
+                 _this.getTickets( currentTabID,search_text,limit, curPage-1);                   
                 });
         }
         
