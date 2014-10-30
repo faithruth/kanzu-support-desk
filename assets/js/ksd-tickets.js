@@ -233,7 +233,7 @@ KSDTickets = function(){
 	            event.preventDefault();
                     
 	             var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-
+                     console.log("tkt_id:" + tkt_id);
 	             jQuery( "#delete-dialog" ).dialog({
 	                modal: true,
 	                buttons: {
@@ -246,7 +246,7 @@ KSDTickets = function(){
 								tkt_id : tkt_id
 							}, 
 					function(response) {
-	                                    jQuery('#ticket-list .ticket_'+tkt_id).remove();
+	                                    jQuery('#ticket-list div#ksd_tkt_id_'+tkt_id).remove();
 	                                    KSDUtils.showDialog("success",JSON.parse(response));  				                                
 					});	
 	                    },                           
