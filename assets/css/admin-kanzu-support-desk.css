@@ -15,6 +15,11 @@
 .admin-ksd-title h2{
 	text-transform: capitalize;
 }
+#ksd_dashboard_chart{
+    width: 100%;
+    max-width: 1120px;
+    min-width: 600px;
+}
 #admin-kanzu-support-desk div.admin-ksd-container{
 	border-bottom: medium none;
 	border-right: medium none;

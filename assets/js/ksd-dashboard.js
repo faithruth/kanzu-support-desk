@@ -43,26 +43,35 @@ KSDDashboard = function(){
 	this.charts = function(){
             try{
             /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
- 
-                  function drawDashboardGraph() {	
+            //@TODO Internalize the chart title (Ready it for translation )
+                  function ksdDrawDashboardGraph() {	
                         jQuery.post( ksd_admin.ajax_url, 
                                 {action : 'ksd_dashboard_ticket_volume',
                                     ksd_admin_nonce : ksd_admin.ksd_admin_nonce
                                 }, 
-                                function(response) {	              		
-                                    var data =  google.visualization.arrayToDataTable(JSON.parse(response));
-                                    var options = {
+                                function( response ) {	
+                                    //IMPORTANT! Google Charts, without width & height explicitly specified, are drawn
+                                    //to fill the parent element. This doesn't work so well if the parent element is hidden
+                                    //while the drawing is happening. In such cases, the final chart will have default dimensions (400px x 200px)
+                                    //To work-around this, we first unhide our parent div just before drawing the chart
+                                    var ksdChartContainer = document.getElementById( 'dashboard' );
+                                    ksdChartContainer.style.display = 'block';//Unhide the parent element
+                                    var ksdData =  google.visualization.arrayToDataTable( JSON.parse(response) );                                   
+                                    var ksdOptions = {
                                         title: 'Incoming Tickets'
                                                 };
-                                    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-                                    chart.draw(data, options);
+                                    var ksdDashboardChart = new google.visualization.LineChart(document.getElementById('ksd_dashboard_chart'));
+                                    //Add a listener to know when drawing the chart is complete.                     
+                                    google.visualization.events.addListener( ksdDashboardChart, 'ready', function () {
+                                       if ( ! jQuery('ul.ksd-main-nav li:first').hasClass("ui-tabs-active") ) {
+                                           ksdChartContainer.style.display = 'none'; //If our dashboard tab isn't the selected one, we hide it. 
+                                       }                                        
+                                            });                                           
+                                    ksdDashboardChart.draw( ksdData, ksdOptions );  
                         });//eof: jQuery.port
                   }
-                  
-                   google.setOnLoadCallback(drawDashboardGraph);
-                  
-                  
-              }catch(err){
+                   google.setOnLoadCallback(ksdDrawDashboardGraph);
+              }catch( err ){//@TODO Handle this error
                   //console.log(err);
               }
 	}//eof:charts

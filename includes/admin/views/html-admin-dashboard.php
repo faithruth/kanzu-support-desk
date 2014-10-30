@@ -2,7 +2,7 @@
         <li> Loading...</li>
 </ul>
 
-<div id="chart_div"> <!--Ticket Inflow-->   
+<div id="ksd_dashboard_chart"> <!--Ticket Inflow-->   
 </div>
 
 <!--Tickets by status-->     <!--Tickets by channel-->
