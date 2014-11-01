@@ -11,7 +11,7 @@ KSDTickets = function(){
 
         this.uiTabs();
         this.uiListTickets();
-        this.newTicket();
+        //this.newTicket();
         this.editTicketForm();
 
         this.deleteTicket();

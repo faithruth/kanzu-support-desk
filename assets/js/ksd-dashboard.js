@@ -44,7 +44,7 @@ KSDDashboard = function(){
             try{
             /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
             //@TODO Internalize the chart title (Ready it for translation )
-                  function ksdDrawDashboardGraph() {	
+                    function ksdDrawDashboardGraph() {	
                         jQuery.post( ksd_admin.ajax_url, 
                                 {action : 'ksd_dashboard_ticket_volume',
                                     ksd_admin_nonce : ksd_admin.ksd_admin_nonce
@@ -69,7 +69,7 @@ KSDDashboard = function(){
                                             });                                           
                                     ksdDashboardChart.draw( ksdData, ksdOptions );  
                         });//eof: jQuery.port
-                  }
+                    }
                    google.setOnLoadCallback(ksdDrawDashboardGraph);
               }catch( err ){//@TODO Handle this error
                   //console.log(err);
