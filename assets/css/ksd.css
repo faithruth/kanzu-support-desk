@@ -5,13 +5,6 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  * */
-/* * @requires KSDUtils
- * @package   Kanzu_Support_Desk
- * @author    Kanzu Code <feedback@kanzucode.com>
- * @license   GPL-2.0+
- * @link      http://kanzucode.com
- * @copyright 2014 Kanzu Code
- * */
 .shadow {
   box-shadow: 0 1px 2px 0 #555555;
 }
@@ -26,13 +19,6 @@
 .hovereffect {
   background: linear-gradient(top, #545454 0%, #434343 50%, #333333 51%, #505050 100%);
 }
-/* * @requires KSDUtils
- * @package   Kanzu_Support_Desk
- * @author    Kanzu Code <feedback@kanzucode.com>
- * @license   GPL-2.0+
- * @link      http://kanzucode.com
- * @copyright 2014 Kanzu Code
- * */
 .ksd-grid-container {
   width: 100%;
   max-width: 1200px;
@@ -268,11 +254,11 @@
 *=============================================================
 */
 .ksd-ticket-search {
-  float: right;
   text-align: right;
-  width: 70%;
 }
-
+.ksd-ticket-search span {
+  font-weight: bold;
+}
 .ksd-ticket-search span:hover {
   color: #2ea2cc;
 }
@@ -281,7 +267,6 @@
   height: 28px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07) inset;
 }
-
 /*Table Pagination
 *=============================================================
 */
@@ -332,4 +317,39 @@
   width: 50px;
   border-radius: 3px;
   border: 1px solid #505050;
+}
+/*
+*Status change & assignment options 
+*/
+.ksd-tkt-row-options {
+  /*border:1px solid @theme2;
+    width:100px;*/
+}
+.ksd-tkt-row-options li {
+  padding: 2px;
+}
+.ksd-tkt-row-options li:hover {
+  text-decoration: underline;
+}
+.ticket-actions ul.status {
+  /*border:1px solid @theme2;
+    width:100px;*/
+  /*margin-left:20px;*/
+}
+.ticket-actions ul.status li {
+  padding: 2px;
+}
+.ticket-actions ul.status li:hover {
+  text-decoration: underline;
+}
+.ticket-actions ul.assign_to2 {
+  /*border:1px solid @theme2;
+    width:100px;*/
+  /*margin-left:100px;*/
+}
+.ticket-actions ul.assign_to2 li {
+  padding: 2px;
+}
+.ticket-actions ul.assign_to2 li:hover {
+  text-decoration: underline;
 }

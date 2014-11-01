@@ -180,6 +180,7 @@ KSDTickets = function(){
 		event.preventDefault();//Important otherwise the page skips around
 		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
 		jQuery("#tkt_"+tkt_id+" ul.status").toggleClass("hidden");
+                jQuery(this).parent().find(".assign_to2").addClass("hidden");
                 
 	});
 	
@@ -207,8 +208,10 @@ KSDTickets = function(){
         /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
     	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
     		event.preventDefault();//Important otherwise the page skips around
+                //jQuery(".ticket-actions a.change_status'").hide();
     		var tkt_id= jQuery(this).parent().attr('id').replace("tkt_",""); //Get the ticket ID
     		jQuery("#tkt_"+tkt_id+" ul.assign_to2").toggleClass("hidden");
+                jQuery(this).parent().find(".status").addClass("hidden");
                 
     	});
     	
