@@ -142,6 +142,8 @@ final class Kanzu_Support_Desk {
 			require_once( plugin_dir_path( __FILE__ ) . 'includes/admin/class-ksd-admin.php' );
 			
 		}
+                //The front-end
+                require_once( KSD_PLUGIN_DIR . '/includes/front/class-ksd-front.php' );
 
 		 
 		}
