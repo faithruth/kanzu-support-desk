@@ -218,7 +218,6 @@ KSDTickets = function(){
     	//---------------------------------------------------------------------------------
             /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
     	jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to2 li',function() {
-            console.log("ASSIGN_TO 2");
                 KSDUtils.showDialog("loading");
     		var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
     		var assign_assigned_to = jQuery(this).attr("id");
@@ -234,6 +233,21 @@ KSDTickets = function(){
                                     KSDUtils.showDialog("success",JSON.parse(response));
     				});		
     	});
+        
+        
+        
+        /*
+         * 
+         *Return the ticket row to nornam size when mouse leaves the ticket options(ie trash, change status, assign) when
+         */
+    	jQuery("#ticket-tabs").on('mouseleave','.ksd-row-data',function(event) {
+            event.preventDefault();//Important otherwise the page skips around
+            jQuery(this).parent().find(".ticket-actions ul").addClass("hidden");
+         });
+        
+        
+        
+        
         
 	}//eof:
 	
