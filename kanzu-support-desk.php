@@ -146,9 +146,8 @@ final class Kanzu_Support_Desk {
 			require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
 			
 		}
-                //@TODO:The front-end
-                //require_once( KSD_PLUGIN_DIR .  'includes/front/class-ksd-front.php' );
-
+                //The front-end
+                require_once( KSD_PLUGIN_DIR .  'includes/frontend/class-ksd-frontend.php' );
 		 
 		}
 		

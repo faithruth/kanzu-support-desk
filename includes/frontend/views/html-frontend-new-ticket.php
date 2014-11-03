@@ -1,6 +1,6 @@
-
-<div id="ksd-new-ticket-front">
-    <form action="#" id="new-ticket" method="POST">
+<button id="ksd-new-ticket-frontend"><?php _e("Support","kanzu-support-desk"); ?></button>
+   <div id="ksd-new-ticket-frontend-wrap">
+    <form action="#" id="ksd-new-ticket" method="POST">
         <ul>
         <li class="ksd-name">
               <label for="customer_name"><?php _e('Name','kanzu-support-desk'); ?></label>
@@ -17,9 +17,9 @@
      <!--<textarea value="<?php ; ?>" rows="7" class="ksd-description" name="description"></textarea>-->
           <li class="ksd-description">     
               <label for="ksd-ticket-description"><?php _e('Message','kanzu-support-desk'); ?></label>
-              <textarea value="" rows="7" class="ksd-description" name="ksd-ticket-description"></textarea>
+              <textarea value="" rows="7" class="ksd-description" name="ksd-ticket-description" required></textarea>
           </li>
-          <input name="tkt_logged_by" type="hidden" value="<?php echo get_current_user_id(); ?>" />
+          <input name="action" type="hidden" value="ksd_new_ticket_frontend" />
           <input type="submit" value="<?php _e( "Send Message","kanzu-support-desk" ); ?>" name="ksd-submit" class="ksd-submit"/>
         </ul>
     </form>

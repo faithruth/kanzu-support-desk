@@ -1,11 +1,33 @@
-#ksd-new-ticket-front ul{
+#ksd-new-ticket-frontend-wrap ul{
     margin: 0;
     padding: 0;
 }
-#ksd-new-ticket-front ul li{
+#ksd-new-ticket-frontend-wrap ul li{
     position: relative;
 }
-#ksd-new-ticket-front ul li label{
-    
+#ksd-new-ticket-frontend-wrap ul li label {
+  color: #ccc;
+  left: 5px;
+  position: absolute;
+  top: 8px;
 }
-
+#ksd-new-ticket-frontend-wrap input,#ksd-new-ticket-frontend-wrap textarea {
+  margin-bottom: 7px;
+  width: 250px;
+}
+ 
+#ksd-new-ticket-frontend-wrap {
+  background-color: #fff;
+  border: 1px solid #CCC;
+  left: 0;
+  padding: 10px;
+  position: fixed;
+  top: 10%;
+}
+button#ksd-new-ticket-frontend{
+  position: fixed;
+  top: 90%;
+  left: 0;
+  border-radius: 0;
+}
+ 
