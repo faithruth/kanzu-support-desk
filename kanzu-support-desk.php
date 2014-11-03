@@ -19,10 +19,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
 if ( !class_exists( 'Kanzu_Support_Desk' ) ) :
 
 
-
-
-
-
 final class Kanzu_Support_Desk {
 
 	/**
@@ -102,20 +98,29 @@ final class Kanzu_Support_Desk {
 	
 	/**
 	 * Define Kanzu Support Constants
+         * @TODO Save version and DB version in the array we use to store
+         * KSD variables
 	 */
 	private function define_constants() {
-		//We'll revise and reduce these to the bare minimums
+            
+            if ( ! defined( 'KSD_PLUGIN_FILE' ) ) {
 		define( 'KSD_PLUGIN_FILE', __FILE__ );
+            }
+             if ( ! defined( 'KSD_VERSION' ) ) {                
 		define( 'KSD_VERSION', $this->version );
+             }
+              if ( ! defined( 'KSD_DB_VERSION' ) ) {                
 		define( 'KSD_DB_VERSION', $this->db_version );
-		define( 'KSD_SLUG', $this->ks_slug );
-		define( 'KSD_PLUGIN_NAME', trim(dirname(plugin_basename(__FILE__)), '/'));
-		define( 'KSD_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . KSD_PLUGIN_NAME);
-		define( 'KSD_PLUGIN_URL', WP_PLUGIN_URL . '/' . KSD_PLUGIN_NAME);
-		define( 'KANZU_DS', DIRECTORY_SEPARATOR );
-		define( 'KANZU_PLUGIN_DIR', rtrim(plugin_dir_path( __FILE__ ),"/\\"));
-		define( 'KANZU_PLUGIN_ADMIN_DIR', KANZU_PLUGIN_DIR . KANZU_DS . "includes" . KANZU_DS . "admin" );
-		
+              }
+               if ( ! defined( 'KSD_SLUG' ) ) {                
+		define( 'KSD_SLUG', $this->ks_slug );           
+               }                
+                if ( ! defined( 'KSD_PLUGIN_DIR' ) ) {
+		define( 'KSD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+                }                
+                if ( ! defined( 'KSD_PLUGIN_URL' ) ) {
+                define( 'KSD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+                 }                
 		//Store the Plugin version. We'll need this for upgrades
 		if (!defined('KANZU_SUPPORT_VERSION_KEY')) {
 			define('KANZU_SUPPORT_VERSION_KEY', 'kanzu_support_version');
@@ -127,7 +132,6 @@ final class Kanzu_Support_Desk {
 		//Store the version in the database as an option
 		add_option(KANZU_SUPPORT_VERSION_KEY, KSD_VERSION);
 		add_option(KANZU_SUPPORT_DB_VERSION_KEY, KSD_DB_VERSION);
-
 	}
 	
 	/**
@@ -139,11 +143,11 @@ final class Kanzu_Support_Desk {
 		
 		//Dashboard and Administrative Functionality 
 		if ( is_admin() ) {
-			require_once( plugin_dir_path( __FILE__ ) . 'includes/admin/class-ksd-admin.php' );
+			require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
 			
 		}
                 //@TODO:The front-end
-                //require_once( KSD_PLUGIN_DIR . '/includes/front/class-ksd-front.php' );
+                //require_once( KSD_PLUGIN_DIR .  'includes/front/class-ksd-front.php' );
 
 		 
 		}

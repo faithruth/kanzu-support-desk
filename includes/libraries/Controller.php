@@ -20,10 +20,8 @@ class Kanzu_Controller
 	* Load model class if provided
 	*/
 	public function __construct(){
-		if( $this->_model_name != ""){
-			$DS=DIRECTORY_SEPARATOR;
-			$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-			include_once( $plugindir. $DS . "admin" . $DS."models" . $DS . $this->_model_name . ".php");
+		if( $this->_model_name != ""){			
+			include_once( KSD_PLUGIN_DIR. "includes/models/" . $this->_model_name . ".php");
 			$classname = $this->_model_name . "Model";
 			$this->_model =& new $classname();
 		}

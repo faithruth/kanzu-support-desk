@@ -9,11 +9,9 @@
  * @copyright 2014 Kanzu Code
  */
 
-$DS=DIRECTORY_SEPARATOR;
-$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
+include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 
- class UsersModel extends{
+ class UsersModel extends Kanzu_Model{
 	
 	public function __construct(){
 		global $wpdb;

@@ -210,7 +210,7 @@ class Kanzu_Support_Admin {
                 }
                else {//Output the dashboard
                    $settings = $this->get_settings();//We'll need these for the settings page
-                    include_once('views/html-admin-wrapper.php');
+                    include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');
                 }
 	}
         
@@ -248,10 +248,10 @@ class Kanzu_Support_Admin {
 	 * Include the files we use in the admin dashboard
 	 */
     public function do_admin_includes() {		
-		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Tickets.php");
-		include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Users.php");
-                include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Assignments.php");  
-                include_once( KSD_PLUGIN_DIR.  "/includes/admin/controllers/Replies.php");  
+		include_once( KSD_PLUGIN_DIR.  "includes/controllers/Tickets.php");
+		include_once( KSD_PLUGIN_DIR.  "includes/controllers/Users.php");
+                include_once( KSD_PLUGIN_DIR.  "includes/controllers/Assignments.php");  
+                include_once( KSD_PLUGIN_DIR.  "includes/controllers/Replies.php");  
 
 	}
 	/** 

@@ -23,7 +23,7 @@ class Kanzu_Support_Front {
     }
     
     private function generate_new_ticket_form(){
-        include_once( KSD_PLUGIN_DIR . '/includes/admin/views/html-front-new-ticket.php' );
+        include_once( KSD_PLUGIN_DIR .  'frontend/views/html-front-new-ticket.php' );
     }
     
     	/**

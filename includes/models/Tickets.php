@@ -8,7 +8,7 @@
  * @copyright 2014 Kanzu Code
  */
  
-include_once( KSD_PLUGIN_DIR . '/includes/admin/libs/Model.php' );
+include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 
  class TicketsModel extends Kanzu_Model{
 

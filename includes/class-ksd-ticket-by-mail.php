@@ -12,11 +12,12 @@
 error_reporting(-1);
 
 /** Make sure that the WordPress bootstrap has run before continuing. */
-require(dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/wp-load.php');
-require(dirname(__FILE__) . '/admin/libs/Mail.php');
-require(dirname(__FILE__) . '/admin/controllers/Tickets.php');
-require(dirname(__FILE__) . '/admin/libs/Model.php');
-require(dirname(__FILE__) . '/admin/controllers/Users.php');
+require( ABSPATH  . '/wp-load.php' );
+
+require( KSD_PLUGIN_DIR .  'includes/libraries/Mail.php' );
+require( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
+require( KSD_PLUGIN_DIR .  'includes/controllers/Tickets.php' );
+require( KSD_PLUGIN_DIR .  'includes/controllers/Users.php' );
 
 
 $kanzuserver_url    		= get_option('mail_server');
@@ -32,10 +33,9 @@ $protocol			= ( $kanzu_useSSL ? $kanzu_mail_protocol.'/ssl' : $kanzu_mail_protoc
 $MBox = new Kanzu_Mail();
 
 if( !$MBox->connect( $protocol, $kanzuserver_url, $kanzueserver_login, $kanzu_serverport, 
-		    $kanzuserver_pass, $kanzu_serverport, $kanzu_mailbox,$kanzu_validate_certificate ) ) 
-{
+		    $kanzuserver_pass, $kanzu_serverport, $kanzu_mailbox,$kanzu_validate_certificate ) ) {
 
-	echo __( "Can not connect to mailbox.","kanzu-support-desk" );
+	_e( "Can not connect to mailbox.", "kanzu-support-desk" );
 	exit;
 }
 
@@ -74,14 +74,12 @@ for( $i=1; $i <= $count; $i++)
 	$TC = new TicketsController();
 	$id = $TC->logTicket( $tO );
 
-	if( $id > 0)
-	{
+	if( $id > 0){
 		echo "New ticket id: $id\n";
 		echo "Subject: " . $subject . "\n";
 		echo "Added by: " . $users[0]->user_nicename . "\n";
 		echo "Date:" . date() . "\n";
-		echo "----------------------------------------------\n";
-		
+		echo "----------------------------------------------\n";		
 	}
 	
 	$tO = null;

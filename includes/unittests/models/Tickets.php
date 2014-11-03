@@ -6,11 +6,8 @@
 * 2) create function with the same name as the test name
 */
 
-$plugindir = plugin_dir_path( __FILE__ );
-
-$DS=DIRECTORY_SEPARATOR;
-$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-include_once( $plugindir. $DS . "admin" . $DS."models".$DS."Tickets.php");
+ 
+include_once( KSD_PLUGIN_DIR . "includes/models/Tickets.php" );
 
 #
 #####################################################################

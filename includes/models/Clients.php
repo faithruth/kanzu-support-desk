@@ -10,36 +10,38 @@
  * Channels.php
  */
  
-$plugindir = plugin_dir_path( __FILE__ );
+ 
+include_once ( KSD_PLUGIN_DIR . "models/Users.php" );
 
-$DS=DIRECTORY_SEPARATOR;
-$plugindir = dirname(dirname(plugin_dir_path( __FILE__ )));
-include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
+ class ClientsModel extends UsersModel{
 
-
- class ChannelTypesModel extends Kanzu_Model{
-
+	private $wp_formats = array();
 	
 	public function __construct(){
 		global $wpdb;
-		$this->_tablename = $wpdb->prefix . "kanzusupport_channeltypes";	
-		$this->_id = "chantype_id";
+		$this->_tablename = $wpdb->prefix . "kanzusupport_customers";	
+		$this->_id = "cust_id";
 			
 		$this->_formats = array(
-		'chan_id' 			 => '%d', 
-		'chan_chantype_id'	 => '%s',
-		'chan_handle'	 	 => '%s' , 
-		'chan_description' 	 => '%s'
+		'cust_id' 			 	=> '%d', 
+		'cust_user_id' 			=> '%d',
+		'cust_firstname'	 	=> '%s',
+		'cust_lastname'	 		=> '%s' , 
+		'cust_company_name' 	=> '%s',
+		'cust_phone_number' 	=> '%s',
+		'cust_about' 	 		=> '%s',
+		'cust_creation_date' 	=> '%s',
+		'cust_created_by' 	 	=> '%d'
 		);
 	}
 	
 	/*
 	*Get user object
 	*
-	*@param userid
+	*@param customerid
 	*/
-	public function getChannelType( $id ){
-		return parent::getRow($id);
+	public function getClient( $id ){
+		return parent::getRow($id); ;
 	}
 	
 	/*
@@ -54,25 +56,25 @@ include_once( $plugindir. $DS . "admin" . $DS."libs".$DS."Model.php");
 	/*
 	*
 	*/
-	public function addChannelType( &$obj ){
+	public function addClient( &$obj ){
 		return parent::addRow( $obj );
 	}
 	
 	/*
 	*
-	*@param Channel object.
+	*@param client object.
 	*/
-	public function deleteChannelType(  &$obj ){
+	public function deleteClient(  &$obj ){
 		return parent::deleteRow( $obj );
 	}
 	
 
 	/*
 	* Save/update 
-	*@param Channel object
+	*@param client object
 	* *new_* for new value
 	*/
-	public function updateChannelType( &$obj ){
+	public function updateClient( &$obj ){
 		return parent::updateRow( $obj );
 	}
  }
