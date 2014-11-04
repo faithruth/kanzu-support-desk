@@ -4,6 +4,7 @@
 }
 #ksd-new-ticket-frontend-wrap ul li{
     position: relative;
+    list-style: none;
 }
 #ksd-new-ticket-frontend-wrap ul li label {
   color: #ccc;
@@ -23,11 +24,13 @@
   padding: 10px;
   position: fixed;
   top: 10%;
+  z-index: 999; /*We need this to make sure this is visible*/
 }
 button#ksd-new-ticket-frontend{
   position: fixed;
   top: 90%;
   left: 0;
   border-radius: 0;
+  z-index: 999; /*We need this to make sure this is visible*/
 }
  

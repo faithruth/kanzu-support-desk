@@ -8,6 +8,7 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
+//@TODO Delete our tables on uninstall
 
 // If uninstall not called from WordPress, then exit
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
