@@ -54,8 +54,9 @@ KSDDashboard = function(){
                                     //to fill the parent element. This doesn't work so well if the parent element is hidden
                                     //while the drawing is happening. In such cases, the final chart will have default dimensions (400px x 200px)
                                     //To work-around this, we first unhide our parent div just before drawing the chart
-                                    var ksdChartContainer = document.getElementById( 'dashboard' );
-                                    ksdChartContainer.style.display = 'block';//Unhide the parent element
+                                    var ksdChartContainer = document.getElementById( 'dashboard' );                                    
+                                    if ( 'undefined' !== typeof google.visualization ) //First check if we can draw a Google Chart
+                                       ksdChartContainer.style.display = 'block';//Unhide the parent element
                                     var ksdData =  google.visualization.arrayToDataTable( JSON.parse(response) );                                   
                                     var ksdOptions = {
                                         title: 'Incoming Tickets'

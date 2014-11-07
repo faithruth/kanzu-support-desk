@@ -12,7 +12,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 
  class TicketsModel extends Kanzu_Model{
 
-	//@TODO Change tkt_description to tkt_message
+	//@TODO Change tkt_message to tkt_subject
 	public function __construct(){
 		global $wpdb;
 		$this->_tablename = $wpdb->prefix . "kanzusupport_tickets";	
@@ -21,7 +21,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 		$this->_formats = array(
 		'tkt_id' 		 => '%d', 
 		'tkt_subject' 		 => '%s', 		
-		'tkt_description' 	 => '%s', 
+		'tkt_message' 	 => '%s', 
                 'tkt_message_excerpt'	 => '%s',
 		'tkt_channel' 		 => '%s',
 		'tkt_status' 		 => '%s',

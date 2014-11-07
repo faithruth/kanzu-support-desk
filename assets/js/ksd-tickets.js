@@ -72,7 +72,7 @@ KSDTickets = function(){
                                             rws += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
 
                                             rws +=	'<span class="subject"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a></span> - ';
-                                            rws += 	'<span class="">'+value.tkt_description+'</span>';
+                                            rws += 	'<span class="">'+value.tkt_message+'</span>';
                                             rws += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
                                             rws += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
                                             rws += 	'</div>';
@@ -358,7 +358,7 @@ KSDTickets = function(){
 			function(response) {
                             the_ticket = JSON.parse(response);
                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
-                            jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_description);
+                            jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message);
                             _ShowLoadingImage(false);
                             jQuery("#ticket-replies").html("Any minute now...") ; //@TODO Add this to Localization                         
                             //Make the 'Back' button visible
@@ -513,7 +513,7 @@ KSDTickets = function(){
                          function(response) {
                              the_ticket = JSON.parse(response);
                              jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
-                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_description);
+                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message);
                              jQuery("#ksd-single-ticket textarea[name=ksd_ticket_private_note]").val(the_ticket.tkt_private_notes);
                              jQuery("#ticket-replies").html("Any minute now...") ; //@TODO Add this to Localization                         
                              //Make the 'Back' button visible

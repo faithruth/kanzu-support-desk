@@ -1,14 +1,13 @@
 <div id="ksd-new-ticket">
-    <h3><?php _e('New Ticket','kanzu-support-desk'); ?></h3>
     <form action="<?php echo admin_url('admin.php?page=ksd-new-ticket'); ?>" id="new-ticket" method="POST">
         <div>
-        <input type="text" value="<?php _e('Customer Name','kanzu-support-desk'); ?>" size="30" name="customer_name" label="Customer Name" class="ksd-customer-name" minlength="2" required/>
-        <input type="email" value="<?php _e('Customer Email','kanzu-support-desk'); ?>" size="30" name="customer_email" label="Customer Email" class="ksd-customer-email" required/>
-        <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
-        <!--<textarea value="<?php ; ?>" rows="7" class="ksd-description" name="description"></textarea>-->
+            <input type="text" value="<?php _e('Customer Name','kanzu-support-desk'); ?>" size="30" name="customer_name" label="Customer Name" class="ksd-customer-name" minlength="2" required/>
+            <input type="email" value="<?php _e('Customer Email','kanzu-support-desk'); ?>" size="30" name="customer_email" label="Customer Email" class="ksd-customer-email" required/>
+            <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
+            <!--<textarea value="<?php ; ?>" rows="7" class="ksd-description" name="description"></textarea>-->
         </div>
         <div class="ksd-description">
-        <?php wp_editor(  '' , 'ksd-ticket-description', array( "media_buttons" => false, "textarea_rows" => 5 ) ); ?> 
+            <?php wp_editor(  '' , 'ksd-ticket-description', array( "media_buttons" => false, "textarea_rows" => 5 ) ); ?> 
         </div>
         <div class="ksd-severity">
             <label for="tkt_severity"><?php _e('Severity','kanzu-support-desk'); ?></label>

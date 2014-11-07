@@ -56,7 +56,7 @@ for( $i=1; $i <= $count; $i++)
 	$tO = new stdClass(); 
 	$tO->tkt_subject	 = $msg['headers']->subject;
 	$tO->tkt_message_excerpt = "New Ticket.";
-	$tO->tkt_description 	 =  $msg['text'];;
+	$tO->tkt_message 	 =  $msg['text'];;
 	$tO->tkt_channel     	 = "EMAIL";
 	$tO->tkt_status 	 = "OPEN";
 	$tO->tkt_private_notes 	 = "Private notes";

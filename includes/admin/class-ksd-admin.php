@@ -444,8 +444,8 @@ class Kanzu_Support_Admin {
             	$ksd_excerpt_length = 30;
                 $tO = new stdClass(); 
                 $tO->tkt_subject    	    = $title;
-                $tO->tkt_message_excerpt    =  wp_trim_words( $description, $ksd_excerpt_length );
-                $tO->tkt_description        = $description;
+                $tO->tkt_message_excerpt    = wp_trim_words( $description, $ksd_excerpt_length );
+                $tO->tkt_message            = $description;
                 $tO->tkt_channel            = $channel;
                 $tO->tkt_severity           = $severity;
                 $tO->tkt_status             = $status;

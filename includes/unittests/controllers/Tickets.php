@@ -27,7 +27,7 @@ function logTicket(){
 	$tO = new stdClass(); 
 	$tO->tkt_subject    	     = "Title";
 	$tO->tkt_message_excerpt 	 = "Initial Message";
-	$tO->tkt_description 	 = "NEW TICKET";
+	$tO->tkt_message 	 = "NEW TICKET";
 	$tO->tkt_channel     	 = "EMAIL";
 	$tO->tkt_status 	 	 = "OPEN";
 	$tO->tkt_private_notes 	 = "Private notes";
