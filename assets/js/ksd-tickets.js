@@ -308,6 +308,21 @@ KSDTickets = function(){
                 });
             });
             
+        /*-------------------------------------------------------------------------------------------------
+         * AJAX: Log New ticket
+         */    
+        jQuery('form.ksd-new-ticket-admin').submit( function(e){
+                e.preventDefault(); 
+                KSDUtils.showDialog("loading");//Show a dialog message
+                jQuery.post(	ksd_admin.ajax_url, 
+                                    jQuery(this).serialize(), //The action and nonce are hidden fields in the form
+                    function( response ) {//@TODO Check for errors 
+                       KSDUtils.showDialog("success",JSON.parse(response));
+                       //Redirect to the Tickets page
+                       window.location.replace( ksd_admin.ksd_tickets_url );
+                });
+            });
+            
         /**While working on a single ticket, switch between reply/forward and Add note modes
          * We define the action (used by AJAX) and change the submit button's text
          * @TODO Move submitButtonText to PHP so it can be localized**/

@@ -50,6 +50,7 @@ class Kanzu_Support_Admin {
 
 		//Handle AJAX calls
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
+                add_action( 'wp_ajax_ksd_log_new_ticket', array( $this, 'log_new_ticket' ));
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
                 add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
@@ -192,6 +193,7 @@ class Kanzu_Support_Admin {
                 }
                 
 	}
+                        
 	
 	/**
 	 * Display the main Kanzu Support Desk admin dashboard
@@ -199,19 +201,13 @@ class Kanzu_Support_Admin {
 	 * @TODO Move some of this logic to ajax; like ticket deletion
          * @TODO Change $_POST field names for the form to match the table field names
          *       to use a forloop to do the ticket logging
+         * @Use sanitization http://codex.wordpress.org/Validating_Sanitizing_and_Escaping_User_Data
 	 */
 	public function output_admin_menu_dashboard(){
 		$this->do_admin_includes();
-                if( isset( $_POST['ksd-submit'] ) ) {//If it's a form submission
-                   // @TODO Switch this to AJAX        
-                   $this->log_new_ticket("STAFF",$_POST['tkt_subject'],$_POST['ksd-ticket-description'],$_POST['customer_name'],$_POST['customer_email'],$_POST['assign-to'],$_POST['tkt_severity'],$_POST['tkt_logged_by'],"OPEN");
-                   wp_redirect(admin_url('admin.php?page=ksd-tickets'));                   
-                   exit;
-                }
-               else {//Output the dashboard
+                
                    $settings = $this->get_settings();//We'll need these for the settings page
-                    include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');
-                }
+                    include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');                
 	}
         
         /**
@@ -430,30 +426,42 @@ class Kanzu_Support_Admin {
         }
         /**
          * Log new tickets
-         * @param type $channel
-         * @param type $title
-         * @param type $description
-         * @param type $customer_name
-         * @param type $customer_email
-         * @param type $assign_to
-         * @param type $severity Ticket's severity
-         * @param type $status
          * @return type
+         * @TODO Add customer name and email to the customers table
          */
-        public function log_new_ticket ( $channel,$title,$description,$customer_name,$customer_email,$assign_to,$severity,$tkt_logged_by,$status ){
-            	$ksd_excerpt_length = 30;
-                $tO = new stdClass(); 
-                $tO->tkt_subject    	    = $title;
-                $tO->tkt_message_excerpt    = wp_trim_words( $description, $ksd_excerpt_length );
-                $tO->tkt_message            = $description;
-                $tO->tkt_channel            = $channel;
-                $tO->tkt_severity           = $severity;
-                $tO->tkt_status             = $status;
-                $tO->tkt_logged_by          = $tkt_logged_by;
-                $t0->tkt_assigned_to        = $assign_to;
-
+        public function log_new_ticket (){
+                if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) )
+			die ( 'Busted!');
+		$this->do_admin_includes();
+            
+            	$tkt_channel    = "STAFF"; //This is the default channel
+                $tkt_status     = "OPEN";//The default status
+                //Check what channel the request came from
+                if( isset( $_POST['ksd-submit-admin-new-ticket'] ) ) {
+                    $channel = "STAFF";
+                }
+                           
+                $ksd_excerpt_length = 30;//The excerpt length to use for the message
+                //We sanitize each input before storing it in the database
+                $new_ticket = new stdClass(); 
+                $new_ticket->tkt_subject    	    = sanitize_text_field( $_POST[ 'ksd_tkt_subject' ] );
+                $new_ticket->tkt_message_excerpt    = wp_trim_words( sanitize_text_field( $_POST[ 'ksd_tkt_message' ] ), $ksd_excerpt_length );
+                $new_ticket->tkt_message            = sanitize_text_field( $_POST[ 'ksd_tkt_message' ] );
+                $new_ticket->tkt_channel            = $tkt_channel;
+                $new_ticket->tkt_severity           = sanitize_text_field( $_POST[ 'ksd_tkt_severity' ] );
+                $new_ticket->tkt_status             = $tkt_status;
+                $new_ticket->tkt_logged_by          = sanitize_text_field( $_POST[ 'ksd_tkt_logged_by' ] );
+                $new_ticket->tkt_assigned_to        = sanitize_text_field( $_POST[ 'ksd_tkt_assigned_to' ] );
+                
+                //Return a different message based on the channel the request came on
+                $output_messages_by_channel = array();
+                $output_messages_by_channel[ 'STAFF' ] = __("Message Sent", "kanzu-support-desk");
+                
                 $TC = new TicketsController();
-               return ( $TC->logTicket( $tO ) > 0 ) ? True : False;
+                $new_ticket_status = ( $TC->logTicket( $new_ticket ) > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
+                
+                echo json_encode( $new_ticket_status );
+                die();// IMPORTANT: don't leave this out
         }
         
         /**

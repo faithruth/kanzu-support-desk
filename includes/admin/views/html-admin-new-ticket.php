@@ -1,17 +1,16 @@
 <div id="ksd-new-ticket">
-    <form action="<?php echo admin_url('admin.php?page=ksd-new-ticket'); ?>" id="new-ticket" method="POST">
+    <form class="ksd-new-ticket-admin" id="new-ticket" method="POST">
         <div>
-            <input type="text" value="<?php _e('Customer Name','kanzu-support-desk'); ?>" size="30" name="customer_name" label="Customer Name" class="ksd-customer-name" minlength="2" required/>
-            <input type="email" value="<?php _e('Customer Email','kanzu-support-desk'); ?>" size="30" name="customer_email" label="Customer Email" class="ksd-customer-email" required/>
-            <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
-            <!--<textarea value="<?php ; ?>" rows="7" class="ksd-description" name="description"></textarea>-->
+            <input type="text" value="<?php _e('Customer Name','kanzu-support-desk'); ?>" size="30" name="ksd_cust_fullname" label="Customer Name" class="ksd-customer-name" minlength="2" required/>
+            <input type="email" value="<?php _e('Customer Email','kanzu-support-desk'); ?>" size="30" name="ksd_cust_email" label="Customer Email" class="ksd-customer-email" required/>
+            <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
         </div>
-        <div class="ksd-description">
-            <?php wp_editor(  '' , 'ksd-ticket-description', array( "media_buttons" => false, "textarea_rows" => 5 ) ); ?> 
+        <div class="ksd-message">
+            <?php wp_editor(  '' , 'ksd_tkt_message', array( "media_buttons" => false, "textarea_rows" => 5 ) ); ?> 
         </div>
         <div class="ksd-severity">
-            <label for="tkt_severity"><?php _e('Severity','kanzu-support-desk'); ?></label>
-            <select name="tkt_severity">
+            <label for="ksd_tkt_severity"><?php _e('Severity','kanzu-support-desk'); ?></label>
+            <select name="ksd_tkt_severity">
                 <option><?php _e('LOW','kanzu-support-desk'); ?></option>
                 <option><?php _e('MEDIUM','kanzu-support-desk'); ?></option>
                 <option><?php _e('HIGH','kanzu-support-desk'); ?></option>
@@ -19,8 +18,8 @@
             </select>
         </div>
         <div class="ksd-assign-to">
-            <label for="assign-to"><?php _e('Assign To','kanzu-support-desk'); ?></label>
-            <select name="assign-to">
+            <label for="ksd_tkt_assigned_to"><?php _e('Assign To','kanzu-support-desk'); ?></label>
+            <select name="ksd_tkt_assigned_to">
                 <option>-</option>
             <?php $agents = get_users();
                 foreach ( $agents as $agent ) {
@@ -29,7 +28,9 @@
             ?>
             </select>
         </div> 
-        <input name="tkt_logged_by" type="hidden" value="<?php echo get_current_user_id(); ?>" />
-        <input type="submit" value="<?php _e( "Submit","kanzu-support-desk" ); ?>" name="ksd-submit" class="ksd-submit"/>
+        <input name="ksd_tkt_logged_by" type="hidden" value="<?php echo get_current_user_id(); ?>" />
+        <input name="action" type="hidden" value="ksd_log_new_ticket" />
+         <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
+        <input type="submit" value="<?php _e( "Submit","kanzu-support-desk" ); ?>" name="ksd-submit-admin-new-ticket" class="ksd-submit"/>
     </form>
 </div>

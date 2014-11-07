@@ -14,10 +14,10 @@
           <label for="tkt_subject"><?php _e('Subject','kanzu-support-desk'); ?></label>
           <input type="text" value="" maxlength="255" name="tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
         </li>
-     <!--<textarea value="<?php ; ?>" rows="7" class="ksd-description" name="description"></textarea>-->
-          <li class="ksd-description">     
-              <label for="ksd-ticket-description"><?php _e('Message','kanzu-support-desk'); ?></label>
-              <textarea value="" rows="7" class="ksd-description" name="ksd-ticket-description" required></textarea>
+     <!--<textarea value="<?php ; ?>" rows="7" class="ksd-message" name="description"></textarea>-->
+          <li class="ksd-message">     
+              <label for="tkt_message"><?php _e('Message','kanzu-support-desk'); ?></label>
+              <textarea value="" rows="7" class="ksd-message" name="tkt_message" required></textarea>
           </li>
           <input name="action" type="hidden" value="ksd_new_ticket_frontend" />
           <input type="submit" value="<?php _e( "Send Message","kanzu-support-desk" ); ?>" name="ksd-submit" class="ksd-submit"/>

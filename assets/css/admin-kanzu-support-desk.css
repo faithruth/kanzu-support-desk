@@ -192,7 +192,7 @@ a.new-ticket:hover {
     width: 30%;
     border: 1px solid #d3d3d3;
 }
-.ksd-subject,.ksd-description,.ksd-tags{
+.ksd-subject,.ksd-message,.ksd-tags{
     width: 100%;
 }
 .ksd-assign-to,.ksd-severity{
@@ -207,7 +207,7 @@ a.new-ticket:hover {
 .ksd-severity{
     float: left;
 }
-.ksd-description{
+.ksd-message{
     margin-bottom: 10px;
     clear: both;
 }
