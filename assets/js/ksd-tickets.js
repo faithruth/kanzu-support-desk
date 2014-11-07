@@ -757,11 +757,8 @@ KSDTickets = function(){
                     
                     //@TODO: Why is this coming as o instead of 0.
                     if( total_results == "o" || total_results == "0"  ) return; 
-            
                     var pages = (total_results/limit);
-                    jQuery("#ksd_pagination_"+ tab_id + " ul li").remove()
-                    jQuery("#ksd_pagination_"+ tab_id + " ul li a.current-nav").removeClass("current-nav");
-                    
+                    jQuery("#ksd_pagination_"+ tab_id + " ul li").remove();
                     jQuery("#ksd_pagination_"+ tab_id + " ul").append('\
                         <li><a rel="external" href="#"><<</a></li>  \
                         <li><a rel="external" href="#"><</a></li>');    
@@ -770,7 +767,7 @@ KSDTickets = function(){
                         currentclass=(i== current_page-1)?"current-nav" : "";
                         ii=i+1;
                         jQuery("#ksd_pagination_"+ tab_id + " ul").append(' \
-                            <li><a rel="external" href="#" class="'+currentclass+'">'+ ii +'</li> \
+                            <li><a rel="external" href="#" class="'+currentclass+'">'+ ii +'</a></li> \
                         ');
                     }
                     
