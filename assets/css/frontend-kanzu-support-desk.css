@@ -1,3 +1,6 @@
+.hidden{
+    display: none;
+}
 #ksd-new-ticket-frontend-wrap ul{
     margin: 0;
     padding: 0;
@@ -6,22 +9,40 @@
     position: relative;
     list-style: none;
 }
+#ksd-new-ticket-frontend-wrap input{
+      color: #ccc;
+}
 #ksd-new-ticket-frontend-wrap ul li label {
-  color: #ccc;
-  left: 5px;
-  position: absolute;
-  top: 8px;
+  font-size: 0.7em;
+}
+#ksd-new-ticket-frontend-wrap ul li label.error{
+    color: red;
 }
 #ksd-new-ticket-frontend-wrap input,#ksd-new-ticket-frontend-wrap textarea {
   margin-bottom: 7px;
   width: 250px;
 }
+#ksd-new-ticket-frontend-wrap img.ksd_close_button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+#ksd-new-ticket-frontend-wrap img.ksd_loading_button {
+  left: 50%;
+  position: absolute;
+}
+#ksd-new-ticket-frontend-wrap .ksd-frontend-submit{
+    position: relative;
+    min-height: 35px;
+}
  
 #ksd-new-ticket-frontend-wrap {
   background-color: #fff;
+  max-width: 30%;
   border: 1px solid #CCC;
   left: 0;
-  padding: 10px;
+  padding: 42px 10px 10px;
   position: fixed;
   top: 10%;
   z-index: 999; /*We need this to make sure this is visible*/

@@ -570,14 +570,9 @@ KSDTickets = function(){
             var new_form_fields = {
                 "tkt_subject" : "Subject",
                 "customer_name" : "Customer Name",
-                "customer_email" : "Customer Email"/*,
-                "ksd_tkt_search_input_1" : "Search...",
-                "ksd_tkt_search_input_2" : "Search...",
-                "ksd_tkt_search_input_3" : "Search...",
-                "ksd_tkt_search_input_4" : "Search...",
-                "ksd_tkt_search_input_5" : "Search..."*/
+                "customer_email" : "Customer Email"
             };
-            //Attach events to the fields @TODO Modify this to handle internalization
+            //Attach events to the fields @TODO Modify this to handle internalization (translation)
             jQuery.each( new_form_fields, function( field_name, form_value ) {
                 jQuery('input[name='+field_name+']').on('focus',{
                                                             old_value: form_value,

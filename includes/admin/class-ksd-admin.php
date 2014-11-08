@@ -131,10 +131,8 @@ class Kanzu_Support_Admin {
                 }
                 $agents_list .= "</ul>";
                 //Localization allows us to send variables to the JS script
-				wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets'),'ksd_agents_list'=>$agents_list,'ksd_current_user_id'=>get_current_user_id()));
+                wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets'),'ksd_agents_list'=>$agents_list,'ksd_current_user_id'=>get_current_user_id()));
 		
-                //Add the script that validates New Ticket additions
-                wp_enqueue_script( KSD_SLUG . '-validate', plugins_url( '../../assets/js/jquery.validate.min.js', __FILE__ ), array("jquery"), "1.13.0" ); 
 
 	}
 
@@ -436,10 +434,15 @@ class Kanzu_Support_Admin {
             
             	$tkt_channel    = "STAFF"; //This is the default channel
                 $tkt_status     = "OPEN";//The default status
+                
                 //Check what channel the request came from
-                if( isset( $_POST['ksd-submit-admin-new-ticket'] ) ) {
-                    $channel = "STAFF";
-                }
+                switch ( sanitize_text_field( $_POST['ksd_tkt_channel']) ){
+                    case 'support_tab':
+                        $tkt_channel   =       "SUPPORT_TAB";
+                        break;
+                    default:
+                        $tkt_channel    =      "STAFF";
+                }                       
                            
                 $ksd_excerpt_length = 30;//The excerpt length to use for the message
                 //We sanitize each input before storing it in the database
@@ -448,14 +451,24 @@ class Kanzu_Support_Admin {
                 $new_ticket->tkt_message_excerpt    = wp_trim_words( sanitize_text_field( $_POST[ 'ksd_tkt_message' ] ), $ksd_excerpt_length );
                 $new_ticket->tkt_message            = sanitize_text_field( $_POST[ 'ksd_tkt_message' ] );
                 $new_ticket->tkt_channel            = $tkt_channel;
-                $new_ticket->tkt_severity           = sanitize_text_field( $_POST[ 'ksd_tkt_severity' ] );
                 $new_ticket->tkt_status             = $tkt_status;
+                //These other fields are only available if a ticket is logged from the admin side so we need to 
+                //check if they are set
+                if ( isset( $_POST[ 'ksd_tkt_severity' ] ) ) {
+                $new_ticket->tkt_severity           = sanitize_text_field( $_POST[ 'ksd_tkt_severity' ] );   
+                }
+                if ( isset( $_POST[ 'ksd_tkt_logged_by' ] ) ) {
                 $new_ticket->tkt_logged_by          = sanitize_text_field( $_POST[ 'ksd_tkt_logged_by' ] );
-                $new_ticket->tkt_assigned_to        = sanitize_text_field( $_POST[ 'ksd_tkt_assigned_to' ] );
-                
+                }
+                if ( isset( $_POST[ 'ksd_tkt_assigned_to' ] ) ) {
+                    $new_ticket->tkt_assigned_to    = sanitize_text_field( $_POST[ 'ksd_tkt_assigned_to' ] );
+                }
                 //Return a different message based on the channel the request came on
+                //@TODO Make these messages configurable
                 $output_messages_by_channel = array();
                 $output_messages_by_channel[ 'STAFF' ] = __("Message Sent", "kanzu-support-desk");
+                $output_messages_by_channel[ 'SUPPORT_TAB' ] = __("Thank you. Your support request has been opened. Please allow at least 24 hours for a reply.", "kanzu-support-desk");
+                
                 
                 $TC = new TicketsController();
                 $new_ticket_status = ( $TC->logTicket( $new_ticket ) > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
