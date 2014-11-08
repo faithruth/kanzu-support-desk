@@ -12,7 +12,6 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 
  class TicketsModel extends Kanzu_Model{
 
-	//@TODO Change tkt_message to tkt_subject
 	public function __construct(){
 		global $wpdb;
 		$this->_tablename = $wpdb->prefix . "kanzusupport_tickets";	
@@ -21,7 +20,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 		$this->_formats = array(
 		'tkt_id' 		 => '%d', 
 		'tkt_subject' 		 => '%s', 		
-		'tkt_message' 	 => '%s', 
+		'tkt_message'            => '%s', 
                 'tkt_message_excerpt'	 => '%s',
 		'tkt_channel' 		 => '%s',
 		'tkt_status' 		 => '%s',
@@ -124,14 +123,14 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
          /**
           * Get all assigned tickets
           * @param String $filter Filter the assigned tickets.
-          * @TODO Replace table names with variables
           */
          public function get_assigned_tickets( $filter = null ){
+             global $wpdb;
              $where = ( is_null( $filter ) ? " IS NULL " : $filter );
-             $assigned_tickets_query = 'SELECT * 
-                        FROM '.$this->_tablename.' AS T
-                         JOIN `wp_kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
-                        WHERE A.`assign_assigned_to` '.$where;
+             $assigned_tickets_query = "SELECT * 
+                        FROM ".$this->_tablename." AS T
+                         JOIN `{$wpdb->prefix}kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
+                        WHERE A.`assign_assigned_to` ".$where; 
              return parent::execQuery( $assigned_tickets_query );
          }
          

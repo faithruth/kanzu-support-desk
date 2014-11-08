@@ -473,9 +473,9 @@ class Kanzu_Support_Admin {
                 $ksd_excerpt_length = 30;//The excerpt length to use for the message
                 //We sanitize each input before storing it in the database
                 $new_ticket = new stdClass(); 
-                $new_ticket->tkt_subject    	    = sanitize_text_field( $_POST[ 'ksd_tkt_subject' ] );
-                $new_ticket->tkt_message_excerpt    = wp_trim_words( sanitize_text_field( $_POST[ 'ksd_tkt_message' ] ), $ksd_excerpt_length );
-                $new_ticket->tkt_message            = $_POST[ 'ksd_tkt_message' ];
+                $new_ticket->tkt_subject    	    = sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_subject' ] ) );
+                $new_ticket->tkt_message_excerpt    = wp_trim_words( sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_message' ] )  ), $ksd_excerpt_length );
+                $new_ticket->tkt_message            = sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_message' ] ));
                 $new_ticket->tkt_channel            = $tkt_channel;
                 $new_ticket->tkt_status             = $tkt_status;
                 

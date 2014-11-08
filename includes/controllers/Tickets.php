@@ -77,26 +77,17 @@ class TicketsController extends Kanzu_Controller {
 	*Returns all tickets that through query
 	*
         *@param String $query The Query to run on the table(s)
-        *@param String $check_ticket_assignments Whether the ticket assignments should also be checked
 	*@return Array Array of objects
 	*/
-	public function getTickets( $query = null, $check_ticket_assignments ){
-                if ( "yes" == $check_ticket_assignments ) { 
-                    //@TODO Fix assignment check. A single ticket has multiple entries so the query should take that into account
-                    //$query.= " ORDER BY T.tkt_time_logged DESC  ";
-                    return $this->_model->get_assigned_tickets( $query );
-                }
-                else{
-                    //$query.= " ORDER BY tkt_time_logged DESC ";
-                    return $this->_model->getAll( $query );
-                }		
+	public function getTickets( $query = null ){                   
+               return $this->_model->getAll( $query );               		
 	}
 	
 	/**
 	 * Delete the ticket with the specified ID
 	 * @param int $ticket_id Ticket ID
 	 */
-	 public function deleteTicket($ticket_id){
+	 public function deleteTicket( $ticket_id ){
 		$where = array ('tkt_id'=>$ticket_id);
 		return $this->_model->deleteTicket( $where);
 	}
