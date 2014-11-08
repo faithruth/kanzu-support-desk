@@ -23,6 +23,7 @@ jQuery( document ).ready(function() {
         }   
     
     //Add validation to the front-end form
+    //@TODO Add CAPTCHA
     jQuery("form.ksd-new-ticket-frontend").validate({
         submitHandler: function(form) {
         logNewTicket(form);

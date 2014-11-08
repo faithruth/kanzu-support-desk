@@ -85,6 +85,9 @@ final class Kanzu_Support_Desk {
 	//Include required files
 	$this->includes();
 	
+        //Set-up actions and filters
+	$this->setup_actions();
+        
 	/*
 	 * Register hooks that are fired when the plugin is activated or deactivated.
 	 * When the plugin is deleted, the uninstall.php file is loaded.
@@ -92,9 +95,7 @@ final class Kanzu_Support_Desk {
 	register_activation_hook( __FILE__, array( 'Kanzu_Support_Install', 'activate' ) );
 	register_deactivation_hook( __FILE__, array( 'Kanzu_Support_Install', 'deactivate' ) );
 	
-	//Set-up actions and filters
-	$this->setup_actions();
-	}
+        }
 	
 	/**
 	 * Define Kanzu Support Constants
@@ -168,35 +169,29 @@ final class Kanzu_Support_Desk {
 	}
 	
 	/**
-	 * Register and enqueue public-facing style sheet.
-         * Be sure to use the word 'public' in the identifier to distinguish
-         * them from the admin-side scripts and prevent collision
+	 * Register and enqueue styles used in both the front and back end
 	 * @since    1.0.0
 	 */
-	public function enqueue_public_styles() {
+	public function enqueue_general_styles() {
 		//wp_enqueue_style( KSD_SLUG . '-plugin-public-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), $this->version );
 	}
 
 	/**
-	 * Register and enqueues public-facing JavaScript files.
-         * Be sure to use the word 'public' in the identifier to distinguish
-         * them from the admin-side scripts and prevent collision
+	 * Enqueue scripts used in both the front and back end
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_public_scripts() {		
-		//wp_enqueue_script( KSD_SLUG . '-plugin-public-script', plugins_url( 'assets/js/public.js', __FILE__ ), array( 'jquery' ), $this->version );
-		
-	}
+	public function enqueue_general_scripts() {		
+            //For form validation
+            wp_enqueue_script( KSD_SLUG . '-validate', KSD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' , array("jquery"), "1.13.0" ); 
+        }
 
 	
 	/**
 	 * Setup Kanzu Support's actions
 	 * @since    1.0.0
 	 */
-	private function setup_actions(){
-			
-		
+	private function setup_actions(){	
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
@@ -204,18 +199,15 @@ final class Kanzu_Support_Desk {
 		// Activate plugin when new blog is added. Leave this out for now
 		//add_action( 'wpmu_new_blog', array( Kanzu_Support_Install, 'activate_new_site' ) );
 		
-                //Load public-facing styles and JS. Commented out for now; not required
-               // add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_public_styles' ) );
-		//add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_public_scripts' ) );
+                //Load styles and scripts used in both the front and back ends
+                add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
                 
 		/* Define custom functionality. Commented out for now
 		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
 		 */
 		//add_action( '@TODO', array( $this, 'action_method_name' ) );
 		//add_filter( '@TODO', array( $this, 'filter_method_name' ) );
-
-
-
 	}	
 	
 	/**

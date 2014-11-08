@@ -42,16 +42,12 @@ class Kanzu_Support_FrontEnd {
         }
         
         /**
-         * Enqueue front-end scripts
-         * Note that if a script is needed in both the front-end and admin side,
-         * we load it from the front-end since that logic will always run
+         * Enqueue scripts used solely at the front-end
          * @since 1.0.0
          */
         public function enqueue_frontend_scripts() {	
             wp_enqueue_script( KSD_SLUG . '-frontend-js', KSD_PLUGIN_URL .  'assets/js/ksd-frontend.js' , array( 'jquery', 'jquery-ui-core' ), KSD_VERSION );
-            wp_localize_script( KSD_SLUG . '-frontend-js', 'ksd_frontend' , array( 'ajax_url' => admin_url( 'admin-ajax.php') ) );
-            //Validate the forms. This is used even by the admin side
-            wp_enqueue_script( KSD_SLUG . '-validate', KSD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' , array("jquery"), "1.13.0" ); 
+            wp_localize_script( KSD_SLUG . '-frontend-js', 'ksd_frontend' , array( 'ajax_url' => admin_url( 'admin-ajax.php') ) );            
         }
         
         /**

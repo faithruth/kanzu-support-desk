@@ -11,7 +11,7 @@ KSDTickets = function(){
 
         this.uiTabs();
         this.uiListTickets();
-        //this.newTicket();
+        this.newTicket();
         this.editTicketForm();
 
         this.deleteTicket();
@@ -311,18 +311,16 @@ KSDTickets = function(){
         /*-------------------------------------------------------------------------------------------------
          * AJAX: Log New ticket
          */    
-        jQuery('form.ksd-new-ticket-admin').submit( function(e){
-                e.preventDefault(); 
+        ksdLogNewTicketAdmin    = function(form){
                 KSDUtils.showDialog("loading");//Show a dialog message
                 jQuery.post(	ksd_admin.ajax_url, 
-                                    jQuery(this).serialize(), //The action and nonce are hidden fields in the form
+                                    jQuery(form).serialize(), //The action and nonce are hidden fields in the form
                     function( response ) {//@TODO Check for errors 
                        KSDUtils.showDialog("success",JSON.parse(response));
                        //Redirect to the Tickets page
                        window.location.replace( ksd_admin.ksd_tickets_url );
                 });
-            });
-            
+        }    
         /**While working on a single ticket, switch between reply/forward and Add note modes
          * We define the action (used by AJAX) and change the submit button's text
          * @TODO Move submitButtonText to PHP so it can be localized**/
@@ -355,58 +353,19 @@ KSDTickets = function(){
 	
         
         
-	this.newTicket = function(){
-	       
-        /**While working on a single ticket, switch between reply/forward and Add note modes**/
-        jQuery('ul.edit-ticket-options li').click(function(e){
-            jQuery('ul.edit-ticket-options li').removeClass('selected');//make all tabs inactive        
-            jQuery(this).addClass('selected');    //then make the clicked tab active
-        });
-        
-        /**AJAX: In single ticket view mode, get the current ticket's description, sender and subject*/
-        if(jQuery("#ksd-single-ticket .description").hasClass("pending")){             
-            jQuery.post(    ksd_admin.ajax_url, 
-                            { 	action : 'ksd_get_single_ticket',
-				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
-				tkt_id : jQuery.urlParam('ticket')//We get the ticket ID from the URL
-                            }, 
-			function(response) {
-                            the_ticket = JSON.parse(response);
-                            jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
-                            jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message);
-                            _ShowLoadingImage(false);
-                            jQuery("#ticket-replies").html("Any minute now...") ; //@TODO Add this to Localization                         
-                            //Make the 'Back' button visible
-                            jQuery(".top-nav li.back").removeClass("hidden");
-                            
-                            //Now get the responses. For cleaner code and to remove reptition in the returned results, we use multiple
-                            //queries instead of a JOIN. The impact on speed is negligible
-                            jQuery.post(    ksd_admin.ajax_url, 
-                            { 	action : 'ksd_get_ticket_replies',
-				ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
-				tkt_id : jQuery.urlParam('ticket')//We get the ticket ID from the URL
-                            }, 
-                                function(the_replies) {       
-                                    jQuery("#ticket-replies").html("") ; //Clear the replies div
-                                    jQuery.each( JSON.parse(the_replies), function( key, value ) {
-                                    jQuery("#ticket-replies").append("<div class='ticket-reply'>"+value.rep_message+"</div>");                                    
-                                    });
-                                    //Toggle the color of the reply background
-                                    jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
-                                });
-                        });	
-        }//eof:if(jQuery("#ksd-single-ticket .description").hasClass("pending")){ 
-        
-        
+	this.newTicket = function(){   
+            
             /*On focus, Toggle customer name, email and subject */
-            _toggleFieldValues();
+            _toggleFieldValues();        
         
-        
-            /**Validate New Tickets**/
+            /**Validate New Tickets before submitting the form by AJAX**/
             //@TODO Add server side validation too
-            jQuery("form#new-ticket").validate();
-
-		
+            //@TODO Add handler to stop sending of default values
+            jQuery("form.ksd-new-ticket-admin").validate({
+                submitHandler: function(form) {
+                ksdLogNewTicketAdmin(form);
+                }
+            });	
 	}//eof:newTicket()
         
         
@@ -560,25 +519,24 @@ KSDTickets = function(){
         _toggleFieldValues = function(){
 
             /**Toggle the form field values for new tickets on click**/
-            function toggle_form_field_input ( event ){
+            function toggle_form_field_input ( event ){                
                     if(jQuery(this).val() === event.data.old_value){
-                        jQuery(this).val(event.data.new_value);      
-                        
+                        jQuery(this).val(event.data.new_value);                        
                 }      
             };
             //The fields
             var new_form_fields = {
-                "tkt_subject" : "Subject",
-                "customer_name" : "Customer Name",
-                "customer_email" : "Customer Email"
+                "ksd_tkt_subject" : "Subject",
+                "ksd_cust_fullname" : "Customer Name",
+                "ksd_cust_email" : "Customer Email"
             };
             //Attach events to the fields @TODO Modify this to handle internalization (translation)
             jQuery.each( new_form_fields, function( field_name, form_value ) {
-                jQuery('input[name='+field_name+']').on('focus',{
+                jQuery('form.ksd-new-ticket-admin input[name='+field_name+']').on('focus',{
                                                             old_value: form_value,
                                                             new_value: ""
                                                          }, toggle_form_field_input);
-                jQuery('input[name='+field_name+']').on('blur',{
+                jQuery('form.ksd-new-ticket-admin input[name='+field_name+']').on('blur',{
                                                             old_value: "",
                                                             new_value: form_value
                                                          }, toggle_form_field_input);
