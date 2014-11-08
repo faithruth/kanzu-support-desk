@@ -38,7 +38,7 @@ class Kanzu_Support_FrontEnd {
 	 *
 	 */
 	public function enqueue_frontend_styles() {	
-		wp_enqueue_style( KSD_SLUG .'-frontend-css', KSD_PLUGIN_URL . 'assets/css/frontend-kanzu-support-desk.css' , array() , KSD_VERSION );
+		wp_enqueue_style( KSD_SLUG .'-frontend-css', KSD_PLUGIN_URL . 'assets/css/ksd-frontend.css' , array() , KSD_VERSION );
         }
         
         /**

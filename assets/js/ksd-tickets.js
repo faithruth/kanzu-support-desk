@@ -49,83 +49,46 @@ KSDTickets = function(){
                         
                         jQuery.post(ksd_admin.ajax_url, data, function(response) {
                             if(jQuery.isArray(JSON.parse(response))){
-                                    
-                                
-                                   //  jQuery(current_tab+' #ticket-list').remove();
-                                     
                                    tab_id = current_tab.replace("#tickets-tab-","");
-                                     rws2 = "";
-                                     rws2 += '<div class="ksd-row-all-hide" id="ksd_row_all_'+tab_id+'">';
-                                     rws2 +=    '<div  id="tkt_all_options"> \
+                                     ticketListData = "";
+                                     ticketListData += '<div class="ksd-row-all-hide" id="ksd_row_all_'+tab_id+'">';
+                                     ticketListData +=    '<div  id="tkt_all_options"> \
                                                     <a href="#" class="trash" id="#">Trash All</a> | \
                                                     <a href="#" id="#" class="change_status">Change All Statuses</a> | \
                                                     <a href="#" id="#" class="assign_to">Assign All To</a> \
                                                 </div>' ;
-                                     rws2 += '</div>';
+                                     ticketListData += '</div>';
                                      
-                                     jQuery(current_tab+' #ticket-list').html( rws2);
+                                     jQuery(current_tab+' #ticket-list').html( ticketListData);
                                      
                                     jQuery.each( JSON.parse(response)[0], function( key, value ) {
-                                            /*
-                                            rws = 	'<div id="ticket-list-item" class="ticket_'+value.tkt_id+'">';
-                                            rws += 	'<div class="ticket-info">';
-                                            rws += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
-
-                                            rws +=	'<span class="subject"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a></span> - ';
-                                            rws += 	'<span class="">'+value.tkt_message+'</span>';
-                                            rws += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
-                                            rws += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
-                                            rws += 	'</div>';
-                                            rws += 	'<div class="ticket-actions" id="tkt_'+value.tkt_id+'">';
-                                            rws += 	'<a href="#" class="trash" id="tkt_'+value.tkt_id+'">Trash</a> | ';
-                                            rws += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="change_status">Change Status</a> | ';
-                                            rws += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="assign_to">Assign To</a>';
-                                            rws += 	ksd_admin.ksd_agents_list;
-                                            rws += 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
-                                            rws += 	'</div>';
-                                            rws +=      '</div>';
-                                            jQuery(current_tab+' #ticket-list2').append( rws);
-                                            */
-
-                                            /*@todo: for testing template 2 */
-                                            rws2 = '<div class="ksd-row-data ticket-list-item" id="ksd_tkt_id_'+value.tkt_id+'">';
-                                            rws2 += 	'<div class="ticket-info">';
-                                            rws2 += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
-                                            rws2 += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
-                                            rws2 +=	'<span class="subject-and-message-excerpt"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject;
-                                            rws2 += 	' - '+value.tkt_message_excerpt+'</span></a>';                                            
-                                            rws2 += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
-                                            rws2 += 	'</div>';
-                                            rws2 += 	'<div class="ticket-actions" id="tkt_'+value.tkt_id+'">';
-                                            rws2 += 	'<a href="#" class="trash" id="tkt_'+value.tkt_id+'">Trash</a> | ';
-                                            rws2 += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="change_status">Change Status</a> | ';
-                                            rws2 += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="assign_to">Assign To</a>';
-                                            rws2 += 	ksd_admin.ksd_agents_list;
-                                            rws2 += 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
-                                            rws2 += 	'</div>';
-                                            rws2 +=     '</div>';
-                                            jQuery(current_tab+' #ticket-list').append( rws2);
+                                        
+                                            ticketListData = '<div class="ksd-row-data ticket-list-item" id="ksd_tkt_id_'+value.tkt_id+'">';
+                                            ticketListData += 	'<div class="ticket-info">';
+                                            ticketListData += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
+                                            ticketListData += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
+                                            ticketListData +=	'<span class="subject-and-message-excerpt"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject;
+                                            ticketListData += 	' - '+value.tkt_message_excerpt+'</span></a>';                                            
+                                            ticketListData += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
+                                            ticketListData += 	'</div>';
+                                            ticketListData += 	'<div class="ticket-actions" id="tkt_'+value.tkt_id+'">';
+                                            ticketListData += 	'<a href="#" class="trash" id="tkt_'+value.tkt_id+'">'+ksd_admin.ksd_labels.tkt_trash+'</a> | ';
+                                            ticketListData += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="change_status">'+ksd_admin.ksd_labels.tkt_change_status+'</a> | ';
+                                            ticketListData += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="assign_to">'+ksd_admin.ksd_labels.tkt_assign_to+'</a>';
+                                            ticketListData += 	ksd_admin.ksd_agents_list;
+                                            ticketListData += 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
+                                            ticketListData += 	'</div>';
+                                            ticketListData +=     '</div>';
                                             
-                                            
-
+                                            jQuery(current_tab+' #ticket-list').append( ticketListData );
                                     });//eof:jQUery.each
 
                                     /**Add class .alternate to every other row in the tickets table.*/
-                                    //jQuery("#ticket-list div#ticket-list-item").filter(':even').addClass("alternate");
                                     jQuery("#ticket-list .ksd-row-data").filter(':even').addClass("alternate");
                                     
                                     RowCtrlEffects();
                             }
                             else{
-                              //  jQuery(current_tab+' #ticket-list tr').remove();
-
-                                     /*rws2 = ' \
-                                              <tr class="ksd-row-nodata"> \
-                                              <td colspan="5">\
-                                              ' + JSON.parse(response) + ' \
-                                              </td> \
-                                              </tr>';*/
-                                     
                                 jQuery(current_tab+' #select-all-tickets').remove();  
                                 jQuery(current_tab+' #ticket-list').addClass("empty").html(JSON.parse(response));
                             }//eof:if
@@ -172,8 +135,6 @@ KSDTickets = function(){
 			
 		});
 		
-
-
 		//---------------------------------------------------------------------------------
         /**Hide/Show the change ticket options on click of a ticket's 'change status' item**/
 	jQuery("#ticket-tabs").on('click','.ticket-actions a.change_status',function(event) {
@@ -526,9 +487,9 @@ KSDTickets = function(){
             };
             //The fields
             var new_form_fields = {
-                "ksd_tkt_subject" : "Subject",
-                "ksd_cust_fullname" : "Customer Name",
-                "ksd_cust_email" : "Customer Email"
+                "ksd_tkt_subject" : ksd_admin.ksd_labels.tkt_subject,
+                "ksd_cust_fullname" : ksd_admin.ksd_labels.tkt_cust_fullname,
+                "ksd_cust_email" : ksd_admin.ksd_labels.tkt_cust_email
             };
             //Attach events to the fields @TODO Modify this to handle internalization (translation)
             jQuery.each( new_form_fields, function( field_name, form_value ) {

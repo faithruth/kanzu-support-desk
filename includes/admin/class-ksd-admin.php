@@ -101,7 +101,7 @@ class Kanzu_Support_Admin {
 	 */
 	public function enqueue_admin_styles() {
 	
-		wp_enqueue_style( KSD_SLUG .'-admin-styles', plugins_url( '../../assets/css/admin-kanzu-support-desk.css', __FILE__ ), array(), KSD_VERSION );
+		wp_enqueue_style( KSD_SLUG .'-admin-styles', plugins_url( '../../assets/css/ksd-admin.css', __FILE__ ), array(), KSD_VERSION );
                 wp_enqueue_style( KSD_SLUG .'-admin-css', plugins_url( '../../assets/css/ksd.css', __FILE__ ), array(), KSD_VERSION );
 
 	}
@@ -123,15 +123,44 @@ class Kanzu_Support_Admin {
                 wp_enqueue_script( KSD_SLUG . '-admin-settings', plugins_url( '../../assets/js/ksd-settings.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION );
                 wp_enqueue_script( KSD_SLUG . '-admin-dashboard', plugins_url( '../../assets/js/ksd-dashboard.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION );
                 wp_enqueue_script( KSD_SLUG . '-admin-tickets', plugins_url( '../../assets/js/ksd-tickets.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION );
-                wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/admin-kanzu-support-desk.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION ); 
-		$ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );	 //This determines which tab to show as active
-                $agents_list = "<ul class='assign_to2 hidden'>";
+                wp_enqueue_script( KSD_SLUG . '-admin-script', plugins_url( '../../assets/js/ksd-admin.js', __FILE__ ), array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION ); 
+		
+                //Variables to send to the admin JS script
+                $ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );//This determines which tab to show as active
+                
+                $agents_list = "<ul class='assign_to2 hidden'>";//The available list of agents
                 foreach (  get_users() as $agent ) {
                     $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
                 }
                 $agents_list .= "</ul>";
+                
+                //This array allows us to internalize (translate) the words/phrases/labels displayed in the JS 
+                $admin_labels_array = array();
+                $admin_labels_array['dashboard_chart_title']        = __('Incoming Tickets','kanzu-support-desk');
+                $admin_labels_array['dashboard_open_tickets']       = __('Total Open Tickets','kanzu-support-desk');
+                $admin_labels_array['dashboard_unassigned_tickets'] = __('Unassigned Tickets','kanzu-support-desk');
+                $admin_labels_array['dashboard_avg_response_time']  = __('Avg. Response Time','kanzu-support-desk');
+                $admin_labels_array['tkt_trash']                    = __('Trash','kanzu-support-desk');
+                $admin_labels_array['tkt_assign_to']                = __('Assign To','kanzu-support-desk');
+                $admin_labels_array['tkt_change_status']            = __('Change Status','kanzu-support-desk');
+                $admin_labels_array['tkt_subject']                  = __('Subject','kanzu-support-desk');
+                $admin_labels_array['tkt_cust_fullname']            = __('Customer Name','kanzu-support-desk');
+                $admin_labels_array['tkt_cust_email']               = __('Customer Email','kanzu-support-desk');
+                $admin_labels_array['msg_loading']                  = __('Loading','kanzu-support-desk');
+                        
+                
                 //Localization allows us to send variables to the JS script
-                wp_localize_script(KSD_SLUG . '-admin-script','ksd_admin',array('admin_tab'=> $ksd_admin_tab,'ajax_url' => admin_url( 'admin-ajax.php'),'ksd_admin_nonce' => wp_create_nonce( 'ksd-admin-nonce' ),'ksd_tickets_url'=>admin_url( 'admin.php?page=ksd-tickets'),'ksd_agents_list'=>$agents_list,'ksd_current_user_id'=>get_current_user_id()));
+                wp_localize_script( KSD_SLUG . '-admin-script',
+                                    'ksd_admin',
+                                    array(  'admin_tab'             =>  $ksd_admin_tab,
+                                            'ajax_url'              =>  admin_url( 'admin-ajax.php'),
+                                            'ksd_admin_nonce'       =>  wp_create_nonce( 'ksd-admin-nonce' ),
+                                            'ksd_tickets_url'       =>  admin_url( 'admin.php?page=ksd-tickets'),
+                                            'ksd_agents_list'       =>  $agents_list,
+                                            'ksd_current_user_id'   =>  get_current_user_id(),
+                                            'ksd_labels'            =>  $admin_labels_array
+                                        )
+                                    );
 		
 
 	}
@@ -255,7 +284,7 @@ class Kanzu_Support_Admin {
 	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
 			die ( 'Busted!');
 		$this->do_admin_includes();
-                $check_ticket_assignments = "no";//This comes into play when we need to check the assignments table
+                
 		switch( $_POST['view'] ):
                         case '#tickets-tab-2': //'All Tickets'
 				$filter=" tkt_status != 'RESOLVED'";
@@ -277,9 +306,9 @@ class Kanzu_Support_Admin {
 		endswitch;
                 
                 
-                $offset = $_POST['offset'];
-                $limit  = $_POST['limit'];
-                $search = $_POST['search'];
+                $offset =   sanitize_text_field( $_POST['offset'] );
+                $limit  =   sanitize_text_field( $_POST['limit'] );
+                $search =   sanitize_text_field( $_POST['search'] );
                 
                 //search
                 if( $search != "" && $search !="Search..."){
@@ -301,7 +330,7 @@ class Kanzu_Support_Admin {
                 //Results count
                 $tickets = new TicketsController(); 
                 $count   = $tickets->get_count( $count_filter );
-                $raw_tickets = $this->filter_ticket_view( $filter, $check_ticket_assignments );
+                $raw_tickets = $this->filter_ticket_view( $filter );
                 
                 //$response = ( empty( $raw_tickets ) ? __( "Nothing to see here. Great work!","kanzu-support-desk" ) : $raw_tickets );
                 

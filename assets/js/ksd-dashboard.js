@@ -31,9 +31,9 @@ KSDDashboard = function(){
                        var openTickets = ( 'undefined' !== typeof raw_response.open_tickets[0] ? raw_response.open_tickets[0].open_tickets : 0)
                        var averageResponseTime = ( 'undefined' !== typeof raw_response.average_response_time ? raw_response.average_response_time : '00:00' );
                        var the_summary_stats = "";
-                       the_summary_stats+= "<li>"+openTickets+" <span>Total Open Tickets</span></li>";
-                       the_summary_stats+= "<li>"+unassignedTickets+" <span>Unassigned Tickets</span></li>";
-                       the_summary_stats+= "<li>"+averageResponseTime+" <span>Avg. Response Time</span></li>";
+                       the_summary_stats+= "<li>"+openTickets+" <span>"+ksd_admin.ksd_labels.dashboard_open_tickets+"</span></li>";
+                       the_summary_stats+= "<li>"+unassignedTickets+" <span>"+ksd_admin.ksd_labels.dashboard_unassigned_tickets+"</span></li>";
+                       the_summary_stats+= "<li>"+averageResponseTime+" <span>"+ksd_admin.ksd_labels.dashboard_avg_response_time+"</span></li>";
                        jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
                 });	
         }
@@ -43,7 +43,6 @@ KSDDashboard = function(){
 	this.charts = function(){
             try{
             /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
-            //@TODO Internalize the chart title (Ready it for translation )
                     function ksdDrawDashboardGraph() {	
                         jQuery.post( ksd_admin.ajax_url, 
                                 {action : 'ksd_dashboard_ticket_volume',
@@ -59,7 +58,7 @@ KSDDashboard = function(){
                                        ksdChartContainer.style.display = 'block';//Unhide the parent element
                                     var ksdData =  google.visualization.arrayToDataTable( JSON.parse(response) );                                   
                                     var ksdOptions = {
-                                        title: 'Incoming Tickets'
+                                        title: ksd_admin.ksd_labels.dashboard_chart_title
                                                 };
                                     var ksdDashboardChart = new google.visualization.LineChart(document.getElementById('ksd_dashboard_chart'));
                                     //Add a listener to know when drawing the chart is complete.                     
