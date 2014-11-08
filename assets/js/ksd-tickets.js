@@ -144,26 +144,6 @@ KSDTickets = function(){
                 jQuery(this).parent().find(".assign_to2").addClass("hidden");
                 
 	});
-	
-	//---------------------------------------------------------------------------------
-	/**AJAX: Send the AJAX request when a new status is chosen**/
-	jQuery("#ticket-tabs").on('click','.ticket-actions ul.status li',function() {
-		KSDUtils.showDialog("loading");
-                var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
-		var tkt_status = jQuery(this).text();
-		jQuery.post(	ksd_admin.ajax_url, 
-						{ 	action : 'ksd_change_status',
-							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
-							tkt_id : tkt_id,
-							tkt_status : tkt_status
-						}, 
-				function(response) {	
-                                    
-							KSDUtils.showDialog("success",JSON.parse(response));
-                                                        jQuery('#ticket-list div#ksd_tkt_id_'+tkt_id).remove();
-				});		
-	});       
-
         
       //---------------------------------------------------------------------------------
         /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
