@@ -41,7 +41,6 @@
 		</div>      
             <div class="ksd-dialog loading hidden">Loading...</div>
             <div class="ksd-dialog error hidden">Error</div>
-            <div class="ksd-dialog success hidden">Success</div>
-            
+            <div class="ksd-dialog success hidden">Success</div>            
             <div class="ksd-hide-pending ksd-pending2"></div>
 </div>

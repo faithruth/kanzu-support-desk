@@ -11,11 +11,10 @@
  */
  
  
-include_once ( KSD_PLUGIN_DIR . "models/Users.php" );
+include_once ( KSD_PLUGIN_DIR . "includes/models/Users.php" );
+include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 
- class ClientsModel extends UsersModel{
-
-	private $wp_formats = array();
+ class CustomersModel extends UsersModel{
 	
 	public function __construct(){
 		global $wpdb;
@@ -23,24 +22,27 @@ include_once ( KSD_PLUGIN_DIR . "models/Users.php" );
 		$this->_id = "cust_id";
 			
 		$this->_formats = array(
-		'cust_id' 			 	=> '%d', 
-		'cust_user_id' 			=> '%d',
-		'cust_firstname'	 	=> '%s',
-		'cust_lastname'	 		=> '%s' , 
+		'cust_id' 		=> '%d', 
+		'cust_user_id'          => '%d',
+		'cust_firstname'	=> '%s',
+		'cust_lastname'	 	=> '%s' , 
+                'cust_email'	 	=> '%s' , 
 		'cust_company_name' 	=> '%s',
 		'cust_phone_number' 	=> '%s',
-		'cust_about' 	 		=> '%s',
+		'cust_about' 	 	=> '%s',
 		'cust_creation_date' 	=> '%s',
-		'cust_created_by' 	 	=> '%d'
+		'cust_created_by' 	=> '%d'
 		);
 	}
+        
+ 
 	
 	/*
 	*Get user object
 	*
 	*@param customerid
 	*/
-	public function getClient( $id ){
+	public function getCustomer( $id ){
 		return parent::getRow($id); ;
 	}
 	
@@ -56,7 +58,7 @@ include_once ( KSD_PLUGIN_DIR . "models/Users.php" );
 	/*
 	*
 	*/
-	public function addClient( &$obj ){
+	public function addCustomer( &$obj ){
 		return parent::addRow( $obj );
 	}
 	
@@ -64,7 +66,7 @@ include_once ( KSD_PLUGIN_DIR . "models/Users.php" );
 	*
 	*@param client object.
 	*/
-	public function deleteClient(  &$obj ){
+	public function deleteCustomer(  &$obj ){
 		return parent::deleteRow( $obj );
 	}
 	
@@ -74,7 +76,7 @@ include_once ( KSD_PLUGIN_DIR . "models/Users.php" );
 	*@param client object
 	* *new_* for new value
 	*/
-	public function updateClient( &$obj ){
+	public function updateCustomer( &$obj ){
 		return parent::updateRow( $obj );
 	}
  }

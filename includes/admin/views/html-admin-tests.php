@@ -24,7 +24,7 @@
 <p><?php _e('Kanzu Support Desk Test Suite','kanzu-support-desk');  
  
  
-	include_once( KSD_PLUGIN_DIR . "unittests/models/Tickets.php");
+	include_once( KSD_PLUGIN_DIR . "includes/unittests/models/Tickets.php");
 	//include_once( KANZU_PLUGIN_ADMIN_DIR . KANZU_DS ."controllers". KANZU_DS ."Tickets.php"); 
 	//include_once( KANZU_PLUGIN_ADMIN_DIR . KANZU_DS ."controllers". KANZU_DS ."Users.php");
 

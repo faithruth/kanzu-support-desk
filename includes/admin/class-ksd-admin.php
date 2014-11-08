@@ -146,7 +146,11 @@ class Kanzu_Support_Admin {
                 $admin_labels_array['tkt_subject']                  = __('Subject','kanzu-support-desk');
                 $admin_labels_array['tkt_cust_fullname']            = __('Customer Name','kanzu-support-desk');
                 $admin_labels_array['tkt_cust_email']               = __('Customer Email','kanzu-support-desk');
-                $admin_labels_array['msg_loading']                  = __('Loading','kanzu-support-desk');
+                $admin_labels_array['tkt_reply']                    = __('Reply','kanzu-support-desk');
+                $admin_labels_array['tkt_forward']                  = __('Forward','kanzu-support-desk');
+                $admin_labels_array['tkt_update_note']              = __('Update Note','kanzu-support-desk');
+                $admin_labels_array['msg_still_loading']            = __('Still Loading...','kanzu-support-desk');
+                $admin_labels_array['msg_loading']                  = __('Loading...','kanzu-support-desk');
                         
                 
                 //Localization allows us to send variables to the JS script
@@ -203,8 +207,7 @@ class Kanzu_Support_Admin {
                         
 		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function),'dashicons-groups',40);
 		
-		//Add the ticket pages. This syntax, __('Word','domain'), allows us to do internalization
-		//@TODO Move this to separate functions
+		//Add the ticket pages. 
 		$ticket_types = array();
 		$ticket_types[ 'ksd-dashboard' ]  =   __( 'Dashboard','kanzu-support-desk' );
 		$ticket_types[ 'ksd-tickets' ]    =   __( 'Tickets','kanzu-support-desk' );
@@ -224,17 +227,11 @@ class Kanzu_Support_Admin {
 	
 	/**
 	 * Display the main Kanzu Support Desk admin dashboard
-	 * @TODO Move output logic to separate functions
-	 * @TODO Move some of this logic to ajax; like ticket deletion
-         * @TODO Change $_POST field names for the form to match the table field names
-         *       to use a forloop to do the ticket logging
-         * @Use sanitization http://codex.wordpress.org/Validating_Sanitizing_and_Escaping_User_Data
 	 */
 	public function output_admin_menu_dashboard(){
-		$this->do_admin_includes();
-                
-                   $settings = $this->get_settings();//We'll need these for the settings page
-                    include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');                
+		$this->do_admin_includes();                
+                $settings = $this->get_settings();//We'll need these for the settings page
+                include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');                
 	}
         
         /**
@@ -275,6 +272,7 @@ class Kanzu_Support_Admin {
 		include_once( KSD_PLUGIN_DIR.  "includes/controllers/Users.php");
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/Assignments.php");  
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/Replies.php");  
+                include_once( KSD_PLUGIN_DIR.  "includes/controllers/Customers.php");  
 
 	}
 	/** 
@@ -453,12 +451,11 @@ class Kanzu_Support_Admin {
         }
         /**
          * Log new tickets
-         * @return type
-         * @TODO Add customer name and email to the customers table
          */
         public function log_new_ticket (){
                 if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) )
 			die ( 'Busted!');
+                
 		$this->do_admin_includes();
             
             	$tkt_channel    = "STAFF"; //This is the default channel
@@ -478,9 +475,10 @@ class Kanzu_Support_Admin {
                 $new_ticket = new stdClass(); 
                 $new_ticket->tkt_subject    	    = sanitize_text_field( $_POST[ 'ksd_tkt_subject' ] );
                 $new_ticket->tkt_message_excerpt    = wp_trim_words( sanitize_text_field( $_POST[ 'ksd_tkt_message' ] ), $ksd_excerpt_length );
-                $new_ticket->tkt_message            = sanitize_text_field( $_POST[ 'ksd_tkt_message' ] );
+                $new_ticket->tkt_message            = $_POST[ 'ksd_tkt_message' ];
                 $new_ticket->tkt_channel            = $tkt_channel;
                 $new_ticket->tkt_status             = $tkt_status;
+                
                 //These other fields are only available if a ticket is logged from the admin side so we need to 
                 //check if they are set
                 if ( isset( $_POST[ 'ksd_tkt_severity' ] ) ) {
@@ -501,6 +499,22 @@ class Kanzu_Support_Admin {
                 
                 $TC = new TicketsController();
                 $new_ticket_status = ( $TC->logTicket( $new_ticket ) > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
+                
+                //Store the customer's info if he/she's not yet in the Db
+                $customer = new stdClass();
+                $customer->cust_email           = sanitize_email( $_POST[ 'ksd_cust_email' ] );
+                //Check whether one or more than one customer name was provided
+                if( false === strpos( trim( sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] ) ), ' ') ){//Only one customer name was provided
+                   $customer->cust_firstname   =   sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] );
+                }
+                else{
+                   preg_match('/(\w+)\s+([\w\s]+)/', sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] ), $customer_fullname );
+                    $customer->cust_firstname   = $customer_fullname[1];
+                    $customer->cust_lastname   = $customer_fullname[2];
+                }
+                //Add the customer to the customer's table
+                $CC = new Customers_Controller();
+                $CC->addCustomer( $customer );
                 
                 echo json_encode( $new_ticket_status );
                 die();// IMPORTANT: don't leave this out

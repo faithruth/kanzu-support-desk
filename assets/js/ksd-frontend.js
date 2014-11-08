@@ -48,7 +48,7 @@ jQuery( document ).ready(function() {
                 "ksd_tkt_subject" :     "Subject",
                 "ksd_cust_email" :      "Email"               
             };
-            //Attach events to the fields @TODO Modify this to handle internalization (translation)
+            //Attach events to the fields 
             jQuery.each( newFormFields, function( fieldName, formValue ) {
                 jQuery( 'input[name='+fieldName+']' ).on('focus',{
                                                     oldValue: formValue,

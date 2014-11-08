@@ -293,7 +293,8 @@ class Kanzu_Support_Install {
 				cust_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 				cust_created_by BIGINT(20), 
 				cust_lastmodification_date DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
-				cust_modified_by BIGINT(20)
+				cust_modified_by BIGINT(20),
+                                UNIQUE (cust_email)
 				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignment` (
 				assign_id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,

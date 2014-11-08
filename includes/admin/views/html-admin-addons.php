@@ -1,4 +1,4 @@
-<?php _e("Take your Kanzu Support Desk experience to the next level by activating one of these add-ons","kanzu-support-desk"); ?>
+<p><?php _e("Take your Kanzu Support Desk experience to the next level by activating one this add-on","kanzu-support-desk"); ?></p>
 <ul class="add-ons">
     <li><!--@TODO Replace this link with actual one-->
         <a href="http://kanzusupport.com/kanzu-support#email" target="_blank"><img width="64" height="64" src="<?php echo KSD_PLUGIN_URL."/assets/images/addon-email.png";?>"/></a>

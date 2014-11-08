@@ -261,22 +261,22 @@ KSDTickets = function(){
                        //Redirect to the Tickets page
                        window.location.replace( ksd_admin.ksd_tickets_url );
                 });
-        }    
+        };    
         /**While working on a single ticket, switch between reply/forward and Add note modes
          * We define the action (used by AJAX) and change the submit button's text
-         * @TODO Move submitButtonText to PHP so it can be localized**/
+         */
          jQuery('ul.edit-ticket-options li a').click(function(e){
              e.preventDefault();
              action = jQuery(this).attr("href").replace("#","");
           switch(action){
               case "forward_ticket":
-                 submitButtonText = "Forward";
+                 submitButtonText = ksd_admin.ksd_labels.tkt_forward;
                   break;
               case "update_private_note":
-                  submitButtonText = "Update Note";
+                  submitButtonText = ksd_admin.ksd_labels.tkt_update_note;
               break;
           default:
-                submitButtonText   = "Reply";
+                submitButtonText   = ksd_admin.ksd_labels.tkt_reply;
           }
           jQuery("input[name=action]").attr("value","ksd_"+action);
           jQuery("input[name=edit-ticket]").attr("value",submitButtonText);
@@ -297,8 +297,11 @@ KSDTickets = function(){
 	this.newTicket = function(){   
             
             /*On focus, Toggle customer name, email and subject */
-            _toggleFieldValues();        
-        
+            _toggleFieldValues();     
+            //This mousedown event is very important; without it, the wp_editor value isn't sent by AJAX
+            jQuery('form.ksd-new-ticket-admin :submit').mousedown( function() {
+                tinyMCE.triggerSave();
+            }); 
             /**Validate New Tickets before submitting the form by AJAX**/
             //@TODO Add server side validation too
             //@TODO Add handler to stop sending of default values
@@ -430,7 +433,7 @@ KSDTickets = function(){
                              jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message);
                              jQuery("#ksd-single-ticket textarea[name=ksd_ticket_private_note]").val(the_ticket.tkt_private_notes);
-                             jQuery("#ticket-replies").html("Any minute now...") ; //@TODO Add this to Localization                         
+                             jQuery("#ticket-replies").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
                              //Make the 'Back' button visible
                              jQuery(".top-nav li.back").removeClass("hidden");
 
@@ -471,7 +474,7 @@ KSDTickets = function(){
                 "ksd_cust_fullname" : ksd_admin.ksd_labels.tkt_cust_fullname,
                 "ksd_cust_email" : ksd_admin.ksd_labels.tkt_cust_email
             };
-            //Attach events to the fields @TODO Modify this to handle internalization (translation)
+            //Attach events to the fields  
             jQuery.each( new_form_fields, function( field_name, form_value ) {
                 jQuery('form.ksd-new-ticket-admin input[name='+field_name+']').on('focus',{
                                                             old_value: form_value,

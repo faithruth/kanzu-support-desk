@@ -71,8 +71,8 @@ KSDDashboard = function(){
                         });//eof: jQuery.port
                     }
                    google.setOnLoadCallback(ksdDrawDashboardGraph);
-              }catch( err ){//@TODO Handle this error
-                  //console.log(err);
+              }catch( err ){
+                  jQuery('#ksd_dashboard_chart').html( err );
               }
 	}//eof:charts
 }
