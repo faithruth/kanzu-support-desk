@@ -554,9 +554,13 @@ class Kanzu_Support_Admin {
 				die ( 'Busted!');
 			$this->do_admin_includes();
 			$tickets = new TicketsController();		
-			$tickets_raw = $tickets->get_dashboard_graph_statistics();	
+			$tickets_raw = $tickets->get_dashboard_graph_statistics();
+                        
+                        $y_axis_label = __("Day", "kanzu-support-desk" );
+                        $x_axis_label = __("Ticket Volume", "kanzu-support-desk" );
+                        
 			$output_array = array();
-                        $output_array[] = array("Day","Ticket Volume");
+                        $output_array[] = array( $y_axis_label,$x_axis_label );
                         
 			foreach ( $tickets_raw as $ticket ) {
 				$output_array[] = array ($ticket->date_logged,$ticket->ticket_volume);			
