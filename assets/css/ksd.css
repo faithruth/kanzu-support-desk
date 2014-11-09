@@ -271,7 +271,7 @@
 *=============================================================
 */
 .ksd-ticket-nav nav {
-  margin: 0px;
+  margin: 10px 0px 0px 0px;
   height: 40px;
 }
 .ksd-ticket-nav nav ul {
@@ -341,8 +341,6 @@
 }
 .ticket-actions ul.status li:hover {
   text-decoration: underline;
-  cursor: pointer;
-  color: #0074a2;
 }
 .ticket-actions ul.assign_to2 {
   /*border:1px solid @theme2;
@@ -354,5 +352,4 @@
 }
 .ticket-actions ul.assign_to2 li:hover {
   text-decoration: underline;
-  cursor: pointer;
 }
