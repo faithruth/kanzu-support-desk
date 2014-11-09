@@ -13,7 +13,7 @@
 </div>
 
 <div class="ksd-grid-container">
-    <div id="ticket-list">
+    <div class="ticket-list">
     </div>
 </div>    
   

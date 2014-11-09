@@ -59,7 +59,7 @@ KSDTickets = function(){
                                                 </div>' ;
                                      ticketListData += '</div>';
                                      
-                                     jQuery(current_tab+' #ticket-list').html( ticketListData);
+                                     jQuery(current_tab+' .ticket-list').html( ticketListData);
                                      
                                     jQuery.each( JSON.parse(response)[0], function( key, value ) {
                                         
@@ -80,17 +80,17 @@ KSDTickets = function(){
                                             ticketListData += 	'</div>';
                                             ticketListData +=     '</div>';
                                             
-                                            jQuery(current_tab+' #ticket-list').append( ticketListData );
+                                            jQuery(current_tab+' .ticket-list').append( ticketListData );
                                     });//eof:jQUery.each
 
                                     /**Add class .alternate to every other row in the tickets table.*/
-                                    jQuery("#ticket-list .ksd-row-data").filter(':even').addClass("alternate");
+                                    jQuery(".ticket-list .ksd-row-data").filter(':even').addClass("alternate");
                                     
                                     RowCtrlEffects();
                             }
                             else{
                                 jQuery(current_tab+' #select-all-tickets').remove();  
-                                jQuery(current_tab+' #ticket-list').addClass("empty").html(JSON.parse(response));
+                                jQuery(current_tab+' .ticket-list').addClass("empty").html(JSON.parse(response));
                             }//eof:if
 
                             jQuery(current_tab).removeClass("pending");
@@ -212,7 +212,7 @@ KSDTickets = function(){
 								tkt_id : tkt_id
 							}, 
 					function(response) {
-	                                    jQuery('#ticket-list div#ksd_tkt_id_'+tkt_id).remove();
+	                                    jQuery('.ticket-list div#ksd_tkt_id_'+tkt_id).remove();
 	                                    KSDUtils.showDialog("success",JSON.parse(response));  				                                
 					});	
 	                    },                           
@@ -521,20 +521,19 @@ KSDTickets = function(){
 
                 
             });
-            //End:Limitr
+            //End:Limit
             
         }
         
         /*
          * Show loading image.
          * classes used in css - ksd-pending2,  ksd-hide-pending
-         * @returns {undefined}
+         * 
          */
         _ShowLoadingImage = function(show){
              if (typeof(show) === 'undefined') show=false;
                          
              if ( show == true){
-                 
                 jQuery("div.ksd-pending2").removeClass('ksd-hide-pending');
             }
              else{

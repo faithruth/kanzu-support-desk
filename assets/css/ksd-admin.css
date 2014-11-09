@@ -316,7 +316,7 @@ ul.dashboard-statistics-summary li {
 }
 
 /**Style a ticket item*/
-#ticket-list{
+.ticket-list{
     background-color: #FFF;
 }
 #select-all-tickets{
