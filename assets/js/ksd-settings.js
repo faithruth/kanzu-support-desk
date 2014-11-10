@@ -13,6 +13,7 @@ KSDSettings = function(){
             //Mail settings
             this.submitMailForm();
             this.generateSettingsAccordion();
+            this.toggleViewsToHide();
     }
  
     
@@ -58,6 +59,25 @@ KSDSettings = function(){
         });
 
     }//eof:generateSettingsAccordion
+    
+    /**
+     * Hide or show child settings as the value of their parent  
+     * setting changes
+     */
+    this.toggleViewsToHide = function(){            
+        var parentFieldsToToggle = [ 'show_support_tab' , 'enable_new_tkt_notifxns' ];
+        jQuery.each( parentFieldsToToggle, function ( i, field ){
+        //Toggle the view on click    
+            jQuery('input[name='+field+']').click( function(){
+            jQuery( "."+field ).toggle( "slide" );
+        });       
+        //Make sure the fields are hidden if the field's not checked
+        if(!jQuery('input[name='+field+']').is( ":checked" )){
+            jQuery( "."+field ).hide();
+        }
+        })
+        
+        }    
  
 	
 }//eof:KSDSettings

@@ -36,7 +36,7 @@
                 <label for="show_support_tab">Show support tab</label>
                 <input name="show_support_tab"  type="checkbox" <?php checked( $settings['show_support_tab'], "yes" ) ?> value="yes"  />
              </div>
-             <div class="setting">
+             <div class="setting show_support_tab">
                    <label for="tab_message_on_submit">Tab message on ticket submission</label>
                    <textarea cols="60" rows="4" name="tab_message_on_submit"><?php echo $settings['tab_message_on_submit']; ?></textarea>
              </div>
