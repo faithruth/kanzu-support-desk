@@ -260,13 +260,14 @@ class Kanzu_Support_Install {
 				`tkt_resolution` VARCHAR(64) NOT NULL, /*@TODO Remove this field. Don't see its use*/
 				`tkt_time_logged` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 				`tkt_logged_by` BIGINT(20) NOT NULL, 
+                                `tkt_cust_id` BIGINT(20) NOT NULL, 
                                 `tkt_assigned_to` BIGINT(20) NULL, 
 				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
 				`tkt_updated_by` BIGINT(20) NOT NULL,                                 
 				`tkt_private_notes` TEXT,       
 				`tkt_tags` VARCHAR(255),   /*@TODO Use WordPress tags*/
 				`tkt_customer_rating` INT(2), /*@TODO Use NPS scoring system which rates from 0 to 10*/
-                                INDEX (`tkt_assigned_to`)
+                                INDEX (`tkt_assigned_to`,`tkt_cust_id`,`tkt_logged_by`)
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY ,

@@ -437,7 +437,7 @@ class Kanzu_Support_Admin {
          */
         
         public function reply_ticket(){
-                if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) )
+               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) )
 			die ( 'Busted!');
 		$this->do_admin_includes();
                 
@@ -499,29 +499,35 @@ class Kanzu_Support_Admin {
                 $output_messages_by_channel = array();
                 $output_messages_by_channel[ 'STAFF' ] = __("Ticket Logged", "kanzu-support-desk");
                 $output_messages_by_channel[ 'SUPPORT_TAB' ] = $settings['tab_message_on_submit'];
-                
+      
+                //Get the provided email address and use it to check whether the customer's already in the Db
+                $cust_email           = sanitize_email( $_POST[ 'ksd_cust_email' ] );
+                $CC = new Customers_Controller();
+                $customer_details = $CC->get_customer_by_email ( $cust_email );
+                if ( $customer_details ){//If the customer's already in the Db, proceed 
+                        $new_ticket->tkt_cust_id = $customer_details->cust_id;
+                }
+                else{//The customer isn't in the Db. We add them
+                    $new_customer = new stdClass();
+                    $new_customer->cust_email           = $cust_email;
+                    //Check whether one or more than one customer name was provided
+                    if( false === strpos( trim( sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] ) ), ' ') ){//Only one customer name was provided
+                       $new_customer->cust_firstname   =   sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] );
+                    }
+                    else{
+                       preg_match('/(\w+)\s+([\w\s]+)/', sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] ), $new_customer_fullname );
+                        $new_customer->cust_firstname   = $new_customer_fullname[1];
+                        $new_customer->cust_lastname   = $new_customer_fullname[2];//We store everything besides the first name in the last name field
+                    }
+                    //Add the customer to the customers table and get the customer ID
+                    $new_ticket->tkt_cust_id    =   $CC->addCustomer( $new_customer );
+                }   
                 
                 $TC = new TicketsController();
                 $new_ticket_status = ( $TC->logTicket( $new_ticket ) > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
                 
-                //Store the customer's info if he/she's not yet in the Db
-                $customer = new stdClass();
-                $customer->cust_email           = sanitize_email( $_POST[ 'ksd_cust_email' ] );
-                //Check whether one or more than one customer name was provided
-                if( false === strpos( trim( sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] ) ), ' ') ){//Only one customer name was provided
-                   $customer->cust_firstname   =   sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] );
-                }
-                else{
-                   preg_match('/(\w+)\s+([\w\s]+)/', sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] ), $customer_fullname );
-                    $customer->cust_firstname   = $customer_fullname[1];
-                    $customer->cust_lastname   = $customer_fullname[2];//We store everything besides the first name in the last name field
-                }
-                //Add the customer to the customer's table
-                $CC = new Customers_Controller();
-                $CC->addCustomer( $customer );
-                
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && "yes" == $_POST['ksd_send_email']) ){
-                    $this->send_email( $customer->cust_email );
+                    $this->send_email( $new_customer->cust_email );
                 }
                 
                 echo json_encode( $new_ticket_status );

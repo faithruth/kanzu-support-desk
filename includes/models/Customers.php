@@ -54,9 +54,20 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	public  function getAll( $filter = "" ){
 		return parent::getRow($filter = "");
 	}
+        
+        /**
+         * Find a customer by their email address
+         * @param string $email_address
+         * @return Customer Object
+         * 
+         */
+        public function get_customer_by_email( $email_address ){
+            $query = "SELECT * FROM ".$this->_tablename." WHERE cust_email ='".$email_address."'";
+            return parent::execQuery( $query );
+        }
  
-	/*
-	*
+        /*
+	* Add a new customer to the Db. 
 	*/
 	public function addCustomer( &$obj ){
 		return parent::addRow( $obj );

@@ -25,6 +25,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 		'tkt_channel' 		 => '%s',
 		'tkt_status' 		 => '%s',
 		'tkt_logged_by' 	 => '%s',  
+                'tkt_cust_id'            => '%s',
                 'tkt_assigned_to' 	 => '%s',  
 		'tkt_severity' 		 => '%s', 
 		'tkt_resolution' 	 => '%s', 
@@ -97,18 +98,19 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
          */
         //@TODO Optimize the retrieval of average response time
         public function get_dashboard_statistics_summary(){
+            global $wpdb;
             $summary_statistics = array();
                          
             //Note that the alias's in all the queries below are important. 
             //They are used by the JS that iterates through the AJAX response
             //and displays the output in the view. 
             //Change the query but keep the alias; or moodify the output JS too
-             $response_time_query='SELECT TIMESTAMPDIFF(
+             $response_time_query="SELECT TIMESTAMPDIFF(
                         SECOND , TICKETS.tkt_time_logged, REPLIES.rep_date_created ) AS time_difference
-                        FROM wp_kanzusupport_tickets AS TICKETS
-                        JOIN `wp_kanzusupport_replies` AS REPLIES ON TICKETS.tkt_id = REPLIES.rep_tkt_id
-                        WHERE TICKETS.tkt_status = "OPEN"
-                        GROUP BY replies.rep_tkt_id';
+                        FROM {$wpdb->prefix}kanzusupport_tickets AS TICKETS
+                        JOIN `{$wpdb->prefix}kanzusupport_replies` AS REPLIES ON TICKETS.tkt_id = REPLIES.rep_tkt_id
+                        WHERE TICKETS.tkt_status = 'OPEN'
+                        GROUP BY replies.rep_tkt_id";
              $summary_statistics["response_times"] = parent::execQuery( $response_time_query );
              
              $open_tickets_query = 'SELECT COUNT(tkt_id) AS open_tickets FROM '.$this->_tablename.' WHERE tkt_status != "RESOLVED" ';
