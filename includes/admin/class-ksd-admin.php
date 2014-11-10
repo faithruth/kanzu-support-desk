@@ -230,8 +230,7 @@ class Kanzu_Support_Admin {
 	 * Display the main Kanzu Support Desk admin dashboard
 	 */
 	public function output_admin_menu_dashboard(){
-		$this->do_admin_includes();                
-                $settings = $this->get_settings();//We'll need these for the settings page
+		$this->do_admin_includes();               
                 include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');                
 	}
         
@@ -291,11 +290,13 @@ class Kanzu_Support_Admin {
 			case '#tickets-tab-3'://'Unassigned Tickets'
                                 $filter = " tkt_assigned_to IS NULL ";			
 			break;
-			case '#tickets-tab-4'://'Recently Updated' i.e. Updated in the last hour. @TODO Make the '1 hour' configurable 
-				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL 1 HOUR)"; 
+			case '#tickets-tab-4'://'Recently Updated' i.e. Updated in the last hour. 
+                                $settings = Kanzu_Support_Desk::get_settings();
+				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL ".$settings['recency_definition']." HOUR)"; 
 			break;
-			case '#tickets-tab-5'://'Recently Resolved'.i.e Resolved in the last hour. @TODO Make the '1 hour' configurable
-				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL 1 HOUR) AND tkt_status = 'RESOLVED'"; 
+			case '#tickets-tab-5'://'Recently Resolved'.i.e Resolved in the last hour. 
+                                $settings = Kanzu_Support_Desk::get_settings();
+				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL ".$settings['recency_definition']." HOUR) AND tkt_status = 'RESOLVED'"; 
 			break;
 			case '#tickets-tab-6'://'Resolved'
 				$filter=" tkt_status = 'RESOLVED'";
@@ -645,14 +646,7 @@ class Kanzu_Support_Admin {
 		echo json_encode( $status );
 		die();// IMPORTANT: don't leave this out             
          }
-         
-         /**
-          * Get all settings
-          */
-         public static function get_settings(){
-             return get_option(Kanzu_Support_Install::$ksd_options_name);
-         }
-        
+ 
                         
 	/**
 	 * NOTE:     Actions are points in the execution of a page or process

@@ -20,14 +20,21 @@ class Kanzu_Support_FrontEnd {
         //Enqueue styles
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_styles' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ) );
-        //Add new form to the footer @TODO Display this only if the 'show support tab' option is selected
+        //Add form for new ticket to the footer
         add_action( 'wp_footer', array( $this , 'generate_new_ticket_form' ));
         //Handle AJAX
         add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ));
     }
     
+    /**
+     * Generate the ticket form that's displayed in the front-end
+     * NB: We only show the form if you enabled the 'show_support_tab' option
+     */
     public function generate_new_ticket_form(){
-        include_once( KSD_PLUGIN_DIR .  'includes/frontend/views/html-frontend-new-ticket.php' );
+        $settings = Kanzu_Support_Desk::get_settings();
+        if( "yes" == $settings['show_support_tab'] ) {
+            include_once( KSD_PLUGIN_DIR .  'includes/frontend/views/html-frontend-new-ticket.php' );
+        }
     }
     
     	/**

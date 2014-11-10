@@ -185,6 +185,13 @@ final class Kanzu_Support_Desk {
             //For form validation
             wp_enqueue_script( KSD_SLUG . '-validate', KSD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' , array("jquery"), "1.13.0" ); 
         }
+        
+         /**
+          * Get all settings
+          */
+         public static function get_settings(){
+             return get_option( Kanzu_Support_Install::$ksd_options_name );
+         }
 
 	
 	/**
