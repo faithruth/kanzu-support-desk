@@ -18,22 +18,10 @@ require( KSD_PLUGIN_DIR .  'includes/libraries/Mail.php' );
 require( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 require( KSD_PLUGIN_DIR .  'includes/controllers/Tickets.php' );
 require( KSD_PLUGIN_DIR .  'includes/controllers/Users.php' );
-
-
-$kanzuserver_url    		= get_option('mail_server');
-$kanzueserver_login 		= get_option('mail_account');
-$kanzuserver_pass   		= get_option('mail_password');
-$kanzu_mailbox   		= get_option('mail_mailbox');
-$kanzu_serverport		= get_option('mail_port');
-$kanzu_useSSL   		= get_option('mail_useSSL');
-$kanzu_validate_certificate 	= get_option('mail_validate_certificate'); //If use_SSL is true
-$kanzu_mail_protocol 		= get_option('mail_protocol'); // Can be imap or pop3
-$protocol			= ( $kanzu_useSSL ? $kanzu_mail_protocol.'/ssl' : $kanzu_mail_protocol);
-
+ 
 $MBox = new Kanzu_Mail();
 
-if( !$MBox->connect( $protocol, $kanzuserver_url, $kanzueserver_login, $kanzu_serverport, 
-		    $kanzuserver_pass, $kanzu_serverport, $kanzu_mailbox,$kanzu_validate_certificate ) ) {
+if( !$MBox->connect() ) {
 
 	_e( "Can not connect to mailbox.", "kanzu-support-desk" );
 	exit;
@@ -53,26 +41,26 @@ for( $i=1; $i <= $count; $i++)
 	$subject      = $msg['headers']->subject;
 
 	//Create new ticket.
-	$tO = new stdClass(); 
-	$tO->tkt_subject	 = $msg['headers']->subject;
-	$tO->tkt_message_excerpt = "New Ticket.";
-	$tO->tkt_message 	 =  $msg['text'];;
-	$tO->tkt_channel     	 = "EMAIL";
-	$tO->tkt_status 	 = "OPEN";
-	$tO->tkt_private_notes 	 = "Private notes";
-	$tO->tkt_tags 	 	 = "tag";
-	$tO->tkt_customer_rating = "1";
+	$new_ticket = new stdClass(); 
+	$new_ticket->tkt_subject	 = $msg['headers']->subject;
+	$new_ticket->tkt_message_excerpt = "New Ticket.";
+	$new_ticket->tkt_message 	 =  $msg['text'];;
+	$new_ticket->tkt_channel     	 = "EMAIL";
+	$new_ticket->tkt_status 	 = "OPEN";
+	$new_ticket->tkt_private_notes 	 = "Private notes";
+	$new_ticket->tkt_tags 	 	 = "tag";
+	$new_ticket->tkt_customer_rating = "1";
 
 	//Get userid
 	$userObj = new UsersController();
 	$users = $userObj->getUsers("user_email = '$email'");
 	$user_id = $users[0]->ID;
 
-	$tO->tkt_logged_by  = $user_id;
-	$tO->tkt_updated_by = $user_id;
+	$new_ticket->tkt_logged_by  = $user_id;
+	$new_ticket->tkt_updated_by = $user_id;
 
 	$TC = new TicketsController();
-	$id = $TC->logTicket( $tO );
+	$id = $TC->logTicket( $new_ticket );
 
 	if( $id > 0){
 		echo "New ticket id: $id\n";
@@ -82,7 +70,7 @@ for( $i=1; $i <= $count; $i++)
 		echo "----------------------------------------------\n";		
 	}
 	
-	$tO = null;
+	$new_ticket = null;
 	$TC = null;
 
 }

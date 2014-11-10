@@ -11,13 +11,13 @@
 
 class Kanzu_Mail { 	
 
-	protected $default_ports = array('pop3'=>'110', 'imap'=>'143', 'pop3/ssl'=>'995', 'imap/ssl'=>'993');
 	protected $imap=null;
 	private   $num_msgs = 0;
+        private   $settings;
 
 
 	public function __construct(){
-
+            $this->settings = Kanzu_Support_Desk::get_settings();
 	}
 
 	/*
@@ -32,23 +32,22 @@ class Kanzu_Mail {
 	*
 	* @return 	  TRUE/FALSE
 	*/
-	public function connect(  $protocol, $server, $user_id, $password, $port=null, $mailbox="INBOX", $validate_certificate="no" )
+	public function connect()
 	{
-		if(is_null($port))
-		{
-			$port= $this->default_ports[$protocol];
-		}
 
 		$the_mailbox="";
-		//Cater for self-signed certificates
-                if( "yes" == $validate_certificate ) {
-                    $the_mailbox = "{" . "$server:$port/$protocol"."}"."$mailbox";
+                //Append the ssl Flag if the user chose to always use SSL
+                $this->settings['mail_protocol'] = ( "yes" == $this->settings['mail_useSSL'] ? $this->settings['mail_protocol'].'/ssl' : $this->settings['mail_protocol'] );
+		
+                //Cater for self-signed certificates
+                if( "yes" == $this->settings['mail_validate_certificate'] ) {
+                    $the_mailbox = "{" . "$this->settings['mail_server']:$this->settings['mail_port']/$this->settings['mail_protocol']"."}"."$this->settings['mail_mailbox']";
                 }
                 else {
-                    $the_mailbox = "{" . "$server:$port/$protocol"."/novalidate-cert}"."$mailbox";
+                    $the_mailbox = "{" . "$this->settings['mail_server']:$this->settings['mail_port']/$this->settings['mail_protocol']"."/novalidate-cert}"."$this->settings['mail_mailbox']";
                 }
                     
-		$this->imap = imap_open($the_mailbox, $user_id, $password);
+		$this->imap = imap_open( $the_mailbox, $this->settings['mail_account'], $this->settings['mail_password'] );
 		
 		if( $this->imap != FALSE)
 		{

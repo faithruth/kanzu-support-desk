@@ -240,10 +240,16 @@ a.new-ticket:hover {
   border-radius: 0;
 }
 #ksd-single-ticket #edit-ticket-tabs ul li.ui-state-default{
-  background: #222222;
+  background: #e0e0e0;
+}
+#ksd-single-ticket #edit-ticket-tabs ul li.ui-state-default a{
+    color: #222;
 }
 #ksd-single-ticket #edit-ticket-tabs ul li.ui-tabs-active{
   background: #2ea2cc;
+}
+#ksd-single-ticket #edit-ticket-tabs ul li.ui-tabs-active a{
+  color: #FFF;
 }
 #ksd-single-ticket #edit-ticket-tabs ul li a{
     padding: 0 15%;
