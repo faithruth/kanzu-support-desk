@@ -43,7 +43,6 @@ class AssignmentsController extends Kanzu_Controller
 	*
 	*/
 	public function unassignTicket( int $ticket_id ){
-		//TODO: Check if ticket is already assigned.
 		$aO                = $this->_model->getObj();
 		$aO->assign_tkt_id = $ticket_id;
 		$this->_model->deleteAssignment( $aO );

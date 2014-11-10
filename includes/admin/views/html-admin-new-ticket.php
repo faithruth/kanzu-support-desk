@@ -27,7 +27,11 @@
                 }
             ?>
             </select>
-        </div> 
+        </div>
+        <div class="ksd-send-email">
+            <label for="ksd_send_email"><?php _e('Send Email','kanzu-support-desk'); ?></label>
+            <input name="ksd_send_email"  type="checkbox" value="yes" checked/>
+        </div>
         <input name="ksd_tkt_logged_by" type="hidden" value="<?php echo get_current_user_id(); ?>" />
         <input name="action" type="hidden" value="ksd_log_new_ticket" />
         <input name="ksd_tkt_channel" type="hidden" value="staff" />

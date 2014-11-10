@@ -198,6 +198,11 @@ a.new-ticket:hover {
 .ksd-assign-to,.ksd-severity{
     width: 50%;
 }
+.ksd-send-email{
+    width: 10%;
+    float: left;
+    line-height: 42px;
+}
 .ksd-customer-email,.ksd-customer-name{
     width: 45%;
 }

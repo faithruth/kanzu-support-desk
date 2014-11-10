@@ -520,7 +520,7 @@ class Kanzu_Support_Admin {
                 $CC = new Customers_Controller();
                 $CC->addCustomer( $customer );
                 
-                if ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB" ){
+                if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && "yes" == $_POST['ksd_send_email']) ){
                     $this->send_email( $customer->cust_email );
                 }
                 

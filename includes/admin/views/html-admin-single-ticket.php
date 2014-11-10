@@ -38,5 +38,4 @@
     </form>
   </div>
 </div>
-<div class="success hidden"></div>
-<div class="loading hidden"></div>
+<!-- server side validation/stop sending default values/check post values/send mail on reply-->
