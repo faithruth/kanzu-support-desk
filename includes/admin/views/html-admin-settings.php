@@ -4,11 +4,11 @@
          <div>
             <div class="setting">
                 <label for="mail_server">Mail Server</label>
-                <input type="text" value="<?php _e('mail.example.com','kanzu-support-desk'); ?>" size="30" name="mail_server" />
+                <input type="text" value="<?php echo $settings['mail_server']; ?>" size="30" name="mail_server" />
             </div>
             <div class="setting">
                 <label for="mail_account">Support Email Address</label>
-                <input type="text" value="<?php _e('user@example.com','kanzu-support-desk'); ?>" size="30" name="mail_account" />
+                <input type="text" value="<?php echo $settings['mail_account']; ?>" size="30" name="mail_account" />
             </div>
             <div class="setting">
                 <label for="mail_password">Password</label>
@@ -38,18 +38,45 @@
                     <option value="yes" <?php selected( "yes", $settings['mail_validate_certificate'] ) ?>>YES</option>            
                 </select>
             </div> 
-            <input name="action" type="hidden" value="ksd_update_settings" />    
-            <?php wp_nonce_field( 'ksd-update-settings', 'update-settings-nonce' ); ?>
          </div>
-         <h3><?php _e("Auto replies","kanzu-support-desk"); ?></h3>
+         <h3><?php _e("Tickets","kanzu-support-desk"); ?></h3>
          <div>
              <div class="setting">
-                <label for="auto_enable_autoreplies">Enable Auto-replies</label>
-                <input name="auto_enable_autoreplies"  type="checkbox" <?php checked( $settings['mail_enable_autoreplies'], "yes" ) ?> value="yes"  />
+                <label for="enable_new_tkt_notifxns">Enable new ticket notifications</label>
+                <input name="enable_new_tkt_notifxns"  type="checkbox" <?php checked( $settings['enable_new_tkt_notifxns'], "yes" ) ?> value="yes"  />
+             </div>
+             <div class="enable_new_tkt_notifxns">
+                <div class="setting">
+                   <label for="ticket_mail_from">From</label>
+                   <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("Defaults to the primary administrator's email address",'kanzu-support-desk')  ;?>"/>
+                   <input type="text" value="<?php echo $settings['ticket_mail_from']; ?>" size="30" name="ticket_mail_from" />
+               </div>
+               <div class="setting">
+                   <label for="ticket_mail_subject">Subject</label>
+                   <input type="text" value="<?php echo $settings['ticket_mail_subject']; ?>" size="60" name="ticket_mail_subject" />
+               </div>
+               <div class="setting">
+                   <label for="ticket_mail_message">Message</label>
+                   <textarea cols="60" rows="4" name="ticket_mail_message"><?php echo $settings['ticket_mail_message']; ?></textarea>
+               </div>
+             </div><!--.enable_new_tkt_notifxns-->
+            <div class="setting">
+                <label for="recency_definition">Recency Definition ( In Hours ) </label>
+                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("In the ticket view, the 'Recently Updated' & 'Recently resolved' tabs, show tickets updated in last X hours",'kanzu-support-desk')  ;?>"/>
+                <input type="text" value="<?php echo $settings['recency_definition']; ?>" size="15" name="recency_definition" />
+            </div>
+            <div class="setting">
+                <label for="show_support_tab">Show support tab</label>
+                <input name="show_support_tab"  type="checkbox" <?php checked( $settings['show_support_tab'], "yes" ) ?> value="yes"  />
+             </div>
+             <div class="setting">
+                   <label for="tab_message_on_submit">Tab message on ticket submission</label>
+                   <textarea cols="60" rows="4" name="tab_message_on_submit"><?php echo $settings['tab_message_on_submit']; ?></textarea>
              </div>
          </div>
     </div>
+    <input name="action" type="hidden" value="ksd_update_settings" />    
+    <?php wp_nonce_field( 'ksd-update-settings', 'update-settings-nonce' ); ?>
     <input type="submit" value="<?php _e( "Update","kanzu-support-desk" ); ?>" name="ksd-settings-submit" class="ksd-submit button button-primary button-large"/>
+    <input type="submit" value="<?php _e( "Reset Defaults","kanzu-support-desk" ); ?>" name="ksd-settings-reset" class="ksd-submit ksd-reset button action button-large"/>
  </form>
-<div class="success hidden"></div>
-<div class="loading hidden"></div>

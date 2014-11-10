@@ -23,10 +23,17 @@ KSDSettings = function(){
 	this.submitMailForm = function(){
         /**AJAX: Update settings @TODO Handle errors**/
         jQuery('form#update-settings').submit( function(e){
-            e.preventDefault();   
+            e.preventDefault();         
+            var data;
+            if ( jQuery(this).find("input[type=submit]:focus" ).hasClass("ksd-reset") ){//The  reset button has been clicked
+                data = { action: 'ksd_reset_settings' , ksd_admin_nonce : ksd_admin.ksd_admin_nonce }
+            }
+            else{//The update button has been clicked
+                data =  jQuery(this).serialize();//The action and nonce are hidden fields in the form
+            }          
             KSDUtils.showDialog("loading");  
             jQuery.post(ksd_admin.ajax_url, 
-                        jQuery(this).serialize(), //The action and nonce are hidden fields in the form
+                        data, 
                         function(response) {//@TODO Check for errors 	
                             KSDUtils.showDialog("success",JSON.parse(response));       
                         });

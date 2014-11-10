@@ -60,6 +60,7 @@ class Kanzu_Support_Admin {
 		add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' )); 
                 add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ));  
                 add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' )); 
+                add_action( 'wp_ajax_ksd_reset_settings', array( $this, 'reset_settings' )); 
                 add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));                 
 
 		
@@ -609,7 +610,21 @@ class Kanzu_Support_Admin {
                 $updated_settings[$option_name] = $_POST[$option_name];
             }
             $status = update_option( Kanzu_Support_Install::$ksd_options_name, $updated_settings );
+
             echo json_encode ( ( $status ? __("Settings Updated") : __("Update failed. Please retry") ) );
+            die();
+         }
+         
+         /**
+          * Reset settings to default
+          */
+         public function reset_settings(){
+             	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
+			die ( 'Busted!');
+                  
+            $status = update_option( Kanzu_Support_Install::$ksd_options_name, Kanzu_Support_Install::get_default_options() );
+
+            echo json_encode ( ( $status ? __("Settings Reset") : __("Reset failed. Please retry") ) );
             die();
          }
          

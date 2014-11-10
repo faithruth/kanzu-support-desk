@@ -408,6 +408,9 @@ ul.edit-ticket-options li.selected{
   right: 120px;
   padding: 0 12px 2px;
 }
+#update-settings .ksd-reset {
+  right: 210px;
+}
 #settings-accordion{
   padding-top: 12px;
 }
