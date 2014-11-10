@@ -492,11 +492,13 @@ class Kanzu_Support_Admin {
                 if ( isset( $_POST[ 'ksd_tkt_assigned_to' ] ) ) {
                     $new_ticket->tkt_assigned_to    = sanitize_text_field( $_POST[ 'ksd_tkt_assigned_to' ] );
                 }
+               
+                //Get the settings. We need them for tickets logged from the support tab
+                $settings = Kanzu_Support_Desk::get_settings();
                 //Return a different message based on the channel the request came on
-                //@TODO Make these messages configurable
                 $output_messages_by_channel = array();
-                $output_messages_by_channel[ 'STAFF' ] = __("Message Sent", "kanzu-support-desk");
-                $output_messages_by_channel[ 'SUPPORT_TAB' ] = __("Thank you. Your support request has been opened. Please allow at least 24 hours for a reply.", "kanzu-support-desk");
+                $output_messages_by_channel[ 'STAFF' ] = __("Ticket Logged", "kanzu-support-desk");
+                $output_messages_by_channel[ 'SUPPORT_TAB' ] = $settings['tab_message_on_submit'];
                 
                 
                 $TC = new TicketsController();
@@ -512,11 +514,15 @@ class Kanzu_Support_Admin {
                 else{
                    preg_match('/(\w+)\s+([\w\s]+)/', sanitize_text_field( $_POST[ 'ksd_cust_fullname' ] ), $customer_fullname );
                     $customer->cust_firstname   = $customer_fullname[1];
-                    $customer->cust_lastname   = $customer_fullname[2];
+                    $customer->cust_lastname   = $customer_fullname[2];//We store everything besides the first name in the last name field
                 }
                 //Add the customer to the customer's table
                 $CC = new Customers_Controller();
                 $CC->addCustomer( $customer );
+                
+                if ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB" ){
+                    $this->send_email( $customer->cust_email );
+                }
                 
                 echo json_encode( $new_ticket_status );
                 die();// IMPORTANT: don't leave this out
@@ -645,6 +651,22 @@ class Kanzu_Support_Admin {
 		$status = ( $tickets->update_ticket( $updated_ticket  ) ? __("Noted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode( $status );
 		die();// IMPORTANT: don't leave this out             
+         }
+         
+         /**
+          * Send mail. 
+          * @param string $to Recipient email address
+          * @param string $type Type of email to send. Can be "new_ticket"
+          */
+         public function send_email( $to, $type="new_ticket" ){
+             $settings = Kanzu_Support_Desk::get_settings();             
+             switch ( $type ):
+                 default://'new_ticket' is the default
+                     $subject   = $settings['ticket_mail_subject'];
+                     $message   = $settings['ticket_mail_message'];
+                     $headers = 'From: '.$settings['ticket_mail_from_name'].' <'.$settings['ticket_mail_from_email'].'>' . "\r\n";
+             endswitch;
+             return wp_mail( $to, $subject, $message, $headers ); 
          }
  
                         

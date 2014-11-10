@@ -347,7 +347,8 @@ class Kanzu_Support_Install {
                         /** Tickets ****************************************************/
                     
                         'enable_new_tkt_notifxns'           => "yes",
-                        'ticket_mail_from'                  => $user_info->user_email ,//Defaults to the admin email 
+                        'ticket_mail_from_name'             => $user_info->display_name,//Defaults to the admin display name 
+                        'ticket_mail_from_email'            => $user_info->user_email,//Defaults to the admin email
                         'ticket_mail_subject'               => __("Your support ticket has been received","kanzu-support-desk"),
                         'ticket_mail_message'               => __("Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.","kanzu-support-desk"),
                         'recency_definition'                => __("1","kanzu-support-desk"),

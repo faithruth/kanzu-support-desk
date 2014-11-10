@@ -9,9 +9,14 @@
              </div>
              <div class="enable_new_tkt_notifxns">
                 <div class="setting">
-                   <label for="ticket_mail_from">From</label>
+                   <label for="ticket_mail_from_name">From (Name)</label>
+                   <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("Defaults to the primary administrator's display name",'kanzu-support-desk')  ;?>"/>
+                   <input type="text" value="<?php echo $settings['ticket_mail_from_name']; ?>" size="30" name="ticket_mail_from_name" />
+               </div>
+               <div class="setting">
+                   <label for="ticket_mail_from_email">From (Email Address)</label>
                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("Defaults to the primary administrator's email address",'kanzu-support-desk')  ;?>"/>
-                   <input type="text" value="<?php echo $settings['ticket_mail_from']; ?>" size="30" name="ticket_mail_from" />
+                   <input type="text" value="<?php echo $settings['ticket_mail_from_email']; ?>" size="30" name="ticket_mail_from_email" />
                </div>
                <div class="setting">
                    <label for="ticket_mail_subject">Subject</label>
