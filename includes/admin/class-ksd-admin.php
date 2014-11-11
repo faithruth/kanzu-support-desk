@@ -281,71 +281,91 @@ class Kanzu_Support_Admin {
 	public function filter_tickets() {		 
 	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
 			die ( 'Busted!');
-		$this->do_admin_includes();
-                
-		switch( $_POST['view'] ):
-                        case '#tickets-tab-2': //'All Tickets'
-				$filter=" tkt_status != 'RESOLVED'";
-			break;
-			case '#tickets-tab-3'://'Unassigned Tickets'
-                                $filter = " tkt_assigned_to IS NULL ";			
-			break;
-			case '#tickets-tab-4'://'Recently Updated' i.e. Updated in the last hour. 
-                                $settings = Kanzu_Support_Desk::get_settings();
-				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL ".$settings['recency_definition']." HOUR)"; 
-			break;
-			case '#tickets-tab-5'://'Recently Resolved'.i.e Resolved in the last hour. 
-                                $settings = Kanzu_Support_Desk::get_settings();
-				$filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL ".$settings['recency_definition']." HOUR) AND tkt_status = 'RESOLVED'"; 
-			break;
-			case '#tickets-tab-6'://'Resolved'
-				$filter=" tkt_status = 'RESOLVED'";
-			break;
-			default://'My Unresolved'
-                                $filter = " tkt_assigned_to = ".get_current_user_id()." AND tkt_status != 'RESOLVED'";				
-		endswitch;
-                
-                
-                $offset =   sanitize_text_field( $_POST['offset'] );
-                $limit  =   sanitize_text_field( $_POST['limit'] );
-                $search =   sanitize_text_field( $_POST['search'] );
-                
-                //search
-                if( $search != "" && $search !="Search..."){
-                    $filter .= " AND UPPER(tkt_subject) LIKE UPPER('%$search%') ";
-                }
-                
-                //order
-                $filter .= " ORDER BY tkt_time_logged DESC ";
-                
-                //We now pick the limit from screen options
+          
+                try{
+                    $this->do_admin_includes();
 
-              //  $per_page = get_user_meta(get_current_user_id(), $this->tickets_per_page_options_key, true);
-                //Switched back to $limit to address AJAX issue first
-                        
-                //limit
-                $count_filter = $filter; //Query without limit to get the total number of rows
-                $filter .= " LIMIT $offset , $limit " ;
-                
-                //Results count
-                $tickets = new TicketsController(); 
-                $count   = $tickets->get_count( $count_filter );
-                $raw_tickets = $this->filter_ticket_view( $filter );
-                
-                //$response = ( empty( $raw_tickets ) ? __( "Nothing to see here. Great work!","kanzu-support-desk" ) : $raw_tickets );
-                
-                $response = null;
-                if( empty( $raw_tickets ) ){
-                    $response = __( "Nothing to see here. Great work!","kanzu-support-desk" );
-                }    else{
-                    $response = array(
-                        0 => $raw_tickets,
-                        1 => $count
-                    );
-                }
-                
-		echo json_encode($response);		 
-		die();// IMPORTANT: don't leave this out
+                    switch( $_POST['view'] ):
+                            case '#tickets-tab-2': //'All Tickets'
+                                    $filter=" tkt_status != 'RESOLVED'";
+                            break;
+                            case '#tickets-tab-3'://'Unassigned Tickets'
+                                    $filter = " tkt_assigned_to IS NULL ";			
+                            break;
+                            case '#tickets-tab-4'://'Recently Updated' i.e. Updated in the last hour. 
+                                    $settings = Kanzu_Support_Desk::get_settings();
+                                    $filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL ".$settings['recency_definition']." HOUR)"; 
+                            break;
+                            case '#tickets-tab-5'://'Recently Resolved'.i.e Resolved in the last hour. 
+                                    $settings = Kanzu_Support_Desk::get_settings();
+                                    $filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL ".$settings['recency_definition']." HOUR) AND tkt_status = 'RESOLVED'"; 
+                            break;
+                            case '#tickets-tab-6'://'Resolved'
+                                    $filter=" tkt_status = 'RESOLVED'";
+                            break;
+                            default://'My Unresolved'
+                                    $filter = " tkt_assigned_to = ".get_current_user_id()." AND tkt_status != 'RESOLVED'";				
+                    endswitch;
+
+
+                    $offset =   sanitize_text_field( $_POST['offset'] );
+                    $limit  =   sanitize_text_field( $_POST['limit'] );
+                    $search =   sanitize_text_field( $_POST['search'] );
+
+                    //search
+                    if( $search != "" && $search !="Search..."){
+                        $filter .= " AND UPPER(tkt_subject) LIKE UPPER('%$search%') ";
+                    }
+
+                    //order
+                    $filter .= " ORDER BY tkt_time_logged DESC ";
+
+                    //We now pick the limit from screen options
+
+                  //  $per_page = get_user_meta(get_current_user_id(), $this->tickets_per_page_options_key, true);
+                    //Switched back to $limit to address AJAX issue first
+
+                    //limit
+                    $count_filter = $filter; //Query without limit to get the total number of rows
+                    $filter .= " LIMIT $offset , $limit " ;
+
+                    //Results count
+                    $tickets = new TicketsController(); 
+                    $count   = $tickets->get_count( $count_filter );
+                    $raw_tickets = $this->filter_ticket_view( $filter );
+
+                    //$response = ( empty( $raw_tickets ) ? __( "Nothing to see here. Great work!","kanzu-support-desk" ) : $raw_tickets );
+
+                    $response = array('data'=>'Undefined error in ' . __line__, 'status'=>'-1');
+                    if( empty( $raw_tickets ) ){
+                        //$response = __( "Nothing to see here. Great work!","kanzu-support-desk" );
+                        $response['data'] = __( "Nothing to see here. Great work!","kanzu-support-desk" );
+                        $response['status'] = 0;
+                    }    else{
+                        /*
+                        $response = array(
+                            0 => $raw_tickets,
+                            1 => $count
+                        );
+
+                         */
+
+                        $response['data'] = array(
+                            0 => $raw_tickets,
+                            1 => $count
+                        );
+                        $response['status'] = 1;
+
+                    }
+
+
+
+                    echo json_encode($response);		 
+                    die();// IMPORTANT: don't leave this out
+                }catch( Exception $e){
+                    $response = array('data'=> $e , 'status'=>'-1');
+                    die();// IMPORTANT: don't leave this out
+                }    
 	}
 	/**
 	 * Filters tickets based on the view chosen

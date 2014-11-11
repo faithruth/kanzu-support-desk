@@ -48,7 +48,8 @@ KSDTickets = function(){
 
                         
                         jQuery.post(ksd_admin.ajax_url, data, function(response) {
-                            if(jQuery.isArray(JSON.parse(response))){
+                            //if(jQuery.isArray(JSON.parse(response))){
+                              if(  JSON.parse(response).status > 0 ){  
                                    tab_id = current_tab.replace("#tickets-tab-","");
                                      ticketListData = "";
                                      ticketListData += '<div class="ksd-row-all-hide" id="ksd_row_all_'+tab_id+'">';
@@ -61,7 +62,7 @@ KSDTickets = function(){
                                      
                                      jQuery(current_tab+' .ticket-list').html( ticketListData);
                                      
-                                    jQuery.each( JSON.parse(response)[0], function( key, value ) {
+                                    jQuery.each( JSON.parse(response).data[0], function( key, value ) {
                                         
                                             ticketListData = '<div class="ksd-row-data ticket-list-item" id="ksd_tkt_id_'+value.tkt_id+'">';
                                             ticketListData += 	'<div class="ticket-info">';
@@ -99,7 +100,7 @@ KSDTickets = function(){
                             
                             //Add Navigation
                             var tab_id = current_tab.replace("#tickets-tab-","");
-                            var total_rows = JSON.parse(response)[1];
+                            var total_rows = JSON.parse(response).data[1];
                             var currentpage = offset+1; 
                             _loadTicketPagination(tab_id, currentpage, total_rows, limit);
                             
@@ -260,7 +261,10 @@ KSDTickets = function(){
                        KSDUtils.showDialog("success",JSON.parse(response));
                        //Redirect to the Tickets page
                        window.location.replace( ksd_admin.ksd_tickets_url );
+                }).fail(function(){
+                    //@TODO: ajax call failed.
                 });
+            ;
         };    
         /**While working on a single ticket, switch between reply/forward and Add note modes
          * We define the action (used by AJAX) and change the submit button's text

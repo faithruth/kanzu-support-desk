@@ -20,6 +20,10 @@ KSDUtils.showDialog = function(dialog_type,message){
 KSDUtils.isNumber = function(){
     return typeof n== "number" && isFinite(n) && n%1===0;
 }
+
+
+
+
 /*
 KSDUtils.LOGLEVEL = 1;//0:INFO|1:DEBUG|2:ERROR|3:WARNING|4:ALL|-1:NONE
 KSDUtils.LOGLEVELS=['KSDINFO','KSDDEBUG','KSDERROR','KSDWARNING','KSDALL','NONE']; 
