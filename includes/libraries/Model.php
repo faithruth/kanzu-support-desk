@@ -19,7 +19,7 @@
 	public function __construct(){
 	}
 	
-	public function execQuery( $query ){
+	public function exec_query( $query ){
 		global $wpdb;
 		return $wpdb->get_results( $query, OBJECT );
 	}
@@ -29,7 +29,7 @@
 	*
 	*@param userid
 	*/
-	public function getRow( $id ){
+	public function get_row( $id ){
 		global $wpdb;
 		$results = $wpdb->get_results( 'SELECT * FROM '. $this->_tablename .' WHERE '. $this->_id .' = ' . $id, OBJECT );
 		
@@ -53,7 +53,7 @@
 	*
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
-	public  function getAll( $filter = "" ){
+	public  function get_all( $filter = "" ){
 		global $wpdb;
 		$where = ( $filter == "" || $filter == null ) ? "" : " WHERE " . $filter ;
                 $results = $wpdb->get_results( 'SELECT * FROM '. $this->_tablename . ' '. $where , OBJECT );
@@ -65,7 +65,7 @@
 	*
 	*@param 
 	*/
-	public function addRow( &$rowObject ){
+	public function add_row( &$rowObject ){
 		global $wpdb;
 		
 		$data = array();
@@ -84,7 +84,7 @@
 	*@param $rowObject 
 	* @return Number of rows deleted or false 
 	*/
-	public function deleteRow(  &$rowObject ){
+	public function delete_row(  &$rowObject ){
 		global $wpdb;
 		$table = $this->_tablename;
 		$where = array();
@@ -103,7 +103,7 @@
 	* @return The number of rows updated or false
 	* *new_* for new value
 	*/
-	public function updateRow( &$rowObject ){
+	public function update_row( &$rowObject ){
 		global $wpdb;
 		$table = $this->_tablename;
 		$data = array();
@@ -124,11 +124,11 @@
 		return $wpdb->update( $table, $data, $where, $format, $where_format); 		 
 	}
 	
-	public function getObj(){
+	public function get_obj(){
 		return (new stdClass());
 	}
         
-        public function getCount( $filter="", $table=""){
+        public function get_count( $filter="", $table=""){
             global $wpdb;
                 
             $where = ( $filter != "" )? " WHERE " : "" ;

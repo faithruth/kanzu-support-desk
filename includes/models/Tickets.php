@@ -42,8 +42,8 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 	*
 	*@param Ticket ID
 	*/
-	public function getTicket( $id ){
-		return parent::getRow($id);
+	public function get_ticket( $id ){
+		return parent::get_row($id);
 	}
 	
 	/*
@@ -51,8 +51,8 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 	*
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
-	public  function getAll( $filter = "" ){
-		return parent::getAll($filter);
+	public  function get_all( $filter = "" ){
+		return parent::get_all($filter);
 	}
  
 	/*
@@ -60,8 +60,8 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 	*
 	*
 	*/
-	public function addTicket( &$ticket ){
-		return parent::addRow( $ticket );
+	public function add_ticket( &$ticket ){
+		return parent::add_row( $ticket );
 	}
 	
 	/*
@@ -69,8 +69,8 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 	*
 	*@param Ticket object.
 	*/
-	public function deleteTicket(  &$ticket ){
-		return parent::deleteRow( $ticket );
+	public function delete_ticket(  &$ticket ){
+		return parent::delete_row( $ticket );
 	}
 	
 
@@ -79,18 +79,18 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 	*@param ticket object
 	* *new_* for new value
 	*/
-	public function updateTicket( &$ticket ){
-		return parent::updateRow( $ticket );
+	public function update_ticket( &$ticket ){
+		return parent::update_row( $ticket );
 	}
         
         
-        public function execQuery( $query ){
-		return parent::execQuery( $query );
+        public function exec_query( $query ){
+		return parent::exec_query( $query );
 	}
         
         public function get_dashboard_graph_statistics(){
             $query = 'SELECT COUNT(tkt_id) AS "ticket_volume",DATE(tkt_time_logged) AS "date_logged" FROM '.$this->_tablename.' GROUP BY date_logged;';
-            return parent::execQuery( $query );
+            return parent::exec_query( $query );
         }
         
         /**
@@ -111,13 +111,13 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
                         JOIN `{$wpdb->prefix}kanzusupport_replies` AS REPLIES ON TICKETS.tkt_id = REPLIES.rep_tkt_id
                         WHERE TICKETS.tkt_status = 'OPEN'
                         GROUP BY replies.rep_tkt_id";
-             $summary_statistics["response_times"] = parent::execQuery( $response_time_query );
+             $summary_statistics["response_times"] = parent::exec_query( $response_time_query );
              
              $open_tickets_query = 'SELECT COUNT(tkt_id) AS open_tickets FROM '.$this->_tablename.' WHERE tkt_status != "RESOLVED" ';
-             $summary_statistics["open_tickets"] = parent::execQuery( $open_tickets_query );
+             $summary_statistics["open_tickets"] = parent::exec_query( $open_tickets_query );
 
              $unassigned_tickets_query = 'SELECT COUNT(tkt_id) AS unassigned_tickets FROM '.$this->_tablename.' WHERE tkt_assigned_to IS NULL ';
-             $summary_statistics["unassigned_tickets"]  = parent::execQuery( $unassigned_tickets_query );
+             $summary_statistics["unassigned_tickets"]  = parent::exec_query( $unassigned_tickets_query );
               
              return $summary_statistics;
          }
@@ -133,7 +133,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
                         FROM ".$this->_tablename." AS T
                          JOIN `{$wpdb->prefix}kanzusupport_assignments` AS A ON A.assign_tkt_id = T.tkt_id
                         WHERE A.`assign_assigned_to` ".$where; 
-             return parent::execQuery( $assigned_tickets_query );
+             return parent::exec_query( $assigned_tickets_query );
          }
          
          
@@ -142,7 +142,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
           * @param string filter
           */
          public function get_count($filter){
-             return parent::getCount($filter);
+             return parent::get_count($filter);
              
          }
  }

@@ -27,12 +27,12 @@ class Kanzu_Assignments_Controller extends Kanzu_Controller
 	* @param $assign_by ID of admin who assigned ticket
 	* @param $notes 	Notes on ticket assignment
 	*/
-	public function assignTicket( $ticket_id, $assign_to,  $assign_by, $notes="" ){
-		$aO                = $this->_model->getObj();
+	public function assign_ticket( $ticket_id, $assign_to,  $assign_by, $notes="" ){
+		$aO                = $this->_model->get_obj();
 		$aO->assign_assigned_to     = $assign_to;
 		$aO->assign_assigned_by 	   = $assign_by;
 		$aO->assign_tkt_id = $ticket_id;
-		return $this->_model->addAssignment( $aO );
+		return $this->_model->add_assignment( $aO );
 	}
 	
 	
@@ -42,31 +42,11 @@ class Kanzu_Assignments_Controller extends Kanzu_Controller
 	* @param $ticket_id Ticket ID of ticket to unassign 
 	*
 	*/
-	public function unassignTicket( int $ticket_id ){
-		$aO                = $this->_model->getObj();
+	public function unassign_ticket( int $ticket_id ){
+		$aO                = $this->_model->get_obj();
 		$aO->assign_tkt_id = $ticket_id;
-		$this->_model->deleteAssignment( $aO );
+		$this->_model->delete_assignment( $aO );
 	}
 
-	/*
-	* Assign ticket to different agent.  
-        * NB: I DON'T THINK WE NEED THIS FUNCTION. ALL ASSIGNMENTS
-        * ARE ADDED AS NEW ASSIGNMENTS FOR US TO BE ABLE TO TRACK RE-ASSIGNMENTS
-	*
-	* @param int 	$ticket_id Ticket ID of ticket to reassign
-	* @param int 	$agent_id ID of agent to reassign ticket to 
-	* @param int 	$assign_by ID of admin who reassigns 
-	* @param string	$notes New notes if provided, else old notes will be maintained.
-	*/
-	public function reassignTicket($ticket_id, $agent_id, $assign_by, $notes = "" ){
-		$aO                = $this->_model->getObj();
-		$aO->assign_tkt_id = $ticket_id;
-		$aO->new_assign_to = $agent_id;
-		$aO->new_assign_by = $assign_by;
-		if ( $notes != "" ){
-			$aO->new_notes = $notes;
-		}
-		$this->_model->updateReply( $aO );
-	}
 }
 ?>

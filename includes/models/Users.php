@@ -23,7 +23,7 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param userid
 	*/
-	public function getUser( $id = null){
+	public function get_user( $id = null){
 		if ( $id == null or $id == 0 ){
 			return wp_get_current_user();
 		}
@@ -35,8 +35,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param $filter SQL filter 
 	*/
-	public  function getAll( $filter = "" ){
-		return parent::getAll($filter = "");
+	public  function get_all( $filter = "" ){
+		return parent::get_all( $filter = "" );
 	}
  
 	/*
@@ -44,7 +44,7 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*
 	*/
-	public function addUser( &$userObject ){
+	public function add_user( &$userObject ){
 		$userdata = (array) $userObject;
 		$user_id = wp_insert_user( $userdata ) ;
 		
@@ -55,7 +55,7 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param $id User id
 	*/
-	public function deleteUser( int $id, $reassign = null){
+	public function delete_user( int $id, $reassign = null){
 		 wp_delete_user( $id, $reassign ); 
 	}
 	
@@ -64,7 +64,7 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	* @param userObject
 	*/
-	public function updateUser( &$userObject ){
+	public function update_user( &$userObject ){
 		$userdata = (array) $userObject;
 		$user_id  = wp_update_user( $userdata );
 		

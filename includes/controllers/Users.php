@@ -25,8 +25,8 @@ class Kanzu_Users_Controller extends Kanzu_Controller
 	*@param  $client_id	ticket id
 	*@return client Object
 	*/
-	public function getUser( $user_id = null){
-		return $this->_model->getUser( $user_id);
+	public function get_user( $user_id = null){
+		return $this->_model->get_user( $user_id);
 	}
 	
 	/*
@@ -34,15 +34,15 @@ class Kanzu_Users_Controller extends Kanzu_Controller
 	*
 	*@return Array Array of objects
 	*/
-	public function getUsers( $filter ){
-		return $this->_model->getAll( $filter );
+	public function get_users( $filter ){
+		return $this->_model->get_all( $filter );
 	}
 	
 	/*
 	*Update user details
 	*/
-	public function updateUser(&$user){
-		return $this->_model->updateUser( $user );
+	public function update_user(&$user){
+		return $this->_model->update_user( $user );
 	}
 	
 	

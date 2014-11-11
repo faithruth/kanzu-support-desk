@@ -22,8 +22,8 @@ class Kanzu_Tickets_Controller extends Kanzu_Controller {
 	*
 	*@param $ticket ticket object to log
 	*/
-	public function logTicket(&$ticket){
-		return $this->_model->addTicket( $ticket);
+	public function log_ticket(&$ticket){
+		return $this->_model->add_ticket( $ticket);
 	}
 	
 	/*
@@ -32,11 +32,11 @@ class Kanzu_Tickets_Controller extends Kanzu_Controller {
 	*@param int $ticket_id ticket id of ticket to close
 	*
 	*/
-	public function closeTicket($ticket_id ){
+	public function close_ticket($ticket_id ){
 		$tO = new stdClass();
 		$tO->tkt_id = $ticket_id;
 		$tO->new_tkt_status = "CLOSE";
-		$id = $this->_model->updateTicket( $tO );
+		$id = $this->_model->update_ticket( $tO );
 	}
 	
 	/*
@@ -45,11 +45,11 @@ class Kanzu_Tickets_Controller extends Kanzu_Controller {
 	*@param int $ticket_id ticket id of ticket to close
 	*
 	*/
-	public function changeTicketStatus($ticket_id,$new_status ){
+	public function change_ticket_status($ticket_id,$new_status ){
 		$tO = new stdClass();
 		$tO->tkt_id = $ticket_id;
 		$tO->new_tkt_status = $new_status;
-		return $this->_model->updateTicket( $tO );
+		return $this->_model->update_ticket( $tO );
 	}
         
       	/*
@@ -59,7 +59,7 @@ class Kanzu_Tickets_Controller extends Kanzu_Controller {
 	*
 	*/
 	public function update_ticket( $ticket ){
-		return $this->_model->updateTicket( $ticket );
+		return $this->_model->update_ticket( $ticket );
 	}
 
 	/*
@@ -68,8 +68,8 @@ class Kanzu_Tickets_Controller extends Kanzu_Controller {
 	*@param  int $ticket_id	ticket id
 	*@return ticket Object
 	*/
-	public function getTicket($ticket_id){
-		return $this->_model->getTicket( $ticket_id);
+	public function get_ticket($ticket_id){
+		return $this->_model->get_ticket( $ticket_id);
 	}
         
 	
@@ -79,17 +79,17 @@ class Kanzu_Tickets_Controller extends Kanzu_Controller {
         *@param String $query The Query to run on the table(s)
 	*@return Array Array of objects
 	*/
-	public function getTickets( $query = null ){                   
-               return $this->_model->getAll( $query );               		
+	public function get_tickets( $query = null ){                   
+               return $this->_model->get_all( $query );               		
 	}
 	
 	/**
 	 * Delete the ticket with the specified ID
 	 * @param int $ticket_id Ticket ID
 	 */
-	 public function deleteTicket( $ticket_id ){
+	 public function delete_ticket( $ticket_id ){
 		$where = array ('tkt_id'=>$ticket_id);
-		return $this->_model->deleteTicket( $where);
+		return $this->_model->delete_ticket( $where);
 	}
 	
 	/**
@@ -107,11 +107,11 @@ class Kanzu_Tickets_Controller extends Kanzu_Controller {
          * Run a custom query
          * @param type $query The query to run
          */
-        public function execQuery($query){
-            return $this->_model->execQuery( $query);
+        public function exec_query($query){
+            return $this->_model->exec_query( $query);
         }
         
-        public function get_count( $filter = ""){
+        public function get_count( $filter = "" ){
            return  $this->_model->get_count( $filter );
         }
 

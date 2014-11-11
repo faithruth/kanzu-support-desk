@@ -39,8 +39,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param userid
 	*/
-	public function getReply( $id ){
-		return parent::getRow($id);
+	public function get_reply( $id ){
+		return parent::get_row($id);
 	}
 	
 	/*
@@ -48,34 +48,25 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
-	public  function getAll( $filter = "" ){
-		return parent::getAll($filter);
+	public  function get_all( $filter = "" ){
+		return parent::get_all($filter);
 	}
  
 	/*
 	*
 	*/
-	public function addReply( &$obj ){
-		return parent::addRow( $obj );
+	public function add_reply( &$obj ){
+		return parent::add_row( $obj );
 	}
 	
 	/*
 	*
 	*@param Replies object.
 	*/
-	public function deleteReply(  &$obj ){
-		return parent::deleteRow( $obj );
+	public function delete_reply(  &$obj ){
+		return parent::delete_row( $obj );
 	}
-	
 
-	/*
-	* Save/update 
-	*@param Replies object
-	* *new_* for new value
-	*/
-	public function updateReply( &$obj ){
-		return parent::updateRow( $obj );
-	}
  }
  
  

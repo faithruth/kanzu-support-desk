@@ -23,8 +23,8 @@ class Kanzu_Replies_Controller extends Kanzu_Controller
 	*
 	*@param $reply reply object to log
 	*/
-	public function addReply(&$reply){
-		return $this->_model->addReply( $reply);
+	public function add_reply(&$reply){
+		return $this->_model->add_reply( $reply);
 	}
 	
 	/*
@@ -43,10 +43,10 @@ class Kanzu_Replies_Controller extends Kanzu_Controller
 	*@param $reply_id Reply id 
 	*
 	*/
-	public function deleteReply(int $reply_id ){
+	public function delete_reply(int $reply_id ){
 		$rO = new stdClass();
 		$rO->tkt_id = $reply_id;
-		$this->_model->deleteReply( $rO );
+		$this->_model->delete_reply( $rO );
 	}
 
 	
@@ -56,8 +56,8 @@ class Kanzu_Replies_Controller extends Kanzu_Controller
 	*@param  $reply_id	Reply id
 	*@return Reply Object
 	*/
-	public function getReply($reply_id){
-		return $this->_model->getReply( $reply_id);
+	public function get_reply($reply_id){
+		return $this->_model->get_reply( $reply_id);
 	}
 	
 	/*
@@ -65,8 +65,8 @@ class Kanzu_Replies_Controller extends Kanzu_Controller
 	*
 	*@return Array Array of objects
 	*/
-	public function getReplies( $query ){
-		return $this->_model->getAll( $query);
+	public function get_replies( $query ){
+		return $this->_model->get_all( $query);
 	}
 }
 ?>

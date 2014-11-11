@@ -20,10 +20,10 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 		$this->_id = "assign_id";
 			
 		$this->_formats = array(
-		'assign_tkt_id' 		 => '%d', 
-		'assign_assigned_to'	 => '%d',
-		'assign_date_assigned' 	 => '%s' , 
-		'assign_assigned_by' 	 => '%d'
+		'assign_tkt_id'             => '%d', 
+		'assign_assigned_to'        => '%d',
+		'assign_date_assigned'      => '%s' , 
+		'assign_assigned_by'        => '%d'
 	);
 	}
 	
@@ -32,8 +32,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param userid
 	*/
-	public function getAssignment( $id ){
-		return parent::getRow($id);
+	public function get_assignment( $id ){
+		return parent::get_row($id);
 	}
 	
 	/*
@@ -41,8 +41,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
-	public  function getAll( $filter = "" ){
-		return parent::getAll($filter = "");
+	public  function get_all( $filter = "" ){
+		return parent::get_all($filter = "");
 	}
  
 	/*
@@ -50,8 +50,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*
 	*/
-	public function addAssignment( &$obj ){
-		return parent::addRow( $obj );
+	public function add_assignment( &$obj ){
+		return parent::add_row( $obj );
 	}
 	
 	/*
@@ -59,8 +59,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param Ticket object.
 	*/
-	public function deleteAssignment(  &$obj ){
-		return parent::deleteRow( $obj );
+	public function delete_assignment(  &$obj ){
+		return parent::delete_row( $obj );
 	}
 	
 
@@ -69,8 +69,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*@param ticket object
 	* *new_* for new value
 	*/
-	public function updateAssignment( &$obj ){
-		return parent::updateRow( $obj );
+	public function update_assignment( &$obj ){
+		return parent::update_row( $obj );
 	}
  }
  

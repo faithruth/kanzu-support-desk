@@ -21,7 +21,7 @@ class Kanzu_Controller
 	*/
 	public function __construct(){
 		if( $this->_model_name != ""){			
-			include_once( KSD_PLUGIN_DIR. "includes/models/" . $this->_model_name . ".php");
+			include_once( KSD_PLUGIN_DIR. "includes/models/" . $this->_model_name . ".php" );
 			$classname = "Kanzu_".$this->_model_name . "_Model";
 			$this->_model =& new $classname();
 		}

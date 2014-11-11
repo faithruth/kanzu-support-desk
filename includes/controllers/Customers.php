@@ -23,8 +23,8 @@ class Kanzu_Customers_Controller extends Kanzu_Controller
 	*
 	*@param $reply reply object to log
 	*/
-	public function addCustomer( &$customer ){
-		return $this->_model->addCustomer( $customer );
+	public function add_customer( &$customer ){
+		return $this->_model->add_customer( $customer );
 	}
 	
 	/*
@@ -33,8 +33,8 @@ class Kanzu_Customers_Controller extends Kanzu_Controller
 	*@param  $customer_id	ticket id
 	*@return customer Object
 	*/
-	public function getCustomer( $customer_id ){
-		return $this->_model->getCustomer( $customer_id);
+	public function get_customer( $customer_id ){
+		return $this->_model->get_customer( $customer_id);
 	}
 	
         /**
@@ -57,8 +57,8 @@ class Kanzu_Customers_Controller extends Kanzu_Controller
 	*
 	*@return Array Array of objects
 	*/
-	public function getCustomers( $filter ){
-		return $this->_model->getAll( $filter);
+	public function get_customers( $filter ){
+		return $this->_model->get_all( $filter);
 	}
 	
 	/*
@@ -66,24 +66,24 @@ class Kanzu_Customers_Controller extends Kanzu_Controller
 	*
 	* @param int $customer_id 
 	*/
-	public function disableAccount( $customer_id ){
+	public function disable_account( $customer_id ){
 		$cO = new stdClass();
 		$cO->cust_id = $customer_id;
 		$cO->new_account_status = "DISABLED";
-		$this->_model->updateCustomer( $cO );
+		$this->_model->update_customer( $cO );
 	}
 	
 	/*
 	* Enable customer account
 	*/
-	public function enableAccount( $customer_id ){
+	public function enable_account( $customer_id ){
 		$cO = new stdClass();
 		$cO->cust_id = $customer_id;
 		$cO->new_account_status = "ENABLED";
-		$this->_model->updateCustomer( $cO );
+		$this->_model->update_customer( $cO );
 	}
 	
-	public function deleteCustomer( $customer_id ){
+	public function delete_customer( $customer_id ){
 		
 		//Delete from customer table
 		//Delete from wp usertable

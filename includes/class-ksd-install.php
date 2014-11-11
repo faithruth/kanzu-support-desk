@@ -155,7 +155,7 @@ class Kanzu_Support_Install {
                         /** KSD Version info ********************************************************/
                         'kanzu_support_version'             => KSD_VERSION,
                      
-                        /** Mail Settings ****************************************************/
+                        /** Mail Settings **********************************************************/
                         'mail_server'                       => "mail.example.com",    
                         'mail_account'                      => "user@example.com",         
                         'mail_password'                     => null,  
@@ -165,7 +165,7 @@ class Kanzu_Support_Install {
                 	'mail_port'                         => "143",
                         'mail_mailbox'         	            => "INBOX",
                     
-                        /** Tickets ****************************************************/
+                        /** Tickets **************************************************************/
                     
                         'enable_new_tkt_notifxns'           => "yes",
                         'ticket_mail_from_name'             => $user_info->display_name,//Defaults to the admin display name 

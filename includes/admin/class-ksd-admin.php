@@ -310,7 +310,7 @@ class Kanzu_Support_Admin {
 	 */
 	public function filter_ticket_view( $filter = "" , $check_ticket_assignments = "no" ) {
 		$tickets = new Kanzu_Tickets_Controller();                 
-                $tickets_raw = $tickets->getTickets( $filter, $check_ticket_assignments ); 	
+                $tickets_raw = $tickets->get_tickets( $filter, $check_ticket_assignments ); 	
                 //Process the tickets for viewing on the view. Replace the username and the time with cleaner versions
                 foreach ( $tickets_raw as $ksd_ticket ) {
                     $this->format_ticket_for_viewing( $ksd_ticket );
@@ -329,7 +329,7 @@ class Kanzu_Support_Admin {
             $this->do_admin_includes();	
             try{
                $tickets = new Kanzu_Tickets_Controller();	
-               $ticket = $tickets->getTicket($_POST['tkt_id']);
+               $ticket = $tickets->get_ticket($_POST['tkt_id']);
                $this->format_ticket_for_viewing($ticket);
                echo json_encode($ticket);
                die();
@@ -355,7 +355,7 @@ class Kanzu_Support_Admin {
             try{
                 $replies = new Kanzu_Replies_Controller();
                 $query = " rep_tkt_id = ".$_POST['tkt_id'];
-                $response = $replies->getReplies($query);
+                $response = $replies->get_replies($query);
                 echo json_encode($response);
                 die();
             }catch( Exception $e){
@@ -377,8 +377,8 @@ class Kanzu_Support_Admin {
                 }
                     $this->do_admin_includes();	
                     $tickets = new Kanzu_Tickets_Controller();		
-                    //$status = ( $tickets->deleteTicket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
-                    if( $tickets->deleteTicket( $_POST['tkt_id']) ){
+                    //$status = ( $tickets->delete_ticket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+                    if( $tickets->delete_ticket( $_POST['tkt_id']) ){
                         echo json_encode(__("Deleted","kanzu-support-desk"));
                     }else{
                         throw new Exception( __("Failed","kanzu-support-desk") , -1);
@@ -405,7 +405,7 @@ class Kanzu_Support_Admin {
                 $this->do_admin_includes();	
 		$tickets = new Kanzu_Tickets_Controller();		
                 
-                if( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ){
+                if( $tickets->change_ticket_status( $_POST['tkt_id'],$_POST['tkt_status'] ) ){
                     echo json_encode( __("Updated","kanzu-support-desk"));
                 }else {
                     throw new Exception( __("Failed","kanzu-support-desk") , -1);
@@ -476,7 +476,7 @@ class Kanzu_Support_Admin {
                     $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, $customer_details[0]->tkt_subject );
 
                    $RC = new Kanzu_Replies_Controller(); 
-                   $response = $RC->addReply( $new_reply );
+                   $response = $RC->add_reply( $new_reply );
                    //$status = ( $response > 0  ? $new_reply->rep_message : __("Error", 'kanzu-support-desk') );
                    if ($response > 0 ){
                       echo json_encode($new_reply->rep_message );
@@ -573,14 +573,14 @@ class Kanzu_Support_Admin {
                         $new_customer->cust_lastname   = $new_customer_fullname[2];//We store everything besides the first name in the last name field
                     }
                     //Add the customer to the customers table and get the customer ID
-                    $new_ticket->tkt_cust_id    =   $CC->addCustomer( $new_customer );
+                    $new_ticket->tkt_cust_id    =   $CC->add_customer( $new_customer );
                 }   
                 
                 //Set 'logged by' to the ID of whoever logged it ( admin side tickets ) or to the customer's ID ( for tickets from the front-end )
                $new_ticket->tkt_assigned_by   = ( isset( $_POST[ 'ksd_tkt_assigned_by' ] ) ? sanitize_text_field( $_POST[ 'ksd_tkt_assigned_by' ] ) : $new_ticket->tkt_cust_id );
                 
                 $TC = new Kanzu_Tickets_Controller();
-                $new_ticket_id = $TC->logTicket( $new_ticket );
+                $new_ticket_id = $TC->log_ticket( $new_ticket );
                 $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
                 
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && isset($_POST['ksd_send_email'])) ){
@@ -607,7 +607,7 @@ class Kanzu_Support_Admin {
         private function do_ticket_assignment( $ticket_id,$assign_to,$assign_by ){
             $this->do_admin_includes();
            $assignment = new Kanzu_Assignments_Controller();
-           $assignment->assignTicket( $ticket_id, $assign_to, $assign_by );  
+           $assignment->assign_ticket( $ticket_id, $assign_to, $assign_by );  
         }
         
         /**
@@ -619,7 +619,7 @@ class Kanzu_Support_Admin {
         private function format_ticket_for_viewing( $ticket ){
             //Replace the username
             $users = new Kanzu_Users_Controller();
-            $ticket->tkt_assigned_by = str_replace($ticket->tkt_assigned_by,$users->getUser($ticket->tkt_assigned_by)->user_nicename,$ticket->tkt_assigned_by);
+            $ticket->tkt_assigned_by = str_replace($ticket->tkt_assigned_by,$users->get_user($ticket->tkt_assigned_by)->user_nicename,$ticket->tkt_assigned_by);
             //Replace the date 
             $ticket->tkt_time_logged = date('M d',strtotime($ticket->tkt_time_logged));
             

@@ -42,8 +42,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param customerid
 	*/
-	public function getCustomer( $id ){
-		return parent::getRow($id); ;
+	public function get_customer( $id ){
+		return parent::get_row($id); ;
 	}
 	
 	/*
@@ -51,8 +51,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*
 	*@param $filter SQL filter. Everything after the WHERE key word
 	*/
-	public  function getAll( $filter = "" ){
-		return parent::getRow($filter = "");
+	public  function get_all( $filter = "" ){
+		return parent::get_row($filter = "");
 	}
         
         /**
@@ -63,7 +63,7 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
          */
         public function get_customer_by_email( $email_address ){
             $query = "SELECT * FROM ".$this->_tablename." WHERE cust_email ='".$email_address."'";
-            return parent::execQuery( $query );
+            return parent::exec_query( $query );
         }
         
         /**
@@ -72,22 +72,22 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
         public function get_customer_by_ticketID( $tkt_id ){
             global $wpdb;
             $query = "SELECT C.cust_email,T.tkt_subject FROM `{$wpdb->prefix}kanzusupport_tickets` AS T JOIN ".$this->_tablename." AS C ON T.tkt_cust_id = C.cust_id WHERE T.tkt_id= ".$tkt_id;
-            return parent::execQuery( $query );
+            return parent::exec_query( $query );
         }
  
         /*
 	* Add a new customer to the Db. 
 	*/
-	public function addCustomer( &$obj ){
-		return parent::addRow( $obj );
+	public function add_customer( &$obj ){
+		return parent::add_row( $obj );
 	}
 	
 	/*
 	*
 	*@param client object.
 	*/
-	public function deleteCustomer(  &$obj ){
-		return parent::deleteRow( $obj );
+	public function delete_customer(  &$obj ){
+		return parent::delete_row( $obj );
 	}
 	
 
@@ -96,8 +96,8 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	*@param client object
 	* *new_* for new value
 	*/
-	public function updateCustomer( &$obj ){
-		return parent::updateRow( $obj );
+	public function update_customer( &$obj ){
+		return parent::update_row( $obj );
 	}
  }
  
