@@ -315,8 +315,8 @@ class Kanzu_Support_Install {
             public static function get_default_options(){
                 $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
                 return  array (
-                        /** DB Version ********************************************************/
-                        'db_version'                        => KSD_VERSION,
+                        /** KSD Version info ********************************************************/
+                        'kanzu_support_version'             => KSD_VERSION,
                      
                         /** Mail Settings ****************************************************/
                         'mail_server'                       => "mail.example.com",    

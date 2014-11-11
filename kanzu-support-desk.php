@@ -26,20 +26,15 @@ final class Kanzu_Support_Desk {
 	 */
 	public $version = '1.0.0';
 	
-	/**
-	 * @var string
-	 * Same as $version but without the periods
-	 */
-	public $db_version = '100';
 	
 	/**
 	 * @var string
 	 * Note that it should match the Text Domain file header in this file
 	 */
-	public $ks_slug = 'kanzu-support-desk';
+	public $ksd_slug = 'kanzu-support-desk';
 	
 	/**
-	 * @var KanzuSupport The single instance of the class
+	 * @var Kanzu_Support_Desk The single instance of the class
 	 * @since 1.0.0
 	 */
 	protected static $_instance = null;
@@ -99,40 +94,22 @@ final class Kanzu_Support_Desk {
 	
 	/**
 	 * Define Kanzu Support Constants
-         * @TODO Save version and DB version in the array we use to store
-         * KSD variables
 	 */
 	private function define_constants() {
-            
-            if ( ! defined( 'KSD_PLUGIN_FILE' ) ) {
-		define( 'KSD_PLUGIN_FILE', __FILE__ );
-            }
+
              if ( ! defined( 'KSD_VERSION' ) ) {                
 		define( 'KSD_VERSION', $this->version );
              }
-              if ( ! defined( 'KSD_DB_VERSION' ) ) {                
-		define( 'KSD_DB_VERSION', $this->db_version );
-              }
                if ( ! defined( 'KSD_SLUG' ) ) {                
-		define( 'KSD_SLUG', $this->ks_slug );           
+		define( 'KSD_SLUG', $this->ksd_slug );           
                }                
                 if ( ! defined( 'KSD_PLUGIN_DIR' ) ) {
 		define( 'KSD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
                 }                
                 if ( ! defined( 'KSD_PLUGIN_URL' ) ) {
                 define( 'KSD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-                 }                
-		//Store the Plugin version. We'll need this for upgrades
-		if (!defined('KANZU_SUPPORT_VERSION_KEY')) {
-			define('KANZU_SUPPORT_VERSION_KEY', 'kanzu_support_version');
-		}
-		//Store the Db version. Might remove Db version altogether & work with just $version
-		if (!defined('KANZU_SUPPORT_DB_VERSION_KEY')) {
-			define('KANZU_SUPPORT_DB_VERSION_KEY', 'kanzu_support_db_version');
-		}
-		//Store the version in the database as an option
-		add_option(KANZU_SUPPORT_VERSION_KEY, KSD_VERSION);
-		add_option(KANZU_SUPPORT_DB_VERSION_KEY, KSD_DB_VERSION);
+                 }               
+
 	}
 	
 	/**
@@ -145,20 +122,18 @@ final class Kanzu_Support_Desk {
 		//Dashboard and Administrative Functionality 
 		if ( is_admin() ) {
 			require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
-			
 		}
                 //The front-end
                 require_once( KSD_PLUGIN_DIR .  'includes/frontend/class-ksd-frontend.php' );
-		 
 		}
 		
 	
 
 	/**
 	 * Load the plugin text domain for translation.
-	 * .mo files should be placed in /languages/ and should 
-         * be named {KSD_SLUG}-{locale}.mo e.g. For Danish, whose locale is Danish is 'da_DK',
-         * the MO and PO files should be named kanzu-support-desk-da_DK.mo & kanzu-support-desk-da_DK.po
+	 * .mo files should be placed in /languages/ and should be named {KSD_SLUG}-{locale}.mo
+         *  e.g. For Danish, whose locale is Danish is 'da_DK',
+         * the MO and PO files should be named kanzu-support-desk-da_DK.mo and kanzu-support-desk-da_DK.po
 	 * @since    1.0.0
 	 */
 	public function load_plugin_textdomain() {
@@ -200,76 +175,40 @@ final class Kanzu_Support_Desk {
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-		// Activate plugin when new blog is added. Leave this out for now
-		//add_action( 'wpmu_new_blog', array( Kanzu_Support_Install, 'activate_new_site' ) );
-		
-                //Load styles and scripts used in both the front and back ends
+                //Load scripts used in both the front and back ends
                 add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
-                
-		/* Define custom functionality. Commented out for now
-		 * Refer To http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
-		 */
-		//add_action( '@TODO', array( $this, 'action_method_name' ) );
-		//add_filter( '@TODO', array( $this, 'filter_method_name' ) );
-	}	
-	
-	/**
-	 * NOTE:  Actions are points in the execution of a page or process
-	 *        lifecycle that WordPress fires.
-	 *
-	 *        Actions:    http://codex.wordpress.org/Plugin_API#Actions
-	 *        Reference:  http://codex.wordpress.org/Plugin_API/Action_Reference
-	 *
-	 * @since    1.0.0
-	 */
-	public function action_method_name() {
-		// @TODO: Define our action hook callback here
-	}
-
-	/**
-	 * NOTE:  Filters are points of execution in which WordPress modifies data
-	 *        before saving it or sending it to the browser.
-	 *
-	 *        Filters: http://codex.wordpress.org/Plugin_API#Filters
-	 *        Reference:  http://codex.wordpress.org/Plugin_API/Filter_Reference
-	 *
-	 * @since    1.0.0
-	 */
-	public function filter_method_name() {
-		// @TODO: Define our filter hook callback here
-	}
-	
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) ); 
+	}		
 
 	/**
 	* Added to write custom debug messages to the debug log (wp-content/debug.log). You
 	* need to turn debug on for this to work
 	*/
 	public static function kanzu_support_log_me($message) {
-    if (WP_DEBUG === true) {
-        if (is_array($message) || is_object($message)) {
-            error_log(print_r($message, true));
-        } else {
-            error_log($message);
-        }
-    }
-} 
-}
+            if (WP_DEBUG === true) {
+                if (is_array($message) || is_object($message)) {
+                    error_log(print_r($message, true));
+                } else {
+                    error_log($message);
+                }
+                            }
+        } 
+ }
 
-/**
- * The main function responsible for returning the one true Kanzu_Support_Desk Instance
- * to functions everywhere.
- *
- * Use this function like you would a global variable, except without needing
- * to declare the global.
- *
- * Example: <?php $ksd = Kanzu_Support_Desk(); ?>
- *
- * @return The one true Kanzu_Support_Desk Instance
- */
-function kanzu_support_desk() {
-	return Kanzu_Support_Desk::instance();
-}
+    /**
+     * The main function responsible for returning the one true Kanzu_Support_Desk Instance
+     * to functions everywhere.
+     *
+     * Use this function like you would a global variable, except without needing
+     * to declare the global.
+     *
+     * Example: <?php $ksd = Kanzu_Support_Desk(); ?>
+     *
+     * @return The one true Kanzu_Support_Desk Instance
+     */
+    function kanzu_support_desk() {
+            return Kanzu_Support_Desk::instance();
+    }
 
  
 kanzu_support_desk();
