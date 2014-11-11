@@ -60,7 +60,7 @@ KSDTickets = function(){
                             }
                     
                             //Check for error in request.
-                            if ( 'undefined' != typeof(respObj.error) ){
+                            if ( 'undefined' !== typeof(respObj.error) ){
                                 KSDUtils.showDialog("error", respObj.error.message  );
                                 return ;
                             }
@@ -200,7 +200,7 @@ KSDTickets = function(){
                                     }
 
                                     //Check for error in request.
-                                    if ( 'undefined' != typeof(respObj.error) ){
+                                    if ( 'undefined' !== typeof(respObj.error) ){
                                         KSDUtils.showDialog("error", respObj.error.message  );
                                         return ;
                                     }
@@ -212,7 +212,7 @@ KSDTickets = function(){
         
         /*
          * 
-         *Return the ticket row to nornam size when mouse leaves the ticket options(ie trash, change status, assign) when
+         *Return the ticket row to normal size when mouse leaves the ticket options(ie trash, change status, assign) when
          */
     	jQuery("#ticket-tabs").on('mouseleave','.ksd-row-data',function(event) {
             event.preventDefault();//Important otherwise the page skips around
@@ -256,7 +256,7 @@ KSDTickets = function(){
                                             }
 
                                             //Check for error in request.
-                                            if ( 'undefined' != typeof(respObj.error) ){
+                                            if ( 'undefined' !== typeof(respObj.error) ){
                                                 KSDUtils.showDialog("error", respObj.error.message  );
                                                 return ;
                                             }
@@ -296,7 +296,7 @@ KSDTickets = function(){
                         }
 
                         //Check for error in request.
-                        if ( 'undefined' != typeof(respObj.error) ){
+                        if ( 'undefined' !== typeof(respObj.error) ){
                             KSDUtils.showDialog("error", respObj.error.message  );
                             return ;
                         }
@@ -338,7 +338,7 @@ KSDTickets = function(){
                         }
 
                         //Check for error in request.
-                        if ( 'undefined' != typeof(respObj.error) ){
+                        if ( 'undefined' !== typeof(respObj.error) ){
                             KSDUtils.showDialog("error", respObj.error.message  );
                             return ;
                         }
@@ -458,7 +458,7 @@ KSDTickets = function(){
                                         }
 
                                         //Check for error in request.
-                                        if ( 'undefined' != typeof(respObj.error) ){
+                                        if ( 'undefined' !== typeof(respObj.error) ){
                                             KSDUtils.showDialog("error", respObj.error.message  );
                                             return ;
                                         }
@@ -517,7 +517,7 @@ KSDTickets = function(){
                                         }
 
                                         //Check for error in request.
-                                        if ( 'undefined' != typeof(respObj.error) ){
+                                        if ( 'undefined' !== typeof(respObj.error) ){
                                             KSDUtils.showDialog("error", respObj.error.message  );
                                             return ;
                                         }
@@ -556,7 +556,7 @@ KSDTickets = function(){
                             }
 
                             //Check for error in request.
-                            if ( 'undefined' != typeof(respObj.error) ){
+                            if ( 'undefined' !== typeof(respObj.error) ){
                                 KSDUtils.showDialog("error", respObj.error.message  );
                                 return ;
                             }                             
@@ -587,7 +587,7 @@ KSDTickets = function(){
                                     }
                                     the_replies = respObj;
                                     //Check for error in request.
-                                    if ( 'undefined' != typeof(respObj.error) ){
+                                    if ( 'undefined' !== typeof(respObj.error) ){
                                         KSDUtils.showDialog("error", respObj.error.message  );
                                         return ;
                                     }
