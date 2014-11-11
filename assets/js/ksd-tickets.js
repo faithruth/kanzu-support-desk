@@ -227,16 +227,16 @@ KSDTickets = function(){
                     
 		});	
         }
-        this.editTicketForm = function(){
-            //--------------------------------------------------------------------------------------
-            /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
-           //@TODO Fix wp_editor bug that returns stale data with each submission      
-            jQuery('form#edit-ticket').submit( function(e){
-                e.preventDefault(); 
-                var action = jQuery("input[name=action]").attr("value");
+        
+       //--------------------------------------------------------------------------------------
+       /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
+       //Also, update the private note when 'Update Note' is clicked
+       //@TODO Fix wp_editor bug that returns stale data with each submission    
+        replyTicketAndUpdateNote    = function( form ){   
+                var action = jQuery("input[name=action]").attr("value");               
                 KSDUtils.showDialog("loading");//Show a dialog message
                 jQuery.post(	ksd_admin.ajax_url, 
-                                    jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
+                                jQuery( form ).serialize(), //The action, nonce and TicketID are hidden fields in the form
                     function(response) {//@TODO Check for errors 
                         switch(action){
                             case "ksd_update_private_note":
@@ -248,8 +248,14 @@ KSDTickets = function(){
                                  jQuery("textarea[name=ksd_ticket_reply]").val(" ");      
                         }
                 });
-            });
-            
+        };
+            this.editTicketForm = function(){            
+                jQuery("form#edit-ticket").validate({
+                   submitHandler: function( form ) {
+                   replyTicketAndUpdateNote( form );
+                   }
+            });	
+
         /*-------------------------------------------------------------------------------------------------
          * AJAX: Log New ticket
          */    
@@ -308,7 +314,6 @@ KSDTickets = function(){
             }); 
             /**Validate New Tickets before submitting the form by AJAX**/
             //@TODO Add server side validation too
-            //@TODO Add handler to stop sending of default values
             jQuery("form.ksd-new-ticket-admin").validate({
                 submitHandler: function(form) {
                 ksdLogNewTicketAdmin(form);
