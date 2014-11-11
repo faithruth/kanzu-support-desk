@@ -451,8 +451,10 @@ class Kanzu_Support_Admin {
                echo json_encode($status);
                 die();// IMPORTANT: don't leave this out
         }
+        
         /**
-         * Log new tickets
+         * Log new tickets.  The different channels (admin side, front-end) all 
+         * call this method to log the ticket
          */
         public function log_new_ticket (){
                 if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) )
@@ -473,6 +475,7 @@ class Kanzu_Support_Admin {
                 }                       
                            
                 $ksd_excerpt_length = 30;//The excerpt length to use for the message
+                
                 //We sanitize each input before storing it in the database
                 $new_ticket = new stdClass(); 
                 $new_ticket->tkt_subject    	    = sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_subject' ] ) );
@@ -482,12 +485,9 @@ class Kanzu_Support_Admin {
                 $new_ticket->tkt_status             = $tkt_status;
                 
                 //These other fields are only available if a ticket is logged from the admin side so we need to 
-                //check if they are set
+                //first check if they are set
                 if ( isset( $_POST[ 'ksd_tkt_severity' ] ) ) {
-                $new_ticket->tkt_severity           = sanitize_text_field( $_POST[ 'ksd_tkt_severity' ] );   
-                }
-                if ( isset( $_POST[ 'ksd_tkt_logged_by' ] ) ) {
-                $new_ticket->tkt_logged_by          = sanitize_text_field( $_POST[ 'ksd_tkt_logged_by' ] );
+                    $new_ticket->tkt_severity           = sanitize_text_field( $_POST[ 'ksd_tkt_severity' ] );   
                 }
                 if ( isset( $_POST[ 'ksd_tkt_assigned_to' ] ) ) {
                     $new_ticket->tkt_assigned_to    = sanitize_text_field( $_POST[ 'ksd_tkt_assigned_to' ] );
@@ -504,8 +504,8 @@ class Kanzu_Support_Admin {
                 $cust_email           = sanitize_email( $_POST[ 'ksd_cust_email' ] );
                 $CC = new Customers_Controller();
                 $customer_details = $CC->get_customer_by_email ( $cust_email );
-                if ( $customer_details ){//If the customer's already in the Db, proceed 
-                        $new_ticket->tkt_cust_id = $customer_details->cust_id;
+                if ( $customer_details ){//If the customer's already in the Db, proceed. Get their customer ID
+                        $new_ticket->tkt_cust_id = $customer_details[0]->cust_id;
                 }
                 else{//The customer isn't in the Db. We add them
                     $new_customer = new stdClass();
@@ -523,11 +523,14 @@ class Kanzu_Support_Admin {
                     $new_ticket->tkt_cust_id    =   $CC->addCustomer( $new_customer );
                 }   
                 
+                //Set 'logged by' to the ID of whoever logged it ( admin side tickets ) or to the customer's ID ( for tickets from the front-end )
+               $new_ticket->tkt_logged_by   = ( isset( $_POST[ 'ksd_tkt_logged_by' ] ) ? sanitize_text_field( $_POST[ 'ksd_tkt_logged_by' ] ) : $new_ticket->tkt_cust_id );
+                
                 $TC = new TicketsController();
                 $new_ticket_status = ( $TC->logTicket( $new_ticket ) > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
                 
-                if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && "yes" == $_POST['ksd_send_email']) ){
-                    $this->send_email( $new_customer->cust_email );
+                if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && isset($_POST['ksd_send_email'])) ){
+                    $this->send_email( $cust_email );
                 }
                 
                 echo json_encode( $new_ticket_status );
