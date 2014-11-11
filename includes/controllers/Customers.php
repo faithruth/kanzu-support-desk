@@ -33,10 +33,18 @@ class Customers_Controller extends Kanzu_Controller
 	*@param  $customer_id	ticket id
 	*@return customer Object
 	*/
-	public function getCustomer(int $customer_id){
+	public function getCustomer( $customer_id ){
 		return $this->_model->getCustomer( $customer_id);
 	}
 	
+        /**
+         * Get customer by their email address
+         * @param string $email_address The customer's email address
+         */
+        public function get_customer_by_email( $email_address ){
+            return $this->_model->get_customer_by_email( $email_address );
+        }
+        
 	/*
 	*Returns all customers that through query
 	*
@@ -51,7 +59,7 @@ class Customers_Controller extends Kanzu_Controller
 	*
 	* @param int $customer_id 
 	*/
-	public function disableAccount( int $customer_id){
+	public function disableAccount( $customer_id ){
 		$cO = new stdClass();
 		$cO->cust_id = $customer_id;
 		$cO->new_account_status = "DISABLED";
@@ -61,7 +69,7 @@ class Customers_Controller extends Kanzu_Controller
 	/*
 	* Enable customer account
 	*/
-	public function enableAccount( int $customer_id ){
+	public function enableAccount( $customer_id ){
 		$cO = new stdClass();
 		$cO->cust_id = $customer_id;
 		$cO->new_account_status = "ENABLED";

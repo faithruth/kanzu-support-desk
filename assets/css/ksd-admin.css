@@ -265,6 +265,9 @@ a.new-ticket:hover {
     margin-top: 20px;
     padding-left: 0;
 }
+#update_private_note textarea{
+    background-color: #EFEFEF;
+}
 #ticket-replies{
     margin-top: 10px;
     border-top: 1px solid #ccc;

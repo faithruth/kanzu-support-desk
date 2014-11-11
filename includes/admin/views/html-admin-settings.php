@@ -34,7 +34,7 @@
                 <input type="text" value="<?php echo $settings['recency_definition']; ?>" size="15" name="recency_definition" />
             </div>
             <div class="setting">
-                <label for="show_support_tab">Show support tab</label>
+                <label for="show_support_tab">Show front-end support tab</label>
                 <input name="show_support_tab"  type="checkbox" <?php checked( $settings['show_support_tab'], "yes" ) ?> value="yes"  />
              </div>
              <div class="setting show_support_tab">
