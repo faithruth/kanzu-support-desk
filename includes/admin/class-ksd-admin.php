@@ -379,11 +379,12 @@ class Kanzu_Support_Admin {
          * Retrieve a single ticket and all its replies
          */
         public function get_single_ticket(){
+
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+               die ( __('Busted!','kanzu-support-desk') );                         
+            }
+            $this->do_admin_includes();	
             try{
-                if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
-                   die ( __('Busted!','kanzu-support-desk') );                         
-                }
-               $this->do_admin_includes();	
                $tickets = new TicketsController();	
                $ticket = $tickets->getTicket($_POST['tkt_id']);
                $this->format_ticket_for_viewing($ticket);
@@ -404,11 +405,11 @@ class Kanzu_Support_Admin {
          * Retrieve a ticket's replies
          */
         public function get_ticket_replies(){
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                die ( __('Busted!','kanzu-support-desk') );                         
+            }
+            $this->do_admin_includes();
             try{
-                if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
-                    die ( __('Busted!','kanzu-support-desk') );                         
-                }
-                $this->do_admin_includes();	
                 $replies = new RepliesController();
                 $query = " rep_tkt_id = ".$_POST['tkt_id'];
                 $response = $replies->getReplies($query);
@@ -433,8 +434,12 @@ class Kanzu_Support_Admin {
                 }
                     $this->do_admin_includes();	
                     $tickets = new TicketsController();		
-                    $status = ( $tickets->deleteTicket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
-                    echo json_encode($status);
+                    //$status = ( $tickets->deleteTicket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+                    if( $tickets->deleteTicket( $_POST['tkt_id']) ){
+                        echo json_encode(__("Deleted","kanzu-support-desk"));
+                    }else{
+                        throw new Exception( __("Failed","kanzu-support-desk") , -1);
+                    }
                     die();// IMPORTANT: don't leave this out
             }catch( Exception $e){
                 $response = array(
@@ -459,12 +464,10 @@ class Kanzu_Support_Admin {
 		//$status = ( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ? __("Updated","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
                 
                 if( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ){
-                    $status = __("Updated","kanzu-support-desk");
+                    echo json_encode( __("Updated","kanzu-support-desk"));
                 }else {
                     throw new Exception( __("Failed","kanzu-support-desk") , -1);
                 }
-                
-		echo json_encode($status);
 		die();// IMPORTANT: don't leave this out
             }catch( Exception $e){ 
                 $response = array( 
@@ -492,12 +495,10 @@ class Kanzu_Support_Admin {
               // $status = ( $assign_ticket->update_ticket( $updated_ticket ) ? __("Re-assigned","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
                
                if( $assign_ticket->update_ticket( $updated_ticket ) ){
-                   $status = __("Re-assigned","kanzu-support-desk");
+                   echo json_encode( __("Re-assigned","kanzu-support-desk"));
                }else{
                    throw new Exception( __("Failed","kanzu-support-desk") , -1);
                }
-               
-               echo json_encode($status);
                die();// IMPORTANT: don't leave this out
            }catch( Exception $e){
                $response = array(
@@ -535,11 +536,10 @@ class Kanzu_Support_Admin {
                    $response = $RC->addReply( $new_reply );
                    //$status = ( $response > 0  ? $new_reply->rep_message : __("Error", 'kanzu-support-desk') );
                    if ($response > 0 ){
-                       $status = $new_reply->rep_message ;
+                      echo json_encode($new_reply->rep_message );
                    }else{
                        throw new Exception( __("Error", 'kanzu-support-desk'), -1 );
                    }
-                   echo json_encode($status);
                    die();// IMPORTANT: don't leave this out
                 }catch( Exception $e){
                     $response = array(
@@ -587,7 +587,6 @@ class Kanzu_Support_Admin {
                 //Server side validation for the inputs
                 if ( strlen( $new_ticket->tkt_subject ) < 2 || strlen( $new_ticket->tkt_message ) < 2 ) {
                      throw new Exception( __('Error | Your subject and message should be at least 2 characters','kanzu-support-desk'), -1 );
-                     die();
                 }
                 
                 //These other fields are only available if a ticket is logged from the admin side so we need to 
@@ -611,7 +610,6 @@ class Kanzu_Support_Admin {
                 //Check that it is a valid email address
                 if (!is_email( $cust_email )){
                      throw new Exception( __('Error | Invalid email address specified','kanzu-support-desk') , -1);
-                     die();
                 }
                 
                 $CC = new Customers_Controller();
@@ -759,7 +757,11 @@ class Kanzu_Support_Admin {
                 }
                 $status = update_option( Kanzu_Support_Install::$ksd_options_name, $updated_settings );
                 
-                echo json_encode ( ( $status ? __("Settings Updated") : __("Update failed. Please retry") ) );
+                if( $status){
+                   echo json_encode(  __("Settings Updated"));
+                }else{
+                    throw new Exception(__("Update failed. Please retry"), -1);
+                }
                 die();
             }catch( Exception $e){
                 $response = array(
@@ -811,11 +813,11 @@ class Kanzu_Support_Admin {
                     $tickets = new TicketsController();		
                     //$status = ( $tickets->update_ticket( $updated_ticket  ) ? __("Noted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
                     if ( $tickets->update_ticket( $updated_ticket  ) ){
-                        $status = __("Noted","kanzu-support-desk");
+                        echo json_encode( __("Noted","kanzu-support-desk") );
                     }else {
                         throw new Exception(__("Failed","kanzu-support-desk"), -1);
                     }
-                    echo json_encode( $status );
+                    //echo json_encode( $status );
                     die();// IMPORTANT: don't leave this out             
                 }catch( Exception $e){
                     $response = array(
