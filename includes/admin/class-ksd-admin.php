@@ -279,8 +279,9 @@ class Kanzu_Support_Admin {
 	 * Handle AJAX callbacks. Currently used to sort tickets 
 	 */
 	public function filter_tickets() {		 
-	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-			die ( 'Busted!');
+	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                die ( __('Busted!','kanzu-support-desk') );                         
+          }
           
                 try{
                     $this->do_admin_includes();
@@ -383,8 +384,9 @@ class Kanzu_Support_Admin {
          * Retrieve a single ticket and all its replies
          */
         public function get_single_ticket(){
-             if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-			die ( 'Busted!');
+             if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                die ( __('Busted!','kanzu-support-desk') );                         
+             }
             $this->do_admin_includes();	
             $tickets = new TicketsController();	
             $ticket = $tickets->getTicket($_POST['tkt_id']);
@@ -398,8 +400,9 @@ class Kanzu_Support_Admin {
          * Retrieve a ticket's replies
          */
         public function get_ticket_replies(){
-            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-			die ( 'Busted!');
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                die ( __('Busted!','kanzu-support-desk') );                         
+            }
             $this->do_admin_includes();	
             $replies = new RepliesController();
             $query = " rep_tkt_id = ".$_POST['tkt_id'];
@@ -412,8 +415,9 @@ class Kanzu_Support_Admin {
 	 * Delete a ticket
 	 */
 	public function delete_ticket(){
-			  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-			die ( 'Busted!');
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+			 die ( __('Busted!','kanzu-support-desk') );
+            }
 		$this->do_admin_includes();	
 		$tickets = new TicketsController();		
 		$status = ( $tickets->deleteTicket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
@@ -425,9 +429,10 @@ class Kanzu_Support_Admin {
 	 * Change a ticket's status
 	 */
 	public function change_status(){
-		 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-			die ( 'Busted!');
-		$this->do_admin_includes();	
+		if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+			 die ( __('Busted!','kanzu-support-desk') );
+		}
+                $this->do_admin_includes();	
 		$tickets = new TicketsController();		
 		$status = ( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ? __("Updated","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode($status);
@@ -438,8 +443,9 @@ class Kanzu_Support_Admin {
 	 * Change a ticket's assignment
 	 */
 	public function assign_to(){
-		 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-			die ( 'Busted!');
+		 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+			 die ( __('Busted!','kanzu-support-desk') );
+                 }
 		$this->do_admin_includes();	
                 $updated_ticket = new stdClass();
                 $updated_ticket->tkt_id = $_POST['tkt_id'];
@@ -456,8 +462,9 @@ class Kanzu_Support_Admin {
          */
         
         public function reply_ticket(){
-               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) )
-			die ( 'Busted!');
+               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) ){
+			 die ( __('Busted!','kanzu-support-desk') );
+               }
 		$this->do_admin_includes();
                 
                 $new_reply = new stdClass(); 
@@ -481,9 +488,9 @@ class Kanzu_Support_Admin {
          * call this method to log the ticket
          */
         public function log_new_ticket (){
-                if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) )
-			die ( 'Busted!');
-                
+                if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) ){
+			 die ( __('Busted!','kanzu-support-desk') );
+                }
 		$this->do_admin_includes();
             
             	$tkt_channel    = "STAFF"; //This is the default channel
@@ -591,8 +598,9 @@ class Kanzu_Support_Admin {
 		 * Generate the ticket volumes displayed in the graph in the dashboard
 		 */
 		public function get_dashboard_ticket_volume(){
-			 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-				die ( 'Busted!');
+			 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+				 die ( __('Busted!','kanzu-support-desk') );
+                         }
 			$this->do_admin_includes();
 			$tickets = new TicketsController();		
 			$tickets_raw = $tickets->get_dashboard_graph_statistics();
@@ -613,8 +621,9 @@ class Kanzu_Support_Admin {
 		}
                 //@TODO Optimize the way the average response time is calculated
                 public function get_dashboard_summary_stats(){
-                    if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-				die ( 'Busted!');
+                    if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+				 die ( __('Busted!','kanzu-support-desk') );
+                    }
                     $this->do_admin_includes();
                     $tickets = new TicketsController();	
                     $summary_stats = $tickets->get_dashboard_statistics_summary();
@@ -629,14 +638,7 @@ class Kanzu_Support_Admin {
                     die();//Important
                 }
          
-         /**
-          * Set a particular option
-          * @param String $option_name Options name
-          * @param String $new_value The new option value
-          */
-         public function update_option ( $option_name, $new_value ){
-             
-         }  
+                    
          
          /**
           * Update all settings
@@ -660,9 +662,9 @@ class Kanzu_Support_Admin {
           * Reset settings to default
           */
          public function reset_settings(){
-             	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) )
-			die ( 'Busted!');
-                  
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                die ( __('Busted!','kanzu-support-desk') );
+             }
             $status = update_option( Kanzu_Support_Install::$ksd_options_name, Kanzu_Support_Install::get_default_options() );
 
             echo json_encode ( ( $status ? __("Settings Reset") : __("Reset failed. Please retry") ) );
@@ -675,8 +677,9 @@ class Kanzu_Support_Admin {
           * @TODO IMPORTANT: Escape user input
           */
          public function update_private_note(){
-               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) )
-			die ( 'Busted!');
+               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) ){
+			 die ( __('Busted!','kanzu-support-desk') );
+               }
 		$this->do_admin_includes();
                 $updated_ticket = new stdClass();
                 $updated_ticket->tkt_id = $_POST['tkt_id'];
