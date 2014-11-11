@@ -347,7 +347,6 @@ class Kanzu_Support_Admin {
                             0 => $raw_tickets,
                             1 => $count
                         );
-
                          */
 
                         $response['data'] = array(
