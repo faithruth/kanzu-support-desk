@@ -34,4 +34,3 @@
     </form>
   </div>
 </div>
-<!-- server side validation-->

@@ -313,7 +313,6 @@ KSDTickets = function(){
                 tinyMCE.triggerSave();
             }); 
             /**Validate New Tickets before submitting the form by AJAX**/
-            //@TODO Add server side validation too
             jQuery("form.ksd-new-ticket-admin").validate({
                 submitHandler: function(form) {
                 ksdLogNewTicketAdmin(form);

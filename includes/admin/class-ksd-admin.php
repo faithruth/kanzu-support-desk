@@ -470,7 +470,10 @@ class Kanzu_Support_Admin {
                 $new_reply = new stdClass(); 
                 $new_reply->rep_tkt_id    	 =  $_POST['tkt_id'] ;
                 $new_reply->rep_message 	 = sanitize_text_field( stripslashes ( $_POST['ksd_ticket_reply'] ) );
-                
+                if ( strlen( $new_reply->rep_message ) < 2 ){//If the response sent it too short
+                   echo json_encode( __("Error | Reply too short", 'kanzu-support-desk') );
+                   die();
+                }
                 //Get the customer's email address and send them this reply
                 $CC = new Customers_Controller();
                 $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );                   
@@ -487,7 +490,7 @@ class Kanzu_Support_Admin {
          * Log new tickets.  The different channels (admin side, front-end) all 
          * call this method to log the ticket
          */
-        public function log_new_ticket (){
+        public function log_new_ticket(){
                 if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) ){
 			 die ( __('Busted!','kanzu-support-desk') );
                 }
@@ -515,6 +518,12 @@ class Kanzu_Support_Admin {
                 $new_ticket->tkt_channel            = $tkt_channel;
                 $new_ticket->tkt_status             = $tkt_status;
                 
+                //Server side validation for the inputs
+                if ( strlen( $new_ticket->tkt_subject ) < 2 || strlen( $new_ticket->tkt_message ) < 2 ) {
+                     echo json_encode( __('Error | Your subject and message should be at least 2 characters','kanzu-support-desk') );
+                     die();
+                }
+                
                 //These other fields are only available if a ticket is logged from the admin side so we need to 
                 //first check if they are set
                 if ( isset( $_POST[ 'ksd_tkt_severity' ] ) ) {
@@ -533,6 +542,12 @@ class Kanzu_Support_Admin {
       
                 //Get the provided email address and use it to check whether the customer's already in the Db
                 $cust_email           = sanitize_email( $_POST[ 'ksd_cust_email' ] );
+                //Check that it is a valid email address
+                if (!is_email( $cust_email )){
+                     echo json_encode( __('Error | Invalid email address specified','kanzu-support-desk') );
+                     die();
+                }
+                
                 $CC = new Customers_Controller();
                 $customer_details = $CC->get_customer_by_email ( $cust_email );
                 if ( $customer_details ){//If the customer's already in the Db, proceed. Get their customer ID
@@ -674,7 +689,6 @@ class Kanzu_Support_Admin {
          /**
           * Update a ticket's private note
           * @TODO Change tkt_private_notes to tkt_private_note
-          * @TODO IMPORTANT: Escape user input
           */
          public function update_private_note(){
                if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) ){
