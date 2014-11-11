@@ -34,4 +34,3 @@
     </form>
   </div>
 </div>
-<!-- server side validation/check post values/send mail on reply/stripslashes-->

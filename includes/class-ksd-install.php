@@ -217,7 +217,7 @@ class Kanzu_Support_Install {
 	private static function single_activate() {
 	
 
-		self::ksd_create_tables();
+		self::create_tables();
                 self::set_default_options();
 		
 		//add_action( 'admin_init', array( $this, 'install_actions' ) );
@@ -239,35 +239,29 @@ class Kanzu_Support_Install {
 	/**
 	* Install Kanzu Support
 	*/
-   private static function ksd_create_tables() {
+   private static function create_tables() {
             global $wpdb;        
 		$wpdb->hide_errors();		            
              
                 require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
-                //@TODO Add foreign key constraint
-                //@TODO Change assignment to assignments. Changed tkt_logged_by to assigned_by
-                //@TODO Check how to tag assignments done by the system. Currently tkt_logged_by can be 0
-                //@TODO Table defaults need internalization
+                //@TODO Check how to tag assignments done by the system. Currently tkt_assigned_by can be 0
                 $kanzusupport_tables = "
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
-				`tkt_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+				`tkt_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				`tkt_subject` VARCHAR(512) NOT NULL,                                 
 				`tkt_message` TEXT NOT NULL,
                                 `tkt_message_excerpt` TEXT NOT NULL, 
 				`tkt_channel` ENUM('STAFF','FACEBOOK','TWITTER','SUPPORT_TAB','EMAIL','CONTACT_FORM') DEFAULT 'STAFF',
 				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
 				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
-				`tkt_resolution` VARCHAR(64) NOT NULL, /*@TODO Remove this field. Don't see its use*/
-				`tkt_time_logged` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-				`tkt_logged_by` BIGINT(20) NOT NULL, 
+				`tkt_time_logged` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 				
                                 `tkt_cust_id` BIGINT(20) NOT NULL, 
+                                `tkt_assigned_by` BIGINT(20) NOT NULL, 
                                 `tkt_assigned_to` BIGINT(20) NULL, 
 				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
 				`tkt_updated_by` BIGINT(20) NOT NULL,                                 
-				`tkt_private_notes` TEXT,       
-				`tkt_tags` VARCHAR(255),   /*@TODO Use WordPress tags*/
-				`tkt_customer_rating` INT(2), /*@TODO Use NPS scoring system which rates from 0 to 10*/
-                                INDEX (`tkt_assigned_to`,`tkt_cust_id`,`tkt_logged_by`)
+				`tkt_private_note` TEXT,
+                                INDEX (`tkt_assigned_to`,`tkt_cust_id`,`tkt_assigned_by`)
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -279,45 +273,34 @@ class Kanzu_Support_Install {
 				`rep_created_by` BIGINT(20) NOT NULL,
 				`rep_date_modified` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
 				`rep_message` TEXT NOT NULL,
-                                 INDEX (`rep_tkt_id`)
+                                 FOREIGN KEY (`rep_tkt_id`) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
 				);				
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` ( /*We store only what's not in the WordPress users table*/
-				cust_id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				cust_user_id BIGINT(20),
-                                cust_email VARCHAR(100) NOT NULL,
-				cust_firstname VARCHAR(100) ,
-				cust_lastname VARCHAR(100),
-				cust_company_name VARCHAR(128),
-				cust_phone_number VARCHAR(100),
-				cust_about TEXT,
-				cust_account_status ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
-				cust_creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-				cust_created_by BIGINT(20), 
-				cust_lastmodification_date DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
-				cust_modified_by BIGINT(20),
-                                UNIQUE (cust_email)
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` (  
+				`cust_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				`cust_user_id` BIGINT(20),
+                                `cust_email` VARCHAR(100) NOT NULL,
+				`cust_firstname` VARCHAR(100) ,
+				`cust_lastname` VARCHAR(100),
+				`cust_company_name` VARCHAR(128),
+				`cust_phone_number` VARCHAR(100),
+				`cust_about` TEXT,
+				`cust_account_status` ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
+				`cust_creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+				`cust_created_by` BIGINT(20), 
+				`cust_lastmodification_date` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+				`cust_modified_by` BIGINT(20),
+                                UNIQUE ( `cust_email` )
 				);
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignment` (
-				assign_id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				assign_tkt_id BIGINT(20),
-				assign_assigned_to BIGINT(20),
-				assign_date_assigned TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				assign_assigned_by BIGINT(20),
-                                INDEX (`assign_tkt_id`)
-				);
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
-				att_id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-				att_name VARCHAR(100),
-				att_filename VARCHAR(255),
-				att_tkt_id BIGINT(20),
-				att_date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				att_reply_id BIGINT(20),
-                                INDEX (`att_tkt_id`)
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignments` (
+				`assign_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				`assign_tkt_id` BIGINT(20),
+				`assign_assigned_to` BIGINT(20),
+				`assign_date_assigned` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				`assign_assigned_by` BIGINT(20),
+                                FOREIGN KEY ( `assign_tkt_id` ) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
 				);
                                 ";
-
-      dbDelta( $kanzusupport_tables );
-                     
+      dbDelta( $kanzusupport_tables );                     
  }
  
              private static function set_default_options() {                    
@@ -359,10 +342,6 @@ class Kanzu_Support_Install {
                     );
             }
  
- 
-	
-
-	 
 	 //Will handle updates
 	 private function ks_update(){
 	 

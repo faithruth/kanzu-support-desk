@@ -30,7 +30,7 @@ function logTicket(){
 	$tO->tkt_message 	 = "NEW TICKET";
 	$tO->tkt_channel     	 = "EMAIL";
 	$tO->tkt_status 	 	 = "OPEN";
-	$tO->tkt_private_notes 	 = "Private notes";
+	$tO->tkt_private_note 	 = "Private notes";
 	$tO->tkt_tags 	 		 = "tag";
 	$tO->tkt_customer_rating = "1";
 
@@ -38,7 +38,7 @@ function logTicket(){
 	$tO->tkt_resolution = null;
 	$tO->tkt_time_logged = 'NOW()';
 	$tO->tkt_updated_by = null;	
-	$tO->tkt_logged_by = 1;
+	$tO->tkt_assigned_by = 1;
 	$TC = new TicketsController();
 	$id = $TC->logTicket( $tO );
 	

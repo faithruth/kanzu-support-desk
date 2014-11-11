@@ -16,7 +16,7 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 	
 	public function __construct(){
 		global $wpdb;
-		$this->_tablename = $wpdb->prefix . "kanzusupport_assignment";	
+		$this->_tablename = $wpdb->prefix . "kanzusupport_assignments";	
 		$this->_id = "assign_id";
 			
 		$this->_formats = array(
