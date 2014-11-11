@@ -461,8 +461,8 @@ class Kanzu_Support_Admin {
 		$this->do_admin_includes();
                 
                 $new_reply = new stdClass(); 
-                $new_reply->rep_tkt_id    	 = sanitize_text_field( $_POST['tkt_id'] );
-                $new_reply->rep_message 	 = sanitize_text_field( $_POST['ksd_ticket_reply'] );
+                $new_reply->rep_tkt_id    	 =  $_POST['tkt_id'] ;
+                $new_reply->rep_message 	 = sanitize_text_field( stripslashes ( $_POST['ksd_ticket_reply'] ) );
                 
                 //Get the customer's email address and send them this reply
                 $CC = new Customers_Controller();
@@ -511,10 +511,10 @@ class Kanzu_Support_Admin {
                 //These other fields are only available if a ticket is logged from the admin side so we need to 
                 //first check if they are set
                 if ( isset( $_POST[ 'ksd_tkt_severity' ] ) ) {
-                    $new_ticket->tkt_severity           = sanitize_text_field( $_POST[ 'ksd_tkt_severity' ] );   
+                    $new_ticket->tkt_severity           =  $_POST[ 'ksd_tkt_severity' ] ;   
                 }
                 if ( isset( $_POST[ 'ksd_tkt_assigned_to' ] ) ) {
-                    $new_ticket->tkt_assigned_to    = sanitize_text_field( $_POST[ 'ksd_tkt_assigned_to' ] );
+                    $new_ticket->tkt_assigned_to    =  $_POST[ 'ksd_tkt_assigned_to' ] ;
                 }
                
                 //Get the settings. We need them for tickets logged from the support tab
@@ -642,12 +642,13 @@ class Kanzu_Support_Admin {
           * Update all settings
           */
          public function update_settings(){
-            if ( ! wp_verify_nonce( $_POST['update-settings-nonce'], 'ksd-update-settings' ) )
-                die ( 'Busted!');
+            if ( ! wp_verify_nonce( $_POST['update-settings-nonce'], 'ksd-update-settings' ) ){
+                die ( __('Busted!','kanzu-support-desk') );
+            }                
             $updated_settings = array();
             //Iterate through the new settings and save them. 
             foreach ( Kanzu_Support_Install::get_default_options() as $option_name => $default_value ) {
-                $updated_settings[$option_name] = $_POST[$option_name];
+                $updated_settings[$option_name] = sanitize_text_field ( stripslashes ( $_POST[$option_name] ) );
             }
             $status = update_option( Kanzu_Support_Install::$ksd_options_name, $updated_settings );
 
@@ -679,7 +680,7 @@ class Kanzu_Support_Admin {
 		$this->do_admin_includes();
                 $updated_ticket = new stdClass();
                 $updated_ticket->tkt_id = $_POST['tkt_id'];
-                $updated_ticket->new_tkt_private_notes = $_POST['tkt_private_note'];
+                $updated_ticket->new_tkt_private_notes = sanitize_text_field ( stripslashes ( $_POST['tkt_private_note']) );
                 $tickets = new TicketsController();		
 		$status = ( $tickets->update_ticket( $updated_ticket  ) ? __("Noted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode( $status );
