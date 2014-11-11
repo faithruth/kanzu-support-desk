@@ -154,16 +154,6 @@ class Kanzu_Support_Install {
                 return  array (
                         /** KSD Version info ********************************************************/
                         'kanzu_support_version'             => KSD_VERSION,
-                     
-                        /** Mail Settings **********************************************************/
-                        'mail_server'                       => "mail.example.com",    
-                        'mail_account'                      => "user@example.com",         
-                        'mail_password'                     => null,  
-                        'mail_protocol'                     => "imap",      
-                        'mail_useSSL'                       => "no",         
-                        'mail_validate_certificate'         => "no",
-                	'mail_port'                         => "143",
-                        'mail_mailbox'         	            => "INBOX",
                     
                         /** Tickets **************************************************************/
                     

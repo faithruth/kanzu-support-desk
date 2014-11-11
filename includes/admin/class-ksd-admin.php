@@ -85,11 +85,8 @@ class Kanzu_Support_Admin {
 	 * @since     1.0.0
 	 *
 	 */
-	public function enqueue_admin_styles() {
-	
-		wp_enqueue_style( KSD_SLUG .'-admin-styles', plugins_url( '../../assets/css/ksd-admin.css', __FILE__ ), array(), KSD_VERSION );
-                wp_enqueue_style( KSD_SLUG .'-admin-css', plugins_url( '../../assets/css/ksd.css', __FILE__ ), array(), KSD_VERSION );
-
+	public function enqueue_admin_styles() {	
+            wp_enqueue_style( KSD_SLUG .'-admin-css', KSD_PLUGIN_URL.'/assets/css/ksd-admin.css', array(), KSD_VERSION );
 	}
 
 	/**
