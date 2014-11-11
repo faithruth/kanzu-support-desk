@@ -48,8 +48,25 @@ KSDTickets = function(){
 
                         
                         jQuery.post(ksd_admin.ajax_url, data, function(response) {
-                            //if(jQuery.isArray(JSON.parse(response))){
-                              if(  JSON.parse(response).status > 0 ){  
+                            
+                            var respObj = {};
+                            //To catch cases when the ajax response is not json
+                            try{
+                                //to reduce cost of recalling parse
+                                respObj = JSON.parse(response); 
+                            }catch( err){
+                                KSDUtils.showDialog("error", err);  
+                                return;
+                            }
+                    
+                            //Check for error in request.
+                            if ( 'undefined' != typeof(respObj.error) ){
+                                KSDUtils.showDialog("error", respObj.error.message  );
+                                return ;
+                            }
+                            
+                            
+                            if(jQuery.isArray(respObj)){
                                    tab_id = current_tab.replace("#tickets-tab-","");
                                      ticketListData = "";
                                      ticketListData += '<div class="ksd-row-all-hide" id="ksd_row_all_'+tab_id+'">';
@@ -62,7 +79,7 @@ KSDTickets = function(){
                                      
                                      jQuery(current_tab+' .ticket-list').html( ticketListData);
                                      
-                                    jQuery.each( JSON.parse(response).data[0], function( key, value ) {
+                                    jQuery.each( respObj[0], function( key, value ) {
                                         
                                             ticketListData = '<div class="ksd-row-data ticket-list-item" id="ksd_tkt_id_'+value.tkt_id+'">';
                                             ticketListData += 	'<div class="ticket-info">';
@@ -91,7 +108,7 @@ KSDTickets = function(){
                             }
                             else{
                                 jQuery(current_tab+' #select-all-tickets').remove();  
-                                jQuery(current_tab+' .ticket-list').addClass("empty").html(JSON.parse(response));
+                                jQuery(current_tab+' .ticket-list').addClass("empty").html( respObj );
                             }//eof:if
 
                             jQuery(current_tab).removeClass("pending");
@@ -100,7 +117,7 @@ KSDTickets = function(){
                             
                             //Add Navigation
                             var tab_id = current_tab.replace("#tickets-tab-","");
-                            var total_rows = JSON.parse(response).data[1];
+                            var total_rows = respObj[1];
                             var currentpage = offset+1; 
                             _loadTicketPagination(tab_id, currentpage, total_rows, limit);
                             
@@ -172,7 +189,22 @@ KSDTickets = function(){
     							tkt_assign_assigned_to : assign_assigned_to
     						}, 
     				function(response) {	
-                                    KSDUtils.showDialog("success",JSON.parse(response));
+                                    var respObj = {};
+                                    //To catch cases when the ajax response is not json
+                                    try{
+                                        //to reduce cost of recalling parse
+                                        respObj = JSON.parse(response); 
+                                    }catch( err){
+                                        KSDUtils.showDialog("error", err);  
+                                        return;
+                                    }
+
+                                    //Check for error in request.
+                                    if ( 'undefined' != typeof(respObj.error) ){
+                                        KSDUtils.showDialog("error", respObj.error.message  );
+                                        return ;
+                                    }
+                                    KSDUtils.showDialog("success",respObj);
     				});		
     	});
         
@@ -213,8 +245,23 @@ KSDTickets = function(){
 								tkt_id : tkt_id
 							}, 
 					function(response) {
+                                            var respObj = {};
+                                            //To catch cases when the ajax response is not json
+                                            try{
+                                                //to reduce cost of recalling parse
+                                                respObj = JSON.parse(response); 
+                                            }catch( err){
+                                                KSDUtils.showDialog("error", err);  
+                                                return;
+                                            }
+
+                                            //Check for error in request.
+                                            if ( 'undefined' != typeof(respObj.error) ){
+                                                KSDUtils.showDialog("error", respObj.error.message  );
+                                                return ;
+                                            }
 	                                    jQuery('.ticket-list div#ksd_tkt_id_'+tkt_id).remove();
-	                                    KSDUtils.showDialog("success",JSON.parse(response));  				                                
+	                                    KSDUtils.showDialog("success",respObj);  				                                
 					});	
 	                    },                           
 	                    No : function() {
@@ -238,12 +285,28 @@ KSDTickets = function(){
                 jQuery.post(	ksd_admin.ajax_url, 
                                     jQuery(this).serialize(), //The action, nonce and TicketID are hidden fields in the form
                     function(response) {//@TODO Check for errors 
+                        var respObj = {};
+                        //To catch cases when the ajax response is not json
+                        try{
+                            //to reduce cost of recalling parse
+                            respObj = JSON.parse(response); 
+                        }catch( err){
+                            KSDUtils.showDialog("error", err);  
+                            return;
+                        }
+
+                        //Check for error in request.
+                        if ( 'undefined' != typeof(respObj.error) ){
+                            KSDUtils.showDialog("error", respObj.error.message  );
+                            return ;
+                        }
+                        
                         switch(action){
                             case "ksd_update_private_note":
-                               KSDUtils.showDialog("success",JSON.parse(response));
+                               KSDUtils.showDialog("success",respObj );
                             break;
                             default:
-                                jQuery("#ticket-replies").append("<div class='ticket-reply'>"+JSON.parse(response)+"</div>");	
+                                jQuery("#ticket-replies").append("<div class='ticket-reply'>"+respObj+"</div>");	
                                  //Clear the reply field
                                  jQuery("textarea[name=ksd_ticket_reply]").val(" ");      
                         }
@@ -258,7 +321,22 @@ KSDTickets = function(){
                 jQuery.post(	ksd_admin.ajax_url, 
                                     jQuery(form).serialize(), //The action and nonce are hidden fields in the form
                     function( response ) {//@TODO Check for errors 
-                       KSDUtils.showDialog("success",JSON.parse(response));
+                        var respObj = {};
+                        //To catch cases when the ajax response is not json
+                        try{
+                            //to reduce cost of recalling parse
+                            respObj = JSON.parse(response); 
+                        }catch( err){
+                            KSDUtils.showDialog("error", err);  
+                            return;
+                        }
+
+                        //Check for error in request.
+                        if ( 'undefined' != typeof(respObj.error) ){
+                            KSDUtils.showDialog("error", respObj.error.message  );
+                            return ;
+                        }
+                       KSDUtils.showDialog("success",respObj);
                        //Redirect to the Tickets page
                        window.location.replace( ksd_admin.ksd_tickets_url );
                 }).fail(function(){
@@ -365,7 +443,22 @@ KSDTickets = function(){
                                                             tkt_assign_assigned_to : assign_assigned_to
                                                     }, 
                                     function(response) {	
-                                    ksd_show_dialog("success",JSON.parse(response));
+                                        var respObj = {};
+                                        //To catch cases when the ajax response is not json
+                                        try{
+                                            //to reduce cost of recalling parse
+                                            respObj = JSON.parse(response); 
+                                        }catch( err){
+                                            KSDUtils.showDialog("error", err);  
+                                            return;
+                                        }
+
+                                        //Check for error in request.
+                                        if ( 'undefined' != typeof(respObj.error) ){
+                                            KSDUtils.showDialog("error", respObj.error.message  );
+                                            return ;
+                                        }
+                                    ksd_show_dialog("success",respObj );
                                     });		
             });
 
@@ -409,7 +502,22 @@ KSDTickets = function(){
                                                             tkt_status : tkt_status
                                                     }, 
                                     function(response) {	
-                                        KSDUtils.showDialog("success",JSON.parse(response));				                            
+                                        var respObj = {};
+                                        //To catch cases when the ajax response is not json
+                                        try{
+                                            //to reduce cost of recalling parse
+                                            respObj = JSON.parse(response); 
+                                        }catch( err){
+                                            KSDUtils.showDialog("error", err);  
+                                            return;
+                                        }
+
+                                        //Check for error in request.
+                                        if ( 'undefined' != typeof(respObj.error) ){
+                                            KSDUtils.showDialog("error", respObj.error.message  );
+                                            return ;
+                                        }
+                                        KSDUtils.showDialog("success", respObj);				                            
                                     });		
             });
                 
@@ -433,7 +541,22 @@ KSDTickets = function(){
                                  tkt_id : jQuery.urlParam('ticket')//We get the ticket ID from the URL
                              }, 
                          function(response) {
-                             the_ticket = JSON.parse(response);
+                            var respObj = {};
+                            //To catch cases when the ajax response is not json
+                            try{
+                                //to reduce cost of recalling parse
+                                respObj = JSON.parse(response); 
+                            }catch( err){
+                                KSDUtils.showDialog("error", err);  
+                                return;
+                            }
+
+                            //Check for error in request.
+                            if ( 'undefined' != typeof(respObj.error) ){
+                                KSDUtils.showDialog("error", respObj.error.message  );
+                                return ;
+                            }                             
+                             the_ticket = respObj;
                              jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message);
                              jQuery("#ksd-single-ticket textarea[name=ksd_ticket_private_note]").val(the_ticket.tkt_private_notes);
@@ -448,9 +571,25 @@ KSDTickets = function(){
                                  ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
                                  tkt_id : jQuery.urlParam('ticket')//We get the ticket ID from the URL
                              }, 
-                                 function(the_replies) {       
+                                 function(the_replies) {   
+                                    var respObj = {};
+                                    //To catch cases when the ajax response is not json
+                                    try{
+                                        //to reduce cost of recalling parse
+                                        respObj = JSON.parse(the_replies); 
+                                    }catch( err){
+                                        KSDUtils.showDialog("error", err);  
+                                        return;
+                                    }
+                                    the_replies = respObj;
+                                    //Check for error in request.
+                                    if ( 'undefined' != typeof(respObj.error) ){
+                                        KSDUtils.showDialog("error", respObj.error.message  );
+                                        return ;
+                                    }
+                                    
                                      jQuery("#ticket-replies").html("") ; //Clear the replies div
-                                     jQuery.each( JSON.parse(the_replies), function( key, value ) {
+                                     jQuery.each( respObj, function( key, value ) {
                                      jQuery("#ticket-replies").append("<div class='ticket-reply'>"+value.rep_message+"</div>");                                    
                                      });
                                      //Toggle the color of the reply background

@@ -338,31 +338,23 @@ class Kanzu_Support_Admin {
 
                     $response = array('data'=>'Undefined error in ' . __line__, 'status'=>'-1');
                     if( empty( $raw_tickets ) ){
-                        //$response = __( "Nothing to see here. Great work!","kanzu-support-desk" );
-                        $response['data'] = __( "Nothing to see here. Great work!","kanzu-support-desk" );
-                        $response['status'] = 0;
+                        $response = __( "Nothing to see here. Great work!","kanzu-support-desk" );
                     }    else{
-                        /*
+                        
                         $response = array(
                             0 => $raw_tickets,
                             1 => $count
                         );
-                         */
-
-                        $response['data'] = array(
-                            0 => $raw_tickets,
-                            1 => $count
-                        );
-                        $response['status'] = 1;
-
+                         
                     }
-
-
-
-                    echo json_encode($response);		 
+                    echo json_encode($response);
+                    
                     die();// IMPORTANT: don't leave this out
                 }catch( Exception $e){
-                    $response = array('data'=> $e , 'status'=>'-1');
+                    $response = array(
+                        'error'=> array( 'message' => $e , 'code'=>'-1')
+                    );
+                    echo json_encode($response);	
                     die();// IMPORTANT: don't leave this out
                 }    
 	}
