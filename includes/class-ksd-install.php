@@ -179,13 +179,6 @@ class Kanzu_Support_Install {
                     );
             }
  
-	 //Will handle updates
-	 private function ks_update(){
-	 
-	 
-	 }
-
-
 }
 
 endif;

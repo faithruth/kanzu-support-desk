@@ -12,7 +12,7 @@
 
 include_once( KSD_PLUGIN_DIR. "includes/libraries/Controller.php");
 
-class UsersController extends Kanzu_Controller 
+class Kanzu_Users_Controller extends Kanzu_Controller 
 {	
 	public function __construct(){
 		$this->_model_name = "Users";

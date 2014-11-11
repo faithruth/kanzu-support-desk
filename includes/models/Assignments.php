@@ -11,7 +11,7 @@
  
 include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
 
- class AssignmentsModel extends Kanzu_Model{
+ class Kanzu_Assignments_Model extends Kanzu_Model{
 
 	
 	public function __construct(){

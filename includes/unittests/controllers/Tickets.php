@@ -39,7 +39,7 @@ function logTicket(){
 	$tO->tkt_time_logged = 'NOW()';
 	$tO->tkt_updated_by = null;	
 	$tO->tkt_assigned_by = 1;
-	$TC = new TicketsController();
+	$TC = new Kanzu_Tickets_Controller();
 	$id = $TC->logTicket( $tO );
 	
 

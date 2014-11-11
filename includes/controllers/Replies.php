@@ -11,7 +11,7 @@
 
 include_once( KSD_PLUGIN_DIR. "includes/libraries/Controller.php");
 
-class RepliesController extends Kanzu_Controller 
+class Kanzu_Replies_Controller extends Kanzu_Controller 
 {	
 	public function __construct(){
 		$this->_model_name = "Replies";

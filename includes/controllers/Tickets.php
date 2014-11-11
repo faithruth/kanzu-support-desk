@@ -11,7 +11,7 @@
 
 include_once( KSD_PLUGIN_DIR .  'includes/libraries/Controller.php' );
 
-class TicketsController extends Kanzu_Controller {	
+class Kanzu_Tickets_Controller extends Kanzu_Controller {	
 	public function __construct(){
 		$this->_model_name = "Tickets";
 		parent::__construct();

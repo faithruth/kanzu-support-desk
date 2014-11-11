@@ -9,8 +9,7 @@
                         <li><a href="#new_ticket"><img src="<?php echo KSD_PLUGIN_URL. '/assets/images/icons/newticket.png'; ?>" title="<?php _e('New Ticket','kanzu-support-desk'); ?>" /></a></li>
 			<li><a href="#settings"><img src="<?php echo KSD_PLUGIN_URL. '/assets/images/icons/settings.png'; ?>" title="<?php _e('Settings','kanzu-support-desk'); ?>"/></a></li>
 			<li><a href="#add-ons"><img src="<?php echo KSD_PLUGIN_URL. '/assets/images/icons/addons.png'; ?>" title="<?php _e('Add-ons','kanzu-support-desk'); ?>" /></a></li>
-			<li><a href="#help"><img src="<?php echo KSD_PLUGIN_URL. '/assets/images/icons/help.png'; ?>" title="<?php _e('Help','kanzu-support-desk'); ?>" /></a></li>
-			<li><a href="#tests"><img src="<?php echo KSD_PLUGIN_URL. '/assets/images/icons/tests.png'; ?>" title="<?php _e('Tests','kanzu-support-desk'); ?>"/></a></li>
+			<li><a href="#help"><img src="<?php echo KSD_PLUGIN_URL. '/assets/images/icons/help.png'; ?>" title="<?php _e('Help','kanzu-support-desk'); ?>" /></a></li>	
 		</ul>
 		<div id="dashboard" class="admin-ksd-content">
 			<?php include_once('html-admin-dashboard.php'); ?>
@@ -29,10 +28,7 @@
 		</div>
 		<div id="help" class="admin-ksd-content">
 			<?php include_once('html-admin-help.php'); ?>
-		</div>
-		<div id="tests" class="admin-ksd-content">
-			<?php include_once('html-admin-tests.php'); ?>
-		</div>      
+		</div>   
             <div class="ksd-dialog loading hidden">Loading...</div>
             <div class="ksd-dialog error hidden">Error</div>
             <div class="ksd-dialog success hidden">Success</div>            

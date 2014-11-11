@@ -10,7 +10,7 @@
  
 include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
 
- class TicketsModel extends Kanzu_Model{
+ class Kanzu_Tickets_Model extends Kanzu_Model{
 
 	public function __construct(){
 		global $wpdb;

@@ -28,7 +28,7 @@ $TestSuit = array(
 ######################################################################
 function TicketInsert(){
 	#Load ticket model class file
-	$TM = new TicketsModel();
+	$TM = new Kanzu_Tickets_Model();
 
 	//Populate ticket model instalate
 	$tO = new stdClass(); 
@@ -49,7 +49,7 @@ function TicketInsert(){
 
 function TicketDelete(){
 	#Load ticket model class file
-	$TM = new TicketsModel();
+	$TM = new Kanzu_Tickets_Model();
 	$tO = new stdClass(); 
 	$tO->tkt_id = "5";
 	$id = $TM->deleteTicket($tO);
@@ -58,7 +58,7 @@ function TicketDelete(){
 
 function TicketUpdate(){
 	#Load ticket model class file
-	$TM = new TicketsModel();
+	$TM = new Kanzu_Tickets_Model();
 
 		//Populate ticket model instalate
 	$tO = new stdClass(); 
@@ -70,7 +70,7 @@ function TicketUpdate(){
 }
 
 function TicketGetTicket(){
-	$TM = new TicketsModel();
+	$TM = new Kanzu_Tickets_Model();
 
 	$tO = $TM->getTicket( 6);
 	print_r( $tO);

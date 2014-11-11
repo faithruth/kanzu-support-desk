@@ -59,7 +59,7 @@ KSDDashboard = function(){
                                         jQuery('#ksd_dashboard_chart').html( respObj.error.message );
                                         return ;
                                     }
-                                    if ( 'undefined' !== typeof google.visualization ) //First check if we can draw a Google Chart
+                                    if ( 'undefined' !== typeof google.visualization && null !== ksdChartContainer ) //First check if we can draw a Google Chart
                                        ksdChartContainer.style.display = 'block';//Unhide the parent element
                                     var ksdData =  google.visualization.arrayToDataTable( respObj );                                   
                                     var ksdOptions = {

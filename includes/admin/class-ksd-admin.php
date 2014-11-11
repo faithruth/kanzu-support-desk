@@ -24,15 +24,10 @@ class Kanzu_Support_Admin {
 	 */
 	protected static $instance = null;   
 
-        
-                        
-
-
-
 
         /**
 	 * Initialize the plugin by loading admin scripts & styles and adding a
-	 * settings page and menu.
+	 * settings page and menu. Also define the AJAX callbacks
 	 *
 	 * @since     1.0.0
 	 */
@@ -45,7 +40,7 @@ class Kanzu_Support_Admin {
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
 
-		// Add an action link pointing to the options page.
+		// Add an action link pointing to the settings page.
 		add_filter( 'plugin_action_links_' . plugin_basename(KSD_PLUGIN_FILE), array( $this, 'add_action_links' ) );		
 
 		//Handle AJAX calls
@@ -61,17 +56,7 @@ class Kanzu_Support_Admin {
                 add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ));  
                 add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' )); 
                 add_action( 'wp_ajax_ksd_reset_settings', array( $this, 'reset_settings' )); 
-                add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));                 
-
-		
-		/*
-		 * Define custom functionality.
-		 *
-		 * Read more about actions and filters:
-		 * http://codex.wordpress.org/Plugin_API#Hooks.2C_Actions_and_Filters
-		 */
-		//add_action( '@TODO', array( $this, 'action_method_name' ) );
-		//add_filter( '@TODO', array( $this, 'filter_method_name' ) );
+                add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));              
 
 	}
 	
@@ -199,13 +184,9 @@ class Kanzu_Support_Admin {
 		$menu_slug = KSD_SLUG;
 		$function = 'output_admin_menu_dashboard';
 		
-			/*
-			 * Add the settings page to the Settings menu.
-			 *
-			 * NOTE:  Alternative menu locations are available via WordPress administration menu functions.		 
-			 *        Administration Menus: http://codex.wordpress.org/Administration_Menus
-			 */
-                        
+                /*
+		* Add the settings page to the Settings menu.
+                */
 		add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this,$function),'dashicons-groups',40);
 		
 		//Add the ticket pages. 
@@ -234,40 +215,11 @@ class Kanzu_Support_Admin {
                 include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');                
 	}
         
-        /**
-         * Add a screen option to the tickets sub-page
-         
-        public function add_tickets_screen_option(){
-            $option = 'per_page';
  
-            $args = array(
-                'label' => __('Tickets', 'kanzu-support-desk'),
-                'default' => 20,//The default number of tickets to display per page
-                'option' => $this->tickets_per_page_options_key            
-                    );
- 
-            add_screen_option( $option, $args );
-        }*/
-        
-        /**
-         * Set the tickets screen option when the user does a save
-         * The tickets screen option tells us how many tickets the user
-         * would like to view per page
-         
-        
-        public function set_tickets_screen_option($status, $option, $value) {
- 
-            if ( $this->tickets_per_page_options_key == $option ) return $value;
- 
-        return $status;
- 
-        }*/
-        
-
 	/**
 	 * Include the files we use in the admin dashboard
 	 */
-    public function do_admin_includes() {		
+        public function do_admin_includes() {		
 		include_once( KSD_PLUGIN_DIR.  "includes/controllers/Tickets.php");
 		include_once( KSD_PLUGIN_DIR.  "includes/controllers/Users.php");
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/Assignments.php");  
@@ -275,7 +227,7 @@ class Kanzu_Support_Admin {
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/Customers.php");  
 	}
 	/** 
-	 * Handle AJAX callbacks. Currently used to sort tickets 
+	 * Filter tickets in the 'tickets' view 
 	 */
 	public function filter_tickets() {		 
 	  if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
@@ -320,21 +272,14 @@ class Kanzu_Support_Admin {
                     //order
                     $filter .= " ORDER BY tkt_time_logged DESC ";
 
-                    //We now pick the limit from screen options
-
-                  //  $per_page = get_user_meta(get_current_user_id(), $this->tickets_per_page_options_key, true);
-                    //Switched back to $limit to address AJAX issue first
-
                     //limit
                     $count_filter = $filter; //Query without limit to get the total number of rows
                     $filter .= " LIMIT $offset , $limit " ;
 
                     //Results count
-                    $tickets = new TicketsController(); 
+                    $tickets = new Kanzu_Tickets_Controller(); 
                     $count   = $tickets->get_count( $count_filter );
                     $raw_tickets = $this->filter_ticket_view( $filter );
-
-                    //$response = ( empty( $raw_tickets ) ? __( "Nothing to see here. Great work!","kanzu-support-desk" ) : $raw_tickets );
 
                     $response = array('data'=>'Undefined error in ' . __line__, 'status'=>'-1');
                     if( empty( $raw_tickets ) ){
@@ -347,9 +292,7 @@ class Kanzu_Support_Admin {
                         );
                          
                     }
-                    
-                    //throw new Exception('Filtering failed. '); 
-                     
+
                     echo json_encode($response);
                     die();// IMPORTANT: don't leave this out
                     
@@ -366,7 +309,7 @@ class Kanzu_Support_Admin {
 	 * Filters tickets based on the view chosen
 	 */
 	public function filter_ticket_view( $filter = "" , $check_ticket_assignments = "no" ) {
-		$tickets = new TicketsController();                 
+		$tickets = new Kanzu_Tickets_Controller();                 
                 $tickets_raw = $tickets->getTickets( $filter, $check_ticket_assignments ); 	
                 //Process the tickets for viewing on the view. Replace the username and the time with cleaner versions
                 foreach ( $tickets_raw as $ksd_ticket ) {
@@ -385,7 +328,7 @@ class Kanzu_Support_Admin {
             }
             $this->do_admin_includes();	
             try{
-               $tickets = new TicketsController();	
+               $tickets = new Kanzu_Tickets_Controller();	
                $ticket = $tickets->getTicket($_POST['tkt_id']);
                $this->format_ticket_for_viewing($ticket);
                echo json_encode($ticket);
@@ -410,7 +353,7 @@ class Kanzu_Support_Admin {
             }
             $this->do_admin_includes();
             try{
-                $replies = new RepliesController();
+                $replies = new Kanzu_Replies_Controller();
                 $query = " rep_tkt_id = ".$_POST['tkt_id'];
                 $response = $replies->getReplies($query);
                 echo json_encode($response);
@@ -433,7 +376,7 @@ class Kanzu_Support_Admin {
                              die ( __('Busted!','kanzu-support-desk') );
                 }
                     $this->do_admin_includes();	
-                    $tickets = new TicketsController();		
+                    $tickets = new Kanzu_Tickets_Controller();		
                     //$status = ( $tickets->deleteTicket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
                     if( $tickets->deleteTicket( $_POST['tkt_id']) ){
                         echo json_encode(__("Deleted","kanzu-support-desk"));
@@ -460,8 +403,7 @@ class Kanzu_Support_Admin {
             
             try{
                 $this->do_admin_includes();	
-		$tickets = new TicketsController();		
-		//$status = ( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ? __("Updated","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+		$tickets = new Kanzu_Tickets_Controller();		
                 
                 if( $tickets->changeTicketStatus( $_POST['tkt_id'],$_POST['tkt_status'] ) ){
                     echo json_encode( __("Updated","kanzu-support-desk"));
@@ -491,11 +433,11 @@ class Kanzu_Support_Admin {
                $updated_ticket->tkt_id = $_POST['tkt_id'];
                $updated_ticket->new_tkt_assigned_to = $_POST['tkt_assign_assigned_to'];
                $updated_ticket->new_tkt_assigned_by = $_POST['ksd_current_user_id'];
-               $assign_ticket = new TicketsController();                       
+               $assign_ticket = new Kanzu_Tickets_Controller();                       
                
                if( $assign_ticket->update_ticket( $updated_ticket ) ){
                    //Add the event to the assignments table
-                   do_ticket_assignment ( $updated_ticket->tkt_id,$updated_ticket->new_tkt_assigned_to, $updated_ticket->new_tkt_assigned_by );
+                   $this->do_ticket_assignment ( $updated_ticket->tkt_id,$updated_ticket->new_tkt_assigned_to, $updated_ticket->new_tkt_assigned_by );
                    echo json_encode( __("Re-assigned","kanzu-support-desk"));
                }else{
                    throw new Exception( __("Failed","kanzu-support-desk") , -1);
@@ -529,11 +471,11 @@ class Kanzu_Support_Admin {
                        die();
                     }
                     //Get the customer's email address and send them this reply
-                    $CC = new Customers_Controller();
+                    $CC = new Kanzu_Customers_Controller();
                     $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );                   
                     $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, $customer_details[0]->tkt_subject );
 
-                   $RC = new RepliesController(); 
+                   $RC = new Kanzu_Replies_Controller(); 
                    $response = $RC->addReply( $new_reply );
                    //$status = ( $response > 0  ? $new_reply->rep_message : __("Error", 'kanzu-support-desk') );
                    if ($response > 0 ){
@@ -613,7 +555,7 @@ class Kanzu_Support_Admin {
                      throw new Exception( __('Error | Invalid email address specified','kanzu-support-desk') , -1);
                 }
                 
-                $CC = new Customers_Controller();
+                $CC = new Kanzu_Customers_Controller();
                 $customer_details = $CC->get_customer_by_email ( $cust_email );
                 if ( $customer_details ){//If the customer's already in the Db, proceed. Get their customer ID
                         $new_ticket->tkt_cust_id = $customer_details[0]->cust_id;
@@ -637,7 +579,7 @@ class Kanzu_Support_Admin {
                 //Set 'logged by' to the ID of whoever logged it ( admin side tickets ) or to the customer's ID ( for tickets from the front-end )
                $new_ticket->tkt_assigned_by   = ( isset( $_POST[ 'ksd_tkt_assigned_by' ] ) ? sanitize_text_field( $_POST[ 'ksd_tkt_assigned_by' ] ) : $new_ticket->tkt_cust_id );
                 
-                $TC = new TicketsController();
+                $TC = new Kanzu_Tickets_Controller();
                 $new_ticket_id = $TC->logTicket( $new_ticket );
                 $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
                 
@@ -645,7 +587,7 @@ class Kanzu_Support_Admin {
                     $this->send_email( $cust_email );
                 }
                 //Add this event to the assignments table
-                do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by );
+                $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by );
 
                 echo json_encode( $new_ticket_status );
                 die();// IMPORTANT: don't leave this out
@@ -661,23 +603,22 @@ class Kanzu_Support_Admin {
         
         /**
          * Assign the ticket 
-         * @TODO Add error check
          */
-        private function do_ticket_assignment($ticket_id,$assign_to,$assign_by){
-           $assignment = new AssignmentsController();
-           $assignment->assignTicket( $ticket_id, $assign_to, $assign_by );                
-            
+        private function do_ticket_assignment( $ticket_id,$assign_to,$assign_by ){
+            $this->do_admin_includes();
+           $assignment = new Kanzu_Assignments_Controller();
+           $assignment->assignTicket( $ticket_id, $assign_to, $assign_by );  
         }
         
         /**
          * Replace a ticket's logged_by field with the nicename of the user who logged it
          * Replace the tkt_time_logged with a date better-suited for viewing
-         * NB: Because we use {@link UsersController}, call this function after {@link do_admin_includes} has been called.   
-         * @param type $ticket The ticket to modify
+         * NB: Because we use {@link Kanzu_Users_Controller}, call this function after {@link do_admin_includes} has been called.   
+         * @param Object $ticket The ticket to modify
          */
-        private function format_ticket_for_viewing($ticket){
+        private function format_ticket_for_viewing( $ticket ){
             //Replace the username
-            $users = new UsersController();
+            $users = new Kanzu_Users_Controller();
             $ticket->tkt_assigned_by = str_replace($ticket->tkt_assigned_by,$users->getUser($ticket->tkt_assigned_by)->user_nicename,$ticket->tkt_assigned_by);
             //Replace the date 
             $ticket->tkt_time_logged = date('M d',strtotime($ticket->tkt_time_logged));
@@ -694,7 +635,7 @@ class Kanzu_Support_Admin {
 				 die ( __('Busted!','kanzu-support-desk') );
                          }
 			$this->do_admin_includes();
-			$tickets = new TicketsController();		
+			$tickets = new Kanzu_Tickets_Controller();		
 			$tickets_raw = $tickets->get_dashboard_graph_statistics();
                         //If there are no tickets, the road ends here
                         if ( count( $tickets_raw ) < 1 ) {
@@ -736,15 +677,19 @@ class Kanzu_Support_Admin {
                     }
                     $this->do_admin_includes();
                     try{
-                        $tickets = new TicketsController();	
+                        $tickets = new Kanzu_Tickets_Controller();	
                         $summary_stats = $tickets->get_dashboard_statistics_summary();
                         //Compute the average
                         $total_response_time = 0;
                         foreach ( $summary_stats["response_times"] as $response_time ) {
                             $total_response_time+=$response_time->time_difference;
                         }
-                        $summary_stats["average_response_time"] = date('H:i:s', $total_response_time/count($summary_stats["response_times"]) ) ;
-
+                        //Prevent division by zero
+                        if ( count($summary_stats["response_times"]) > 0 ){
+                            $summary_stats["average_response_time"] = date('H:i:s', $total_response_time/count($summary_stats["response_times"]) ) ;
+                        }else{
+                            $summary_stats["average_response_time"] = '00:00:00';
+                        }
                         echo json_encode ( $summary_stats , JSON_NUMERIC_CHECK);                    
                         die();//Important
                     }catch( Exception $e){
@@ -824,7 +769,7 @@ class Kanzu_Support_Admin {
                     $updated_ticket = new stdClass();
                     $updated_ticket->tkt_id = $_POST['tkt_id'];
                     $updated_ticket->new_tkt_private_note = sanitize_text_field ( stripslashes ( $_POST['tkt_private_note']) );
-                    $tickets = new TicketsController();		
+                    $tickets = new Kanzu_Tickets_Controller();		
                     //$status = ( $tickets->update_ticket( $updated_ticket  ) ? __("Noted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
                     if ( $tickets->update_ticket( $updated_ticket  ) ){
                         echo json_encode( __("Noted","kanzu-support-desk") );
@@ -859,34 +804,6 @@ class Kanzu_Support_Admin {
              return wp_mail( $to, $subject, $message, $headers ); 
          }
  
-                        
-	/**
-	 * NOTE:     Actions are points in the execution of a page or process
-	 *           lifecycle that WordPress fires.
-	 *
-	 *           Actions:    http://codex.wordpress.org/Plugin_API#Actions
-	 *           Reference:  http://codex.wordpress.org/Plugin_API/Action_Reference
-	 *
-	 * @since    1.0.0
-	 */
-
-	public function action_method_name() {
-		// @TODO: Define your action hook callback here
-	}
-
-	/**
-	 * NOTE:     Filters are points of execution in which WordPress modifies data
-	 *           before saving it or sending it to the browser.
-	 *
-	 *           Filters: http://codex.wordpress.org/Plugin_API#Filters
-	 *           Reference:  http://codex.wordpress.org/Plugin_API/Filter_Reference
-	 *
-	 * @since    1.0.0
-	 */
-	public function filter_method_name() {
-		// @TODO: Define your filter hook callback here
-	}
-
 }
 endif;
 

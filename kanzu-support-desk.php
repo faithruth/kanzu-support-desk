@@ -99,15 +99,18 @@ final class Kanzu_Support_Desk {
              if ( ! defined( 'KSD_VERSION' ) ) {                
 		define( 'KSD_VERSION', $this->version );
              }
-               if ( ! defined( 'KSD_SLUG' ) ) {                
-		define( 'KSD_SLUG', $this->ksd_slug );           
-               }                
-                if ( ! defined( 'KSD_PLUGIN_DIR' ) ) {
-		define( 'KSD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-                }                
-                if ( ! defined( 'KSD_PLUGIN_URL' ) ) {
+            if ( ! defined( 'KSD_SLUG' ) ) {                
+                define( 'KSD_SLUG', $this->ksd_slug );           
+            }                
+            if ( ! defined( 'KSD_PLUGIN_DIR' ) ) {
+            define( 'KSD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
+            }                
+            if ( ! defined( 'KSD_PLUGIN_URL' ) ) {
                 define( 'KSD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-                 }               
+             } 
+            if ( ! defined( 'KSD_PLUGIN_FILE' ) ) {
+                define( 'KSD_PLUGIN_FILE',  __FILE__ );
+            } 
 
 	}
 	

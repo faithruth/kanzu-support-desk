@@ -561,7 +561,7 @@ KSDTickets = function(){
                                 return ;
                             }                             
                              the_ticket = respObj;
-                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
+                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_assigned_by+"-"+the_ticket.tkt_subject);
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message);
                              jQuery("#ksd-single-ticket textarea[name=ksd_ticket_private_note]").val(the_ticket.tkt_private_note);
                              jQuery("#ticket-replies").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
