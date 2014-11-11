@@ -65,6 +65,15 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
             $query = "SELECT * FROM ".$this->_tablename." WHERE cust_email ='".$email_address."'";
             return parent::execQuery( $query );
         }
+        
+        /**
+         * Get customer email by ticket ID
+         */
+        public function get_customer_by_ticketID( $tkt_id ){
+            global $wpdb;
+            $query = "SELECT C.cust_email,T.tkt_subject FROM `{$wpdb->prefix}kanzusupport_tickets` AS T JOIN ".$this->_tablename." AS C ON T.tkt_cust_id = C.cust_id WHERE T.tkt_id= ".$tkt_id;
+            return parent::execQuery( $query );
+        }
  
         /*
 	* Add a new customer to the Db. 

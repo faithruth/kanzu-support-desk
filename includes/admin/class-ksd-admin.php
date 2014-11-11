@@ -460,15 +460,20 @@ class Kanzu_Support_Admin {
 			die ( 'Busted!');
 		$this->do_admin_includes();
                 
-                $tO = new stdClass(); 
-                $tO->rep_tkt_id    	     = $_POST['tkt_id'];
-                $tO->rep_message 	 = $_POST['ksd_ticket_reply'];
+                $new_reply = new stdClass(); 
+                $new_reply->rep_tkt_id    	 = sanitize_text_field( $_POST['tkt_id'] );
+                $new_reply->rep_message 	 = sanitize_text_field( $_POST['ksd_ticket_reply'] );
+                
+                //Get the customer's email address and send them this reply
+                $CC = new Customers_Controller();
+                $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );                   
+                $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, $customer_details[0]->tkt_subject );
 
-               $TC = new RepliesController();
-               $response = $TC->addReply( $tO );
-               $status = ( $response > 0  ? $tO->rep_message : __("Error", 'kanzu-support-desk') );
+               $RC = new RepliesController(); 
+               $response = $RC->addReply( $new_reply );
+               $status = ( $response > 0  ? $new_reply->rep_message : __("Error", 'kanzu-support-desk') );
                echo json_encode($status);
-                die();// IMPORTANT: don't leave this out
+               die();// IMPORTANT: don't leave this out
         }
         
         /**
@@ -684,16 +689,17 @@ class Kanzu_Support_Admin {
          /**
           * Send mail. 
           * @param string $to Recipient email address
-          * @param string $type Type of email to send. Can be "new_ticket"
+          * @param string $message The message to send. Can be "new_ticket"
+          * @param string $subject The message subject
           */
-         public function send_email( $to, $type="new_ticket" ){
+         public function send_email( $to, $message="new_ticket", $subject=null ){
              $settings = Kanzu_Support_Desk::get_settings();             
-             switch ( $type ):
-                 default://'new_ticket' is the default
+             switch ( $message ):
+                 case 'new_ticket'://For new tickets
                      $subject   = $settings['ticket_mail_subject'];
-                     $message   = $settings['ticket_mail_message'];
-                     $headers = 'From: '.$settings['ticket_mail_from_name'].' <'.$settings['ticket_mail_from_email'].'>' . "\r\n";
+                     $message   = $settings['ticket_mail_message'];                     
              endswitch;
+                     $headers = 'From: '.$settings['ticket_mail_from_name'].' <'.$settings['ticket_mail_from_email'].'>' . "\r\n";
              return wp_mail( $to, $subject, $message, $headers ); 
          }
  

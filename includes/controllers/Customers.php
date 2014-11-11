@@ -45,6 +45,13 @@ class Customers_Controller extends Kanzu_Controller
             return $this->_model->get_customer_by_email( $email_address );
         }
         
+        /**
+         * Get customer email address by Ticket ID
+         */
+        public function get_customer_by_ticketID( $tkt_id ){
+            return $this->_model->get_customer_by_ticketID( $tkt_id );
+        }
+        
 	/*
 	*Returns all customers that through query
 	*
