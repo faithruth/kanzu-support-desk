@@ -84,11 +84,10 @@ final class Kanzu_Support_Desk {
 	$this->setup_actions();
         
 	/*
-	 * Register hooks that are fired when the plugin is activated or deactivated.
+	 * Register hooks that are fired when the plugin is activated  
 	 * When the plugin is deleted, the uninstall.php file is loaded.
 	 */
 	register_activation_hook( __FILE__, array( 'Kanzu_Support_Install', 'activate' ) );
-	register_deactivation_hook( __FILE__, array( 'Kanzu_Support_Install', 'deactivate' ) );
 	
         }
 	

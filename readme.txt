@@ -1,43 +1,60 @@
-=== Plugin Name ===
+=== Kanzu Support Desk ===
 Contributors: kanzucode
 Donate link: http://kanzucode.com/
 Tags: ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
-Tested up to: 3.4
+Tested up to: 3.8.4
 Stable tag: 4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kanzu Support Desk is a pretty support desk portal; pretty powerful, pretty easy to use, and well, pretty good to look at
+Kanzu Support Desk (KSD) is an all-in-one support desk (ticketing) solution that looks and feels like email.
 
 == Description ==
 
-Great customer care is at the heart of every good product or service. Kanzu Support Desk is the perfect tool to enable you be 
-outstanding at it. This nifty and pretty plugin boasts of a very intuitive ticketing system and the kind of features your team 
-needs to keep your customers happy. KSD was built with <strong>SIMPLICITY</strong> in the driving seat. You'll love how simple
-and powerful it is. So...
+Great customer care is at the heart of every good product or service. Kanzu Support Desk breathes fresh life into ticketing solutions
+so that you and your team can focus on what you do best-being awesome. This nifty and pretty plugin boasts of a very intuitive 
+interface that feels like email so you don't have to worry about a learning curve-get up and running immediately!
+We do the heavy-lifting for you so you can focus on your customers. KSD was built with **SIMPLICITY** in the driving seat. 
+You'll love how simple and powerful it is. Ok ok, enough already! So...
 
 What's under the hood? Let's see:
-* Several channels for ticket-creation: Email (PRO), front-end via a widget/shortcode/support tab, backend via a pretty form
-* Simple ticket re-assignment 
-* Auto-assignment of tickets
-* Translation-ready 
+* Multiple channels for ticket-creation: Front-end via a support tab, backend via a pretty form, via Email as an optional add-on
 * Unlimited number of agents supported
-* Ticket Private notes
+* Beautiful graphs to let you in on your performance
+* Customers receive email notifications on ticket creation
+* Multiple customizable ticket views 
+* Private notes on tickets
+* Simple ticket re-assignment 
 * Ticket severity supported
-* Admin notifications on ticket-creation 
+* Translation-ready 
 
-Not a feature but it is worth mentioning the great support team behind this support desk plugin
+This isn't a feature but it is worth mentioning that a great support desk plugin ought to have an awesome support team behind it. This one does,
+if we can say so ourselves :-)
 
 == Installation ==
 
-This section describes how to install the plugin and get it working.
+= Using The WordPress Dashboard =
 
-e.g.
+1. Navigate to the 'Add New' in the plugins dashboard
+2. Search for 'kanzu-support-desk'
+3. Click 'Install Now'
+4. Activate the plugin on the Plugin dashboard
 
-1. Upload `kanzu-support-desk.zip` to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Modify the settings to fit your needs
+= Uploading in WordPress Dashboard =
+
+1. Navigate to the 'Add New' in the plugins dashboard
+2. Navigate to the 'Upload' area
+3. Select `kanzu-support-desk.zip` from your computer
+4. Click 'Install Now'
+5. Activate the plugin in the Plugin dashboard
+
+= Using FTP =
+
+1. Download `kanzu-support-desk.zip`
+2. Extract the `kanzu-support-desk` directory to your computer
+3. Upload the `kanzu-support-desk` directory to the `/wp-content/plugins/` directory
+4. Activate the plugin in the Plugin dashboard
 
 == Frequently Asked Questions ==
 
@@ -46,9 +63,9 @@ e.g.
 The short answer? No. 
 The long answer? No, you cannot unfortunately
 
-= What about foo bar? =
+= Does KSD support email piping? =
 
-Answer to foo bar dilemma.
+With an optional add-on, yes it does.
 
 == Screenshots ==
 
@@ -60,48 +77,7 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 
 == Changelog ==
 
-= 1.0 =
-* A change since the previous version.
-* Another change.
+= 1.0.0 =
+* 11 Nov 14 Launched.
 
-= 0.5 =
-* List versions from most recent at top to oldest at bottom.
 
-== Upgrade Notice ==
-
-= 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
-
-= 0.5 =
-This version fixes a security related bug.  Upgrade immediately.
-
-== Arbitrary section ==
-
-You may provide arbitrary sections, in the same format as the ones above.  This may be of use for extremely complicated
-plugins where more information needs to be conveyed that doesn't fit into the categories of "description" or
-"installation."  Arbitrary sections will be shown below the built-in sections outlined above.
-
-== A brief Markdown Example ==
-
-Ordered list:
-
-1. Some feature
-1. Another feature
-1. Something else about the plugin
-
-Unordered list:
-
-* something
-* something else
-* third thing
-
-Here's a link to [WordPress](http://wordpress.org/ "Your favorite software") and one to [Markdown's Syntax Documentation][markdown syntax].
-Titles are optional, naturally.
-
-[markdown syntax]: http://daringfireball.net/projects/markdown/syntax
-            "Markdown is what the parser uses to process much of the readme file"
-
-Markdown uses email style notation for blockquotes and I've been told:
-> Asterisks for *emphasis*. Double it up  for **strong**.
-
-`<?php code(); // goes in backticks ?>`

@@ -48,15 +48,20 @@ KSDDashboard = function(){
                                 {action : 'ksd_dashboard_ticket_volume',
                                     ksd_admin_nonce : ksd_admin.ksd_admin_nonce
                                 }, 
-                                function( response ) {	
+                                function( response ) {                                    
                                     //IMPORTANT! Google Charts, without width & height explicitly specified, are drawn
                                     //to fill the parent element. This doesn't work so well if the parent element is hidden
                                     //while the drawing is happening. In such cases, the final chart will have default dimensions (400px x 200px)
                                     //To work-around this, we first unhide our parent div just before drawing the chart
-                                    var ksdChartContainer = document.getElementById( 'dashboard' );                                    
+                                    var ksdChartContainer = document.getElementById( 'dashboard' );  
+                                    var respObj = JSON.parse(response);
+                                    if ( 'undefined' !== typeof(respObj.error) ){
+                                        jQuery('#ksd_dashboard_chart').html( respObj.error.message );
+                                        return ;
+                                    }
                                     if ( 'undefined' !== typeof google.visualization ) //First check if we can draw a Google Chart
                                        ksdChartContainer.style.display = 'block';//Unhide the parent element
-                                    var ksdData =  google.visualization.arrayToDataTable( JSON.parse(response) );                                   
+                                    var ksdData =  google.visualization.arrayToDataTable( respObj );                                   
                                     var ksdOptions = {
                                         title: ksd_admin.ksd_labels.dashboard_chart_title
                                                 };

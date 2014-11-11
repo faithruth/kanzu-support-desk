@@ -341,6 +341,7 @@
 }
 .ticket-actions ul.status li:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 .ticket-actions ul.assign_to2 {
   /*border:1px solid @theme2;
@@ -352,4 +353,5 @@
 }
 .ticket-actions ul.assign_to2 li:hover {
   text-decoration: underline;
+  cursor: pointer;
 }

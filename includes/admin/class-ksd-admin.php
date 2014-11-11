@@ -491,10 +491,11 @@ class Kanzu_Support_Admin {
                $updated_ticket->tkt_id = $_POST['tkt_id'];
                $updated_ticket->new_tkt_assigned_to = $_POST['tkt_assign_assigned_to'];
                $updated_ticket->new_tkt_assigned_by = $_POST['ksd_current_user_id'];
-               $assign_ticket = new TicketsController();		
-              // $status = ( $assign_ticket->update_ticket( $updated_ticket ) ? __("Re-assigned","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+               $assign_ticket = new TicketsController();                       
                
                if( $assign_ticket->update_ticket( $updated_ticket ) ){
+                   //Add the event to the assignments table
+                   do_ticket_assignment ( $updated_ticket->tkt_id,$updated_ticket->new_tkt_assigned_to, $updated_ticket->new_tkt_assigned_by );
                    echo json_encode( __("Re-assigned","kanzu-support-desk"));
                }else{
                    throw new Exception( __("Failed","kanzu-support-desk") , -1);
@@ -637,11 +638,14 @@ class Kanzu_Support_Admin {
                $new_ticket->tkt_assigned_by   = ( isset( $_POST[ 'ksd_tkt_assigned_by' ] ) ? sanitize_text_field( $_POST[ 'ksd_tkt_assigned_by' ] ) : $new_ticket->tkt_cust_id );
                 
                 $TC = new TicketsController();
-                $new_ticket_status = ( $TC->logTicket( $new_ticket ) > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
+                $new_ticket_id = $TC->logTicket( $new_ticket );
+                $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
                 
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && isset($_POST['ksd_send_email'])) ){
                     $this->send_email( $cust_email );
                 }
+                //Add this event to the assignments table
+                do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by );
 
                 echo json_encode( $new_ticket_status );
                 die();// IMPORTANT: don't leave this out
@@ -692,6 +696,16 @@ class Kanzu_Support_Admin {
 			$this->do_admin_includes();
 			$tickets = new TicketsController();		
 			$tickets_raw = $tickets->get_dashboard_graph_statistics();
+                        //If there are no tickets, the road ends here
+                        if ( count( $tickets_raw ) < 1 ) {
+                            $response = array(
+                                'error'=> array( 
+                                        'message' => __("No logged tickets. Graphing isn't possible","kanzu-support-desk") , 
+                                        'code'=> -1 )
+                            );
+                            echo json_encode($response);	
+                            die();// IMPORTANT: don't leave this out
+                        }
                         
                         $y_axis_label = __("Day", "kanzu-support-desk" );
                         $x_axis_label = __("Ticket Volume", "kanzu-support-desk" );
