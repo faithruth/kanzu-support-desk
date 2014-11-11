@@ -8,70 +8,66 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
-//@TODO Delete our tables on uninstall
+ 
 
 // If uninstall not called from WordPress, then exit
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-global $wpdb;
+if ( ! class_exists( 'Kanzu_Support_Uninstall' ) ) :
 
-if ( is_multisite() ) {
+class Kanzu_Support_Uninstall {
+    
+    public function __construct(){
+        $this->do_uninstall();
+    }
+    
+    /**
+     * Do the uninstallation. Delete tables and options
+     */
+    public function do_uninstall(){
+        global $wpdb;
+        if ( is_multisite() ) {
+        $blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs}", ARRAY_A );
+        $this->delete_options();
+        if ( $blogs ) {
+            foreach ( $blogs as $blog ) {
+                            switch_to_blog( $blog['blog_id'] );
+                            $this->delete_options();
+                            $this->delete_tables();
+                            restore_current_blog();
+                    }
+            }
+        } else {
+           $this->delete_options();
+           $this->delete_tables();
+        }
+    }
+    
+    /**
+     * Delete all Kanzu Support tables
+     */
+    private function delete_tables(){
+        global $wpdb;
+        $wpdb->hide_errors();		
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
+        $tables    = array('kanzusupport_tickets', 'kanzusupport_replies', 'kanzusupport_customers', 'kanzusupport_assignments');
+        $deleteTables   = "";
+        //Iterate through the tables for deletion
+        foreach ( $tables as $table ){
+            $deleteTables .= "DROP TABLE `{$wpdb->prefix}{$table}`;";
+        }
+        //Optimize the options table
+        $deleteTables .= "OPTIMIZE TABLE `{$wpdb->prefix}options`;";
+        dbDelta( $deleteTables );
+    }
+    
+    private function delete_options(){
+         delete_option( Kanzu_Support_Install::$ksd_options_name );
+    }
 
-	$blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs}", ARRAY_A );
-		/* @TODO: delete all transient, options and files you may have added
-		delete_transient( 'TRANSIENT_NAME' );
-		delete_option('OPTION_NAME');
-		//info: remove custom file directory for main site
-		$upload_dir = wp_upload_dir();
-		$directory = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . "CUSTOM_DIRECTORY_NAME" . DIRECTORY_SEPARATOR;
-		if (is_dir($directory)) {
-			foreach(glob($directory.'*.*') as $v){
-				unlink($v);
-			}
-			rmdir($directory);
-		}
-		*/
-	if ( $blogs ) {
-
-	 	foreach ( $blogs as $blog ) {
-			switch_to_blog( $blog['blog_id'] );
-			/* @TODO: delete all transient, options and files you may have added
-			delete_transient( 'TRANSIENT_NAME' );
-			delete_option('OPTION_NAME');
-			//info: remove custom file directory for main site
-			$upload_dir = wp_upload_dir();
-			$directory = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . "CUSTOM_DIRECTORY_NAME" . DIRECTORY_SEPARATOR;
-			if (is_dir($directory)) {
-				foreach(glob($directory.'*.*') as $v){
-					unlink($v);
-				}
-				rmdir($directory);
-			}
-			//info: remove and optimize tables
-			$GLOBALS['wpdb']->query("DROP TABLE `".$GLOBALS['wpdb']->prefix."TABLE_NAME`");
-			$GLOBALS['wpdb']->query("OPTIMIZE TABLE `" .$GLOBALS['wpdb']->prefix."options`");
-			*/
-			restore_current_blog();
-		}
-	}
-
-} else {
-	/* @TODO: delete all transient, options and files you may have added
-	delete_transient( 'TRANSIENT_NAME' );
-	delete_option('OPTION_NAME');
-	//info: remove custom file directory for main site
-	$upload_dir = wp_upload_dir();
-	$directory = $upload_dir['basedir'] . DIRECTORY_SEPARATOR . "CUSTOM_DIRECTORY_NAME" . DIRECTORY_SEPARATOR;
-	if (is_dir($directory)) {
-		foreach(glob($directory.'*.*') as $v){
-			unlink($v);
-		}
-		rmdir($directory);
-	}
-	//info: remove and optimize tables
-	$GLOBALS['wpdb']->query("DROP TABLE `".$GLOBALS['wpdb']->prefix."TABLE_NAME`");
-	$GLOBALS['wpdb']->query("OPTIMIZE TABLE `" .$GLOBALS['wpdb']->prefix."options`");
-	*/
 }
+endif;
+
+return new Kanzu_Support_Uninstall(); 

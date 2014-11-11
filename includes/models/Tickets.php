@@ -24,14 +24,14 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
                 'tkt_message_excerpt'	 => '%s',
 		'tkt_channel' 		 => '%s',
 		'tkt_status' 		 => '%s',
-		'tkt_logged_by' 	 => '%s',  
+		'tkt_assigned_by' 	 => '%s',  
                 'tkt_cust_id'            => '%s',
                 'tkt_assigned_to' 	 => '%s',  
 		'tkt_severity' 		 => '%s', 
 		'tkt_resolution' 	 => '%s', 
 		'tkt_time_logged' 	 => '%s', 
 		'tkt_time_updated' 	 => '%s', 
-		'tkt_private_notes'  	 => '%s',
+		'tkt_private_note'  	 => '%s',
 		'tkt_tags' 		 => '%s',
 		'tkt_customer_rating'    => '%d'
 	);
@@ -131,7 +131,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/Model.php' );
              $where = ( is_null( $filter ) ? " IS NULL " : $filter );
              $assigned_tickets_query = "SELECT * 
                         FROM ".$this->_tablename." AS T
-                         JOIN `{$wpdb->prefix}kanzusupport_assignment` AS A ON A.assign_tkt_id = T.tkt_id
+                         JOIN `{$wpdb->prefix}kanzusupport_assignments` AS A ON A.assign_tkt_id = T.tkt_id
                         WHERE A.`assign_assigned_to` ".$where; 
              return parent::execQuery( $assigned_tickets_query );
          }

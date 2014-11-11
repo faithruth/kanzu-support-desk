@@ -1,11 +1,6 @@
 <div id="admin-kanzu-support-desk">
     <div class="admin-ksd-title">
         <h2><?php _e('Dashboard','kanzu-support-desk'); ?></h2>
-        <!--@TODO Implement topnav as a filter and add content to it from the various tabs using filters-->
-	<!--<ul class="top-nav wrap">
-            <li class="back hidden"><a href="<?php echo admin_url('admin.php?page=ksd-tickets'); ?>" class="add-new-h2"><?php _e('Inbox','kanzu-support-desk'); ?></a></li>
-            <li><a href="<?php echo admin_url('admin.php?page=ksd-new-ticket'); ?>" class="add-new-h2"><?php _e('New Ticket','kanzu-support-desk'); ?></a></li>
-        </ul>-->
     </div>
 	<div id="tabs" class="admin-ksd-container">
 		<ul class="ksd-main-nav">

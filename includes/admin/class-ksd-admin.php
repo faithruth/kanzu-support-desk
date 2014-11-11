@@ -450,7 +450,7 @@ class Kanzu_Support_Admin {
                 $updated_ticket = new stdClass();
                 $updated_ticket->tkt_id = $_POST['tkt_id'];
                 $updated_ticket->new_tkt_assigned_to = $_POST['tkt_assign_assigned_to'];
-                $updated_ticket->new_tkt_logged_by = $_POST['ksd_current_user_id'];
+                $updated_ticket->new_tkt_assigned_by = $_POST['ksd_current_user_id'];
 		$assign_ticket = new TicketsController();		
 		$status = ( $assign_ticket->update_ticket( $updated_ticket ) ? __("Re-assigned","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode($status);
@@ -570,7 +570,7 @@ class Kanzu_Support_Admin {
                 }   
                 
                 //Set 'logged by' to the ID of whoever logged it ( admin side tickets ) or to the customer's ID ( for tickets from the front-end )
-               $new_ticket->tkt_logged_by   = ( isset( $_POST[ 'ksd_tkt_logged_by' ] ) ? sanitize_text_field( $_POST[ 'ksd_tkt_logged_by' ] ) : $new_ticket->tkt_cust_id );
+               $new_ticket->tkt_assigned_by   = ( isset( $_POST[ 'ksd_tkt_assigned_by' ] ) ? sanitize_text_field( $_POST[ 'ksd_tkt_assigned_by' ] ) : $new_ticket->tkt_cust_id );
                 
                 $TC = new TicketsController();
                 $new_ticket_status = ( $TC->logTicket( $new_ticket ) > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
@@ -602,7 +602,7 @@ class Kanzu_Support_Admin {
         private function format_ticket_for_viewing($ticket){
             //Replace the username
             $users = new UsersController();
-            $ticket->tkt_logged_by = str_replace($ticket->tkt_logged_by,$users->getUser($ticket->tkt_logged_by)->user_nicename,$ticket->tkt_logged_by);
+            $ticket->tkt_assigned_by = str_replace($ticket->tkt_assigned_by,$users->getUser($ticket->tkt_assigned_by)->user_nicename,$ticket->tkt_assigned_by);
             //Replace the date 
             $ticket->tkt_time_logged = date('M d',strtotime($ticket->tkt_time_logged));
             
@@ -688,7 +688,6 @@ class Kanzu_Support_Admin {
          
          /**
           * Update a ticket's private note
-          * @TODO Change tkt_private_notes to tkt_private_note
           */
          public function update_private_note(){
                if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) ){
@@ -697,7 +696,7 @@ class Kanzu_Support_Admin {
 		$this->do_admin_includes();
                 $updated_ticket = new stdClass();
                 $updated_ticket->tkt_id = $_POST['tkt_id'];
-                $updated_ticket->new_tkt_private_notes = sanitize_text_field ( stripslashes ( $_POST['tkt_private_note']) );
+                $updated_ticket->new_tkt_private_note = sanitize_text_field ( stripslashes ( $_POST['tkt_private_note']) );
                 $tickets = new TicketsController();		
 		$status = ( $tickets->update_ticket( $updated_ticket  ) ? __("Noted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
 		echo json_encode( $status );

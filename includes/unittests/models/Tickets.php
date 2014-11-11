@@ -37,7 +37,7 @@ function TicketInsert(){
 	$tO->tkt_message 	 = "NEW TICKET";
 	$tO->tkt_channel     	 = "EMAIL";
 	$tO->tkt_status 	 	 = "OPEN";
-	$tO->tkt_private_notes 	 = "Private notes";
+	$tO->tkt_private_note 	 = "Private notes";
 	$tO->tkt_tags 	 		 = "tag";
 	$tO->tkt_customer_rating = "1";
 

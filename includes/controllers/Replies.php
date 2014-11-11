@@ -25,7 +25,6 @@ class RepliesController extends Kanzu_Controller
 	*/
 	public function addReply(&$reply){
 		return $this->_model->addReply( $reply);
-		//TODO: Send email reply after logging reply in db, or do this in view
 	}
 	
 	/*

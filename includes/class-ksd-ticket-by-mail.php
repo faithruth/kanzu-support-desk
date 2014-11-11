@@ -47,7 +47,7 @@ for( $i=1; $i <= $count; $i++)
 	$new_ticket->tkt_message 	 =  $msg['text'];;
 	$new_ticket->tkt_channel     	 = "EMAIL";
 	$new_ticket->tkt_status 	 = "OPEN";
-	$new_ticket->tkt_private_notes 	 = "Private notes";
+	$new_ticket->tkt_private_note 	 = "Private notes";
 	$new_ticket->tkt_tags 	 	 = "tag";
 	$new_ticket->tkt_customer_rating = "1";
 
@@ -56,7 +56,7 @@ for( $i=1; $i <= $count; $i++)
 	$users = $userObj->getUsers("user_email = '$email'");
 	$user_id = $users[0]->ID;
 
-	$new_ticket->tkt_logged_by  = $user_id;
+	$new_ticket->tkt_assigned_by  = $user_id;
 	$new_ticket->tkt_updated_by = $user_id;
 
 	$TC = new TicketsController();

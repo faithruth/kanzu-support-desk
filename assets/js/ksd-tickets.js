@@ -67,7 +67,7 @@ KSDTickets = function(){
                                             ticketListData = '<div class="ksd-row-data ticket-list-item" id="ksd_tkt_id_'+value.tkt_id+'">';
                                             ticketListData += 	'<div class="ticket-info">';
                                             ticketListData += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
-                                            ticketListData += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_logged_by+'</a></span>';
+                                            ticketListData += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+'</a></span>';
                                             ticketListData +=	'<span class="subject-and-message-excerpt"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject;
                                             ticketListData += 	' - '+value.tkt_message_excerpt+'</span></a>';                                            
                                             ticketListData += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
@@ -438,9 +438,9 @@ KSDTickets = function(){
                              }, 
                          function(response) {
                              the_ticket = JSON.parse(response);
-                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_logged_by+"-"+the_ticket.tkt_subject);
+                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_assigned_by+"-"+the_ticket.tkt_subject);
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message);
-                             jQuery("#ksd-single-ticket textarea[name=ksd_ticket_private_note]").val(the_ticket.tkt_private_notes);
+                             jQuery("#ksd-single-ticket textarea[name=ksd_ticket_private_note]").val(the_ticket.tkt_private_note);
                              jQuery("#ticket-replies").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
                              //Make the 'Back' button visible
                              jQuery(".top-nav li.back").removeClass("hidden");
