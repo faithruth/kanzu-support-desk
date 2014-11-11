@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Kanzu Support Desk
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
- * Description:       A simple support desk (ticketing) system for your WordPress site
+ * Description:       All-in-one support desk (ticketing) solution for your WordPress site
  * Version:           1.0.0
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
@@ -156,7 +156,9 @@ final class Kanzu_Support_Desk {
 
 	/**
 	 * Load the plugin text domain for translation.
-	 *
+	 * .mo files should be placed in /languages/ and should 
+         * be named {KSD_SLUG}-{locale}.mo e.g. For Danish, whose locale is Danish is 'da_DK',
+         * the MO and PO files should be named kanzu-support-desk-da_DK.mo & kanzu-support-desk-da_DK.po
 	 * @since    1.0.0
 	 */
 	public function load_plugin_textdomain() {
@@ -168,13 +170,7 @@ final class Kanzu_Support_Desk {
 
 	}
 	
-	/**
-	 * Register and enqueue styles used in both the front and back end
-	 * @since    1.0.0
-	 */
-	public function enqueue_general_styles() {
-		//wp_enqueue_style( KSD_SLUG . '-plugin-public-styles', plugins_url( 'assets/css/public.css', __FILE__ ), array(), $this->version );
-	}
+ 
 
 	/**
 	 * Enqueue scripts used in both the front and back end
@@ -187,7 +183,8 @@ final class Kanzu_Support_Desk {
         }
         
          /**
-          * Get all settings
+          * Get all settings. Settings are stored as an array
+          * with key Kanzu_Support_Install::$ksd_options_name
           */
          public static function get_settings(){
              return get_option( Kanzu_Support_Install::$ksd_options_name );
