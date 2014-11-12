@@ -18,9 +18,6 @@
                 <li><a href="#update_private_note"><?php _e('Private Note','kanzu-support-desk'); ?></a></li>
             </ul>        
             <div class="edit-ticket-description" id="reply_ticket">
-                <?php /* //wp_editor has a bug that returns stale data
-                 $edit_ticket_settings = array ( 'textarea_rows'=> 5, 'media_buttons' => FALSE );
-                wp_editor( __('Reply','kanzu-support-desk'), 'ksd_ticket_reply',$edit_ticket_settings); */?> 
                 <textarea name="ksd_ticket_reply" rows="5" cols="100"></textarea> 
             </div>
            <div id="update_private_note">
