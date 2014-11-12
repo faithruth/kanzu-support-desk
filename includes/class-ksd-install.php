@@ -138,8 +138,10 @@ class KSD_Install {
 				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
 				`tkt_updated_by` BIGINT(20) NOT NULL,                                 
 				`tkt_private_note` TEXT,
-                                INDEX (`tkt_assigned_to`,`tkt_assigned_by`),
+                                INDEX (`tkt_assigned_to`,`tkt_assigned_by`,`tkt_cust_id`),
+                                CONSTRAINT `tkts_custid_fk`
                                 FOREIGN KEY (`tkt_cust_id`) REFERENCES {$wpdb->prefix}kanzusupport_customers(`cust_id`)
+                                ON DELETE NO ACTION    
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
 				`rep_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
@@ -151,7 +153,9 @@ class KSD_Install {
 				`rep_created_by` BIGINT(20) NOT NULL,
 				`rep_date_modified` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
 				`rep_message` TEXT NOT NULL,
-                                 FOREIGN KEY (`rep_tkt_id`) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
+                                CONSTRAINT `rep_tktid_fk`
+                                FOREIGN KEY (`rep_tkt_id`) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
+                                ON DELETE CASCADE 
 				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignments` (
 				`assign_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -159,7 +163,9 @@ class KSD_Install {
 				`assign_assigned_to` BIGINT(20),
 				`assign_date_assigned` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				`assign_assigned_by` BIGINT(20),
+                                CONSTRAINT `assign_tktid_fk`
                                 FOREIGN KEY ( `assign_tkt_id` ) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
+                                ON DELETE CASCADE 
 				);
                                 ";
       dbDelta( $kanzusupport_tables );                     

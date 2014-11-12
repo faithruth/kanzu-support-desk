@@ -52,7 +52,8 @@ class KSD_Uninstall {
         global $wpdb;
         $wpdb->hide_errors();		
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
-        $tables    = array('kanzusupport_tickets', 'kanzusupport_replies', 'kanzusupport_customers', 'kanzusupport_assignments');
+        //Because of foreign key constraints, we need to delete the tables in the order below
+        $tables    = array( 'kanzusupport_assignments','kanzusupport_replies','kanzusupport_tickets','kanzusupport_customers' );
         $deleteTables   = "";
         //Iterate through the tables for deletion
         foreach ( $tables as $table ){
