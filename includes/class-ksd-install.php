@@ -71,7 +71,31 @@ class KSD_Install {
 	 */
 	public static function activate() { 
                self::create_tables();
-               self::set_default_options(); 		 
+               self::set_default_options(); 	
+               // Redirect to welcome screen
+               set_transient( '_ksd_activation_redirect', 1, 60 * 60 );
+	}
+        
+       /**
+	 * Redirect to a welcome page on activation
+	 */
+	public static function redirect_to_dashboard(){
+		// Bail if no activation redirect transient is set
+	    if ( ! get_transient( '_ksd_activation_redirect' ) ){
+			return;
+                }
+		// Delete the redirect transient
+		delete_transient( '_ksd_activation_redirect' );
+ 
+		// Bail if activating from network, or bulk, or within an iFrame
+		if ( is_network_admin() || isset( $_GET['activate-multi'] ) || defined( 'IFRAME_REQUEST' ) ){
+			return;
+                }
+		if ( ( isset( $_GET['action'] ) && 'upgrade-plugin' == $_GET['action'] ) && ( isset( $_GET['plugin'] ) && strstr( $_GET['plugin'], 'kanzu-support-desk.php' ) ) ){
+			return;
+                }
+		wp_redirect( admin_url( 'admin.php?page='.KSD_SLUG ) );
+		exit;		
 	}
  
        /**
