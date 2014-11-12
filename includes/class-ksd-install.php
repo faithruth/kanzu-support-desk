@@ -70,6 +70,11 @@ class KSD_Install {
 	 *
 	 */
 	public static function activate() { 
+            //Check for re-activation. Will later be used to check for upgrades
+            $settings   =   Kanzu_Support_Desk::get_settings();
+            if ( $settings['kanzu_support_version'] == KSD_VERSION ) {//Bail out if it's a re-activation
+                return;
+            }
                self::create_tables();
                self::set_default_options(); 	
                // Redirect to welcome screen
@@ -138,7 +143,7 @@ class KSD_Install {
 				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
 				`tkt_updated_by` BIGINT(20) NOT NULL,                                 
 				`tkt_private_note` TEXT,
-                                INDEX (`tkt_assigned_to`,`tkt_assigned_by`,`tkt_cust_id`),
+                                KEY (`tkt_assigned_to`,`tkt_assigned_by`,`tkt_cust_id`),
                                 CONSTRAINT `tkts_custid_fk`
                                 FOREIGN KEY (`tkt_cust_id`) REFERENCES {$wpdb->prefix}kanzusupport_customers(`cust_id`)
                                 ON DELETE NO ACTION    
@@ -168,7 +173,7 @@ class KSD_Install {
                                 ON DELETE CASCADE 
 				);
                                 ";
-      dbDelta( $kanzusupport_tables );                     
+      dbDelta($kanzusupport_tables);                     
  }
  
              private static function set_default_options() {                    

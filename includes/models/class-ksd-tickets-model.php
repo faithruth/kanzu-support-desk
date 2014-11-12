@@ -135,7 +135,11 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
          public function get_pre_limit_count( $filter, $value_parameters ){
             $new_filter = "SELECT * FROM {$this->_tablename} WHERE {$filter}";            
             $query = "SELECT COUNT(*) AS count FROM ( $new_filter ) t";
-            $obj =  parent::exec_prepare_query( $query,$value_parameters );                 
+            if ( count ($value_parameters) > 0 ){//If we need to prepare the query {since some input in it is from the user
+                $obj =  parent::exec_prepare_query( $query,$value_parameters );   
+            }else{//$query doesn't contain any user input
+                $obj =  parent::exec_query( $query );   
+            }           
             return $obj[0]->count;
          }
  }

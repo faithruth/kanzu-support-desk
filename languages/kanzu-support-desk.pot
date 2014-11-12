@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: BUG-EMAIL-ADDR <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: yyyy-mm-dd hh:mm+0000\n"
-"PO-Revision-Date: 2014-11-12 19:26+0300\n"
+"PO-Revision-Date: 2014-11-12 20:52+0300\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -22,21 +22,21 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/class-ksd-install.php:194
+#: includes/class-ksd-install.php:199
 msgid "Your support ticket has been received"
 msgstr ""
 
-#: includes/class-ksd-install.php:195
+#: includes/class-ksd-install.php:200
 msgid ""
 "Thank you for getting in touch with us. Your support request has been "
 "opened. Please allow at least 24 hours for a reply."
 msgstr ""
 
-#: includes/class-ksd-install.php:196
+#: includes/class-ksd-install.php:201
 msgid "1"
 msgstr ""
 
-#: includes/class-ksd-install.php:198
+#: includes/class-ksd-install.php:203
 msgid ""
 "Thank you. Your support request has been opened. Please allow at least 24 "
 "hours for a reply."
@@ -289,6 +289,16 @@ msgstr ""
 msgid ""
 "If you have any trouble, please get in touch with us: <a href='http://"
 "kanzucode.com/support' target='_blank'>Kanzu Support</a>"
+msgstr ""
+
+#: includes/admin/views/html-admin-help.php:7
+msgid "Show some love"
+msgstr ""
+
+#: includes/admin/views/html-admin-help.php:8
+msgid ""
+"Has Kanzu Support been helpful? If so, please give us a rating in the "
+"WordPress plugin store"
 msgstr ""
 
 #: includes/admin/views/html-admin-new-ticket.php:12
