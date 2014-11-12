@@ -376,7 +376,7 @@ class KSD_Admin {
                 }
                     $this->do_admin_includes();	
                     $tickets = new KSD_Tickets_Controller();		
-                    //$status = ( $tickets->delete_ticket( $_POST['tkt_id'] ) ? __("Deleted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+                    
                     if( $tickets->delete_ticket( $_POST['tkt_id']) ){
                         echo json_encode(__("Deleted","kanzu-support-desk"));
                     }else{
@@ -470,8 +470,7 @@ class KSD_Admin {
                     $new_reply->rep_tkt_id    	 =  $_POST['tkt_id'] ;
                     $new_reply->rep_message 	 = sanitize_text_field( stripslashes ( $_POST['ksd_ticket_reply'] ) );
                     if ( strlen( $new_reply->rep_message ) < 2 ){//If the response sent it too short
-                       echo json_encode( __("Error | Reply too short", 'kanzu-support-desk') );
-                       die();
+                       throw new Exception( __("Error | Reply too short", 'kanzu-support-desk'), -1 );
                     }
                     //Get the customer's email address and send them this reply
                     $CC = new KSD_Customers_Controller();
@@ -480,7 +479,7 @@ class KSD_Admin {
 
                    $RC = new KSD_Replies_Controller(); 
                    $response = $RC->add_reply( $new_reply );
-                   //$status = ( $response > 0  ? $new_reply->rep_message : __("Error", 'kanzu-support-desk') );
+                   
                    if ($response > 0 ){
                       echo json_encode($new_reply->rep_message );
                    }else{

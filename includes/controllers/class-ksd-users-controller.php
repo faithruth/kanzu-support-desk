@@ -6,7 +6,7 @@
  * @license   GPL-2.0+
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
- * @file	  Users.php
+ * @file      class-ksd-users-controller.php
  * @version   1.0
  */
 

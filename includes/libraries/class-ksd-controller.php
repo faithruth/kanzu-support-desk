@@ -6,7 +6,7 @@
  * @license   GPL-2.0+
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
- * @file	  Controller.php
+ * @file      class-ksd-controller.php
  */
 
 $plugindir = plugin_dir_path( __FILE__ );

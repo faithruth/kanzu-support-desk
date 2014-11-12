@@ -6,7 +6,7 @@
  * @license   GPL-2.0+
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
- * @file	  Controller.php
+ * @file      class-ksd-tickets-contoller.php
  */
 
 include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-controller.php' );
@@ -79,7 +79,7 @@ class KSD_Tickets_Controller extends KSD_Controller {
 	 */
 	 public function delete_ticket( $ticket_id ){
 		$where = array ('tkt_id'=>$ticket_id);
-		return $this->_model->delete_ticket( $where);
+		return $this->_model->delete_ticket( $where );
 	}
 	
 	/**

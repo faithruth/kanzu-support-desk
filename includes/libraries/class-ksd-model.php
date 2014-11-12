@@ -113,9 +113,9 @@
 	}
 	
 	/*
-	*Add delete row/s 
+	* Delete row/s 
 	* Delete escapes the data
-	*@param $rowObject 
+	* @param $rowObject 
 	* @return Number of rows deleted or false 
 	*/
 	public function delete_row(  &$rowObject ){
