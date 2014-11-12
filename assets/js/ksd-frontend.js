@@ -12,10 +12,15 @@ jQuery( document ).ready(function() {
         jQuery('form.ksd-new-ticket-frontend :submit').hide(); //Hide the submit button
         jQuery.post(    ksd_frontend.ajax_url, 
                         jQuery(form).serialize(), //The action and nonce are hidden fields in the form
-                        function( response ) {//@TODO Check for errors 
+                        function( response ) { 
                             jQuery( 'img.ksd_loading_button' ).hide();//Hide the loading button
-                            //Show the response received
-                            jQuery ( 'div.ksd-new-ticket-response').show().text(JSON.parse(response));
+                            var respObj = JSON.parse(response);
+                            //Show the response received. Check for errors
+                            if ( 'undefined' !== typeof(respObj.error) ){
+                                jQuery ( 'div.ksd-new-ticket-response').show().text(respObj.error.message);
+                                return ;
+                            }
+                            jQuery ( 'div.ksd-new-ticket-response').show().text(respObj);
                             //Remove the form
                             jQuery( 'form.ksd-new-ticket-frontend' ).remove();
                 });
@@ -23,7 +28,6 @@ jQuery( document ).ready(function() {
         }   
     
     //Add validation to the front-end form
-    //@TODO Add CAPTCHA
     jQuery("form.ksd-new-ticket-frontend").validate({
         submitHandler: function(form) {
         logNewTicket(form);

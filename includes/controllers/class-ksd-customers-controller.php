@@ -54,11 +54,12 @@ class KSD_Customers_Controller extends KSD_Controller
         
 	/*
 	*Returns all customers that through query
-	*
+	*@param string $filter Everything after the WHERE clause. Uses placeholders %s and %d
+        *@param Array $value_parameters The values to replace the placeholders
 	*@return Array Array of objects
 	*/
-	public function get_customers( $filter ){
-		return $this->_model->get_all( $filter);
+	public function get_customers( $filter,$value_parameters ){
+		return $this->_model->get_all( $filter,$value_parameters );
 	}
 	
 	/*

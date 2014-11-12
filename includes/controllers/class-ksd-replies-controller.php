@@ -62,11 +62,12 @@ class KSD_Replies_Controller extends KSD_Controller
 	
 	/*
 	*Returns all Replies that through query
-	*
+	*@param string $query The query. Uses placeholders %s and %d
+        * @param Array $value_parameters The values to replace the placeholders
 	*@return Array Array of objects
 	*/
-	public function get_replies( $query ){
-		return $this->_model->get_all( $query);
+	public function get_replies( $query, $value_parameters ){
+		return $this->_model->get_all( $query, $value_parameters);
 	}
 }
 ?>

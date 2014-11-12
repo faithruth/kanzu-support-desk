@@ -39,18 +39,7 @@ class KSD_Tickets_Controller extends KSD_Controller {
 		$id = $this->_model->update_ticket( $tO );
 	}
 	
-	/*
-	* Change ticket status
-	* @TODO update_ticket should handle this
-	*@param int $ticket_id ticket id of ticket to close
-	*
-	*/
-	public function change_ticket_status($ticket_id,$new_status ){
-		$tO = new stdClass();
-		$tO->tkt_id = $ticket_id;
-		$tO->new_tkt_status = $new_status;
-		return $this->_model->update_ticket( $tO );
-	}
+ 
         
       	/*
 	* Update a ticket
@@ -74,13 +63,14 @@ class KSD_Tickets_Controller extends KSD_Controller {
         
 	
 	/*
-	*Returns all tickets that through query
+	* Returns all tickets that through query
 	*
-        *@param String $query The Query to run on the table(s)
-	*@return Array Array of objects
+        * @param String $query The Query to run on the table(s). Uses placeholders %s and %d
+        * @param Array $value_parameters The values to replace the placeholders in $query
+	* @return Array Array of objects
 	*/
-	public function get_tickets( $query = null ){                   
-               return $this->_model->get_all( $query );               		
+	public function get_tickets( $query = null, $value_parameters=array() ){                   
+               return $this->_model->get_all( $query, $value_parameters );               		
 	}
 	
 	/**
@@ -111,8 +101,16 @@ class KSD_Tickets_Controller extends KSD_Controller {
             return $this->_model->exec_query( $query);
         }
         
-        public function get_count( $filter = "" ){
-           return  $this->_model->get_count( $filter );
+       /**
+        * Before imposing a LIMIT clause to a query to get the tickets needed in the tickets view,
+        * we run that query against the Db and count the number of rows. This is essential for
+        * pagination of the returned tickets
+        * @param String $filter The Query to run on the table. Uses placeholders %s and %d
+        * @param Array  $value_parameters The values to replace the placeholders in $filter
+        * @return type
+        */
+        public function get_pre_limit_count( $filter, $value_parameters ){
+           return  $this->_model->get_pre_limit_count( $filter,$value_parameters );
         }
 
 }

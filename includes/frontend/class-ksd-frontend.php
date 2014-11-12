@@ -39,7 +39,6 @@ class KSD_FrontEnd {
     
     	/**
 	 * Register and enqueue front-specific style sheet.
-	 * @TODO Change handles
 	 *
 	 * @since     1.0.0
 	 *

@@ -227,7 +227,7 @@ class KSD_Admin {
           
                 try{
                     $this->do_admin_includes();
-
+                    $value_parameters   =   array();
                     switch( $_POST['view'] ):
                             case '#tickets-tab-2': //'All Tickets'
                                     $filter=" tkt_status != 'RESOLVED'";
@@ -237,11 +237,13 @@ class KSD_Admin {
                             break;
                             case '#tickets-tab-4'://'Recently Updated' i.e. Updated in the last hour. 
                                     $settings = Kanzu_Support_Desk::get_settings();
-                                    $filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL ".$settings['recency_definition']." HOUR)"; 
+                                    $value_parameters[] = $settings['recency_definition'];
+                                    $filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL %d HOUR)"; 
                             break;
                             case '#tickets-tab-5'://'Recently Resolved'.i.e Resolved in the last hour. 
                                     $settings = Kanzu_Support_Desk::get_settings();
-                                    $filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL ".$settings['recency_definition']." HOUR) AND tkt_status = 'RESOLVED'"; 
+                                    $value_parameters[] = $settings['recency_definition'];
+                                    $filter=" tkt_time_updated < DATE_SUB(NOW(), INTERVAL %d HOUR) AND tkt_status = 'RESOLVED'"; 
                             break;
                             case '#tickets-tab-6'://'Resolved'
                                     $filter=" tkt_status = 'RESOLVED'";
@@ -256,8 +258,9 @@ class KSD_Admin {
                     $search =   sanitize_text_field( $_POST['search'] );
 
                     //search
-                    if( $search != "" && $search !="Search..."){
-                        $filter .= " AND UPPER(tkt_subject) LIKE UPPER('%$search%') ";
+                    if( $search != "" ){
+                        $filter .= " AND UPPER(tkt_subject) LIKE UPPER(%s) ";
+                        $value_parameters[] = '%'.$search.'%';
                     }
 
                     //order
@@ -265,14 +268,16 @@ class KSD_Admin {
 
                     //limit
                     $count_filter = $filter; //Query without limit to get the total number of rows
-                    $filter .= " LIMIT $offset , $limit " ;
+                    $count_value_parameters =   $value_parameters;
+                    $filter .= " LIMIT %d , %d " ;
+                    $value_parameters[] = $offset;//The order of items in $value_parameters is very important. 
+                    $value_parameters[] = $limit;//The order of placeholders should correspond to the order of entries in the array
 
                     //Results count
                     $tickets = new KSD_Tickets_Controller(); 
-                    $count   = $tickets->get_count( $count_filter );
-                    $raw_tickets = $this->filter_ticket_view( $filter );
-
-                    $response = array('data'=>'Undefined error in ' . __line__, 'status'=>'-1');
+                    $count   = $tickets->get_pre_limit_count( $count_filter,$count_value_parameters );
+                    $raw_tickets = $this->filter_ticket_view( $filter,$value_parameters );
+                    
                     if( empty( $raw_tickets ) ){
                         $response = __( "Nothing to see here. Great work!","kanzu-support-desk" );
                     }    else{
@@ -298,10 +303,12 @@ class KSD_Admin {
 	}
 	/**
 	 * Filters tickets based on the view chosen
+         * @param string $filter The filter [Everything after the WHERE clause] using placeholders %s and %d
+         * @param Array $value_parameters The values to replace the $filter placeholders
 	 */
-	public function filter_ticket_view( $filter = "" , $check_ticket_assignments = "no" ) {
+	public function filter_ticket_view( $filter = "", $value_parameters=array() ) {
 		$tickets = new KSD_Tickets_Controller();                 
-                $tickets_raw = $tickets->get_tickets( $filter, $check_ticket_assignments ); 	
+                $tickets_raw = $tickets->get_tickets( $filter,$value_parameters ); 	
                 //Process the tickets for viewing on the view. Replace the username and the time with cleaner versions
                 foreach ( $tickets_raw as $ksd_ticket ) {
                     $this->format_ticket_for_viewing( $ksd_ticket );
@@ -345,8 +352,9 @@ class KSD_Admin {
             $this->do_admin_includes();
             try{
                 $replies = new KSD_Replies_Controller();
-                $query = " rep_tkt_id = ".$_POST['tkt_id'];
-                $response = $replies->get_replies($query);
+                $query = " rep_tkt_id = %d";
+                $value_parameters = array ($_POST['tkt_id']);
+                $response = $replies->get_replies( $query,$value_parameters );
                 echo json_encode($response);
                 die();
             }catch( Exception $e){
@@ -394,9 +402,13 @@ class KSD_Admin {
             
             try{
                 $this->do_admin_includes();	
-		$tickets = new KSD_Tickets_Controller();		
+                $updated_ticket = new stdClass();
+		$updated_ticket->tkt_id = $_POST['tkt_id'];
+		$updated_ticket->new_tkt_status = $_POST['tkt_status'];
                 
-                if( $tickets->change_ticket_status( $_POST['tkt_id'],$_POST['tkt_status'] ) ){
+		$tickets = new KSD_Tickets_Controller();	
+                
+                if( $tickets->update_ticket( $updated_ticket ) ){
                     echo json_encode( __("Updated","kanzu-support-desk"));
                 }else {
                     throw new Exception( __("Failed","kanzu-support-desk") , -1);
@@ -661,7 +673,9 @@ class KSD_Admin {
                         die();// IMPORTANT: don't leave this out
                     }  
 		}
-                //@TODO Optimize the way the average response time is calculated
+                /**
+                 * Get the statistics that show on the dashboard, above the graph
+                 */
                 public function get_dashboard_summary_stats(){
                     if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
 				 die ( __('Busted!','kanzu-support-desk') );

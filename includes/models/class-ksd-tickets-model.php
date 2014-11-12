@@ -18,23 +18,23 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
 		$this->_id = "tkt_id";
 			
 		$this->_formats = array(
-		'tkt_id' 		 => '%d', 
-		'tkt_subject' 		 => '%s', 		
-		'tkt_message'            => '%s', 
-                'tkt_message_excerpt'	 => '%s',
-		'tkt_channel' 		 => '%s',
-		'tkt_status' 		 => '%s',
-		'tkt_assigned_by' 	 => '%s',  
-                'tkt_cust_id'            => '%s',
-                'tkt_assigned_to' 	 => '%s',  
-		'tkt_severity' 		 => '%s', 
-		'tkt_resolution' 	 => '%s', 
-		'tkt_time_logged' 	 => '%s', 
-		'tkt_time_updated' 	 => '%s', 
-		'tkt_private_note'  	 => '%s',
-		'tkt_tags' 		 => '%s',
-		'tkt_customer_rating'    => '%d'
-	);
+                    'tkt_id' 		 => '%d', 
+                    'tkt_subject' 		 => '%s', 		
+                    'tkt_message'            => '%s', 
+                    'tkt_message_excerpt'	 => '%s',
+                    'tkt_channel' 		 => '%s',
+                    'tkt_status' 		 => '%s',
+                    'tkt_assigned_by' 	 => '%s',  
+                    'tkt_cust_id'            => '%s',
+                    'tkt_assigned_to' 	 => '%s',  
+                    'tkt_severity' 		 => '%s', 
+                    'tkt_resolution' 	 => '%s', 
+                    'tkt_time_logged' 	 => '%s', 
+                    'tkt_time_updated' 	 => '%s', 
+                    'tkt_private_note'  	 => '%s',
+                    'tkt_tags' 		 => '%s',
+                    'tkt_customer_rating'    => '%d'
+                );
 	}
 	
 	/*
@@ -49,10 +49,11 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
 	/*
 	*Get all from Tickets table
 	*
-	*@param $filter SQL filter. Everything after the WHERE key word
+	*@param string $filter Everything after the WHERE clause. Uses placeholders %s and %d
+        *@param Array $value_parameters The values to replace the placeholders
 	*/
-	public  function get_all( $filter = "" ){
-		return parent::get_all($filter);
+	public  function get_all( $filter = "",$value_parameters=array() ){
+		return parent::get_all( $filter,$value_parameters );
 	}
  
 	/*
@@ -96,7 +97,6 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
         /**
          * Retrieve the summary statistics that show on the dashboard
          */
-        //@TODO Optimize the retrieval of average response time
         public function get_dashboard_statistics_summary(){
             global $wpdb;
             $summary_statistics = array();
@@ -121,28 +121,21 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
               
              return $summary_statistics;
          }
-         
-         /**
-          * Get all assigned tickets
-          * @param String $filter Filter the assigned tickets.
-          */
-         public function get_assigned_tickets( $filter = null ){
-             global $wpdb;
-             $where = ( is_null( $filter ) ? " IS NULL " : $filter );
-             $assigned_tickets_query = "SELECT * 
-                        FROM ".$this->_tablename." AS T
-                         JOIN `{$wpdb->prefix}kanzusupport_assignments` AS A ON A.assign_tkt_id = T.tkt_id
-                        WHERE A.`assign_assigned_to` ".$where; 
-             return parent::exec_query( $assigned_tickets_query );
-         }
+ 
          
          
-         /*
-          * Return number of rows in query
-          * @param string filter
-          */
-         public function get_count($filter){
-             return parent::get_count($filter);
-             
+       /* Before imposing a LIMIT clause to a query to get the tickets needed in the tickets view,
+        * we run that query against the Db and count the number of rows returned. This is essential for
+        * pagination of the returned tickets
+        * Return number of rows in query
+        * @param String $filter The Query to run on the table. Uses placeholders %s and %d
+        * @param Array  $value_parameters The values to replace the placeholders in $filter
+        * @return int The number of tickets
+        */
+         public function get_pre_limit_count( $filter, $value_parameters ){
+            $new_filter = "SELECT * FROM {$this->_tablename} WHERE {$filter}";            
+            $query = "SELECT COUNT(*) AS count FROM ( $new_filter ) t";
+            $obj =  parent::exec_prepare_query( $query,$value_parameters );                 
+            return $obj[0]->count;
          }
  }

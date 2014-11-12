@@ -39,10 +39,11 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-model.php");
 	/*
 	*Get all from users (kanzu-users) from wp users table
 	*
-	*@param $filter SQL filter. Everything after the WHERE key word
+	*@param string $filter Everything after the WHERE clause. Uses placeholders %s and %d
+        *@param Array $value_parameters The values to replace the placeholders
 	*/
-	public  function get_all( $filter = "" ){
-		return parent::get_all($filter = "");
+	public  function get_all( $filter = "",$value_parameters=array() ){
+		return parent::get_all($filter,$value_parameters);
 	}
  
 	/*

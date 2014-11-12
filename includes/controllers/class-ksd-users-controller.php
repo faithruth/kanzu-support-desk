@@ -26,16 +26,17 @@ class KSD_Users_Controller extends KSD_Controller
 	*@return client Object
 	*/
 	public function get_user( $user_id = null){
-		return $this->_model->get_user( $user_id);
+		return $this->_model->get_user( $user_id );
 	}
 	
 	/*
 	*Returns all clients that through query
-	*
+	*@param string $filter Everything after the WHERE clause. Uses placeholders %s and %d
+        *@param Array $value_parameters The values to replace the placeholders
 	*@return Array Array of objects
 	*/
-	public function get_users( $filter ){
-		return $this->_model->get_all( $filter );
+	public function get_users( $filter, $value_parameters ){
+		return $this->_model->get_all( $filter,$value_parameters );
 	}
 	
 	/*
