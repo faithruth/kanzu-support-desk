@@ -9,7 +9,7 @@
  */
  
 //@TODO Add $wpdb->prepare to wrap the queries
- class Kanzu_Model{
+ class KSD_Model{
 	protected $_tablename = "";
 	protected $_id = "";
 	protected $_formats = array(

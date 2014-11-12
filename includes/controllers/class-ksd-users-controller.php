@@ -10,9 +10,9 @@
  * @version   1.0
  */
 
-include_once( KSD_PLUGIN_DIR. "includes/libraries/Controller.php");
+include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-controller.php");
 
-class Kanzu_Users_Controller extends Kanzu_Controller 
+class KSD_Users_Controller extends KSD_Controller 
 {	
 	public function __construct(){
 		$this->_model_name = "Users";

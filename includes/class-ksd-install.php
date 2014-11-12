@@ -12,9 +12,9 @@
  
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'Kanzu_Support_Install' ) ) :
+if ( ! class_exists( 'KSD_Install' ) ) :
 
-class Kanzu_Support_Install {
+class KSD_Install {
 
 
 
@@ -173,4 +173,4 @@ class Kanzu_Support_Install {
 
 endif;
 
-return new Kanzu_Support_Install();
+return new KSD_Install();

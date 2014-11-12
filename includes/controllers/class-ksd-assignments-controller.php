@@ -10,9 +10,9 @@
  */
 
  
-include_once( KSD_PLUGIN_DIR. "includes/libraries/Controller.php");
+include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-controller.php");
 
-class Kanzu_Assignments_Controller extends Kanzu_Controller 
+class KSD_Assignments_Controller extends KSD_Controller 
 {	
 	public function __construct(){
 		$this->_model_name = "Assignments";

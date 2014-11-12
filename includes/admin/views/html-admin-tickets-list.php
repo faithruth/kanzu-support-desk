@@ -11,9 +11,9 @@ fsgdfgsd<table class="ksd-admin-tickets-list wp-list-table widefat fixed posts">
 	<tbody>
 	<?php	
  
-		$ksd_admin = Kanzu_Support_Admin::get_instance();
+		$ksd_admin = KSD_Admin::get_instance();
 		$all = $ksd_admin->filter_ticket_view();
-		$Users   = new Kanzu_Users_Controller();		
+		$Users   = new KSD_Users_Controller();		
 		
  
 			foreach ( $all as $ticket ): ?>

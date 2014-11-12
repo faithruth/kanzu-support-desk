@@ -15,9 +15,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'Kanzu_Support_Uninstall' ) ) :
+if ( ! class_exists( 'KSD_Uninstall' ) ) :
 
-class Kanzu_Support_Uninstall {
+class KSD_Uninstall {
     
     public function __construct(){
         $this->do_uninstall();
@@ -64,10 +64,10 @@ class Kanzu_Support_Uninstall {
     }
     
     private function delete_options(){
-         delete_option( Kanzu_Support_Install::$ksd_options_name );
+         delete_option( KSD_Install::$ksd_options_name );
     }
 
 }
 endif;
 
-return new Kanzu_Support_Uninstall(); 
+return new KSD_Uninstall(); 

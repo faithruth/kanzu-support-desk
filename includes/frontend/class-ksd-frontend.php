@@ -11,9 +11,9 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'Kanzu_Support_FrontEnd' ) ) : 
+if ( ! class_exists( 'KSD_FrontEnd' ) ) : 
     
-class Kanzu_Support_FrontEnd {
+class KSD_FrontEnd {
     
     public function __construct() {
         
@@ -61,11 +61,11 @@ class Kanzu_Support_FrontEnd {
          * Log a new ticket. We use the backend logic
          */
         public function log_new_ticket(){
-            $ksd_admin =  Kanzu_Support_Admin::get_instance();
+            $ksd_admin =  KSD_Admin::get_instance();
             $ksd_admin->log_new_ticket();
         }
 }
 endif;
 
-return new Kanzu_Support_FrontEnd();
+return new KSD_FrontEnd();
 

@@ -87,7 +87,7 @@ final class Kanzu_Support_Desk {
 	 * Register hooks that are fired when the plugin is activated  
 	 * When the plugin is deleted, the uninstall.php file is loaded.
 	 */
-	register_activation_hook( __FILE__, array( 'Kanzu_Support_Install', 'activate' ) );
+	register_activation_hook( __FILE__, array( 'KSD_Install', 'activate' ) );
 	
         }
 	
@@ -161,10 +161,10 @@ final class Kanzu_Support_Desk {
         
          /**
           * Get all settings. Settings are stored as an array
-          * with key Kanzu_Support_Install::$ksd_options_name
+          * with key KSD_Install::$ksd_options_name
           */
          public static function get_settings(){
-             return get_option( Kanzu_Support_Install::$ksd_options_name );
+             return get_option( KSD_Install::$ksd_options_name );
          }
 
 	

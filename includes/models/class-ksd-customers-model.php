@@ -12,9 +12,9 @@
  
  
 include_once ( KSD_PLUGIN_DIR . "includes/models/Users.php" );
-include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
+include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-model.php");
 
- class Kanzu_Customers_Model extends Kanzu_Users_Model{
+ class KSD_Customers_Model extends KSD_Users_Model{
 	
 	public function __construct(){
 		global $wpdb;

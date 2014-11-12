@@ -9,9 +9,9 @@
  * @copyright 2014 Kanzu Code
  */
 
-include_once( KSD_PLUGIN_DIR. "includes/libraries/Model.php");
+include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-model.php");
 
- class Kanzu_Users_Model extends Kanzu_Model{
+ class KSD_Users_Model extends KSD_Model{
 	
 	public function __construct(){
 		global $wpdb;

@@ -9,9 +9,9 @@
  * @file	  Controller.php
  */
 
-include_once( KSD_PLUGIN_DIR. "includes/libraries/Controller.php");
+include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-controller.php");
 
-class Kanzu_Customers_Controller extends Kanzu_Controller 
+class KSD_Customers_Controller extends KSD_Controller 
 {	
 	public function __construct(){
 		$this->_model_name = "Customers";

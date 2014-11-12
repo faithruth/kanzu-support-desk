@@ -11,7 +11,7 @@
 
 $plugindir = plugin_dir_path( __FILE__ );
 
-class Kanzu_Controller 
+class KSD_Controller 
 {
 	protected $_model = null;
 	protected $_model_name = null;
@@ -21,8 +21,8 @@ class Kanzu_Controller
 	*/
 	public function __construct(){
 		if( $this->_model_name != ""){			
-			include_once( KSD_PLUGIN_DIR. "includes/models/" . $this->_model_name . ".php" );
-			$classname = "Kanzu_".$this->_model_name . "_Model";
+			include_once( KSD_PLUGIN_DIR. "includes/models/class-ksd-" . strtolower( $this->_model_name ) . "-model.php" );
+			$classname = "KSD_".$this->_model_name . "_Model";
 			$this->_model =& new $classname();
 		}
 	}
