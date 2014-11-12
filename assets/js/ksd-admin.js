@@ -24,9 +24,11 @@ jQuery( document ).ready(function() {
         _this = this;     
         };
 
-        KSDUtils.showDialog = function(dialog_type,message){
+        KSDUtils.showDialog = function( dialog_type,message ){
             /**Show update/error/Loading dialog while performing AJAX calls and on completion*/
             message = message || ksd_admin.ksd_labels.msg_loading;//Set default message
+            //First hide all other dialogs
+            jQuery('.ksd-dialog').hide();
             jQuery('.'+dialog_type).html(message);//Set the message
             jQuery('.'+dialog_type).fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
         };
