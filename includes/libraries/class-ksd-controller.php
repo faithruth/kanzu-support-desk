@@ -23,7 +23,7 @@ class KSD_Controller
 		if( $this->_model_name != ""){			
 			include_once( KSD_PLUGIN_DIR. "includes/models/class-ksd-" . strtolower( $this->_model_name ) . "-model.php" );
 			$classname = "KSD_".$this->_model_name . "_Model";
-			$this->_model =& new $classname();
+			$this->_model = new $classname();
 		}
 	}
 }
