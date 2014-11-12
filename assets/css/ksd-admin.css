@@ -284,6 +284,7 @@ a.new-ticket:hover {
   font-size: 0.8em;
   visibility: hidden;
   width: 100%;
+  padding-left: 11px;
 }
 .ticket-list-item .ticket-actions a{
 	color: #0074a2;
@@ -809,22 +810,22 @@ ul.edit-ticket-options li.selected{
   text-decoration: underline;
   cursor: pointer;
 }
-.ticket-actions ul.assign_to2 {
+.ticket-actions ul.ksd_agent_list {
   /*border:1px solid @theme2;
     width:100px;*/
   /*margin-left:100px;*/
 }
-.ticket-actions ul.assign_to2 li {
+.ticket-actions ul.ksd_agent_list li {
   padding: 2px;
 }
-.ticket-actions ul.assign_to2 li:hover {
+.ticket-actions ul.ksd_agent_list li:hover {
   text-decoration: underline;
   cursor: pointer;
 }
 
 
 /**
- * Jquery UI CSS. @TODO Edit this to remove all excess CSS
+ * Jquery UI CSS.  
  */
 /* Layout helpers
 ----------------------------------*/

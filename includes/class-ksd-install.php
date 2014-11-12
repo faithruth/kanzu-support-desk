@@ -83,36 +83,7 @@ class KSD_Install {
              
                 require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
                 $kanzusupport_tables = "
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
-				`tkt_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
-				`tkt_subject` VARCHAR(512) NOT NULL,                                 
-				`tkt_message` TEXT NOT NULL,
-                                `tkt_message_excerpt` TEXT NOT NULL, 
-				`tkt_channel` ENUM('STAFF','FACEBOOK','TWITTER','SUPPORT_TAB','EMAIL','CONTACT_FORM') DEFAULT 'STAFF',
-				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
-				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
-				`tkt_time_logged` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 				
-                                `tkt_cust_id` BIGINT(20) NOT NULL, 
-                                `tkt_assigned_by` BIGINT(20) NOT NULL, 
-                                `tkt_assigned_to` BIGINT(20) NULL, 
-				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
-				`tkt_updated_by` BIGINT(20) NOT NULL,                                 
-				`tkt_private_note` TEXT,
-                                INDEX (`tkt_assigned_to`,`tkt_cust_id`,`tkt_assigned_by`)
-				);	
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
-				`rep_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-				`rep_tkt_id` BIGINT(20) NOT NULL ,
-				`rep_type` INT ,/*@TODO To hold forwards*/
-				`rep_is_cc` BOOLEAN DEFAULT FALSE,
-				`rep_is_bcc` BOOLEAN DEFAULT FALSE,
-				`rep_date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-				`rep_created_by` BIGINT(20) NOT NULL,
-				`rep_date_modified` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
-				`rep_message` TEXT NOT NULL,
-                                 FOREIGN KEY (`rep_tkt_id`) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
-				);				
-				CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` (  
+                    		CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` (  
 				`cust_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				`cust_user_id` BIGINT(20),
                                 `cust_email` VARCHAR(100) NOT NULL,
@@ -128,6 +99,36 @@ class KSD_Install {
 				`cust_modified_by` BIGINT(20),
                                 UNIQUE ( `cust_email` )
 				);
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
+				`tkt_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+				`tkt_subject` VARCHAR(512) NOT NULL,                                 
+				`tkt_message` TEXT NOT NULL,
+                                `tkt_message_excerpt` TEXT NOT NULL, 
+				`tkt_channel` ENUM('STAFF','FACEBOOK','TWITTER','SUPPORT_TAB','EMAIL','CONTACT_FORM') DEFAULT 'STAFF',
+				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
+				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
+				`tkt_time_logged` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 				
+                                `tkt_cust_id` BIGINT(20) NOT NULL, 
+                                `tkt_assigned_by` BIGINT(20) NOT NULL, 
+                                `tkt_assigned_to` BIGINT(20) NULL, 
+				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
+				`tkt_updated_by` BIGINT(20) NOT NULL,                                 
+				`tkt_private_note` TEXT,
+                                INDEX (`tkt_assigned_to`,`tkt_assigned_by`),
+                                FOREIGN KEY (`tkt_cust_id`) REFERENCES {$wpdb->prefix}kanzusupport_customers(`cust_id`)
+				);	
+				CREATE TABLE `{$wpdb->prefix}kanzusupport_replies` (
+				`rep_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+				`rep_tkt_id` BIGINT(20) NOT NULL ,
+				`rep_type` INT ,/*@TODO To hold forwards*/
+				`rep_is_cc` BOOLEAN DEFAULT FALSE,
+				`rep_is_bcc` BOOLEAN DEFAULT FALSE,
+				`rep_date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+				`rep_created_by` BIGINT(20) NOT NULL,
+				`rep_date_modified` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+				`rep_message` TEXT NOT NULL,
+                                 FOREIGN KEY (`rep_tkt_id`) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
+				);	
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_assignments` (
 				`assign_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 				`assign_tkt_id` BIGINT(20),

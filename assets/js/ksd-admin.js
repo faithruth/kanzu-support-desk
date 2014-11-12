@@ -32,6 +32,23 @@ jQuery( document ).ready(function() {
             jQuery('.'+dialog_type).html(message);//Set the message
             jQuery('.'+dialog_type).fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
         };
+        
+        KSDUtils.ajaxResponseErrorCheck = function ( ajaxResponse ){
+        //To catch cases when the ajax response is not json
+        try{
+            //to reduce cost of recalling parse
+            respObj = JSON.parse( ajaxResponse ); 
+        }catch( err ){
+            this.showDialog("error", err);  
+            return true;
+        }                    
+        //Check for error in request.
+        if ( 'undefined' !== typeof(respObj.error) ){
+            this.showDialog("error", respObj.error.message  );
+            return true;
+        }
+            return false;
+        };
 
         KSDUtils.isNumber = function(){
             return typeof n== "number" && isFinite(n) && n%1===0;
@@ -44,15 +61,15 @@ jQuery( document ).ready(function() {
         _this = this;
         this.init = function(){
                 //Mail settings
-                this.submitMailForm();
+                this.submitSettingsForm();
                 this.toggleViewsToHide();
         }
 
 	/*
-	 * Submit Mail Settings form.
+	 * Submit Settings form.
 	 */
-	this.submitMailForm = function(){
-        /**AJAX: Update settings @TODO Handle errors**/
+	this.submitSettingsForm = function(){
+        /**AJAX: Update settings**/
         jQuery('form#update-settings').submit( function(e){
             e.preventDefault();         
             var data;
@@ -65,7 +82,10 @@ jQuery( document ).ready(function() {
             KSDUtils.showDialog("loading");  
             jQuery.post(ksd_admin.ajax_url, 
                         data, 
-                        function(response) {//@TODO Check for errors 	
+                        function( response ) {     
+                            if ( KSDUtils.ajaxResponseErrorCheck( response )) {
+                                return;
+                            }
                             KSDUtils.showDialog("success",JSON.parse(response));       
                         });
         });
@@ -74,7 +94,7 @@ jQuery( document ).ready(function() {
          //Add Tooltips for the settings panel
          jQuery( ".help_tip" ).tooltip();
          
-	}//eof:submitMailForm
+	}//eof:submitSettingsForm
  
     /**
      * Hide or show child settings as the value of their parent  
@@ -334,7 +354,7 @@ jQuery( document ).ready(function() {
 		event.preventDefault();//Important otherwise the page skips around
 		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
 		jQuery("#tkt_"+tkt_id+" ul.status").toggleClass("hidden");
-                jQuery(this).parent().find(".assign_to2").addClass("hidden");
+                jQuery(this).parent().find(".ksd_agent_list").addClass("hidden");
                 
 	});
         
@@ -344,14 +364,14 @@ jQuery( document ).ready(function() {
     		event.preventDefault();//Important otherwise the page skips around
                 //jQuery(".ticket-actions a.change_status'").hide();
     		var tkt_id= jQuery(this).parent().attr('id').replace("tkt_",""); //Get the ticket ID
-    		jQuery("#tkt_"+tkt_id+" ul.assign_to2").toggleClass("hidden");
+    		jQuery("#tkt_"+tkt_id+" ul.ksd_agent_list").toggleClass("hidden");
                 jQuery(this).parent().find(".status").addClass("hidden");
                 
     	});
     	
     	//---------------------------------------------------------------------------------
             /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
-    	jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to2 li',function() {
+    	jQuery("#ticket-tabs").on('click','.ticket-actions ul.ksd_agent_list li',function() {
                 KSDUtils.showDialog("loading");
     		var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
     		var assign_assigned_to = jQuery(this).attr("id");
@@ -450,14 +470,13 @@ jQuery( document ).ready(function() {
         
        //--------------------------------------------------------------------------------------
        /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
-       //Also, update the private note when 'Update Note' is clicked
-       //@TODO Fix wp_editor bug that returns stale data with each submission    
+       //Also, update the private note when 'Update Note' is clicked  
         replyTicketAndUpdateNote    = function( form ){   
                 var action = jQuery("input[name=action]").attr("value");               
                 KSDUtils.showDialog("loading");//Show a dialog message
                 jQuery.post(	ksd_admin.ajax_url, 
                                 jQuery( form ).serialize(), //The action, nonce and TicketID are hidden fields in the form
-                    function(response) {//@TODO Check for errors 
+                    function(response) {
                         var respObj = {};
                         //To catch cases when the ajax response is not json
                         try{
@@ -499,7 +518,7 @@ jQuery( document ).ready(function() {
                 KSDUtils.showDialog("loading");//Show a dialog message
                 jQuery.post(	ksd_admin.ajax_url, 
                                     jQuery(form).serialize(), //The action and nonce are hidden fields in the form
-                    function( response ) {//@TODO Check for errors 
+                    function( response ) {
                         var respObj = {};
                         //To catch cases when the ajax response is not json
                         try{
@@ -518,8 +537,6 @@ jQuery( document ).ready(function() {
                        KSDUtils.showDialog("success",respObj);
                        //Redirect to the Tickets page
                        window.location.replace( ksd_admin.ksd_tickets_url );
-                }).fail(function(){
-                    //@TODO: ajax call failed.
                 });
             ;
         };    

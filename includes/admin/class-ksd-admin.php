@@ -105,7 +105,7 @@ class KSD_Admin {
                 //Variables to send to the admin JS script
                 $ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );//This determines which tab to show as active
                 
-                $agents_list = "<ul class='assign_to2 hidden'>";//The available list of agents
+                $agents_list = "<ul class='ksd_agent_list hidden'>";//The available list of agents
                 foreach (  get_users() as $agent ) {
                     $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
                 }
@@ -736,8 +736,7 @@ class KSD_Admin {
                     echo json_encode( __("Settings Reset") );
                 }else{
                     throw new Exception( __("Reset failed. Please retry"), -1);
-                }
-                //echo json_encode ( ( $status ? __("Settings Reset") : __("Reset failed. Please retry") ) );
+                }                    
                 die();
             }catch( Exception $e){
                 $response = array(
