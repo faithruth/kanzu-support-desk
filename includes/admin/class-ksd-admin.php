@@ -591,6 +591,9 @@ class KSD_Admin {
                 //Add this event to the assignments table
                 $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by );
 
+                //for addons to do something
+                do_action( 'ksd_new_ticket', $_POST );
+                
                 echo json_encode( $new_ticket_status );
                 die();// IMPORTANT: don't leave this out
                 
@@ -721,6 +724,8 @@ class KSD_Admin {
                 $status = update_option( KSD_Install::$ksd_options_name, $updated_settings );
                 
                 if( $status){
+                   
+                   do_action('ksd_save_settings', $_POST);
                    echo json_encode(  __("Settings Updated"));
                 }else{
                     throw new Exception(__("Update failed. Please retry"), -1);

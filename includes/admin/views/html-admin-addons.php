@@ -9,3 +9,8 @@
         <a href="http://kanzusupport.com/kanzu-support-desk#email" target="_blank" class="button button-primary button-large">Click to activate</a>
     </li>    
 </ul>
+
+
+<?php 
+do_action('ksd_addons');
+?>
