@@ -34,7 +34,15 @@ class KSD_Mail_Admin {
 
 		//Add settings to the KSD Settings view
 		add_action( 'ksd_settings', array( $this, 'show_settings' ) );
-
+                
+                //Add addon to KSD addons view 
+                add_action( 'ksd_addons', array( $this, 'show_addons' ) );
+                
+                //Add help to KSD help view
+                add_action( 'ksd_support', array( $this, 'show_help' ) );
+                
+                //Save settings
+                add_action( 'ksd_save_settings', array( $this, 'save_settings' ) );
 	}
 	
 
@@ -59,52 +67,43 @@ class KSD_Mail_Admin {
          * HTML to added to settings KSD settings form.
          */
         public function show_settings(){
-            ?>
-            <h3><?php _e("Mail","ksd-mail"); ?></h3>
-                    <div>
-                       <div class="setting">
-                           <label for="ksd_mail_server">Mail Server</label>
-                           <input type="text" value="<?php echo $settings['ksd_mail_server']; ?>" size="30" name="ksd_mail_server" />
-                       </div>
-                       <div class="setting">
-                           <label for="ksd_mail_account">Support Email Address</label>
-                           <input type="text" value="<?php echo $settings['ksd_mail_account']; ?>" size="30" name="ksd_mail_account" />
-                       </div>
-                       <div class="setting">
-                           <label for="ksd_mail_password">Password</label>
-                           <input type="password"  size="30" name="ksd_mail_password" />
-                       </div>
-                       <div class="setting">
-                           <label for="ksd_mail_protocol">Protocol</label>
-                           <select name="ksd_mail_protocol">
-                               <option value="pop3" <?php selected( "pop3", $settings['ksd_mail_protocol'] ) ?>>POP3</option>
-                               <option value="imap"  <?php selected( "imap", $settings['ksd_mail_protocol'] ) ?> >IMAP</option>
-                           </select>
-                       </div> 
-                           <div class="setting">
-                           <label for="ksd_mail_port">Port</label>
-                           <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Default Ports are: 143 (IMAP), 993 (IMAP/SSL), 110 (POP3) and 995 (POP3/SSL)','kanzu-support-desk')  ;?>"/>
-                           <input type="text" value="<?php echo $settings['ksd_mail_port']; ?>" size="30" name="ksd_mail_port" />
-                       </div> 
-                       <div class="setting">
-                           <label for="ksd_mail_mailbox">Mailbox</label>
-                           <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('The mailbox to query. You almost never need to change this','kanzu-support-desk')  ;?>"/>
-                           <input type="text" value="<?php echo $settings['ksd_mail_mailbox']; ?>" size="30" name="ksd_mail_mailbox" />
-                       </div>
-                       <div class="setting">
-                           <label for="ksd_mail_validate_certificate">Validate Certificate</label>
-                           <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Validate your SSL certificate during connection. Use only if you have a valid SSL certificate otherwise it will fail','kanzu-support-desk')  ;?>"/>
-                           <input name="ksd_mail_validate_certificate"  type="checkbox" <?php checked( $settings['ksd_mail_validate_certificate'], "yes" ) ?> value="yes"  />
-                       </div> 
-                       <div class="setting">
-                           <label for="ksd_mail_useSSL">Always use secure connection(SSL)?</label>
-                           <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Enable use of secure connections (SSL). Note that you will need to use the correct corresponding port. Defaults are 993 (IMAP/SSL) and 995 (POP3/SSL)','kanzu-support-desk')  ;?>"/>
-                           <input name="ksd_mail_useSSL"  type="checkbox" <?php checked( $settings['ksd_mail_useSSL'], "yes" ) ?> value="yes"  />
-                       </div> 
-                    </div>
-            <?php
+            include( KSD_MAIL_DIR . '/admin/views/html-admin-settings.php' );
+        }
+        
+        
+        
+        /**
+         * HTML for KSD addons view
+         */
+        public function show_addons () {
+            include( KSD_MAIL_DIR . '/admin/views/html-admin-addons.php' );
         }
  
+        /**
+         * HTML for KSD Support/Help view
+         */
+        public function show_help () {
+            include( KSD_MAIL_DIR . '/admin/views/html-admin-help.php' );
+        }
+        
+        /**
+         * This saves the addon settins
+         * @param array $post_vars $_POST values
+         */
+        public function save_settings( $post_vars ){
+
+                $settings = array();
+                //Iterate through the new settings and save them. 
+                foreach ( KSD_Mail_Install::get_default_options() as $option_name => $default_value ) {
+                    $settings[$option_name] = sanitize_text_field ( stripslashes ( $_POST[$option_name] ) );
+                }
+                
+                update_option ( KSD_Mail_Install::$ksd_options_name, $settings );
+                
+        }
+        
+        
+        
 }
 endif;
 

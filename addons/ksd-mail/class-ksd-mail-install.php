@@ -96,7 +96,11 @@ class KSD_Mail_Install {
                     
                         'ksd_mail_check_freq'               => '30', //minutes
                         'ksd_mail_mailbox'                  => 'INBOX',//defualt mail box
-
+                        'ksd_mail_password'                 => '',
+                        'ksd_mail_protocol'                 => 'pop3',
+                        'ksd_mail_port'                     => '110',
+                        'ksd_mail_validate_certificate'     => 'NO',
+                        'ksd_mail_useSSL'                   => 'NO'
                     );
             }
  

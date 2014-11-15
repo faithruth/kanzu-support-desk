@@ -95,6 +95,10 @@ final class KSD_Mail {
 	 * Define KSD Mail Constants
 	 */
 	private function define_constants() {
+             if ( ! defined( 'KSD_MAIL_VERSION' ) ) {                
+		define( 'KSD_MAIL_VERSION', $this->version );
+             }
+             
             if ( ! defined( 'KSD_MAIL_DIR' ) ) {
             define( 'KSD_MAIL_DIR', plugin_dir_path( __FILE__ ) );
             }  
