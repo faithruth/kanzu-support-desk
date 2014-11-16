@@ -102,6 +102,10 @@ final class KSD_Mail {
             if ( ! defined( 'KSD_MAIL_DIR' ) ) {
             define( 'KSD_MAIL_DIR', plugin_dir_path( __FILE__ ) );
             }  
+            
+             if ( ! defined( 'KSD_MAIL_EXTRAS' ) ) {                
+		define( 'KSD_MAIL_EXTRAS', plugin_dir_path( __FILE__ ) . '/extras' );
+             }
 
 	}
 	

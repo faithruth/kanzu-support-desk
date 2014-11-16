@@ -112,6 +112,16 @@ class KSD_Tickets_Controller extends KSD_Controller {
         public function get_pre_limit_count( $filter, $value_parameters ){
            return  $this->_model->get_pre_limit_count( $filter,$value_parameters );
         }
+        
+        /**
+         * Returns the ticket id fromated for email in the form: KSD0000XX
+         * @param int $tkt_id
+         * @return string Ticket ID for email
+         * @TODO: Add setting to check KSD
+         */
+        public function ticket_mail_tktid ( $tkt_id ){
+            $new_tktid = sprintf("KSD%05d", $tkt_id);
+        }
 
 }
 ?>

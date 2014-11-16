@@ -100,7 +100,8 @@ class KSD_Mail_Install {
                         'ksd_mail_protocol'                 => 'pop3',
                         'ksd_mail_port'                     => '110',
                         'ksd_mail_validate_certificate'     => 'NO',
-                        'ksd_mail_useSSL'                   => 'NO'
+                        'ksd_mail_useSSL'                   => 'NO',
+                        'ksd_mail_lastrun_time'             => date( 'U' )
                     );
             }
  
