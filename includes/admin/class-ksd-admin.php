@@ -724,10 +724,11 @@ class KSD_Admin {
                 $status = update_option( KSD_Install::$ksd_options_name, $updated_settings );
                 
                 if( true === $status){
-                   
-                   do_action('ksd_save_settings', $_POST);
+                   //do_action('ksd_save_settings', $_POST);
                    echo json_encode(  __("Settings Updated"));
                 }else{
+                     //print_r($updated_settings);
+                     //print_r( $_POST );
                     throw new Exception(__("Update failed. Please retry. "  ), -1);
                 }
                 die();

@@ -37,8 +37,7 @@ require (BASE_PATH . 'wp-load.php');
 
 require ( KSD_PLUGIN_DIR .  'includes/controllers/class-ksd-tickets-controller.php' );
 require ( KSD_PLUGIN_DIR .  'includes/controllers/class-ksd-users-controller.php' );
-require ( KSD_MAIL_DIR . '/class-ksd-mail.php' ); 
-
+require ( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail.php' ); 
 
 //create pid file to ensure only one instance of this script runs at a time.;
 $pid_file = KSD_MAIL_EXTRAS . '/pids/ksd_mail.pid';
@@ -68,7 +67,6 @@ if ( $interval  < ( $run_freq * 60 ) ){
  
 //Update last run time.
 update_option( 'ksd_mail_lastrun_time', date( 'U' ) ) ;
-
 
 
 $m_box = new Kanzu_Mail();

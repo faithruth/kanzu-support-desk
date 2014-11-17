@@ -113,12 +113,12 @@ final class KSD_Mail {
 	 * Include all the files we need
 	 */
 	private function includes() {
-		//Do installation-related work
-		include_once( KSD_MAIL_DIR . '/class-ksd-mail-install.php' );
-                
-		if ( is_admin() ) {
-			require_once( KSD_MAIL_DIR .  '/class-ksd-mail-admin.php' );
-		}
+            //Do installation-related work
+            include_once( KSD_MAIL_DIR . '/includes/class-ksd-mail-install.php' );
+
+            if ( is_admin() ) {
+                    require_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
+            }
         }
 	
          /**

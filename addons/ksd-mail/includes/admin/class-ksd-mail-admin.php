@@ -67,7 +67,7 @@ class KSD_Mail_Admin {
          * HTML to added to settings KSD settings form.
          */
         public function show_settings(){
-            include( KSD_MAIL_DIR . '/admin/views/html-admin-settings.php' );
+            include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-settings.php' );
         }
         
         
@@ -76,14 +76,14 @@ class KSD_Mail_Admin {
          * HTML for KSD addons view
          */
         public function show_addons () {
-            include( KSD_MAIL_DIR . '/admin/views/html-admin-addons.php' );
+            include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-addons.php' );
         }
  
         /**
          * HTML for KSD Support/Help view
          */
         public function show_help () {
-            include( KSD_MAIL_DIR . '/admin/views/html-admin-help.php' );
+            include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-help.php' );
         }
         
         /**
