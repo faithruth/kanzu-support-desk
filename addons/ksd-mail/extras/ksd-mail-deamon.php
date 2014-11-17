@@ -12,7 +12,7 @@
 error_reporting(-1);
 
 if( php_sapi_name() !== 'cli' ) {
-     die("Must be run ");
+     die("Must be run from commandline.");
 }
 
 function find_wordpress_base_path() {
@@ -83,6 +83,8 @@ if ( ! $m_box->connect() ) {
 
 $count = $m_box->numMsgs();
 
+$TC = new TicketsController();
+
 for ( $i=1; $i <= $count; $i++)
 {
 
@@ -94,34 +96,35 @@ for ( $i=1; $i <= $count; $i++)
 	$email        = $mail_mailbox . "@" . $mail_host;
 	$subject      = $msg['headers']->subject;
 
-        //Check if subject contains ticket ID, then email is reply not new ticket.
-        $id_tag = get_option('ksd_mail_id_tag');
-        $pattern = '/' . $id_tag . '\d+/';
-        $matches = array();
-        preg_match($pattern, $subject, $matches );
-        if ( count($matches) == 0 ){ //log new ticket if no KSD0000XX in subject
-            
 
-            //Create new ticket.
+        
+        //Get userid
+        $userObj = new UsersController();
+        $users = $userObj->getUsers("user_email = '$email'");
+        //TODO: Add check if user is not registered. send email notification.
+        $user_id = $users[0]->ID;
+        
+        //Checi if this is a new ticket before logging it.
+        $value_parameters = array();
+        $filter = " tkt_subject = %s AND tkt_status = %d AND tkt_logged_by = %d ";
+        $value_parameters[] = $subject ;
+        $value_parameters[] = 'OPEN' ;
+        $value_parameters[] = $user_id ;
+        
+        $tc = $TC->get_tickets( $filter, $value_parameters );
+        
+        if ( count($tc) == 0  ){
+
             $new_ticket = new stdClass(); 
-            $new_ticket->tkt_subject	 = $msg['headers']->subject;
+            $new_ticket->tkt_subject         = $msg['headers']->subject;
             $new_ticket->tkt_message_excerpt = "New Ticket.";
-            $new_ticket->tkt_message 	 =  $msg['text'];;
-            $new_ticket->tkt_channel     	 = "EMAIL";
-            $new_ticket->tkt_status 	 = "OPEN";
-            $new_ticket->tkt_private_notes 	 = "Private notes";
-            $new_ticket->tkt_tags 	 	 = "tag";
-            $new_ticket->tkt_customer_rating = "1";
+            $new_ticket->tkt_message         =  $msg['text'];;
+            $new_ticket->tkt_channel         = "EMAIL";
+            $new_ticket->tkt_status          = "OPEN";
+            $new_ticket->tkt_private_notes   = "Private notes";
+            $new_ticket->tkt_logged_by       = $user_id;
+            $new_ticket->tkt_updated_by      = $user_id;
 
-            //Get userid
-            $userObj = new UsersController();
-            $users = $userObj->getUsers("user_email = '$email'");
-            $user_id = $users[0]->ID;
-
-            $new_ticket->tkt_logged_by  = $user_id;
-            $new_ticket->tkt_updated_by = $user_id;
-
-            $TC = new TicketsController();
             $id = $TC->logTicket( $new_ticket );
 
             if( $id > 0){
@@ -133,12 +136,11 @@ for ( $i=1; $i <= $count; $i++)
             }
 
             $new_ticket = null;
-            $TC = null;
-        }else{
-            //Save reply
-            $tkt_id  = $matches[0];
             
-        }
+        }else{//Reply
+            
+        } 
+
 
 }
 
@@ -147,6 +149,6 @@ $m_box->disconnect();
 
 
 //Delete pid file.
-unlink( $pid_file);
+unlink( $pid_file );
 
 ?>

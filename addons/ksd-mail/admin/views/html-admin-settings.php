@@ -50,9 +50,4 @@ $settings = KSD_Mail::get_settings();
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Frequency at which mail deamon should check for new tickets.','ksd-mail') ;?>"/>
                        <input name="ksd_mail_check_freq"  type="text" value="<?php echo $settings['ksd_mail_check_freq']; ?>"  />
                    </div> 
-                   <div class="setting">
-                       <label for="ksd_mail_id_tag">ID Tag </label>
-                       <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Tag before ticket id in subject of ticket reply.eg if tag id is KSD, then email subject ticket id is  [KSD00001] for ticket id 1','ksd-mail') ;?>"/>
-                       <input name="ksd_mail_id_tag"  type="text" value="<?php echo $settings['ksd_mail_id_tag']; ?>"  />
-                   </div> 
                 </div>

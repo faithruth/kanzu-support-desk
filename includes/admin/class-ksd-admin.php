@@ -586,8 +586,7 @@ class KSD_Admin {
                 $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
                 
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && isset($_POST['ksd_send_email'])) ){
-                    $this->send_email( $cust_email, 'new_ticket', 
-                                    '[' . $TC->mail_tktid( $new_ticket_id ) . '] ' );
+                    $this->send_email( $cust_email );
                 }
                 //Add this event to the assignments table
                 $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by );
@@ -806,7 +805,7 @@ class KSD_Admin {
              $settings = Kanzu_Support_Desk::get_settings();             
              switch ( $message ):
                  case 'new_ticket'://For new tickets
-                     $subject   = $subject . $settings['ticket_mail_subject'];
+                     $subject   = $settings['ticket_mail_subject'];
                      $message   = $settings['ticket_mail_message'];                     
              endswitch;
                      $headers = 'From: '.$settings['ticket_mail_from_name'].' <'.$settings['ticket_mail_from_email'].'>' . "\r\n";
