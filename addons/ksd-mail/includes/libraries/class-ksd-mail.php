@@ -34,20 +34,20 @@ class Kanzu_Mail {
 	*/
 	public function connect()
 	{
-
+                print_r( $this->settings );
 		$the_mailbox="";
                 //Append the ssl Flag if the user chose to always use SSL
-                $this->settings['ksd_mail_protocol'] = ( "yes" == $this->settings['mail_useSSL'] ? $this->settings['mail_protocol'].'/ssl' : $this->settings['mail_protocol'] );
+                $this->settings['ksd_mail_protocol'] = ( "yes" == $this->settings['ksd_mail_useSSL'] ? $this->settings['ksd_mail_protocol'].'/ssl' : $this->settings['ksd_mail_protocol'] );
 		
                 //Cater for self-signed certificates
                 if( "yes" == $this->settings['mail_validate_certificate'] ) {
-                    $the_mailbox = "{" . "$this->settings['mail_server']:$this->settings['mail_port']/$this->settings['mail_protocol']"."}"."$this->settings['mail_mailbox']";
+                    $the_mailbox = "{" . "$this->settings['ksd_mail_server']:$this->settings['ksd_mail_port']/$this->settings['ksd_mail_protocol']"."}"."$this->settings['ksd_mail_mailbox']";
                 }
                 else {
-                    $the_mailbox = "{" . "$this->settings['mail_server']:$this->settings['mail_port']/$this->settings['mail_protocol']"."/novalidate-cert}"."$this->settings['mail_mailbox']";
+                    $the_mailbox = "{" . "$this->settings['ksd_mail_server']:$this->settings['ksd_mail_port']/$this->settings['ksd_mail_protocol']"."/novalidate-cert}"."$this->settings['ksd_mail_mailbox']";
                 }
                     
-		$this->imap = imap_open( $the_mailbox, $this->settings['mail_account'], $this->settings['mail_password'] );
+		$this->imap = imap_open( $the_mailbox, $this->settings['ksd_mail_account'], $this->settings['ksd_mail_password'] );
 		
 		if( $this->imap != FALSE)
 		{

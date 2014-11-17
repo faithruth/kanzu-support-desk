@@ -39,13 +39,11 @@ require ( KSD_PLUGIN_DIR .  'includes/controllers/class-ksd-tickets-controller.p
 require ( KSD_PLUGIN_DIR .  'includes/controllers/class-ksd-users-controller.php' );
 require ( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail.php' ); 
 
-//create pid file to ensure only one instance of this script runs at a time.;
-$pid_file = KSD_MAIL_EXTRAS . '/pids/ksd_mail.pid';
-if ( file_exists( $pid_file ) ){
-    $pid_arr = file( $pid_file ); 
-    die(  'File ' . $pid_file . ' already exists. The script is already running with pid '
-                  . $pid_arr[0] . "\n" );
-}
+
+
+
+
+
 
 //Create pid file.
 $pid = getmypid();
@@ -62,7 +60,8 @@ $interval = $now - $last_run ;
 
 if ( $interval  < ( $run_freq * 60 ) ){
     unlink( $pid_file);
-    die( ' Run interval has not passed.' ); //@TODO: Add run log instead.
+    __e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
+    return;
 }
  
 //Update last run time.
@@ -124,7 +123,7 @@ for ( $i=1; $i <= $count; $i++)
             $id = $TC->logTicket( $new_ticket );
 
             if( $id > 0){
-                    echo "New ticket id: $id\n";
+                    __e("New ticket id: $id\n") ;
                     echo "Subject: " . $subject . "\n";
                     echo "Added by: " . $users[0]->user_nicename . "\n";
                     echo "Date:" . date() . "\n";
@@ -144,7 +143,5 @@ for ( $i=1; $i <= $count; $i++)
 $m_box->disconnect();
 
 
-//Delete pid file.
-unlink( $pid_file );
 
 ?>
