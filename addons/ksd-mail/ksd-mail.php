@@ -111,10 +111,15 @@ final class KSD_Mail {
 	private function includes() {
             //Do installation-related work
             include_once( KSD_MAIL_DIR . '/includes/class-ksd-mail-install.php' );
+            
+            //The rest
             include_once( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail.php' );
             include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-tickets-controller.php' );
             include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-users-controller.php' );
             include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
+            
+            //Deliver updates like pizza
+           // include_once( KSD_MAIL_DIR . '/includes/extras/class-ksd-mail-updater.php' );
         }
 	
          /**
@@ -122,7 +127,12 @@ final class KSD_Mail {
           * with key KSD_Install::$ksd_options_name
           */
          public static function get_settings(){
-             return get_option( KSD_Mail_Install::$ksd_options_name );
+            $mail_settings = array();
+            if( class_exists('Kanzu_Support_Desk') ){//Check that Kanzu Support Desk is active. If it is, get settings
+                $base_settings = Kanzu_Support_Desk::get_settings();
+                $mail_settings = $base_settings[KSD_Mail_Install::$ksd_options_name];
+            }
+             return $mail_settings;
          }
 
 	
@@ -130,9 +140,26 @@ final class KSD_Mail {
 	 * Setup KSD Mail actions
 	 * @since    1.0.0
 	 */
-	private function setup_actions(){	
+	public function setup_actions(){	
+            add_action( 'admin_init', array ( $this, 'do_updates' ), 0 );
+	}
+        
+        public function do_updates() {
 
-	}		
+	// retrieve our license key from the DB //@TODO Add check, if license isn't active, deactivate plugin
+        $mail_settings =     $this->get_settings();
+	$license_key = trim( $mail_settings[ 'ksd_mail_license_key' ] );        
+
+	// setup the updater
+	$ksd_updater = new KSD_Mail_Updater( KSD_STORE_URL, __FILE__, array( 
+			'version' 	=> '1.0.0', 				// current version number
+			'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
+			'item_name'     => KSD_ITEM_NAME, 	// name of this plugin
+			'author' 	=> 'Kanzu Code'  // author of this plugin
+		)
+	);
+
+        }
 
 	/**
 	* Added to write custom debug messages to the debug log (wp-content/debug.log). You
