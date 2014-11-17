@@ -160,8 +160,13 @@ class KSD_Mail_Admin {
 
                     //Get userid
                     $userObj = new KSD_Users_Controller();
+                    $users   = array();
                     $users   = $userObj->get_users("user_email = '$email'");
                     //TODO: Add check if user is not registered. send email notification.
+                    
+                    if ( count( $users ) == 0 ){
+                        throw new Exception ( _e( "Email account doesn't exist.\n" ) );
+                    }
                     $user_id = $users[0]->ID;
 
                     //Checi if this is a new ticket before logging it.
