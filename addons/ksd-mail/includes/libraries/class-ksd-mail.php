@@ -17,8 +17,12 @@ class Kanzu_Mail {
 
 
 	public function __construct(){
-            $this->settings = KSD_Mail::get_settings();
+            if( class_exists('Kanzu_Support_Desk') ){//Check that Kanzu Support Desk is active. If it is, get settings
+                $base_settings = Kanzu_Support_Desk::get_settings();
+                $this->settings = $base_settings[KSD_Mail_Install::$ksd_options_name];
+            }
 	}
+        
 
 	/*
 	* Open connection to mailbox

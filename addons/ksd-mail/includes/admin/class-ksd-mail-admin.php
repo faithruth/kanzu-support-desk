@@ -32,17 +32,17 @@ class KSD_Mail_Admin {
 	 */
 	public function __construct() {
 
-		//Add settings to the KSD Settings view
-		add_action( 'ksd_settings', array( $this, 'show_settings' ) );
+		//Add extra settings to the KSD Settings view
+		add_action( 'ksd_display_settings', array( $this, 'show_settings' ) ); 
                 
                 //Add addon to KSD addons view 
-                add_action( 'ksd_addons', array( $this, 'show_addons' ) );
+                add_action( 'ksd_display_addons', array( $this, 'show_addons' ) );
                 
                 //Add help to KSD help view
-                add_action( 'ksd_support', array( $this, 'show_help' ) );
+                add_action( 'ksd_display_help', array( $this, 'show_help' ) );
                 
                 //Save settings
-                add_action( 'ksd_save_settings', array( $this, 'save_settings' ) );
+                add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );     
 	}
 	
 
@@ -65,8 +65,9 @@ class KSD_Mail_Admin {
          
         /**
          * HTML to added to settings KSD settings form.
+         * @param array $current_settings Array holding the current settings
          */
-        public function show_settings(){
+        public function show_settings( $current_settings ){
             include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-settings.php' );
         }
         
@@ -87,21 +88,28 @@ class KSD_Mail_Admin {
         }
         
         /**
-         * This saves the addon settins
-         * @param array $post_vars $_POST values
+         * This saves the addon settings
+         * @param array $current_settings The current KSD settings
+         * @param array $new_settings $_POST values. If the array is empty then it's a reset of the settings
          */
-        public function save_settings( $post_vars ){
-
-                $settings = array();
-                //Iterate through the new settings and save them. 
-                foreach ( KSD_Mail_Install::get_default_options() as $option_name => $default_value ) {
-                    $settings[$option_name] = sanitize_text_field ( stripslashes ( $_POST[$option_name] ) );
+        public function save_settings( $current_settings, $new_settings=array() ){
+                //We add all our new settings into their own array to prevent key clashes
+                $current_settings[KSD_Mail_Install::$ksd_options_name] = array();
+                
+                if ( count ($new_settings) == 0 ){//This is a 'Reset to Defaults' call
+                   $current_settings[KSD_Mail_Install::$ksd_options_name] = KSD_Mail_Install::get_default_options();
+                }
+                else{
+                    //Iterate through the new settings and save them as items in the array 
+                    foreach ( KSD_Mail_Install::get_default_options() as $option_name => $default_value ) {
+                        $current_settings[KSD_Mail_Install::$ksd_options_name][$option_name] = sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) );
+                    }
                 }
                 
-                update_option ( KSD_Mail_Install::$ksd_options_name, $settings );
-                
+                return $current_settings;               
         }
         
+
         
         
 }

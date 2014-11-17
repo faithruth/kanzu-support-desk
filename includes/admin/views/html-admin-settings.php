@@ -37,16 +37,11 @@
              <div class="setting show_support_tab">
                    <label for="tab_message_on_submit">Tab message on ticket submission</label>
                    <textarea cols="60" rows="4" name="tab_message_on_submit"><?php echo $settings['tab_message_on_submit']; ?></textarea>
-             </div>
-             
-             
-             
+             </div>   
              <?php 
-             //
-             do_action( 'ksd_settings' );
-             ?>
-             
-             
+             //Retrieve extra settings from add-ons. Pass current settings to them
+             do_action( 'ksd_display_settings', $settings );             
+             ?>         
     <input name="action" type="hidden" value="ksd_update_settings" />    
     <?php wp_nonce_field( 'ksd-update-settings', 'update-settings-nonce' ); ?>
     <input type="submit" value="<?php _e( "Update","kanzu-support-desk" ); ?>" name="ksd-settings-submit" class="ksd-submit button button-primary button-large"/>

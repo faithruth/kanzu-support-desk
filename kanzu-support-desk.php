@@ -180,6 +180,9 @@ final class Kanzu_Support_Desk {
                 //Load scripts used in both the front and back ends
                 add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) ); 
+                
+                //Share the plugin's settings with add-ons
+                add_filter( 'ksd_get_settings', array( $this, 'get_settings') );
 	}		
 
 	/**
