@@ -30,13 +30,13 @@ if ( null === ( $wp_base  = find_wordpress_base_path()."/" ) ){
     die( 'This file should be located inside a wordpress installation.' );
 }
 
-define( 'BASE_PATH', $wp_base );
-define('WP_USE_THEMES', false);
+define ( 'BASE_PATH', $wp_base );
+define ('WP_USE_THEMES', false);
 global $wp, $wp_query, $wp_the_query, $wp_rewrite, $wp_did_header;
-require(BASE_PATH . 'wp-load.php');
+require (BASE_PATH . 'wp-load.php');
 
-require( KSD_PLUGIN_DIR .  'includes/controllers/class-ksd-tickets-controller.php' );
-require( KSD_PLUGIN_DIR .  'includes/controllers/class-ksd-users-controller.php' );
+require ( KSD_PLUGIN_DIR .  'includes/controllers/class-ksd-tickets-controller.php' );
+require ( KSD_PLUGIN_DIR .  'includes/controllers/class-ksd-users-controller.php' );
 require ( KSD_MAIL_DIR . '/class-ksd-mail.php' ); 
 
 
@@ -69,8 +69,6 @@ if ( $interval  < ( $run_freq * 60 ) ){
 //Update last run time.
 update_option( 'ksd_mail_lastrun_time', date( 'U' ) ) ;
 
-echo 'date(U):' . date( 'U' );
-exit();
 
 
 $m_box = new Kanzu_Mail();
@@ -105,8 +103,8 @@ for ( $i=1; $i <= $count; $i++)
         $user_id = $users[0]->ID;
         
         //Checi if this is a new ticket before logging it.
-        $value_parameters = array();
-        $filter = " tkt_subject = %s AND tkt_status = %d AND tkt_logged_by = %d ";
+        $value_parameters   = array();
+        $filter             = " tkt_subject = %s AND tkt_status = %d AND tkt_logged_by = %d ";
         $value_parameters[] = $subject ;
         $value_parameters[] = 'OPEN' ;
         $value_parameters[] = $user_id ;
