@@ -721,10 +721,12 @@ class KSD_Admin {
                 foreach ( KSD_Install::get_default_options() as $option_name => $default_value ) {
                     $updated_settings[$option_name] = sanitize_text_field ( stripslashes ( $_POST[$option_name] ) );
                 }
+                //Apply the settings filter to get settings from add-ons
+                $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
+                
                 $status = update_option( KSD_Install::$ksd_options_name, $updated_settings );
                 
                 if( true === $status){
-                   do_action('ksd_save_settings', $_POST);
                    echo json_encode(  __("Settings Updated"));
                 }else{
                     throw new Exception(__("Update failed. Please retry. "  ), -1);
@@ -747,8 +749,10 @@ class KSD_Admin {
                 die ( __('Busted!','kanzu-support-desk') );
              }
              try{
-                $status = update_option( KSD_Install::$ksd_options_name, KSD_Install::get_default_options() );
-
+                $base_settings = KSD_Install::get_default_options();
+                //Add the settings from add-ons
+                $base_settings = apply_filters( 'ksd_settings', $base_settings );
+                $status = update_option( KSD_Install::$ksd_options_name, $base_settings );
                 if( $status){
                     echo json_encode( __("Settings Reset") );
                 }else{

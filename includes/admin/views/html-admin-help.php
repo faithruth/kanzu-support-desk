@@ -7,4 +7,4 @@
 <h4><?php _e( "Show some love","kanzu-support-desk" ); ?></h4>
 <?php _e( "Has Kanzu Support been helpful? If so, please give us a rating in the WordPress plugin store","kanzu-support-desk" ); ?>
 
-<?php do_action('ksd_support')?>
+<?php do_action('ksd_display_help')?>

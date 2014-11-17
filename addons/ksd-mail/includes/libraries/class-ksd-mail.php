@@ -17,8 +17,12 @@ class Kanzu_Mail {
 
 
 	public function __construct(){
-            $this->settings = KSD_Mail::get_settings();
+            if( class_exists('Kanzu_Support_Desk') ){//Check that Kanzu Support Desk is active. If it is, get settings
+                $base_settings = Kanzu_Support_Desk::get_settings();
+                $this->settings = $base_settings[KSD_Mail_Install::$ksd_options_name];
+            }
 	}
+        
 
 	/*
 	* Open connection to mailbox
@@ -34,19 +38,27 @@ class Kanzu_Mail {
 	*/
 	public function connect()
 	{
-                print_r( $this->settings );
 		$the_mailbox="";
                 //Append the ssl Flag if the user chose to always use SSL
                 $this->settings['ksd_mail_protocol'] = ( "yes" == $this->settings['ksd_mail_useSSL'] ? $this->settings['ksd_mail_protocol'].'/ssl' : $this->settings['ksd_mail_protocol'] );
 		
                 //Cater for self-signed certificates
                 if( "yes" == $this->settings['mail_validate_certificate'] ) {
-                    $the_mailbox = "{" . "$this->settings['ksd_mail_server']:$this->settings['ksd_mail_port']/$this->settings['ksd_mail_protocol']"."}"."$this->settings['ksd_mail_mailbox']";
+                    $the_mailbox = "{" . 
+                                    $this->settings['ksd_mail_server'] . ": " . 
+                                    $this->settings['ksd_mail_port'] . "/" . 
+                                    $this->settings['ksd_mail_protocol'] . "}" .
+                                    $this->settings['ksd_mail_mailbox'];
                 }
                 else {
-                    $the_mailbox = "{" . "$this->settings['ksd_mail_server']:$this->settings['ksd_mail_port']/$this->settings['ksd_mail_protocol']"."/novalidate-cert}"."$this->settings['ksd_mail_mailbox']";
+                    $the_mailbox = "{" . 
+                                    $this->settings['ksd_mail_server']. ":" .
+                                    $this->settings['ksd_mail_port'] . "/" . 
+                                    $this->settings['ksd_mail_protocol'] .
+                                    "/novalidate-cert}". 
+                                    $this->settings['ksd_mail_mailbox'];    
                 }
-                    
+                        
 		$this->imap = imap_open( $the_mailbox, $this->settings['ksd_mail_account'], $this->settings['ksd_mail_password'] );
 		
 		if( $this->imap != FALSE)

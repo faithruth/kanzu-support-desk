@@ -32,20 +32,21 @@ class KSD_Mail_Admin {
 	 */
 	public function __construct() {
 
-		//Add settings to the KSD Settings view
-		add_action( 'ksd_settings', array( $this, 'show_settings' ) );
+		//Add extra settings to the KSD Settings view
+		add_action( 'ksd_display_settings', array( $this, 'show_settings' ) ); 
                 
                 //Add addon to KSD addons view 
-                add_action( 'ksd_addons', array( $this, 'show_addons' ) );
+                add_action( 'ksd_display_addons', array( $this, 'show_addons' ) );
                 
                 //Add help to KSD help view
-                add_action( 'ksd_support', array( $this, 'show_help' ) );
+                add_action( 'ksd_display_help', array( $this, 'show_help' ) );
                 
-                //Save settings
-                add_action( 'ksd_save_settings', array( $this, 'save_settings' ) );
-                
+
                 //Register backgroup process
                 add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );
+                
+                add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );     
+
 	}
 	
 
@@ -68,8 +69,9 @@ class KSD_Mail_Admin {
          
         /**
          * HTML to added to settings KSD settings form.
+         * @param array $current_settings Array holding the current settings
          */
-        public function show_settings(){
+        public function show_settings( $current_settings ){
             include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-settings.php' );
         }
         
@@ -90,22 +92,31 @@ class KSD_Mail_Admin {
         }
         
         /**
-         * This saves the addon settins
-         * @param array $post_vars $_POST values
+         * This saves the addon settings
+         * @param array $current_settings The current KSD settings
+         * @param array $new_settings $_POST values. If the array is empty then it's a reset of the settings
          */
-        public function save_settings( $post_vars ){
-
-                $settings = array();
-                //Iterate through the new settings and save them. 
-                foreach ( KSD_Mail_Install::get_default_options() as $option_name => $default_value ) {
-                    $settings[$option_name] = sanitize_text_field ( stripslashes ( $_POST[$option_name] ) );
+        public function save_settings( $current_settings, $new_settings=array() ){
+                //We add all our new settings into their own array to prevent key clashes
+                $current_settings[KSD_Mail_Install::$ksd_options_name] = array();
+                
+                if ( count ($new_settings) == 0 ){//This is a 'Reset to Defaults' call
+                   $current_settings[KSD_Mail_Install::$ksd_options_name] = KSD_Mail_Install::get_default_options();
+                }
+                else{
+                    //Iterate through the new settings and save them as items in the array 
+                    foreach ( KSD_Mail_Install::get_default_options() as $option_name => $default_value ) {
+                        $current_settings[KSD_Mail_Install::$ksd_options_name][$option_name] = sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) );
+                    }
                 }
                 
-                update_option ( KSD_Mail_Install::$ksd_options_name, $settings );
-                
+                return $current_settings;               
         }
         
-        
+
+        /*
+         * Checks mailbox for new tickets to log.
+         */
         public function check_mailbox(){
 
             //Get last run time
@@ -115,7 +126,6 @@ class KSD_Mail_Admin {
             $interval = $now - $last_run ;
 
             if ( $interval  < ( $run_freq * 60 ) ){
-                unlink( $pid_file);
                 _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
                 return;
             }
@@ -127,19 +137,18 @@ class KSD_Mail_Admin {
             $m_box = new Kanzu_Mail();
 
             if ( ! $m_box->connect() ) {
-
                     _e( "Can not connect to mailbox.", "ksd-mail" );
-                    exit;
+                    return;
             }
 
             $count = $m_box->numMsgs();
 
-            $TC = new TicketsController();
+            $TC = new KSD_Tickets_Controller();
 
             for ( $i=1; $i <= $count; $i++)
             {
 
-                    $msg=array();
+                    $msg = array();
                     $msg = $m_box->getMessage($i);
 
                     $mail_mailbox = $msg['headers']->from[0]->mailbox;
@@ -150,8 +159,8 @@ class KSD_Mail_Admin {
 
 
                     //Get userid
-                    $userObj = new UsersController();
-                    $users = $userObj->getUsers("user_email = '$email'");
+                    $userObj = new KSD_Users_Controller();
+                    $users   = $userObj->get_users("user_email = '$email'");
                     //TODO: Add check if user is not registered. send email notification.
                     $user_id = $users[0]->ID;
 
@@ -166,7 +175,7 @@ class KSD_Mail_Admin {
 
                     if ( count($tc) == 0  ){
 
-                        $new_ticket = new stdClass(); 
+                        $new_ticket                      = new stdClass(); 
                         $new_ticket->tkt_subject         = $msg['headers']->subject;
                         $new_ticket->tkt_message_excerpt = "New Ticket.";
                         $new_ticket->tkt_message         =  $msg['text'];;
@@ -176,7 +185,7 @@ class KSD_Mail_Admin {
                         $new_ticket->tkt_logged_by       = $user_id;
                         $new_ticket->tkt_updated_by      = $user_id;
 
-                        $id = $TC->logTicket( $new_ticket );
+                        $id = $TC->log_ticket( $new_ticket );
 
                         if( $id > 0){
                                 echo _e( "New ticket id: $id\n") ;
@@ -188,10 +197,9 @@ class KSD_Mail_Admin {
 
                         $new_ticket = null;
 
-                    }else{//Reply
+                    }else{//@TODO: Log Reply
 
                     } 
-
 
             }
 

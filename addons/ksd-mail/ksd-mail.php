@@ -102,10 +102,6 @@ final class KSD_Mail {
             if ( ! defined( 'KSD_MAIL_DIR' ) ) {
             define( 'KSD_MAIL_DIR', plugin_dir_path( __FILE__ ) );
             }  
-            
-             if ( ! defined( 'KSD_MAIL_EXTRAS' ) ) {                
-		define( 'KSD_MAIL_EXTRAS', plugin_dir_path( __FILE__ ) . '/extras' );
-             }
 
 	}
 	
@@ -116,10 +112,9 @@ final class KSD_Mail {
             //Do installation-related work
             include_once( KSD_MAIL_DIR . '/includes/class-ksd-mail-install.php' );
             include_once( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail.php' );
-
-           // if ( is_admin() ) {
-                    require_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
-           // }
+            include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-tickets-controller.php' );
+            include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-users-controller.php' );
+            include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
         }
 	
          /**

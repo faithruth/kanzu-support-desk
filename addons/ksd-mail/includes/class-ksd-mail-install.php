@@ -16,8 +16,6 @@ if ( ! class_exists( 'KSD_Mail_Install' ) ) :
 
 class KSD_Mail_Install {
 
-
-
 	/**
 	 * Instance of this class.
 	 *
@@ -90,12 +88,13 @@ class KSD_Mail_Install {
                 $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
                 return  array (
                         /** KSD Version info ********************************************************/
-                        'ksd_mail_version'             => KSD_MAIL_VERSION,
+                        'ksd_mail_version'                  => KSD_MAIL_VERSION,
                     
                         /** Mail Settings ************************************************************/
-                    
+                        'ksd_mail_server'                   => 'mail.example.com',
+                        'ksd_mail_account'                  => 'user@example.com',
                         'ksd_mail_check_freq'               => '30', //minutes
-                        'ksd_mail_mailbox'                  => 'INBOX',//defualt mail box
+                        'ksd_mail_mailbox'                  => 'INBOX',//default mail box
                         'ksd_mail_password'                 => '',
                         'ksd_mail_protocol'                 => 'pop3',
                         'ksd_mail_port'                     => '110',
