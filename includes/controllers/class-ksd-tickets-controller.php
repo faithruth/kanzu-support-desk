@@ -117,10 +117,11 @@ class KSD_Tickets_Controller extends KSD_Controller {
          * Returns the ticket id fromated for email in the form: KSD0000XX
          * @param int $tkt_id
          * @return string Ticket ID for email
-         * @TODO: Add setting to check KSD
+         * @TODO: Add setting to change KSD
          */
-        public function ticket_mail_tktid ( $tkt_id ){
-            $new_tktid = sprintf("KSD%05d", $tkt_id);
+        public function mail_tktid ( $tkt_id, $tag =  'KSD'){
+            $new_tktid = sprintf( $tag . "%05d", $tkt_id);
+            return $new_tktid;
         }
 
 }

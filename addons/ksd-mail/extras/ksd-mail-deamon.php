@@ -95,10 +95,11 @@ for ( $i=1; $i <= $count; $i++)
 	$subject      = $msg['headers']->subject;
 
         //Check if subject contains ticket ID, then email is reply not new ticket.
-        $pattern = '/KSD\d+/';
+        $id_tag = get_option('ksd_mail_id_tag');
+        $pattern = '/' . $id_tag . '\d+/';
         $matches = array();
         preg_match($pattern, $subject, $matches );
-        if ( count($matches) == 0 ){ //log new ticket if no KSD0000XX
+        if ( count($matches) == 0 ){ //log new ticket if no KSD0000XX in subject
             
 
             //Create new ticket.
@@ -135,6 +136,8 @@ for ( $i=1; $i <= $count; $i++)
             $TC = null;
         }else{
             //Save reply
+            $tkt_id  = $matches[0];
+            
         }
 
 }

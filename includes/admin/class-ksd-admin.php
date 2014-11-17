@@ -586,12 +586,13 @@ class KSD_Admin {
                 $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
                 
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && isset($_POST['ksd_send_email'])) ){
-                    $this->send_email( $cust_email );
+                    $this->send_email( $cust_email, 'new_ticket', 
+                                    '[' . $TC->mail_tktid( $new_ticket_id ) . '] ' );
                 }
                 //Add this event to the assignments table
                 $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by );
 
-                //for addons to do something
+                //for addons to do something aftr new ticket is added.
                 do_action( 'ksd_new_ticket', $_POST );
                 
                 echo json_encode( $new_ticket_status );
@@ -723,12 +724,12 @@ class KSD_Admin {
                 }
                 $status = update_option( KSD_Install::$ksd_options_name, $updated_settings );
                 
-                if( $status){
+                if( true === $status){
                    
                    do_action('ksd_save_settings', $_POST);
                    echo json_encode(  __("Settings Updated"));
                 }else{
-                    throw new Exception(__("Update failed. Please retry"), -1);
+                    throw new Exception(__("Update failed. Please retry. "  ), -1);
                 }
                 die();
             }catch( Exception $e){
@@ -805,7 +806,7 @@ class KSD_Admin {
              $settings = Kanzu_Support_Desk::get_settings();             
              switch ( $message ):
                  case 'new_ticket'://For new tickets
-                     $subject   = $settings['ticket_mail_subject'];
+                     $subject   = $subject . $settings['ticket_mail_subject'];
                      $message   = $settings['ticket_mail_message'];                     
              endswitch;
                      $headers = 'From: '.$settings['ticket_mail_from_name'].' <'.$settings['ticket_mail_from_email'].'>' . "\r\n";
