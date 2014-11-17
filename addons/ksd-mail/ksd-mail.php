@@ -119,7 +119,7 @@ final class KSD_Mail {
             include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
             
             //Deliver updates like pizza
-            include_once( KSD_MAIL_DIR . '/includes/extras/class-ksd-mail-updater.php' );
+           // include_once( KSD_MAIL_DIR . '/includes/extras/class-ksd-mail-updater.php' );
         }
 	
          /**
