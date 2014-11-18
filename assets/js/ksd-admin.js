@@ -60,9 +60,12 @@ jQuery( document ).ready(function() {
         KSDSettings = function(){ 
         _this = this;
         this.init = function(){
-                //Mail settings
+                //Submit the settings
                 this.submitSettingsForm();
+                //Show/Hide some settings when some checkboxes are checked
                 this.toggleViewsToHide();
+                //Use an accordion in case we have multiple setting blocks
+                this.enableAccordion();
         }
 
 	/*
@@ -111,10 +114,21 @@ jQuery( document ).ready(function() {
         if(!jQuery('input[name='+field+']').is( ":checked" )){
             jQuery( "."+field ).hide();
         }
-        })
-        
-        }    
- 
+        });        
+        };    
+    this.enableAccordion = function(){ 
+        //Only use the accordion if more than one section exists
+        if ( jQuery( 'div.ksd-settings-accordion h3' ).length > 1 ){
+            jQuery('div.ksd-settings-accordion').accordion({
+                collapsible: true,
+                heightStyle: "content"
+            });
+        }
+        else{//Otherwise, remove the label 'General'
+            jQuery( 'div.ksd-settings-accordion h3' ).remove();
+        }
+
+    };
 	
         }//eof:KSDSettings
         

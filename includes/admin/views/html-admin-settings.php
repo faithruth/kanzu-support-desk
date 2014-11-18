@@ -1,4 +1,5 @@
 <form method="POST" id="update-settings" class="ksd-settings pending"> 
+    <div class="ksd-settings-accordion">
         <?php $settings = Kanzu_Support_Desk::get_settings();?>
     <h3><?php _e("General","kanzu-support-desk"); ?> </h3>
         <div>
@@ -62,7 +63,8 @@
                 </div>
                  <?php
              }   
-             ?>            
+             ?>   
+    </div><!--.ksd-settings-accordion-->
     <input name="action" type="hidden" value="ksd_update_settings" />    
     <?php wp_nonce_field( 'ksd-update-settings', 'update-settings-nonce' ); ?>
     <input type="submit" value="<?php _e( "Update","kanzu-support-desk" ); ?>" name="ksd-settings-submit" class="ksd-submit button button-primary button-large"/>
