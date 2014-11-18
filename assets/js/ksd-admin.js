@@ -79,9 +79,12 @@ jQuery( document ).ready(function() {
             if ( jQuery(this).find("input[type=submit]:focus" ).hasClass("ksd-reset") ){//The  reset button has been clicked
                 data = { action: 'ksd_reset_settings' , ksd_admin_nonce : ksd_admin.ksd_admin_nonce }
             }
-            else{//The update button has been clicked
+            else if ( jQuery(this).find("input[type=submit]:focus" ).hasClass("ksd-submit") ){//The update button has been clicked
                 data =  jQuery(this).serialize();//The action and nonce are hidden fields in the form
-            }          
+            }    
+            else{//Another button has been clicked. Like 'Activate License' and 'De-activate License'
+                return false;
+            }
             KSDUtils.showDialog("loading");  
             jQuery.post(ksd_admin.ajax_url, 
                         data, 

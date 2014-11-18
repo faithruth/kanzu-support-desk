@@ -716,10 +716,10 @@ class KSD_Admin {
                 die ( __('Busted!','kanzu-support-desk') );
             }                
             try{
-                $updated_settings = array();
+                $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
                 //Iterate through the new settings and save them. 
-                foreach ( KSD_Install::get_default_options() as $option_name => $default_value ) {
-                    $updated_settings[$option_name] = sanitize_text_field ( stripslashes ( $_POST[$option_name] ) );
+                foreach ( $updated_settings as $option_name => $default_value ) {
+                    $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                 }
                 //Apply the settings filter to get settings from add-ons
                 $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
