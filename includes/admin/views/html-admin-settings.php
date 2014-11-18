@@ -1,5 +1,7 @@
 <form method="POST" id="update-settings" class="ksd-settings pending"> 
         <?php $settings = Kanzu_Support_Desk::get_settings();?>
+    <h3><?php _e("General","kanzu-support-desk"); ?> </h3>
+        <div>
              <div class="setting">
                 <label for="enable_new_tkt_notifxns">Enable new ticket notifications</label>
                 <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("If this is enabled, an email is sent to the customer's email address for all new tickets logged from the front-end",'kanzu-support-desk')  ;?>"/>
@@ -38,10 +40,29 @@
                    <label for="tab_message_on_submit">Tab message on ticket submission</label>
                    <textarea cols="60" rows="4" name="tab_message_on_submit"><?php echo $settings['tab_message_on_submit']; ?></textarea>
              </div>   
+        </div>   
              <?php 
              //Retrieve extra settings from add-ons. Pass current settings to them
-             do_action( 'ksd_display_settings', $settings );             
-             ?>         
+             do_action( 'ksd_display_settings', $settings );  
+  
+             //Retrieve 'Licenses' tab if any licenses exist. This is true if one or more add-ons have been activated
+             $settings_and_licenses  =   apply_filters( 'ksd_display_licenses', $settings ); 
+             $licenses      = ( isset( $settings_and_licenses['licenses'] ) ? $settings_and_licenses['licenses'] : array() ) ;
+             if ( count($licenses) > 0 ) {//If some licenses were retrieved, display the licenses tab ?>
+                <h3><?php _e("Licenses","kanzu-support-desk"); ?></h3>
+                <div>                    
+                    <?php //Iterate through the licenses and display them
+                    foreach ( $licenses as $license_details ):?>
+                        <div class="setting">
+                            <label for="<?php echo $license_details['license_key_name']; ?>"><?php echo $license_details['addon_name']; ?></label>
+                            <input type="text" value="<?php echo $license_details['license']; ?>" size="30" name="<?php echo $license_details['license_key_name']; ?>" />
+                        </div>                  
+                    <?php endforeach;
+                    ?>
+                </div>
+                 <?php
+             }   
+             ?>            
     <input name="action" type="hidden" value="ksd_update_settings" />    
     <?php wp_nonce_field( 'ksd-update-settings', 'update-settings-nonce' ); ?>
     <input type="submit" value="<?php _e( "Update","kanzu-support-desk" ); ?>" name="ksd-settings-submit" class="ksd-submit button button-primary button-large"/>
