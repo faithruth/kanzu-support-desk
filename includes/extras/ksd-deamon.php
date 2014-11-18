@@ -9,7 +9,18 @@
  * @copyright 2014 Kanzu Code
  */
 
-error_reporting(-1);
+function errorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
+   throw new Exception( $errstr );
+}
+
+function exceptionHandler($e) {
+    echo $e;
+    delete_transient('ksd_deamon_transient');
+}
+
+set_error_handler('errorHandler', E_ERROR & ~E_DEPRECATED );
+set_exception_handler('exceptionHandler');
+
 
 if( php_sapi_name() !== 'cli' ) {
      die( -e("Must be run from commandline.") ) ;
@@ -49,10 +60,10 @@ class KSD_Deamon {
     protected static $instance = null;   
 
         
-    private $pid_file = null;
+    private $transient         = null;
     
     public function __construct(){
-        $this->pid_file = KSD_PLUGIN_DIR . '/includes/extras/pids/ksd_deamon.pid';
+        $this->transient = 'ksd_deamon_transient';
     }
     
 
@@ -75,45 +86,32 @@ class KSD_Deamon {
     
     public function run (){
         
-        $this->create_pid_file();
+        $transient = $this->transient;
+        $value     = $this->transient;
+        $expiration= 60 * 60 * 1 ; //1 hr
         
-        do_action('ksd_run_deamon');
-        
-        $this->delete_pid_file();
-    }
-            
-    /**
-     * Delete the pid file.
-     */
-    private function delete_pid_file(){
-        unlink( $this->pid_file   );
-    }
-    
-    /**
-     * create pid file.
-     */
-    private function create_pid_file(){
-        
-        //create pid file to ensure only one instance of this script runs at a time.;
-        if ( file_exists( $this->pid_file ) ){
-            $pid_arr = file( $this->pid_file  ); 
-            die(  __('File ' .$this->pid_file  . ' already exists. The script is already running with pid '
-                          . $pid_arr[0] . "\n") );
+        if (  false === get_transient( $transient ) ){
+            set_transient( $transient, $value, $expiration );
+
+            do_action('ksd_run_deamon');
+
+            delete_transient($transient);            
+        }else{
+            _e( 'Script still running.' );
         }
         
-        //Create pid file.
-        $pid = getmypid();
-        $fh = fopen( $this->pid_file  , "w") 
-              or die( __("Unable to create pid file! Check permissions on " . KSD_PLUGIN_DIR . 
-                      "/includes/extras/pids\n") );
-        fwrite($fh, $pid);
-        fclose($fh);
+
     }
-    
+            
+
 }
 
 endif;
-
 $ksd_deamon = KSD_Deamon::get_instance();
-$ksd_deamon->run();
+
+try{
+    $ksd_deamon->run();
+}  catch (Exception $e){
+    delete_transient( 'ksd_deamon_transient' );
+}
 ?>
