@@ -45,7 +45,11 @@ class KSD_Mail_Admin {
                 //Register backgroup process
                 add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );
                 
-                add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );     
+                //Save mail settings with the overall KSD settings
+                add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );   
+                
+                //Display KSD mail license in a separate licenses tab
+                add_filter( 'ksd_display_licenses', array( $this, 'display_licences' ) );     
 
 	}
 	
@@ -94,23 +98,43 @@ class KSD_Mail_Admin {
         /**
          * This saves the addon settings
          * @param array $current_settings The current KSD settings
-         * @param array $new_settings $_POST values. If the array is empty then it's a reset of the settings
+         * @param array $new_settings The $_POST array submitted by the settings form. If the array is empty then it's a 'Reset to defaults' call
          */
         public function save_settings( $current_settings, $new_settings=array() ){
-                //We add all our new settings into their own array to prevent key clashes
+                //To eliminate key clashes with any add-on, we add all our new settings 
+                //into their own array in $current_settings with key KSD_Mail_Install::$ksd_options_name 
                 $current_settings[KSD_Mail_Install::$ksd_options_name] = array();
                 
-                if ( count ($new_settings) == 0 ){//This is a 'Reset to Defaults' call
+                if ( count ( $new_settings ) == 0 ){//This is a 'Reset to Defaults' call. Populate the array with default settings
                    $current_settings[KSD_Mail_Install::$ksd_options_name] = KSD_Mail_Install::get_default_options();
                 }
                 else{
                     //Iterate through the new settings and save them as items in the array 
-                    foreach ( KSD_Mail_Install::get_default_options() as $option_name => $default_value ) {
-                        $current_settings[KSD_Mail_Install::$ksd_options_name][$option_name] = sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) );
+                    foreach ( $current_settings as $option_name => $default_value ) {
+                        //If a setting exists in $new_settings, replace the corresponding value in $current_settings with it. 
+                        //Otherwise, leave the $current_settings value as is
+                        $current_settings[KSD_Mail_Install::$ksd_options_name][$option_name] = ( isset ( $new_settings[$option_name] ) ? sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) ) : $current_settings[KSD_Mail_Install::$ksd_options_name][$option_name] );
                     }
                 }
                 
                 return $current_settings;               
+        }
+        
+        /**
+         * Display active licenses in the settings tab. We display them under a 'Licenses' tab
+         * @param type $current_settings The current KSD settings 
+         */
+        public function display_licences ( $current_settings ){
+            $licences_array = array();
+            $mail_settings = $current_settings[KSD_Mail_Install::$ksd_options_name];
+            //Add an item to the licenses array. We add the name, license and the key name used to store it in the Db
+            $mail_settings['licenses'][] = array (  "addon_name"                => "KSD Mail",
+                                                    "license"                   => $mail_settings['ksd_mail_license_key'],
+                                                    "license_db_key"            => 'ksd_mail_license_key',
+                                                    "license_status"            => $mail_settings['ksd_mail_license_status'],
+                                                    "license_status_db_key"     => 'ksd_mail_license_status'
+                                                  );
+            return $mail_settings;
         }
         
 

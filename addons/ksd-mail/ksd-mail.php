@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Kanzu Support Desk Mail Addon
+ * Plugin Name:       Kanzu Support Desk Mail Add-on
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk/
  * Description:       Adds capability to log new support tickets via email in Kanzu Support Desk.
  * Version:           1.0.0
@@ -102,6 +102,9 @@ final class KSD_Mail {
             if ( ! defined( 'KSD_MAIL_DIR' ) ) {
             define( 'KSD_MAIL_DIR', plugin_dir_path( __FILE__ ) );
             }  
+            if ( ! defined( 'KSD_STORE_URL' ) ) {
+            define( 'KSD_STORE_URL', 'http://kanzucode.com' );
+            }  
 
 	}
 	
@@ -119,7 +122,9 @@ final class KSD_Mail {
             include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
             
             //Deliver updates like pizza
-           // include_once( KSD_MAIL_DIR . '/includes/extras/class-ksd-mail-updater.php' );
+            if( !class_exists( 'KSD_Mail_Updater' ) ) {
+                include_once( KSD_MAIL_DIR . '/includes/extras/class-ksd-mail-updater.php' );
+            }
         }
 	
          /**
@@ -131,6 +136,14 @@ final class KSD_Mail {
             if( class_exists('Kanzu_Support_Desk') ){//Check that Kanzu Support Desk is active. If it is, get settings
                 $base_settings = Kanzu_Support_Desk::get_settings();
                 $mail_settings = $base_settings[KSD_Mail_Install::$ksd_options_name];
+            }
+            else{
+                add_settings_error(
+                    'ksd-not-active',
+                    '',
+                    __( 'Kanzu Support Desk must be active to use this plugin. Please activate it','kanzu-support-desk' ),
+                    'error'
+                    );
             }
              return $mail_settings;
          }
@@ -147,15 +160,15 @@ final class KSD_Mail {
         public function do_updates() {
 
 	// retrieve our license key from the DB //@TODO Add check, if license isn't active, deactivate plugin
-        $mail_settings =     $this->get_settings();
-	$license_key = trim( $mail_settings[ 'ksd_mail_license_key' ] );        
-
+        $mail_settings  =   $this->get_settings();
+	$license_key    =   trim( $mail_settings[ 'ksd_mail_license_key' ] );        
+        $plugin_data    =   get_plugin_data(__FILE__);
 	// setup the updater
 	$ksd_updater = new KSD_Mail_Updater( KSD_STORE_URL, __FILE__, array( 
-			'version' 	=> '1.0.0', 				// current version number
-			'license' 	=> $license_key, 		// license key (used get_option above to retrieve from DB)
-			'item_name'     => KSD_ITEM_NAME, 	// name of this plugin
-			'author' 	=> 'Kanzu Code'  // author of this plugin
+			'version' 	=> KSD_MAIL_VERSION, 		// current version number
+			'license' 	=> $license_key, 		// license key  
+			'item_name'     => $plugin_data['Name'], 	// name of this plugin
+			'author' 	=> $plugin_data['Author']       // author of this plugin
 		)
 	);
 
@@ -174,6 +187,8 @@ final class KSD_Mail {
                 }
                             }
         } 
+ 
+
  }
 
     /**

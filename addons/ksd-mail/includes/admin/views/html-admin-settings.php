@@ -4,7 +4,7 @@ $mail_settings = $current_settings[KSD_Mail_Install::$ksd_options_name];
 
 ?>
 
-<h3><?php _e("Mail Add-on","ksd-mail"); ?> </h3>
+<h3><?php _e("Mail","ksd-mail"); ?> </h3>
                 <div>
                    <div class="setting">
                        <label for="ksd_mail_server">Mail Server</label>
@@ -50,5 +50,4 @@ $mail_settings = $current_settings[KSD_Mail_Install::$ksd_options_name];
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Enable use of secure connections (SSL). Note that you will need to use the correct corresponding port. Defaults are 993 (IMAP/SSL) and 995 (POP3/SSL)','kanzu-support-desk')  ;?>"/>
                        <input name="ksd_mail_useSSL"  type="checkbox" <?php checked( $mail_settings['ksd_mail_useSSL'], "yes" ) ?> value="yes"  />
                    </div> 
-
                 </div>

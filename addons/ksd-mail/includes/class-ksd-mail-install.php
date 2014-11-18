@@ -100,7 +100,11 @@ class KSD_Mail_Install {
                         'ksd_mail_port'                     => '110',
                         'ksd_mail_validate_certificate'     => 'NO',
                         'ksd_mail_useSSL'                   => 'NO',
-                        'ksd_mail_lastrun_time'             => date( 'U' )
+                        'ksd_mail_lastrun_time'             => date( 'U' ),
+                        
+                        /** License Information ************************************************************/
+                        'ksd_mail_license_key'              => '',
+                        'ksd_mail_license_status'           => 'invalid'
                     );
             }
  
