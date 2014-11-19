@@ -278,10 +278,10 @@ class KSD_Mail_Admin {
                         $id = $TC->log_ticket( $new_ticket );
 
                         if( $id > 0){
-                                echo _e( "New ticket id: $id\n") ;
-                                echo _e( "Subject: " . $subject . "\n" ) ;
-                                echo _e( "Added by: " . $users[0]->user_nicename . "\n" ) ;
-                                echo _e( "Date:" . date() . "\n" ) ;
+                                echo _e( "New ticket id: $id\n","kanzu-support-desk") ;
+                                echo _e( "Subject: " . $subject . "\n" ,"kanzu-support-desk") ;
+                                echo _e( "Added by: " . $users[0]->user_nicename . "\n" ,"kanzu-support-desk") ;
+                                echo _e( "Date:" . date() . "\n" ,"kanzu-support-desk") ;
                                 echo _e( "----------------------------------------------\n") ;		
                         }
 
