@@ -66,6 +66,10 @@ class KSD_Mail_Install {
                 return;
             }
             self::set_default_options(); 	
+            
+            
+            //Schedule addon
+            self::schedule_mail_check();
 	}
         
  
@@ -100,6 +104,15 @@ class KSD_Mail_Install {
                         'ksd_mail_license_key'              => '',
                         'ksd_mail_license_status'           => 'invalid'
                     );
+            }
+            
+            
+            /**
+             * Schedule job to check mail using wp_cron
+             */
+            public function schedule_mail_check(){
+                $ksd_mail_admin = KSD_Mail_Admin::get_instance();
+                $ksd_mail_admin->schedule_mail_check();
             }
  
 }
