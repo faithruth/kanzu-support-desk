@@ -1,6 +1,6 @@
 <?php 
 
-$mail_settings = $current_settings[KSD_OPTIONS_KEY];
+$mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
 
 ?>
 

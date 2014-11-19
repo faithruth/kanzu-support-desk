@@ -20,11 +20,11 @@ if ( ! class_exists( 'KSD_Mail_Uninstall' ) ) :
 class KSD_Mail_Uninstall {
     
     public function __construct(){
-        $this->do_uninstall();
+        $this->delete_options();
     }
     
     private function delete_options(){
-         delete_option( KSD_OPTIONS_KEY );
+          KSD_Mail::update_settings( array() );             
     }
 
 }

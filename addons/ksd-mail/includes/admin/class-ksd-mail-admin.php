@@ -39,8 +39,7 @@ class KSD_Mail_Admin {
                 add_action( 'ksd_display_addons', array( $this, 'show_addons' ) );
                 
                 //Add help to KSD help view
-                add_action( 'ksd_display_help', array( $this, 'show_help' ) );
-                
+                add_action( 'ksd_display_help', array( $this, 'show_help' ) );                
 
                 //Register backgroup process
                 add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );
@@ -50,7 +49,18 @@ class KSD_Mail_Admin {
                 
                 //Display KSD mail license in a separate licenses tab
                 add_filter( 'ksd_display_licenses', array( $this, 'display_licences' ) );     
-
+                
+                //Add JS
+                add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+                
+                //Handle AJAX callbacks
+                add_action( 'wp_ajax_ksd_modify_license', array( $this, 'modify_license_status' ));
+                
+                //Check for updates
+                add_action( 'admin_init', array ( $this, 'do_updates' ), 0 );
+                
+                //Display admin notices
+                add_action( 'admin_notices', array ( $this,'display_admin_notice') );
 	}
 	
 
@@ -102,21 +112,20 @@ class KSD_Mail_Admin {
          */
         public function save_settings( $current_settings, $new_settings=array() ){
                 //To eliminate key clashes with any add-on, we add all our new settings 
-                //into their own array in $current_settings with key KSD_OPTIONS_KEY 
-                $current_settings[KSD_OPTIONS_KEY] = array();
-                
+                //into their own array in $current_settings with key KSD_MAIL_OPTIONS_KEY        
                 if ( count ( $new_settings ) == 0 ){//This is a 'Reset to Defaults' call. Populate the array with default settings
-                   $current_settings[KSD_OPTIONS_KEY] = KSD_Mail_Install::get_default_options();
+                   $current_settings[KSD_MAIL_OPTIONS_KEY] = KSD_Mail_Install::get_default_options();
                 }
-                else{
+                else{    
                     //Iterate through the new settings and save them as items in the array 
-                    foreach ( $current_settings as $option_name => $default_value ) {
+                    foreach ( $current_settings[KSD_MAIL_OPTIONS_KEY] as $option_name => $default_value ) {                        
                         //If a setting exists in $new_settings, replace the corresponding value in $current_settings with it. 
                         //Otherwise, leave the $current_settings value as is
-                        $current_settings[KSD_OPTIONS_KEY][$option_name] = ( isset ( $new_settings[$option_name] ) ? sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) ) : $current_settings[KSD_OPTIONS_KEY][$option_name] );
+                        if ( isset ( $new_settings[$option_name] ) ){
+                             $current_settings[KSD_MAIL_OPTIONS_KEY][$option_name] = sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) );
+                           }                       
                     }
                 }
-                
                 return $current_settings;               
         }
         
@@ -125,8 +134,8 @@ class KSD_Mail_Admin {
          * @param type $current_settings The current KSD settings 
          */
         public function display_licences ( $current_settings ){
-            $licences_array = array();
-            $mail_settings = $current_settings[KSD_OPTIONS_KEY];
+
+            $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
             //Add an item to the licenses array. We add the name, license and the key name used to store it in the Db
             $mail_settings['licenses'][] = array (  "addon_name"                => "KSD Mail",
                                                     "license"                   => $mail_settings['ksd_mail_license_key'],
@@ -136,6 +145,40 @@ class KSD_Mail_Admin {
                                                   );
             return $mail_settings;
         }
+        
+                
+        public function do_updates() {
+	// retrieve our license key from the DB //@TODO Add check, if license isn't active, deactivate plugin
+         //@TODO Activate/Deactivate license triggers   
+        $mail_settings  =   KSD_Mail::get_settings();
+	$license_key    =   trim( $mail_settings[ 'ksd_mail_license_key' ] );   
+        if ( empty ( $license_key ) ){
+            KSD_Mail::$ksd_mail_admin_notices = array(
+                "error"=> __( "Kanzu Support Desk Mail | You need to provide a valid license key before this plugin can function","kanzu-support-desk" )
+                );
+        }
+        $plugin_data    =   get_plugin_data( KSD_MAIL_PLUGIN_FILE );
+	// setup the updater
+	$ksd_updater = new KSD_Mail_Updater(  $plugin_data['AuthorURI'], KSD_MAIL_PLUGIN_FILE, array( 
+			'version' 	=> KSD_MAIL_VERSION, 		// current version number
+			'license' 	=> $license_key, 		// license key  
+			'item_name'     => $plugin_data['Name'], 	// name of this plugin
+			'author' 	=> $plugin_data['Author']       // author of this plugin
+		)
+	);
+
+        }
+        
+        public function display_admin_notice() {
+            if ( count ( KSD_Mail::$ksd_mail_admin_notices ) > 0 ){
+                foreach ( KSD_Mail::$ksd_mail_admin_notices as $admin_notice_type => $admin_notice_message ){
+                    $notice_body="<div class='{$admin_notice_type}'><p>";
+                    $notice_body.=$admin_notice_message;
+                    $notice_body.="</p></div>";
+                    echo $notice_body;               
+                }
+            }
+          }
         
 
         /*
@@ -184,13 +227,8 @@ class KSD_Mail_Admin {
 
                     //Get userid
                     $userObj = new KSD_Users_Controller();
-                    $users   = array();
                     $users   = $userObj->get_users("user_email = '$email'");
                     //TODO: Add check if user is not registered. send email notification.
-                    
-                    if ( count( $users ) == 0 ){
-                        throw new Exception ( _e( "Email account doesn't exist.\n" ) );
-                    }
                     $user_id = $users[0]->ID;
 
                     //Checi if this is a new ticket before logging it.
@@ -237,7 +275,84 @@ class KSD_Mail_Admin {
 
         }//eof:
         
+        /**
+         * Enqueue scripts used by KSD Mail. We add them to the footer to 
+         * make use of Kanzu Support's localized variables. We also list the Kanzu Support desk
+         * script among the dependencies
+         */
+        public function enqueue_admin_scripts() { 
+             wp_enqueue_script( KSD_MAIL_SLUG.'-admin-js', KSD_MAIL_PLUGIN_URL.'/assets/js/ksd-mail-admin.js', array( 'jquery','kanzu-support-desk-admin-js' ), KSD_MAIL_VERSION, true ); 
+        }
         
+        /**
+         * Handle an AJAX request to change the license's status. We use this to activate
+         * and deactivate licenses
+         */
+        public function modify_license_status(){
+        if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                die ( __('Busted!','kanzu-support-desk') );                         
+          }
+          
+          $response = $this->do_license_modifications( $_POST['license_action'],sanitize_text_field( $_POST['license'] ) );
+          echo json_encode( $response );          
+          die();//Important. Don't leave this out
+        }
+        
+        /**
+         * Make a remote call to Kanzu Code to activate/Deactivate/check license status
+         * @param string $action The action to perform on the license. Can be 'activate_license','deactivate_license' and 'check_status'
+         * @return boolean
+         */
+        private function do_license_modifications( $action, $license=null ) {
+                $response_message = __( 'An error occured. Please retry','kanzu-support-desk' );
+           
+                 // retrieve the license from the database
+		$mail_settings  = KSD_Mail::get_settings();
+                if( is_null( $license ) ){
+                    $license    =   trim( $mail_settings[ 'ksd_mail_license_key' ] );    	
+                }   
+                $plugin_data    =   get_plugin_data( KSD_MAIL_PLUGIN_FILE );
+		// data to send in our API request
+		$api_params = array( 
+			'edd_action'    => $action, 
+			'license' 	=> $license, 
+			'item_name'     => urlencode( $plugin_data['Name'] ), // the name of our product in EDD
+			'url'           => home_url()
+		);
+		
+		// Call the custom API.
+		$response = wp_remote_get( add_query_arg( $api_params, $plugin_data['AuthorURI'] ), array( 'timeout' => 15, 'sslverify' => false ) );
+
+		// make sure the response came back okay
+		if ( is_wp_error( $response ) ){
+			return $response_message;
+                }
+		// decode the license data
+		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+		
+                switch( $action ){
+                    case 'activate_license':
+                        if( $license_data->license == 'valid' ) {
+                            $mail_settings[ 'ksd_mail_license_status' ] = 'valid';
+                            $response_message = __('License successfully validated. Welcome to a super-charged Kanzu Support Desk!','kanzu-support-desk' );
+                           }
+                        else{//Invalid license
+                            $mail_settings[ 'ksd_mail_license_status' ] = 'invalid';
+                            $response_message = __( 'Invalid License. Please renew your license','kanzu-support-desk' );             
+                        }
+                        break;
+                    case 'deactivate_license':
+                        if( $license_data->license == 'deactivated' ) {
+                            $mail_settings[ 'ksd_mail_license_status' ] = 'invalid';
+                            $response_message = __( 'Your license has been deactivated successfully. Thank you.','kanzu-support-desk' );                            
+                        }
+                        break;
+                }
+                //Update the Db
+                KSD_Mail::update_settings( $mail_settings );
+                
+                return $response_message;	 
+        } 
 }
 endif;
 

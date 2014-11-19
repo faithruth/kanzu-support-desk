@@ -23,8 +23,8 @@ class KSD_Mail_Install {
 	 *
 	 * @var      object
 	 */
-	protected static $instance = null;      
-
+	protected static $instance = null;
+        
 
 	/**
 	 * Initialize the KSD Mail addon
@@ -70,10 +70,9 @@ class KSD_Mail_Install {
         
  
  
-             private static function set_default_options() {                    
+             private static function set_default_options() {                  
                 
-                 add_option( self::$ksd_options_name, self::get_default_options() );
-                    
+                 KSD_Mail::update_settings( self::get_default_options() );                    
             }
             
             /**
