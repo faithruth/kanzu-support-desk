@@ -3,7 +3,7 @@
  * Holds all installation & deactivation-related functionality.  
  * On activation, activate is called.
  * On de-activation, 
- * @package   Kanzu_Support_Desk
+ * @package   KSD_Mail
  * @author    Kanzu Code <feedback@kanzucode.com>
  * @license   GPL-2.0+
  * @link      http://kanzucode.com
@@ -61,8 +61,8 @@ class KSD_Mail_Install {
 	 */
 	public static function activate() { 
             //Check for re-activation. Will later be used to check for upgrades
-            $settings   =   Kanzu_Support_Desk::get_settings();
-            if ( $settings['ksd_mail_version'] == KSD_MAIL_VERSION ) {//Bail out if it's a re-activation
+            $ksd_mail_settings   =   KSD_Mail::get_settings();            
+            if ( isset ( $ksd_mail_settings['ksd_mail_version'] ) &&  $ksd_mail_settings['ksd_mail_version'] == KSD_MAIL_VERSION ) {//Bail out if it's a re-activation
                 return;
             }
             self::set_default_options(); 	
@@ -79,7 +79,7 @@ class KSD_Mail_Install {
              * Get default settings
              */
             public static function get_default_options(){
-                $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
+             
                 return  array (
                         /** KSD Version info ********************************************************/
                         'ksd_mail_version'                  => KSD_MAIL_VERSION,

@@ -4,7 +4,7 @@
  *
  * @author Pippin Williamson
  * @version 1.4
- * @package KSD-Mail
+ * @package KSD_Mail
  */
 class KSD_Mail_Updater {
     private $api_url   = '';

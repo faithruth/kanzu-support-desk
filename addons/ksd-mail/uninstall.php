@@ -2,7 +2,7 @@
 /**
  * Fired when the addon is uninstalled.
  *
- * @package   Kanzu_Support_Desk
+ * @package   KSD_Mail
  * @author    Kanzu Code <feedback@kanzucode.com>
  * @license   GPL-2.0+
  * @link      http://kanzucode.com
@@ -24,7 +24,8 @@ class KSD_Mail_Uninstall {
     }
     
     private function delete_options(){
-          KSD_Mail::update_settings( array() );             
+          KSD_Mail::update_settings( array() );       
+          delete_transient( '_ksd_mail_license_last_check' );
     }
 
 }

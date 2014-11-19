@@ -224,7 +224,7 @@ class KSD_Mail_Admin {
             update_option( 'ksd_mail_lastrun_time', date( 'U' ) ) ;
 
 
-            $m_box = new Kanzu_Mail();
+            $m_box = new KSD_Mail_Processor();
 
             if ( ! $m_box->connect() ) {
                     _e( "Can not connect to mailbox.", "ksd-mail" );

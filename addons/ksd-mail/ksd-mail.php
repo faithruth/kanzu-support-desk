@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Kanzu Support Desk - Mail
- * Plugin URI:        http://kanzucode.com/kanzu-support-desk/
+ * Plugin URI:        http://kanzucode.com/add-ons/kanzu-support-desk-email/
  * Description:       Adds capability to log new support tickets via email in Kanzu Support Desk.
  * Version:           1.0.0
  * Author:            Kanzu Code
@@ -140,7 +140,7 @@ final class KSD_Mail {
                 include_once( KSD_MAIL_DIR . '/includes/extras/class-ksd-mail-updater.php' );
             }
             //The rest
-            include_once( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail.php' );
+            include_once( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail-processor.php' );
             include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-tickets-controller.php' );
             include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-users-controller.php' );
             include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
@@ -155,8 +155,8 @@ final class KSD_Mail {
          public static function get_settings(){
             $mail_settings = array();
              if( self::is_KSD_active() ){//Check that Kanzu Support Desk is active. If it is, get settings
-                $base_settings = get_option( KSD_OPTIONS_KEY );
-                $mail_settings = $base_settings[ KSD_MAIL_OPTIONS_KEY ];
+                $base_settings = get_option( KSD_OPTIONS_KEY );//Check that the key exists
+                $mail_settings = ( isset ( $base_settings[ KSD_MAIL_OPTIONS_KEY ] ) ? $base_settings[ KSD_MAIL_OPTIONS_KEY ] : array() );
                 return $mail_settings;
             }
             else{

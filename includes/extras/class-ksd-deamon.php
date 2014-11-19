@@ -93,9 +93,9 @@ class KSD_Deamon {
         if (  false === get_transient( $transient ) ){
             set_transient( $transient, $value, $expiration );
 
-            do_action('ksd_run_deamon');
+            do_action( 'ksd_run_deamon' );
 
-            delete_transient($transient);            
+            delete_transient( $transient );            
         }else{
             _e( 'Script still running.' );
         }
@@ -114,4 +114,3 @@ try{
 }  catch (Exception $e){
     delete_transient( 'ksd_deamon_transient' );
 }
-?>
