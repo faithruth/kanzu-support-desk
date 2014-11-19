@@ -98,7 +98,10 @@ class KSD_Mail_Admin {
                 add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
                 
                 //Handle AJAX callbacks
-                add_action( 'wp_ajax_ksd_modify_license', array( $this, 'modify_license_status' ));       
+                add_action( 'wp_ajax_ksd_modify_license', array( $this, 'modify_license_status' ));                
+                                
+                //Save mail settings with the overall KSD settings
+                add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );     
             }
             else{
                 //Add extra settings to the KSD Settings view
@@ -111,10 +114,7 @@ class KSD_Mail_Admin {
                 add_action( 'ksd_display_help', array( $this, 'show_help' ) );                
 
                 //Register backgroup process
-                add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );
-                
-                //Save mail settings with the overall KSD settings
-                add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );                 
+                add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );            
             }
 
 	}
