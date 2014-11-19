@@ -4,5 +4,5 @@
     <p>
         <?php _e("Allow your customers to create tickets by sending emails to support@yourdomain.com","kanzu-support-desk"); ?>            
     </p>
-    <a href="http://kanzusupport.com/kanzu-support-desk#email" target="_blank" class="button button-primary button-large">To go addon home</a>
+    <a href="http://kanzusupport.com/kanzu-support-desk#email" target="_blank" class="button button-primary button-large"><?php _e( "Get this add-on","kanzu-support-desk" ); ?></a>
 </li>    
