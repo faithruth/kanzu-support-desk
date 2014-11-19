@@ -23,13 +23,8 @@ class KSD_Mail_Install {
 	 *
 	 * @var      object
 	 */
-	protected static $instance = null;
-        
-        /**
-         * The options name in the WP Db. We store all
-         * KSD options using a single options key
-         */
-        public static $ksd_options_name = "ksd_mail";
+	protected static $instance = null;      
+
 
 	/**
 	 * Initialize the KSD Mail addon

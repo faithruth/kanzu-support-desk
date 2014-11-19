@@ -433,6 +433,20 @@ ul.edit-ticket-options li.selected{
 #update-settings .ksd-license{
   padding: 0 12px 2px;
 }
+#update-settings div.setting span.valid{
+    color: green;
+}
+#update-settings div.setting span.invalid{
+    color: red;
+}
+#update-settings div.setting span.loading {
+  background-image: url("../images/loading_button.gif");
+  background-position: center center;
+  background-repeat: no-repeat;
+  float: left;
+  height: 35px;
+  width: 50px;
+}
 #update-settings .ksd-reset {
   right: 210px;
 }
