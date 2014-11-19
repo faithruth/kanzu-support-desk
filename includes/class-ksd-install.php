@@ -26,12 +26,6 @@ class KSD_Install {
 	 * @var      object
 	 */
 	protected static $instance = null;
-        
-        /**
-         * The options name in the WP Db. We store all
-         * KSD options using a single options key
-         */
-        public static $ksd_options_name = "kanzu_support_desk";
 
 	/**
 	 * Initialize the plugin by setting localization and loading public scripts
@@ -178,7 +172,7 @@ class KSD_Install {
  
              private static function set_default_options() {                    
                 
-                 add_option( self::$ksd_options_name, self::get_default_options() );
+                 add_option( KSD_OPTIONS_KEY, self::get_default_options() );
                     
             }
             

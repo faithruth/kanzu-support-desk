@@ -32,6 +32,12 @@ final class Kanzu_Support_Desk {
 	 * Note that it should match the Text Domain file header in this file
 	 */
 	public $ksd_slug = 'kanzu-support-desk';
+        
+        /**
+         * The options name in the WP Db. We store all
+         * KSD options using a single options key
+         */
+        private $ksd_options_name = "kanzu_support_desk";
 	
 	/**
 	 * @var Kanzu_Support_Desk The single instance of the class
@@ -110,6 +116,9 @@ final class Kanzu_Support_Desk {
              } 
             if ( ! defined( 'KSD_PLUGIN_FILE' ) ) {
                 define( 'KSD_PLUGIN_FILE',  __FILE__ );
+            }             
+            if ( ! defined( 'KSD_OPTIONS_KEY' ) ) {
+                define( 'KSD_OPTIONS_KEY',  $this->ksd_options_name );
             } 
 
 	}
@@ -161,10 +170,18 @@ final class Kanzu_Support_Desk {
         
          /**
           * Get all settings. Settings are stored as an array
-          * with key KSD_Install::$ksd_options_name
+          * with key KSD_OPTIONS_KEY
           */
          public static function get_settings(){
-             return get_option( KSD_Install::$ksd_options_name );
+             return get_option( KSD_OPTIONS_KEY );
+         }
+         
+         /**
+          * Update settings. 
+          * @TODO Change this to use a filter
+          */
+         public static function update_settings( $updated_settings ){             
+             return update_option( KSD_OPTIONS_KEY, $updated_settings );
          }
 
 	

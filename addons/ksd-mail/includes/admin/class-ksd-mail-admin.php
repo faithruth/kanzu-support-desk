@@ -102,18 +102,18 @@ class KSD_Mail_Admin {
          */
         public function save_settings( $current_settings, $new_settings=array() ){
                 //To eliminate key clashes with any add-on, we add all our new settings 
-                //into their own array in $current_settings with key KSD_Mail_Install::$ksd_options_name 
-                $current_settings[KSD_Mail_Install::$ksd_options_name] = array();
+                //into their own array in $current_settings with key KSD_OPTIONS_KEY 
+                $current_settings[KSD_OPTIONS_KEY] = array();
                 
                 if ( count ( $new_settings ) == 0 ){//This is a 'Reset to Defaults' call. Populate the array with default settings
-                   $current_settings[KSD_Mail_Install::$ksd_options_name] = KSD_Mail_Install::get_default_options();
+                   $current_settings[KSD_OPTIONS_KEY] = KSD_Mail_Install::get_default_options();
                 }
                 else{
                     //Iterate through the new settings and save them as items in the array 
                     foreach ( $current_settings as $option_name => $default_value ) {
                         //If a setting exists in $new_settings, replace the corresponding value in $current_settings with it. 
                         //Otherwise, leave the $current_settings value as is
-                        $current_settings[KSD_Mail_Install::$ksd_options_name][$option_name] = ( isset ( $new_settings[$option_name] ) ? sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) ) : $current_settings[KSD_Mail_Install::$ksd_options_name][$option_name] );
+                        $current_settings[KSD_OPTIONS_KEY][$option_name] = ( isset ( $new_settings[$option_name] ) ? sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) ) : $current_settings[KSD_OPTIONS_KEY][$option_name] );
                     }
                 }
                 
@@ -126,7 +126,7 @@ class KSD_Mail_Admin {
          */
         public function display_licences ( $current_settings ){
             $licences_array = array();
-            $mail_settings = $current_settings[KSD_Mail_Install::$ksd_options_name];
+            $mail_settings = $current_settings[KSD_OPTIONS_KEY];
             //Add an item to the licenses array. We add the name, license and the key name used to store it in the Db
             $mail_settings['licenses'][] = array (  "addon_name"                => "KSD Mail",
                                                     "license"                   => $mail_settings['ksd_mail_license_key'],

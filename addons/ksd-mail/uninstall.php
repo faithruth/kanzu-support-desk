@@ -24,7 +24,7 @@ class KSD_Mail_Uninstall {
     }
     
     private function delete_options(){
-         delete_option( KSD_Mail_Install::$ksd_options_name );
+         delete_option( KSD_OPTIONS_KEY );
     }
 
 }

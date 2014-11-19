@@ -129,13 +129,13 @@ final class KSD_Mail {
 	
          /**
           * Get all settings. Settings are stored as an array
-          * with key KSD_Install::$ksd_options_name
+          * with key KSD_OPTIONS_KEY
           */
          public static function get_settings(){
             $mail_settings = array();
             if( class_exists('Kanzu_Support_Desk') ){//Check that Kanzu Support Desk is active. If it is, get settings
                 $base_settings = Kanzu_Support_Desk::get_settings();
-                $mail_settings = $base_settings[KSD_Mail_Install::$ksd_options_name];
+                $mail_settings = $base_settings[KSD_OPTIONS_KEY];
             }
             else{
                 add_settings_error(

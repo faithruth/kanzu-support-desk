@@ -724,7 +724,7 @@ class KSD_Admin {
                 //Apply the settings filter to get settings from add-ons
                 $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
                 
-                $status = update_option( KSD_Install::$ksd_options_name, $updated_settings );
+                $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
                 
                 if( true === $status){
                    echo json_encode(  __("Settings Updated"));
@@ -752,7 +752,7 @@ class KSD_Admin {
                 $base_settings = KSD_Install::get_default_options();
                 //Add the settings from add-ons
                 $base_settings = apply_filters( 'ksd_settings', $base_settings );
-                $status = update_option( KSD_Install::$ksd_options_name, $base_settings );
+                $status = update_option( KSD_OPTIONS_KEY, $base_settings );
                 if( $status){
                     echo json_encode( __("Settings Reset") );
                 }else{

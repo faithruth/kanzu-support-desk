@@ -65,7 +65,7 @@ class KSD_Uninstall {
     }
     
     private function delete_options(){
-         delete_option( KSD_Install::$ksd_options_name );
+         delete_option( KSD_OPTIONS_KEY );
     }
 
 }
