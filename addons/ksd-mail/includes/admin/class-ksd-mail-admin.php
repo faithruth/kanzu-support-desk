@@ -31,36 +31,15 @@ class KSD_Mail_Admin {
 	 * @since     1.0.0
 	 */
 	public function __construct() {
-
-		//Add extra settings to the KSD Settings view
-		add_action( 'ksd_display_settings', array( $this, 'show_settings' ) ); 
-                
-                //Add addon to KSD addons view 
-                add_action( 'ksd_display_addons', array( $this, 'show_addons' ) );
-                
-                //Add help to KSD help view
-                add_action( 'ksd_display_help', array( $this, 'show_help' ) );                
-
-                //Register backgroup process
-                add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );
-                
-                //Save mail settings with the overall KSD settings
-                add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );   
-                
-                //Display KSD mail license in a separate licenses tab
-                add_filter( 'ksd_display_licenses', array( $this, 'display_licences' ) );     
-                
-                //Add JS
-                add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
-                
-                //Handle AJAX callbacks
-                add_action( 'wp_ajax_ksd_modify_license', array( $this, 'modify_license_status' ));
                 
                 //Check for updates
                 add_action( 'admin_init', array ( $this, 'do_updates' ), 0 );
                 
                 //Display admin notices
                 add_action( 'admin_notices', array ( $this,'display_admin_notice') );
+                
+                //Set-up actions
+                $this->setup_actions( 'invalid' );
 	}
 	
 
@@ -104,6 +83,41 @@ class KSD_Mail_Admin {
         public function show_help () {
             include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-help.php' );
         }
+        	
+	/**
+	 * Setup KSD Mail actions
+         * @param string $action_types Can be 'valid' or 'invalid'
+	 * @since    1.0.0
+	 */
+	private function setup_actions( $action_type ){	
+            if ( 'invalid' === $action_type ){                
+                //Display KSD mail license in a separate licenses tab
+                add_filter( 'ksd_display_licenses', array( $this, 'display_licences' ) );     
+                
+                //Add JS
+                add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+                
+                //Handle AJAX callbacks
+                add_action( 'wp_ajax_ksd_modify_license', array( $this, 'modify_license_status' ));       
+            }
+            else{
+                //Add extra settings to the KSD Settings view
+		add_action( 'ksd_display_settings', array( $this, 'show_settings' ) ); 
+                
+                //Add addon to KSD addons view 
+                add_action( 'ksd_display_addons', array( $this, 'show_addons' ) );
+                
+                //Add help to KSD help view
+                add_action( 'ksd_display_help', array( $this, 'show_help' ) );                
+
+                //Register backgroup process
+                add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );
+                
+                //Save mail settings with the overall KSD settings
+                add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );                 
+            }
+
+	}
         
         /**
          * This saves the addon settings
@@ -148,14 +162,23 @@ class KSD_Mail_Admin {
         
                 
         public function do_updates() {
-	// retrieve our license key from the DB //@TODO Add check, if license isn't active, deactivate plugin
-         //@TODO Activate/Deactivate license triggers   
+	// retrieve our license key from the DB 
         $mail_settings  =   KSD_Mail::get_settings();
 	$license_key    =   trim( $mail_settings[ 'ksd_mail_license_key' ] );   
-        if ( empty ( $license_key ) ){
+        //Set-up actions
+        $this->setup_actions( $mail_settings['ksd_mail_license_status'] );
+        //Display notice if no license is set or if the license is invalid
+        if ( empty ( $license_key ) || 'invalid' == $mail_settings['ksd_mail_license_status'] ){
             KSD_Mail::$ksd_mail_admin_notices = array(
                 "error"=> __( "Kanzu Support Desk Mail | You need to provide a valid license key before this plugin can function","kanzu-support-desk" )
                 );
+        }else{
+            //Run check only if transient is not set
+            if ( false === get_transient( '_ksd_mail_license_last_check' ) ){
+                set_transient( '_ksd_mail_license_last_check', date('U'), 7 * 60 * 60 * 24 );//Expires in a week. Didn't use constant WEEK_IN_SECONDS since it was
+                                                                                            //added in WP 3.5+
+                $this->do_license_modifications ( 'check_license', $license_key );
+            }
         }
         $plugin_data    =   get_plugin_data( KSD_MAIL_PLUGIN_FILE );
 	// setup the updater
@@ -184,7 +207,7 @@ class KSD_Mail_Admin {
         /*
          * Checks mailbox for new tickets to log.
          */
-        public function check_mailbox () {
+        public function check_mailbox(){
 
             //Get last run time
             $run_freq = (int) get_option('ksd_mail_check_freq') ; //in minutes
@@ -229,10 +252,9 @@ class KSD_Mail_Admin {
                     $userObj = new KSD_Users_Controller();
                     $users   = $userObj->get_users("user_email = '$email'");
                     //TODO: Add check if user is not registered. send email notification.
-
                     $user_id = $users[0]->ID;
 
-                    //Check if this is a new ticket before logging it.
+                    //Checi if this is a new ticket before logging it.
                     $value_parameters   = array();
                     $filter             = " tkt_subject = %s AND tkt_status = %d AND tkt_logged_by = %d ";
                     $value_parameters[] = $subject ;
@@ -256,11 +278,11 @@ class KSD_Mail_Admin {
                         $id = $TC->log_ticket( $new_ticket );
 
                         if( $id > 0){
-                                echo __( "New ticket id" ) . ": $id\n"  ;
-                                echo __( "Subject: ") . $subject . "\n" ;
-                                echo __( "Added by: ") . $users[0]->user_nicename . "\n"  ;
-                                echo  __( "Date:") . date() . "\n" ;
-                                echo "----------------------------------------------\n" ;		
+                                echo _e( "New ticket id: $id\n") ;
+                                echo _e( "Subject: " . $subject . "\n" ) ;
+                                echo _e( "Added by: " . $users[0]->user_nicename . "\n" ) ;
+                                echo _e( "Date:" . date() . "\n" ) ;
+                                echo _e( "----------------------------------------------\n") ;		
                         }
 
                         $new_ticket = null;
@@ -301,7 +323,7 @@ class KSD_Mail_Admin {
         
         /**
          * Make a remote call to Kanzu Code to activate/Deactivate/check license status
-         * @param string $action The action to perform on the license. Can be 'activate_license','deactivate_license' and 'check_status'
+         * @param string $action The action to perform on the license. Can be 'activate_license','deactivate_license' and 'check_license'
          * @return boolean
          */
         private function do_license_modifications( $action, $license=null ) {
@@ -333,6 +355,7 @@ class KSD_Mail_Admin {
 		
                 switch( $action ){
                     case 'activate_license':
+                    case 'check_license':
                         if( $license_data->license == 'valid' ) {
                             $mail_settings[ 'ksd_mail_license_status' ] = 'valid';
                             $response_message = __('License successfully validated. Welcome to a super-charged Kanzu Support Desk!','kanzu-support-desk' );

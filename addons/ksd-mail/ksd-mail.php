@@ -92,9 +92,6 @@ final class KSD_Mail {
             //Include required files
             $this->includes();
 
-            //Set-up actions and filters
-            $this->setup_actions();
-
             /*
              * Register hooks that are fired when the plugin is activated  
              * When the plugin is deleted, the uninstall.php file is loaded.
@@ -198,15 +195,6 @@ final class KSD_Mail {
             }
          }
 
-	
-	/**
-	 * Setup KSD Mail actions
-	 * @since    1.0.0
-	 */
-	public function setup_actions(){	
-            
-	}
-
 	/**
 	* Added to write custom debug messages to the debug log (wp-content/debug.log). You
 	* need to turn debug on for this to work
@@ -225,22 +213,22 @@ final class KSD_Mail {
  }
 
     /**
-     * The main function responsible for returning the one true KSD Mail Instance
+     * The main function responsible for returning the one true Kanzu_Support_Desk Instance
      * to functions everywhere.
      *
      * Use this function like you would a global variable, except without needing
      * to declare the global.
      *
-     * Example: <?php $ksd = ksd_mail(); ?>
+     * Example: <?php $ksd = Kanzu_Support_Desk(); ?>
      *
-     * @return The one true KSD Mail Instance
+     * @return The one true Kanzu_Support_Desk Instance
      */
     function ksd_mail() {
             return KSD_Mail::instance();
     }
 
  
-ksd_mail();
+KSD_Mail();
 
 
 endif; // class_exists check
