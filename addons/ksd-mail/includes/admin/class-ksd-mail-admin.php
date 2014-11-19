@@ -141,7 +141,7 @@ class KSD_Mail_Admin {
         /*
          * Checks mailbox for new tickets to log.
          */
-        public function check_mailbox(){
+        public function check_mailbox () {
 
             //Get last run time
             $run_freq = (int) get_option('ksd_mail_check_freq') ; //in minutes
@@ -189,7 +189,8 @@ class KSD_Mail_Admin {
                     //TODO: Add check if user is not registered. send email notification.
                     
                     if ( count( $users ) == 0 ){
-                        throw new Exception ( _e( "Email account doesn't exist.\n" ) );
+                        throw new Exception ( __( "User with email account " . 
+                                              $email ." doesn't exist.\n" ) , -3 );
                     }
                     $user_id = $users[0]->ID;
 
@@ -217,11 +218,11 @@ class KSD_Mail_Admin {
                         $id = $TC->log_ticket( $new_ticket );
 
                         if( $id > 0){
-                                echo _e( "New ticket id: $id\n") ;
-                                echo _e( "Subject: " . $subject . "\n" ) ;
-                                echo _e( "Added by: " . $users[0]->user_nicename . "\n" ) ;
-                                echo _e( "Date:" . date() . "\n" ) ;
-                                echo _e( "----------------------------------------------\n") ;		
+                                echo __( "New ticket id" ) . ": $id\n"  ;
+                                echo __( "Subject: ") . $subject . "\n" ;
+                                echo __( "Added by: ") . $users[0]->user_nicename . "\n"  ;
+                                echo  __( "Date:") . date() . "\n" ;
+                                echo "----------------------------------------------\n" ;		
                         }
 
                         $new_ticket = null;
