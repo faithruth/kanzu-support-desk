@@ -225,22 +225,22 @@ final class KSD_Mail {
  }
 
     /**
-     * The main function responsible for returning the one true Kanzu_Support_Desk Instance
+     * The main function responsible for returning the one true KSD Mail Instance
      * to functions everywhere.
      *
      * Use this function like you would a global variable, except without needing
      * to declare the global.
      *
-     * Example: <?php $ksd = Kanzu_Support_Desk(); ?>
+     * Example: <?php $ksd = ksd_mail(); ?>
      *
-     * @return The one true Kanzu_Support_Desk Instance
+     * @return The one true KSD Mail Instance
      */
     function ksd_mail() {
             return KSD_Mail::instance();
     }
 
  
-KSD_Mail();
+ksd_mail();
 
 
 endif; // class_exists check

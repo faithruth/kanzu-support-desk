@@ -23,7 +23,7 @@ set_exception_handler('exceptionHandler');
 
 
 if( php_sapi_name() !== 'cli' ) {
-     die( -e("Must be run from commandline.") ) ;
+     die( __("Must be run from commandline.") ) ;
 }
 
 function find_wordpress_base_path() {

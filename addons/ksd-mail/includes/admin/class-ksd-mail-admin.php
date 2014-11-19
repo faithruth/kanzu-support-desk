@@ -184,7 +184,7 @@ class KSD_Mail_Admin {
         /*
          * Checks mailbox for new tickets to log.
          */
-        public function check_mailbox(){
+        public function check_mailbox () {
 
             //Get last run time
             $run_freq = (int) get_option('ksd_mail_check_freq') ; //in minutes
@@ -229,9 +229,10 @@ class KSD_Mail_Admin {
                     $userObj = new KSD_Users_Controller();
                     $users   = $userObj->get_users("user_email = '$email'");
                     //TODO: Add check if user is not registered. send email notification.
+
                     $user_id = $users[0]->ID;
 
-                    //Checi if this is a new ticket before logging it.
+                    //Check if this is a new ticket before logging it.
                     $value_parameters   = array();
                     $filter             = " tkt_subject = %s AND tkt_status = %d AND tkt_logged_by = %d ";
                     $value_parameters[] = $subject ;
@@ -255,11 +256,11 @@ class KSD_Mail_Admin {
                         $id = $TC->log_ticket( $new_ticket );
 
                         if( $id > 0){
-                                echo _e( "New ticket id: $id\n") ;
-                                echo _e( "Subject: " . $subject . "\n" ) ;
-                                echo _e( "Added by: " . $users[0]->user_nicename . "\n" ) ;
-                                echo _e( "Date:" . date() . "\n" ) ;
-                                echo _e( "----------------------------------------------\n") ;		
+                                echo __( "New ticket id" ) . ": $id\n"  ;
+                                echo __( "Subject: ") . $subject . "\n" ;
+                                echo __( "Added by: ") . $users[0]->user_nicename . "\n"  ;
+                                echo  __( "Date:") . date() . "\n" ;
+                                echo "----------------------------------------------\n" ;		
                         }
 
                         $new_ticket = null;
