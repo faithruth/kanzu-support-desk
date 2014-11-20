@@ -40,6 +40,7 @@ class KSD_Mail_Admin {
                 
                 //Set-up actions
                 $this->setup_actions( 'invalid' );
+
 	}
 	
 
@@ -114,7 +115,11 @@ class KSD_Mail_Admin {
                 add_action( 'ksd_display_help', array( $this, 'show_help' ) );                
 
                 //Register backgroup process
-                add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );            
+                add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );  
+                                
+                //To update wp_cron when settings are saved.
+                add_action( 'ksd_settings_saved', array( $this, 'schedule_mail_check') );
+
             }
 
 	}
@@ -377,6 +382,76 @@ class KSD_Mail_Admin {
                 
                 return $response_message;	 
         } 
+        
+        
+        
+        
+        /**
+         * Create new cron scedure
+         */
+        public function create_cron_schedule(){
+            
+            add_filter( 'cron_schedules',  array( $this, 'ksd_create_cron_schedule') ); 
+            
+        }
+        
+
+        /**
+         * Hook into cron_schedules filter to create "ksd_mail_interval" schedule
+         * 
+         * @param array $schedules
+         */
+        public function ksd_create_cron_schedule( $schedules ){
+            
+            $int = (int)get_option( 'ksd_mail_check_freq' ) ;
+            $int = ( 0 == $int ) ? 30 : $int; //Default value of 30
+            
+            
+            $schedules[ 'KSDMailCheckInt' ] = array(
+              'interval' => $int * 60, 
+              'display' => __( 'KSD Mail Check Interval')
+            );
+            
+
+            return $schedules;
+        }
+        
+        /**
+         * Delete the cron schedule
+         */
+        public function delete_cron_schedule(){
+            
+            // unschedule hook
+            wp_unschedule_event(time(), 'ksd_mail_check');    
+           
+        }
+        
+        
+        /**
+         * Schedule mail check hook called "ksd_mail_check" on "ksd_mail_interval"
+         * cron schedule  and attach "check_mailbox" to it.
+         */
+        public function create_cron_hook(){
+
+            //add action to ksd_mail_hook
+            add_action( 'ksd_mail_check', array( $this, 'check_mailbox' ) );
+            
+            //Schedule ksd_mail_check action hook
+            wp_schedule_event( time(), 'KSDMailCheckInt', 'ksd_mail_check' );
+
+        }
+        
+        /**
+         * Create cron schedule and schedule mail check 
+         */
+        public function schedule_mail_check(){
+            $this->create_cron_schedule();
+            $this->create_cron_hook();
+            
+           
+        }
+        
+        
 }
 endif;
 

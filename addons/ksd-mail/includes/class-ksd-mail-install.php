@@ -60,6 +60,7 @@ class KSD_Mail_Install {
 	 *
 	 */
 	public static function activate() { 
+            
             //Check for re-activation. Will later be used to check for upgrades
             $ksd_mail_settings   =   KSD_Mail::get_settings();            
             if ( isset ( $ksd_mail_settings['ksd_mail_version'] ) &&  $ksd_mail_settings['ksd_mail_version'] == KSD_MAIL_VERSION ) {//Bail out if it's a re-activation
@@ -67,9 +68,9 @@ class KSD_Mail_Install {
             }
             self::set_default_options(); 	
             
-            
             //Schedule addon
             self::schedule_mail_check();
+            
 	}
         
  
@@ -113,6 +114,8 @@ class KSD_Mail_Install {
             public function schedule_mail_check(){
                 $ksd_mail_admin = KSD_Mail_Admin::get_instance();
                 $ksd_mail_admin->schedule_mail_check();
+                            
+                
             }
  
 }
