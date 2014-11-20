@@ -17,7 +17,7 @@ jQuery( document ).ready(function() {
                              { 	action : 'ksd_modify_license',
                                 ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
                                 license_action : licenseAction,
-                                license : jQuery(this).val()
+                                license : jQuery('input[name=ksd_mail_license_key]').val()
                              }, 
                          function( response ) {
                              targetLicenseStatusSpan.removeClass('loading');
