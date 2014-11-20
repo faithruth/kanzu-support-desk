@@ -26,8 +26,10 @@ class KSD_Mail_Uninstall {
     private function delete_options(){
           KSD_Mail::update_settings( array() );       
           delete_transient( '_ksd_mail_license_last_check' );
+          
+          //Delete cron entries
           $ksd_mail_install = KSD_Mail_Install::get_instance();
-//          $ksd_mail_install->
+          $ksd_mail_install->delete_cron_schedule();
           
           
     }
