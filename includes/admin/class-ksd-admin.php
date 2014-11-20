@@ -727,6 +727,7 @@ class KSD_Admin {
                 $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
                 
                 if( true === $status){
+                    do_action('ksd_settings_saved');
                    echo json_encode(  __("Settings Updated"));
                 }else{
                     throw new Exception(__("Update failed. Please retry. "  ), -1);
