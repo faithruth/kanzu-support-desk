@@ -119,6 +119,10 @@ class KSD_Mail_Admin {
                                 
                 //To update wp_cron when settings are saved.
                 add_action( 'ksd_settings_saved', array( $this, 'schedule_mail_check') );
+                
+                
+                //Schedule mail check
+                $this->schedule_mail_check();
 
             }
 
@@ -406,7 +410,6 @@ class KSD_Mail_Admin {
             $int = (int)get_option( 'ksd_mail_check_freq' ) ;
             $int = ( 0 == $int ) ? 30 : $int; //Default value of 30
             
-            
             $schedules[ 'KSDMailCheckInt' ] = array(
               'interval' => $int * 60, 
               'display' => __( 'KSD Mail Check Interval')
@@ -447,8 +450,7 @@ class KSD_Mail_Admin {
         public function schedule_mail_check(){
             $this->create_cron_schedule();
             $this->create_cron_hook();
-            
-           
+
         }
         
         
