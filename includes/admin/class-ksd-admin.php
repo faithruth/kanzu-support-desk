@@ -624,7 +624,13 @@ class KSD_Admin {
         private function format_ticket_for_viewing( $ticket ){
             //Replace the username
             $users = new KSD_Users_Controller();
-            $ticket->tkt_assigned_by = str_replace($ticket->tkt_assigned_by,$users->get_user($ticket->tkt_assigned_by)->user_nicename,$ticket->tkt_assigned_by);
+            $CC = new KSD_Customers_Controller();
+            //If the ticket was logged by staff from the admin end, then the username is available in wp_users. Otherwise, we retrive the name
+            //from the KSD customers table
+            $tmp_tkt_assigned_by = ( 'STAFF' === $ticket->tkt_channel ? $users->get_user($ticket->tkt_assigned_by)->user_nicename : $CC->get_customer($ticket->tkt_assigned_by)->cust_firstname );
+            
+            //Replace the tkt_assigned_by name with a prettier one
+            $ticket->tkt_assigned_by = str_replace($ticket->tkt_assigned_by,$tmp_tkt_assigned_by,$ticket->tkt_assigned_by);
             //Replace the date 
             $ticket->tkt_time_logged = date('M d',strtotime($ticket->tkt_time_logged));
             
