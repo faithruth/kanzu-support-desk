@@ -381,6 +381,9 @@ class KSD_Mail_Admin {
                         }
                         break;
                 }
+                //Retrieve the license for saving
+                $mail_settings[ 'ksd_mail_license_key' ] = $license;
+                
                 //Update the Db
                 KSD_Mail::update_settings( $mail_settings );
                 
