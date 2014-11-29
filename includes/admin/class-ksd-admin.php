@@ -41,8 +41,8 @@ class KSD_Admin {
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
 
 		// Add an action link pointing to the settings page.
-		add_filter( 'plugin_action_links_' . plugin_basename(KSD_PLUGIN_FILE), array( $this, 'add_action_links' ) );		
-
+		add_filter( 'plugin_action_links_' . plugin_basename( KSD_PLUGIN_FILE ), array( $this, 'add_action_links' ) );		
+   
 		//Handle AJAX calls
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
                 add_action( 'wp_ajax_ksd_log_new_ticket', array( $this, 'log_new_ticket' ));
@@ -56,8 +56,8 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ));  
                 add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' )); 
                 add_action( 'wp_ajax_ksd_reset_settings', array( $this, 'reset_settings' )); 
-                add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));              
-
+                add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));  
+                            
 	}
 	
 
@@ -457,19 +457,29 @@ class KSD_Admin {
         
         /**
          * Add a reply to a single ticket
+         * @param Array $ticket_reply_array The ticket reply Array. This exists wnen this function is called
+         * by an add-on
+         * @TODO Handle add-on replies. They don't provide tkt_id so get it
          */
         
-        public function reply_ticket(){
-               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) ){
+        public function reply_ticket( $ticket_reply_array=null ){
+                //In add-on mode, this function was called by an add-on
+                $add_on_mode = ( !is_null( $ticket_reply_array ) ? true : false );
+                
+               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) && ! $add_on_mode ){
 			 die ( __('Busted!','kanzu-support-desk') );
                }
                 $this->do_admin_includes();
                 
                 try{    
+                    //If this was called by an add-on, populate the $_POST array
+                    if ( $add_on_mode ){
+                        $_POST = $ticket_reply_array;
+                    }
                     $new_reply = new stdClass(); 
                     $new_reply->rep_tkt_id    	 =  $_POST['tkt_id'] ;
                     $new_reply->rep_message 	 = sanitize_text_field( stripslashes ( $_POST['ksd_ticket_reply'] ) );
-                    if ( strlen( $new_reply->rep_message ) < 2 ){//If the response sent it too short
+                    if ( strlen( $new_reply->rep_message ) < 2 && ! $add_on_mode ){//If the response sent it too short
                        throw new Exception( __("Error | Reply too short", 'kanzu-support-desk'), -1 );
                     }
                     //Get the customer's email address and send them this reply
@@ -480,7 +490,10 @@ class KSD_Admin {
                    $RC = new KSD_Replies_Controller(); 
                    $response = $RC->add_reply( $new_reply );
                    
-                   if ($response > 0 ){
+                   if( $add_on_mode ){
+                       die();//End the party if this came from an add-on
+                   }
+                   if ( $response > 0 ){
                       echo json_encode($new_reply->rep_message );
                    }else{
                        throw new Exception( __("Error", 'kanzu-support-desk'), -1 );
@@ -497,24 +510,89 @@ class KSD_Admin {
         }
         
         /**
-         * Log new tickets.  The different channels (admin side, front-end) all 
-         * call this method to log the ticket
+         * Log new tickets or replies initiated by add-ons
+         * @param Object $new_ticket New ticket object. Can also be a reply object
+         * @since 1.0.1
          */
-        public function log_new_ticket(){
-                if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) ){
-			 die ( __('Busted!','kanzu-support-desk') );
+        public function do_log_new_ticket( $new_ticket ){
+            Kanzu_Support_Desk::kanzu_support_log_me( "kanzu action triggered ");
+            $this->do_admin_includes();
+            $TC = new KSD_Tickets_Controller();
+            //First check if the ticket initiator exists in our customers table. The assumption here is that 
+            //agents won't use an add-on to log a ticket; otherwise, we'd have to check the wp_users table too (where agents are stored)
+            $CC = new KSD_Customers_Controller();
+            $customer_details = $CC->get_customer_by_email ( $new_ticket->cust_email );
+            if ( $customer_details ){//If the customer's already in the Db, get their customer ID and check whether this is a new ticket or a response
+                $new_ticket->tkt_cust_id = $customer_details[0]->cust_id;
+               //Check whether it is a new ticket or a reply. We match against subject and ticket initiator
+                $value_parameters   = array();
+                $filter             = " tkt_subject = %s AND tkt_status != %d AND tkt_assigned_by = %d ";
+                $value_parameters[] = $new_ticket->tkt_subject ;
+                $value_parameters[] = 'RESOLVED' ;
+                $value_parameters[] = $new_ticket->tkt_cust_id ;
+                $the_ticket = $TC->get_tickets( $filter, $value_parameters );
+                if ( count( $the_ticket ) > 0  ){//this is a reply
+                    //Get a $_POST array to send to the reply_ticket function
+                    $_POST = $this->convert_ticket_object_to_post( $new_ticket );
+                    $this->reply_ticket( $_POST ); //This function has a die() in it so no risk of proceeding beyond this point
+               }               
+            }
+            //This is a new ticket
+            $_POST = $this->convert_ticket_object_to_post( $new_ticket );
+            $this->log_new_ticket( $_POST );                        
+        }
+        
+        /**
+         * Change a new ticket object into a $_POST array. $POST arrays are 
+         * used by the functions that log new tickets & replies
+         * Add-ons on the other hand supply $new_ticket objects. This function
+         * is a bridge between the two
+         * @param Object $new_ticket New ticket object
+         * @return Array $_POST An array used by the functions that log new tickets. This
+         *                      array is basically the same as the object but has ksd_ prefixing all keys 
+         */
+        private function convert_ticket_object_to_post( $new_ticket ){
+            $_POST = array();
+            foreach ( $new_ticket as $key => $value ) {
+               $_POST[ 'ksd_'.$key ] = $value;
+            }
+            return $_POST;
+        }
+        
+        /**
+         * Log new tickets.  The different channels (admin side, front-end) all 
+         * call this method to log the ticket. Other plugins call $this->do_new_ticket_logging  through
+         * an action
+         * @param Array $new_ticket A new ticket array. This is present when ticket logging was initiated 
+         *              by an add-on
+         */
+        public function log_new_ticket( $new_ticket_array=null ){
+                //In add-on mode, this function was called by an add-on
+                $add_on_mode = ( !is_null( $new_ticket_array ) ? true : false );
+                
+                if( ! $add_on_mode ){//Check for NONCE if not in add-on mode
+                    if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) ){
+                             die ( __('Busted!','kanzu-support-desk') );
+                    }
                 }
 		$this->do_admin_includes();
             
                 try{
             	$tkt_channel    = "STAFF"; //This is the default channel
                 $tkt_status     = "OPEN";//The default status
+                //If this was called by an add-on, populate the $_POST array
+                if ( $add_on_mode ){
+                    $_POST = $new_ticket_array;
+                }
                 
                 //Check what channel the request came from
                 switch ( sanitize_text_field( $_POST['ksd_tkt_channel']) ){
                     case 'support_tab':
                         $tkt_channel   =       "SUPPORT_TAB";
                         break;
+                     case 'EMAIL':
+                         $tkt_channel   =       "EMAIL";
+                         break;
                     default:
                         $tkt_channel    =      "STAFF";
                 }                       
@@ -529,8 +607,8 @@ class KSD_Admin {
                 $new_ticket->tkt_channel            = $tkt_channel;
                 $new_ticket->tkt_status             = $tkt_status;
                 
-                //Server side validation for the inputs
-                if ( strlen( $new_ticket->tkt_subject ) < 2 || strlen( $new_ticket->tkt_message ) < 2 ) {
+                //Server side validation for the inputs. Only holds if we aren't in add-on mode
+                if ( ( ! $add_on_mode && strlen( $new_ticket->tkt_subject ) < 2 || strlen( $new_ticket->tkt_message ) < 2) ) {
                      throw new Exception( __('Error | Your subject and message should be at least 2 characters','kanzu-support-desk'), -1 );
                 }
                 
@@ -548,12 +626,12 @@ class KSD_Admin {
                 //Return a different message based on the channel the request came on
                 $output_messages_by_channel = array();
                 $output_messages_by_channel[ 'STAFF' ] = __("Ticket Logged", "kanzu-support-desk");
-                $output_messages_by_channel[ 'SUPPORT_TAB' ] = $settings['tab_message_on_submit'];
+                $output_messages_by_channel[ 'SUPPORT_TAB' ] = $output_messages_by_channel[ 'EMAIL' ] = $settings['tab_message_on_submit'];
       
                 //Get the provided email address and use it to check whether the customer's already in the Db
                 $cust_email           = sanitize_email( $_POST[ 'ksd_cust_email' ] );
-                //Check that it is a valid email address
-                if (!is_email( $cust_email )){
+                //Check that it is a valid email address. Don't do this check in add-on mode
+                if ( ! $add_on_mode && !is_email( $cust_email )){
                      throw new Exception( __('Error | Invalid email address specified','kanzu-support-desk') , -1);
                 }
                 
@@ -589,10 +667,18 @@ class KSD_Admin {
                     $this->send_email( $cust_email );
                 }
                 //Add this event to the assignments table
-                $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by );
+                if ( isset( $new_ticket->tkt_assigned_to ) ) {
+                    $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by ); 
+                }   
 
-                //for addons to do something aftr new ticket is added.
-                do_action( 'ksd_new_ticket', $_POST );
+                //For add-ons to do something after new ticket is added.
+                do_action( 'ksd_new_ticket_logged', $new_ticket );
+                
+                //If this was initiated by the email add-on, end the party here
+                if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "EMAIL") ){
+                     $this->send_email( $cust_email );
+                     die();
+                }
                 
                 echo json_encode( $new_ticket_status );
                 die();// IMPORTANT: don't leave this out

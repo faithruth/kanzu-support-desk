@@ -218,24 +218,28 @@ class KSD_Mail_Admin {
                     
         /*
          * Checks mailbox for new tickets to log.
+         * @TODO Display connection-related errors as admin notices
          */
-            public function check_mailbox(){                    
-            //Get last run time
-            $run_freq = (int) get_option('ksd_mail_check_freq') ; //in minutes
-            $last_run = (int) get_option('ksd_mail_lastrun_time'); //saved as unix timestamp
+            public function check_mailbox(){     
+            //Get the settings
+            $mail_settings  =   KSD_Mail::get_settings();
+            
+            //Get last run time 
+            $run_freq = (int) $mail_settings['ksd_mail_check_freq'] ; //in minutes
+            $last_run = (int) $mail_settings['ksd_mail_lastrun_time']; //saved as unix timestamp
             $now = (int) date( 'U' );
             $interval = $now - $last_run ;
-
+            
             if ( $interval  < ( $run_freq * 60 ) ){
                 KSD_Mail::ksd_mail_log_me('Kanzu Run interval has not passed.');
                 _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
                 return;
             }
-
+            
             //Update last run time.
-            update_option( 'ksd_mail_lastrun_time', date( 'U' ) ) ;
-
-
+            $mail_settings['ksd_mail_lastrun_time'] = date( 'U' );
+            KSD_Mail::update_settings( $mail_settings );
+                    
             $m_box = new KSD_Mail_Processor();
 
             if ( ! $m_box->connect() ) {
@@ -246,8 +250,6 @@ class KSD_Mail_Admin {
 
             $count = $m_box->numMsgs();
 
-            $TC = new KSD_Tickets_Controller();
-
             for ( $i=1; $i <= $count; $i++)
             {
 
@@ -256,53 +258,19 @@ class KSD_Mail_Admin {
 
                     $mail_mailbox = $msg['headers']->from[0]->mailbox;
                     $mail_host    = $msg['headers']->from[0]->host;
-                    $email        = $mail_mailbox . "@" . $mail_host;
-                    $subject      = $msg['headers']->subject;
-
-
-
-                    //Get userid
-                    $userObj = new KSD_Users_Controller();
-                    $users   = $userObj->get_users("user_email = '$email'");
-                    //TODO: Add check if user is not registered. send email notification.
-                    $user_id = $users[0]->ID;
+                    KSD_Mail::ksd_mail_log_me( "kanzu New ticket retrieved" );
                     
-                    //Check if this is a new ticket before logging it.
-                    $value_parameters   = array();
-                    $filter             = " tkt_subject = %s AND tkt_status = %d AND tkt_logged_by = %d ";
-                    $value_parameters[] = $subject ;
-                    $value_parameters[] = 'OPEN' ;
-                    $value_parameters[] = $user_id ;
-
-                    $tc = $TC->get_tickets( $filter, $value_parameters );
-
-                    if ( count($tc) == 0  ){
-
-                        $new_ticket                      = new stdClass(); 
-                        $new_ticket->tkt_subject         = $msg['headers']->subject;
-                        $new_ticket->tkt_message_excerpt = "New Ticket.";
-                        $new_ticket->tkt_message         =  $msg['text'];;
-                        $new_ticket->tkt_channel         = "EMAIL";
-                        $new_ticket->tkt_status          = "OPEN";
-                        $new_ticket->tkt_private_notes   = "Private notes";
-                        $new_ticket->tkt_logged_by       = $user_id;
-                        $new_ticket->tkt_updated_by      = $user_id;
-
-                        $id = $TC->log_ticket( $new_ticket );
-
-                        if( $id > 0){
-                                echo _e( "New ticket id: $id\n","kanzu-support-desk") ;
-                                echo _e( "Subject: " . $subject . "\n" ,"kanzu-support-desk") ;
-                                echo _e( "Added by: " . $users[0]->user_nicename . "\n" ,"kanzu-support-desk") ;
-                                echo _e( "Date:" . date() . "\n" ,"kanzu-support-desk") ;
-                                echo _e( "----------------------------------------------\n") ;		
-                        }
-
-                        $new_ticket = null;
-
-                    }else{//@TODO: Log Reply
-
-                    } 
+                    $new_ticket                         = new stdClass(); 
+                    $new_ticket->tkt_subject            = $msg['headers']->subject;
+                    $new_ticket->tkt_message            = $msg['text'];;
+                    $new_ticket->tkt_channel            = "EMAIL";
+                    $new_ticket->tkt_status             = "OPEN";
+                    $new_ticket->cust_email             = $mail_mailbox . "@" . $mail_host;
+                    $new_ticket->cust_fullname          = $msg['headers']->from[0]->personal;
+                    $new_ticket->tkt_time_logged        = $msg['headers']->MailDate;
+                        
+                    //Log the ticket
+                    do_action( 'ksd_log_new_ticket', $new_ticket );
 
             }
 
@@ -413,12 +381,12 @@ class KSD_Mail_Admin {
          * @param array $schedules
          */
         public function ksd_create_cron_schedule( $schedules ){
-            
-            $int = (int)get_option( 'ksd_mail_check_freq' ) ;
-            $int = ( 0 == $int ) ? 30 : $int; //Default value of 30
+            $mail_settings  = KSD_Mail::get_settings();
+                    
+            $minutes = ( 0 == (int)$mail_settings[ 'ksd_mail_check_freq' ] ? 30 : (int)$mail_settings[ 'ksd_mail_check_freq' ] ); //Default value of 30
             
             $schedules[ 'KSDMailCheckInt' ] = array(
-              'interval' => $int * 60, 
+              'interval' => $minutes * 60, 
               'display' => __( 'KSD Mail Check Interval')
             );
             
@@ -431,8 +399,8 @@ class KSD_Mail_Admin {
          */
         public function delete_cron_schedule(){
             
-            // unschedule hook
-            wp_unschedule_event(time(), 'ksd_mail_check');    
+            //Unschedule all cron jobs attached to our 'ksd_mail_check' hook
+            wp_clear_scheduled_hook( 'ksd_mail_check' );      
            
         }
         
@@ -442,9 +410,11 @@ class KSD_Mail_Admin {
          * cron schedule  
          */
         public function create_cron_hook(){
-            //Schedule ksd_mail_check action hook.  
-            wp_schedule_event( time(), 'KSDMailCheckInt', 'ksd_mail_check');                    
-
+            //Schedule ksd_mail_check action hook. We first check if we've already defined 
+            //a cron event
+            if ( ! wp_next_scheduled( 'ksd_mail_check' ) ) {//No event defined. Define one     
+                wp_schedule_event( time(), 'KSDMailCheckInt', 'ksd_mail_check');      
+            } 
         }
         
         /**

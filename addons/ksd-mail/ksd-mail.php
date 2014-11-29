@@ -97,6 +97,9 @@ final class KSD_Mail {
              * When the plugin is deleted, the uninstall.php file is loaded.
              */
             register_activation_hook( __FILE__, array( 'KSD_Mail_Install', 'activate' ) );
+            
+            //Register a de-activation hook
+            register_deactivation_hook( __FILE__, array( 'KSD_Mail_Install', 'deactivate' ) );
 
         }
 	

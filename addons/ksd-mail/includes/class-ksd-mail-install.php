@@ -70,6 +70,16 @@ class KSD_Mail_Install {
             
 	}
         
+        /**
+         * Fired when the plugin is deactivated
+         * @since 1.0.1
+         */
+        public static function deactivate() { 
+          //Delete cron entries
+          $ksd_mail_admin = KSD_Mail_Admin::get_instance();
+          $ksd_mail_admin->delete_cron_schedule();
+        }
+        
  
  
              private static function set_default_options() {                  

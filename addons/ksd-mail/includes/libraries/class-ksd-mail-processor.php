@@ -40,7 +40,7 @@ class KSD_Mail_Processor {
                 $this->settings['ksd_mail_protocol'] = ( "yes" == $this->settings['ksd_mail_useSSL'] ? $this->settings['ksd_mail_protocol'].'/ssl' : $this->settings['ksd_mail_protocol'] );
 		
                 //Cater for self-signed certificates
-                if( "yes" == $this->settings['mail_validate_certificate'] ) {
+                if( "yes" == $this->settings['ksd_mail_validate_certificate'] ) {
                     $the_mailbox = "{" . 
                                     $this->settings['ksd_mail_server'] . ": " . 
                                     $this->settings['ksd_mail_port'] . "/" . 
