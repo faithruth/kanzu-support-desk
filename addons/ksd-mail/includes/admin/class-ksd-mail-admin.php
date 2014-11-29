@@ -41,9 +41,11 @@ class KSD_Mail_Admin {
                 //Set-up actions
                 $this->setup_actions( 'invalid' );
 
+                //add action to ksd_mail_check hook. This has to be added here otherwise it won't run
+                add_action( 'ksd_mail_check', array( $this, 'check_mailbox' ) );
 	}
-	
-
+        
+                    
 	/**
 	 * Return an instance of this class.
 	 *
@@ -118,9 +120,8 @@ class KSD_Mail_Admin {
                 add_action( 'ksd_run_deamon', array( $this, 'check_mailbox' )  );  
                                 
                 //To update wp_cron when settings are saved.
-                add_action( 'ksd_settings_saved', array( $this, 'schedule_mail_check') );
-                
-                
+                add_action( 'ksd_settings_saved', array( $this, 'schedule_mail_check') );         
+
                 //Schedule mail check
                 $this->schedule_mail_check();
 
@@ -174,14 +175,16 @@ class KSD_Mail_Admin {
 	// retrieve our license key from the DB 
         $mail_settings  =   KSD_Mail::get_settings();
 	$license_key    =   trim( $mail_settings[ 'ksd_mail_license_key' ] );   
-        //Set-up actions
-        $this->setup_actions( $mail_settings['ksd_mail_license_status'] );
+        
         //Display notice if no license is set or if the license is invalid
         if ( empty ( $license_key ) || 'invalid' == $mail_settings['ksd_mail_license_status'] ){
             KSD_Mail::$ksd_mail_admin_notices = array(
                 "error"=> __( "Kanzu Support Desk Mail | You need to provide a valid license key before this plugin can function","kanzu-support-desk" )
                 );
         }else{
+            //Set-up actions
+            $this->setup_actions( 'valid' );
+        
             //Run check only if transient is not set
             if ( false === get_transient( '_ksd_mail_license_last_check' ) ){
                 set_transient( '_ksd_mail_license_last_check', date('U'), 7 * 60 * 60 * 24 );//Expires in a week. Didn't use constant WEEK_IN_SECONDS since it was
@@ -212,12 +215,11 @@ class KSD_Mail_Admin {
             }
           }
         
-
+                    
         /*
          * Checks mailbox for new tickets to log.
          */
-        public function check_mailbox(){
-
+            public function check_mailbox(){                    
             //Get last run time
             $run_freq = (int) get_option('ksd_mail_check_freq') ; //in minutes
             $last_run = (int) get_option('ksd_mail_lastrun_time'); //saved as unix timestamp
@@ -225,6 +227,7 @@ class KSD_Mail_Admin {
             $interval = $now - $last_run ;
 
             if ( $interval  < ( $run_freq * 60 ) ){
+                KSD_Mail::ksd_mail_log_me('Kanzu Run interval has not passed.');
                 _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
                 return;
             }
@@ -237,6 +240,7 @@ class KSD_Mail_Admin {
 
             if ( ! $m_box->connect() ) {
                     _e( "Can not connect to mailbox.", "ksd-mail" );
+                    KSD_Mail::ksd_mail_log_me("Kanzu Can not connect to mailbox.");
                     return;
             }
 
@@ -262,8 +266,8 @@ class KSD_Mail_Admin {
                     $users   = $userObj->get_users("user_email = '$email'");
                     //TODO: Add check if user is not registered. send email notification.
                     $user_id = $users[0]->ID;
-
-                    //Checi if this is a new ticket before logging it.
+                    
+                    //Check if this is a new ticket before logging it.
                     $value_parameters   = array();
                     $filter             = " tkt_subject = %s AND tkt_status = %d AND tkt_logged_by = %d ";
                     $value_parameters[] = $subject ;
@@ -404,7 +408,7 @@ class KSD_Mail_Admin {
         
 
         /**
-         * Hook into cron_schedules filter to create "ksd_mail_interval" schedule
+         * Hook into cron_schedules filter to create "KSDMailCheckInt" schedule
          * 
          * @param array $schedules
          */
@@ -434,16 +438,12 @@ class KSD_Mail_Admin {
         
         
         /**
-         * Schedule mail check hook called "ksd_mail_check" on "ksd_mail_interval"
-         * cron schedule  and attach "check_mailbox" to it.
+         * Schedule mail check hook called "ksd_mail_check" on "KSDMailCheckInt"
+         * cron schedule  
          */
         public function create_cron_hook(){
-
-            //add action to ksd_mail_hook
-            add_action( 'ksd_mail_check', array( $this, 'check_mailbox' ) );
-            
-            //Schedule ksd_mail_check action hook
-            wp_schedule_event( time(), 'KSDMailCheckInt', 'ksd_mail_check' );
+            //Schedule ksd_mail_check action hook.  
+            wp_schedule_event( time(), 'KSDMailCheckInt', 'ksd_mail_check');                    
 
         }
         
@@ -453,8 +453,7 @@ class KSD_Mail_Admin {
         public function schedule_mail_check(){
             $this->create_cron_schedule();
             $this->create_cron_hook();
-
-        }
+        }   
         
         
 }
