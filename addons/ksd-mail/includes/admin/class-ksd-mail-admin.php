@@ -70,15 +70,7 @@ class KSD_Mail_Admin {
         public function show_settings( $current_settings ){
             include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-settings.php' );
         }
-        
-        
-        
-        /**
-         * HTML for KSD addons view
-         */
-        public function show_addons () {
-            include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-addons.php' );
-        }
+
  
         /**
          * HTML for KSD Support/Help view
@@ -109,9 +101,6 @@ class KSD_Mail_Admin {
             else{
                 //Add extra settings to the KSD Settings view
 		add_action( 'ksd_display_settings', array( $this, 'show_settings' ) ); 
-                
-                //Add addon to KSD addons view 
-                add_action( 'ksd_display_addons', array( $this, 'show_addons' ) );
                 
                 //Add help to KSD help view
                 add_action( 'ksd_display_help', array( $this, 'show_help' ) );                

@@ -39,7 +39,10 @@ class KSD_Admin {
 
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
-
+                
+                //Load add-ons
+                add_action( 'ksd_load_addons', array( $this, 'load_ksd_addons' ) );
+                
 		// Add an action link pointing to the settings page.
 		add_filter( 'plugin_action_links_' . plugin_basename( KSD_PLUGIN_FILE ), array( $this, 'add_action_links' ) );		
    
@@ -860,6 +863,26 @@ class KSD_Admin {
                 die();// IMPORTANT: don't leave this out
             }  
          }
+        
+         /**
+          * Retrieve and display the list of add-ons
+          */
+         public function load_ksd_addons(){                    
+            ob_start();  
+            if ( false === ( $cache = get_transient( 'ksd_add_ons_feed' ) ) ) {
+		$feed = wp_remote_get( 'https://kanzucode.com/?feed=ksdaddons', array( 'sslverify' => false ) );
+		if ( ! is_wp_error( $feed ) ) {                   
+			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
+				$cache = wp_remote_retrieve_body( $feed );
+				set_transient( 'ksd_add_ons_feed', $cache, 3600 );
+			}
+		} else {
+			$cache = '<div class="error"><p>' . __( 'There was an error retrieving the add-ons list from the server. Please try again later.', 'kanzu-support-desk' ) . '</div>';
+		}
+            }
+        echo $cache;
+        echo ob_get_clean();    
+        }
          
          /**
           * Update a ticket's private note

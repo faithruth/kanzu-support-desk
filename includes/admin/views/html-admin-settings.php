@@ -59,10 +59,10 @@
                             <input type="text" value="<?php echo $license_details['license']; ?>" size="30" name="<?php echo $license_details['license_db_key']; ?>" />
                             <?php if( $license_details['license_status'] == 'valid' ) { ?>
                                 <span class="license_status valid"><?php _e( 'active', 'kanzu-support-desk' ); ?></span>
-                                <input type="submit" class="button-secondary ksd-license ksd-deactivate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php _e('Deactivate License'); ?>"/>
+                                <input type="submit" class="button-secondary ksd-license ksd-deactivate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php _e('Deactivate License','kanzu-support-desk'); ?>"/>
                             <?php } else { ?>
                                 <span class="license_status <?php echo $license_details['license_status'];?>"><?php echo ( empty( $license_details['license'] ) ? __( 'not set','kanzu-support-desk') : __( 'invalid','kanzu-support-desk') );  ?></span>
-				<input type="submit" class="button-secondary ksd-license ksd-activate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php _e('Activate License'); ?>"/>
+				<input type="submit" class="button-secondary ksd-license ksd-activate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php _e('Activate License','kanzu-support-desk'); ?>"/>
                             <?php } ?>
                         </div>                  
                     <?php endforeach;
