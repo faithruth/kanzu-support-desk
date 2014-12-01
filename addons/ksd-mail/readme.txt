@@ -46,9 +46,11 @@ Yes. Kanzu Support Desk.
 
 
 == Changelog ==
+= 1.1.0 =
+* Tickets logged by an action
 
 = 1.0.0 =
-* 14 Nov 14 Launched.
+* 21 Nov 14 Launched.
 
 == Upgrade Notice ==
 = 1.0.0 =

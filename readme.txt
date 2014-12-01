@@ -95,10 +95,18 @@ Yes; KSD will work with any theme
 
 == Changelog ==
 
+= 1.1.0 =
+* 1/12/14 Tickets logged by an action
+* Feedback form added to help tab
+* Newsletter opt-in added
+
 = 1.0.0 =
 * 21 Nov 14 Launched.
 
 == Upgrade Notice ==
+= 1.1.0 =
+* Tickets now logged by an action & feedback options added
+
 = 1.0.0 =
 * Join the Kanzu Support club
 
