@@ -60,7 +60,8 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' )); 
                 add_action( 'wp_ajax_ksd_reset_settings', array( $this, 'reset_settings' )); 
                 add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));  
-                            
+                add_action( 'wp_ajax_ksd_send_feedback', array( $this, 'send_feedback' ));  
+                
 	}
 	
 
@@ -131,6 +132,7 @@ class KSD_Admin {
                 $admin_labels_array['tkt_update_note']              = __('Update Note','kanzu-support-desk');
                 $admin_labels_array['msg_still_loading']            = __('Still Loading...','kanzu-support-desk');
                 $admin_labels_array['msg_loading']                  = __('Loading...','kanzu-support-desk');
+                $admin_labels_array['msg_sending']                  = __('Sending...','kanzu-support-desk');
                         
                 
                 //Localization allows us to send variables to the JS script
@@ -912,6 +914,23 @@ class KSD_Admin {
                     echo json_encode($response);	
                     die();// IMPORTANT: don't leave this out
                 }  
+         }
+         
+         /**
+          * Send the KSD team feedback
+          */
+         public function send_feedback(){
+            if ( ! wp_verify_nonce( $_POST['feedback-nonce'], 'ksd-send-feedback' ) ){
+			 die ( __('Busted!','kanzu-support-desk') );
+               }
+             if (strlen( $_POST['ksd_user_feedback'] )<= 2 ){
+                $response = __( "Error | The feedback field's empty. Please type something then send","kanzu-support-desk" ); 
+             }  
+             else{
+                $response =  ( $this->send_email( "feedback@kanzucode.com", sanitize_text_field( $_POST['ksd_user_feedback'] ),"KSD Feedback" ) ? __( "Sent successfully. Thank you!", "kanzu-support-desk" ) : __( "Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com","kanzu-support-desk" ) );
+             }
+             echo json_encode( $response );	
+             die();// IMPORTANT: don't leave this out
          }
          
          /**

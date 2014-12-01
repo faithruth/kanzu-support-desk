@@ -92,6 +92,9 @@
 #admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
 	padding: 0.5em 0;
 }
+#admin-kanzu-support-desk textarea{
+    width: 99%;
+}
 ul.ksd-top-nav{
     margin: 0;
     padding: 0;
@@ -264,6 +267,7 @@ a.new-ticket:hover {
     float: left;
     margin-top: 20px;
     padding-left: 0;
+    width: 100%;
 }
 #update_private_note textarea{
     background-color: #EFEFEF;
@@ -480,7 +484,7 @@ span.feedback_note{
     padding-left: 10px;
 }
 /*Newsletter forms*/ 
-.admin-ksd-content #mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px; border: 2px solid #e5e5e5;}
+.admin-ksd-content #mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px; border: 1px solid #e5e5e5;background-color: #FFF;}
 .admin-ksd-content #mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}
 .admin-ksd-content #mc_embed_signup input {border:1px solid #999; -webkit-appearance:none;}
 .admin-ksd-content #mc_embed_signup input[type=checkbox]{-webkit-appearance:checkbox;margin-top: 4px;}
@@ -490,8 +494,7 @@ span.feedback_note{
 .admin-ksd-content #mc_embed_signup .button:hover {background-color:#777;}
 .admin-ksd-content #mc_embed_signup .small-meta {font-size: 11px;}
 .admin-ksd-content #mc_embed_signup .nowrap {white-space:nowrap;}
-
-.admin-ksd-content #mc_embed_signup .mc-field-group {clear:none; position:relative; width:30%; float: left;padding-bottom:3%; min-height:50px;}
+.admin-ksd-content #mc_embed_signup .mc-field-group {clear:none; position:relative; width:30%; float: left;padding-bottom:10px; min-height:50px;font-size: 0.9em;}
 .admin-ksd-content #mc_embed_signup .size1of2 {clear:none; float:left; display:inline-block; width:46%; margin-right:4%;}
 * html .admin-ksd-content #mc_embed_signup .size1of2 {margin-right:2%; /* Fix for IE6 double margins. */}
 .admin-ksd-content #mc_embed_signup .mc-field-group label {display:block; margin-bottom:3px;}
