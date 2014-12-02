@@ -219,8 +219,7 @@ class KSD_Mail_Admin {
             $now = (int) date( 'U' );
             $interval = $now - $last_run ;
             
-            if ( $interval  < ( $run_freq * 60 ) ){
-                KSD_Mail::ksd_mail_log_me('Kanzu Run interval has not passed.');
+            if ( $interval  < ( $run_freq * 60 ) ){               
                 _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
                 return;
             }
@@ -232,8 +231,7 @@ class KSD_Mail_Admin {
             $m_box = new KSD_Mail_Processor();
 
             if ( ! $m_box->connect() ) {
-                    _e( "Can not connect to mailbox.", "ksd-mail" );
-                    KSD_Mail::ksd_mail_log_me("Kanzu Can not connect to mailbox.");
+                    _e( "Can not connect to mailbox.", "ksd-mail" );//@TODO Display admin notice
                     return;
             }
 
@@ -246,8 +244,7 @@ class KSD_Mail_Admin {
                     $msg = $m_box->getMessage($i);
 
                     $mail_mailbox = $msg['headers']->from[0]->mailbox;
-                    $mail_host    = $msg['headers']->from[0]->host;
-                    KSD_Mail::ksd_mail_log_me( "kanzu New ticket retrieved" );
+                    $mail_host    = $msg['headers']->from[0]->host;                    
                     
                     $new_ticket                         = new stdClass(); 
                     $new_ticket->tkt_subject            = $msg['headers']->subject;

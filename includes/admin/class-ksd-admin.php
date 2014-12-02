@@ -333,7 +333,7 @@ class KSD_Admin {
             try{
                $tickets = new KSD_Tickets_Controller();	
                $ticket = $tickets->get_ticket($_POST['tkt_id']);
-               $this->format_ticket_for_viewing($ticket);
+               $this->format_ticket_for_viewing( $ticket );
                echo json_encode($ticket);
                die();
                    
@@ -470,10 +470,11 @@ class KSD_Admin {
         public function reply_ticket( $ticket_reply_array=null ){
                 //In add-on mode, this function was called by an add-on
                 $add_on_mode = ( !is_null( $ticket_reply_array ) ? true : false );
-                
-               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) && ! $add_on_mode ){
+            if ( ! $add_on_mode ){//Check for NONCE if not in add-on mode    
+               if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) ){
 			 die ( __('Busted!','kanzu-support-desk') );
                }
+            }
                 $this->do_admin_includes();
                 
                 try{    
@@ -519,8 +520,7 @@ class KSD_Admin {
          * @param Object $new_ticket New ticket object. Can also be a reply object
          * @since 1.0.1
          */
-        public function do_log_new_ticket( $new_ticket ){
-            Kanzu_Support_Desk::kanzu_support_log_me( "kanzu action triggered ");
+        public function do_log_new_ticket( $new_ticket ){            
             $this->do_admin_includes();
             $TC = new KSD_Tickets_Controller();
             //First check if the ticket initiator exists in our customers table. The assumption here is that 
@@ -538,7 +538,8 @@ class KSD_Admin {
                 $the_ticket = $TC->get_tickets( $filter, $value_parameters );
                 if ( count( $the_ticket ) > 0  ){//this is a reply
                     //Get a $_POST array to send to the reply_ticket function
-                    $_POST = $this->convert_ticket_object_to_post( $new_ticket );
+                    $_POST['tkt_id'] = $the_ticket[0]->tkt_id;//The ticket ID
+                    $_POST['ksd_ticket_reply'] = $new_ticket->tkt_message;//Get the reply
                     $this->reply_ticket( $_POST ); //This function has a die() in it so no risk of proceeding beyond this point
                }               
             }
@@ -868,6 +869,7 @@ class KSD_Admin {
         
          /**
           * Retrieve and display the list of add-ons
+          * @since 1.1.0
           */
          public function load_ksd_addons(){                    
             ob_start();  
@@ -918,6 +920,7 @@ class KSD_Admin {
          
          /**
           * Send the KSD team feedback
+          * @since 1.1.0
           */
          public function send_feedback(){
             if ( ! wp_verify_nonce( $_POST['feedback-nonce'], 'ksd-send-feedback' ) ){

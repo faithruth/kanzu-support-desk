@@ -99,6 +99,7 @@ Yes; KSD will work with any theme
 * 1/12/14 Tickets logged by an action
 * Feedback form added to help tab
 * Newsletter opt-in added
+* Add-on list retrieved from KSD add-on feed
 
 = 1.0.0 =
 * 21 Nov 14 Launched.
