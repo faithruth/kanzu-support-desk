@@ -33,10 +33,10 @@ class KSD_Install {
 	 *
 	 * @since     1.0.0
 	 */
-	public function __construct() {
- 
+	public function __construct() { 
 		//Re-direct on plugin activation
 		add_action( 'admin_init', array( $this, 'redirect_to_dashboard'    ) );
+                //Upgrade settings
                 add_filter( 'ksd_upgrade_settings',  array( $this, 'upgrade_settings' ) );
 	}
  
@@ -120,7 +120,7 @@ class KSD_Install {
         public function upgrade_settings( $settings ){
             switch ( KSD_VERSION ){
                 case '1.1.0':
-                    $settings['tour_mode']   = "no";
+                    $settings['tour_mode']   = "yes";
                     break;
             }
             return $settings;

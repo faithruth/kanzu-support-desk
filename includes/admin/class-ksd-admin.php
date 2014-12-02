@@ -61,6 +61,7 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_reset_settings', array( $this, 'reset_settings' )); 
                 add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));  
                 add_action( 'wp_ajax_ksd_send_feedback', array( $this, 'send_feedback' ));  
+                add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ));              
                 
 	}
 	
@@ -115,8 +116,8 @@ class KSD_Admin {
                 }
                 $agents_list .= "</ul>";
                 
-                //Get intro tour messages if we are in tour mode
-                $tour_pointer_messages = $this->load_intro_tour();
+                //Get intro tour messages if we are in tour mode @since 1.1.0
+                $tour_pointer_messages['ksd_intro_tour'] =  $this->load_intro_tour();
                 
                 //This array allows us to internalize (translate) the words/phrases/labels displayed in the JS 
                 $admin_labels_array = array();
@@ -136,6 +137,7 @@ class KSD_Admin {
                 $admin_labels_array['msg_still_loading']            = __('Still Loading...','kanzu-support-desk');
                 $admin_labels_array['msg_loading']                  = __('Loading...','kanzu-support-desk');
                 $admin_labels_array['msg_sending']                  = __('Sending...','kanzu-support-desk');
+                $admin_labels_array['pointer_next']                 = __('Next','kanzu-support-desk');
                         
                 
                 //Localization allows us to send variables to the JS script
@@ -937,7 +939,7 @@ class KSD_Admin {
             $KSD_settings = Kanzu_Support_Desk::get_settings();
             if ( "no" === $KSD_settings['tour_mode'] ){
                 return false;
-            }
+             }
             //Generate the tour messages
             $pointers = $this->generate_tour_content();
             
@@ -959,16 +961,83 @@ class KSD_Admin {
              //The content is entered into the array based on which tab it'll show on
              //Content for tab 1 is entered first and for tab n is entered at $p[n]
              $p[] = array(
-                'target' => '#admin-kanzu-support-desk',
+                'target' => '#dashboard',
                 'options' => array(
-                    'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
-                    __( 'Title' ,'plugindomain'),
-                    __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','plugindomain')
+                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
+                    __( 'Kanzu Support Desk Dashboard' ,'kanzu-support-desk'),
+                    __( 'Your dashboard displays your performance statistics','kanzu-support-desk')
                     ),
-                'position' => array( 'edge' => 'top', 'align' => 'middle' )
+                    'button2'  => __( 'Next', 'kanzu-support-desk' ),
+                    'function' => 'window.location="' . admin_url( 'admin.php?page=wpseo_titles' ) . '";',
+                    'position' => array( 'edge' => 'top', 'align' => 'left' )
+                )
+            );
+            $p[] = array(
+                'target' => '#dashboard',
+                'options' => array(
+                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p><p> %s </p><p> %s </p></span>',
+                    __( 'The tickets' ,'kanzu-support-desk'),
+                    __( 'All your tickets are displayed here. Filter tickets using the filters at the top left','kanzu-support-desk'),
+                    __( 'Search, refresh and paginate the view using the buttons at the top right.' ,'kanzu-support-desk'),
+                    __( 'View ticket details by clicking on a single ticket' ,'kanzu-support-desk')
+                            ),
+                    'position' => array( 'edge' => 'top', 'align' => 'left' )
+                )
+            );
+            $p[] = array(
+                'target' => '#dashboard',
+                'options' => array(
+                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p><p> %s </p></span>',
+                    __( 'New Ticket' ,'kanzu-support-desk'),
+                    __( 'You or your agent(s) can log new tickets here. If "Send Email" is checked, an email is sent to your customer','kanzu-support-desk'),
+                    __( 'New tickets can also be logged by your customers from a form at the front-end of your site.' ,'kanzu-support-desk')
+                    ),
+                    'position' => array( 'edge' => 'top', 'align' => 'left' )
+                )
+            );
+            $p[] = array(
+                'target' => '#dashboard',
+                'options' => array(
+                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
+                    __( 'Settings' ,'kanzu-support-desk'),
+                    __( 'Modify your settings','kanzu-support-desk')
+                    ),
+                    'position' => array( 'edge' => 'top', 'align' => 'left' )
+                )
+            );
+            $p[] = array(
+                'target' => '#dashboard',
+                'options' => array(
+                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
+                    __( 'Add-ons' ,'kanzu-support-desk'),
+                    __( 'Activate an add-on to allow your customers to log tickets using other channels','kanzu-support-desk')
+                    ),
+                    'position' => array( 'edge' => 'top', 'align' => 'left' )
+                )
+            );
+            $p[] = array(
+                'target' => '#dashboard',
+                'options' => array(
+                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
+                    __( 'Help' ,'kanzu-support-desk'),
+                    __( 'Resource center to help you make the most of your Kanzu Support Desk experience','kanzu-support-desk')
+                    ),
+                    'position' => array( 'edge' => 'top', 'align' => 'left' )
                 )
             );
             return $p;
+         }
+         
+         /**
+          * Disable tour mode
+          * @since 1.1.0
+          */
+         public function disable_tour_mode(){
+            $ksd_settings = Kanzu_Support_Desk::get_settings();
+            $ksd_settings['tour_mode'] = "no";
+            Kanzu_Support_Desk::update_settings( $ksd_settings );
+            echo json_encode( 1 );
+            die();            
          }
          
          /**

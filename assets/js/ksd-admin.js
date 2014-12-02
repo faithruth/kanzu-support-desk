@@ -5,7 +5,7 @@ jQuery( document ).ready(function() {
     
         /**For the general navigation tabs**/
 	jQuery( "#tabs").tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
-	jQuery( "#tabs > ul > li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" );
+	jQuery( "#tabs > ul > li" ).removeClass( "ui-corner-top" ).addClass( "ui-corner-left" ); 
  
         /*Get URL parameters*/
         jQuery.urlParam = function(name){
@@ -244,8 +244,47 @@ jQuery( document ).ready(function() {
             });            
             };
             this.generateTourContent = function(){
-                if( ksd_admin.ksd_tour_pointers ){//If pointers are set, show them off
-                    
+                var pointerContentIndex = 0;
+                if( ksd_admin.ksd_tour_pointers.ksd_intro_tour ){//If pointers are set, show them off 
+                    var pointer = ksd_admin.ksd_tour_pointers.ksd_intro_tour;
+                     options = jQuery.extend( pointer[pointerContentIndex].options, {
+                        close: function() {
+                           /* jQuery.post( ksd_admin.ajax_url, {
+                                pointer: 'ksd_intro_tour',
+                                action: 'dismiss-wp-pointer'
+                            });*/
+                            //Disable tour mode
+                            jQuery.post( ksd_admin.ajax_url, {
+                                action: 'ksd_disable_tour_mode'
+                            });
+                        }
+                    }); 
+                jQuery( pointer[pointerContentIndex].target ).pointer( options ).pointer('open');
+                //Inject a 'Next' button into the pointer
+                jQuery( 'a.close' ).after('<a href="#" class="ksd-next button-primary">'+ksd_admin.ksd_labels.pointer_next+'</a>');
+  
+                //Move to the next tab when 'Next' is clicked
+                jQuery( 'a.ksd-next' ).click( function(){                     
+                    if( pointerContentIndex < 5 ){
+                        ++pointerContentIndex;
+                    }
+                    else{//End of the tour
+                        //Dismiss the pointer in the WP db
+                        /*jQuery.post( ksd_admin.ajax_url, {
+                                pointer: 'ksd_intro_tour',
+                                action: 'dismiss-wp-pointer'
+                        });*/
+                        //Disable tour mode
+                        jQuery.post( ksd_admin.ajax_url, {
+                                action: 'ksd_disable_tour_mode'
+                        });
+                        //Close the pointer
+                        jQuery( pointer[pointerContentIndex].target ).pointer('close');
+                        return;
+                    }
+                   jQuery('.wp-pointer-content span').html(pointer[pointerContentIndex].options.content);
+                   jQuery( "#tabs" ).tabs( "option", "active", pointerContentIndex );
+                });
                 }
             };
         };
@@ -666,6 +705,10 @@ jQuery( document ).ready(function() {
                     case "ksd-help":
                             activeTab=5;
                     break;
+            }
+            //If we are in tour mode, activate the dashboard
+            if ( ksd_admin.ksd_tour_pointers.ksd_intro_tour ){
+                activeTab=0;       
             }
             jQuery( "#tabs" ).tabs( "option", "active", activeTab );
             //Set the title

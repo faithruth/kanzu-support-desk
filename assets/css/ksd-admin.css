@@ -340,6 +340,11 @@ ul.dashboard-statistics-summary li {
   line-height: 70px;
   width: 25%;
 }
+/*Pointers*/
+.wp-pointer-buttons a.ksd-next {
+  margin-right: 22px;
+  margin-top: -6px;
+}
 
 /**Style a ticket item*/
 .ticket-list{

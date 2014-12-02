@@ -60,12 +60,21 @@ class KSD_Mail_Install {
 	 *
 	 */
 	public static function activate() { 
+             // Bail if activating from network, or bulk. @since 1.1.0
+            if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
+		return;
+            }
             
-            //Check for re-activation. Will later be used to check for upgrades
+            //Check for re-activation. 
             $ksd_mail_settings   =   KSD_Mail::get_settings();            
             if ( isset ( $ksd_mail_settings['ksd_mail_version'] ) &&  $ksd_mail_settings['ksd_mail_version'] == KSD_MAIL_VERSION ) {//Bail out if it's a re-activation
                 return;
             }
+            //If it's an upgrade, do nothing
+             if ($ksd_mail_settings['ksd_mail_version'] != KSD_MAIL_VERSION ) {  
+                 return;
+             }
+            //This is a new installation. Yippee! 
             self::set_default_options(); 	
             
 	}
