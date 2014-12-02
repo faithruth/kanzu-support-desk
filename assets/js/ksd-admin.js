@@ -222,6 +222,7 @@ jQuery( document ).ready(function() {
         this.init = function(){
             //Submit feedback
             this.submitFeedbackForm();
+            this.generateTourContent();
         };
 
             /*
@@ -241,6 +242,11 @@ jQuery( document ).ready(function() {
                                 KSDUtils.showDialog("success",JSON.parse( response ));       
                             });
             });            
+            };
+            this.generateTourContent = function(){
+                if( ksd_admin.ksd_tour_pointers ){//If pointers are set, show them off
+                    
+                }
             };
         };
         

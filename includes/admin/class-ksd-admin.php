@@ -115,6 +115,9 @@ class KSD_Admin {
                 }
                 $agents_list .= "</ul>";
                 
+                //Get intro tour messages if we are in tour mode
+                $tour_pointer_messages = $this->load_intro_tour();
+                
                 //This array allows us to internalize (translate) the words/phrases/labels displayed in the JS 
                 $admin_labels_array = array();
                 $admin_labels_array['dashboard_chart_title']        = __('Incoming Tickets','kanzu-support-desk');
@@ -144,7 +147,8 @@ class KSD_Admin {
                                             'ksd_tickets_url'       =>  admin_url( 'admin.php?page=ksd-tickets'),
                                             'ksd_agents_list'       =>  $agents_list,
                                             'ksd_current_user_id'   =>  get_current_user_id(),
-                                            'ksd_labels'            =>  $admin_labels_array
+                                            'ksd_labels'            =>  $admin_labels_array,
+                                            'ksd_tour_pointers'     =>  $tour_pointer_messages
                                         )
                                     );
 		
@@ -916,6 +920,55 @@ class KSD_Admin {
                     echo json_encode($response);	
                     die();// IMPORTANT: don't leave this out
                 }  
+         }
+         
+         /**
+          * Give the user an introductory tour to KSD
+          * @return Array $pointers Returns an array of pointers or false
+          * @since 1.1.0
+          */
+         private function load_intro_tour(){
+            // Don't run on WP < 3.3. The 'pointers' used to give the
+            //intro tour were only introduced in WP 3.3
+            if ( get_bloginfo( 'version' ) < '3.3' ){
+                return false;                
+            }
+            //Check if tour mode is on
+            $KSD_settings = Kanzu_Support_Desk::get_settings();
+            if ( "no" === $KSD_settings['tour_mode'] ){
+                return false;
+            }
+            //Generate the tour messages
+            $pointers = $this->generate_tour_content();
+            
+            // No pointers? Then we stop.
+            if ( ! $pointers || ! is_array( $pointers ) ){
+                return false;
+            }
+            wp_enqueue_style( 'wp-pointer' );
+            wp_enqueue_script( 'wp-pointer' );
+            
+            return $pointers;
+         }
+         
+         /**
+          * The tour content for the different screens
+          * @since 1.1.0
+          */
+         private function generate_tour_content(){
+             //The content is entered into the array based on which tab it'll show on
+             //Content for tab 1 is entered first and for tab n is entered at $p[n]
+             $p[] = array(
+                'target' => '#admin-kanzu-support-desk',
+                'options' => array(
+                    'content' => sprintf( '<h3> %s </h3> <p> %s </p>',
+                    __( 'Title' ,'plugindomain'),
+                    __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.','plugindomain')
+                    ),
+                'position' => array( 'edge' => 'top', 'align' => 'middle' )
+                )
+            );
+            return $p;
          }
          
          /**
