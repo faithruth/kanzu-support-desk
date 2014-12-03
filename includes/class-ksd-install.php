@@ -71,22 +71,26 @@ class KSD_Install {
             }
             //Check for re-activation.  
             $settings   =   Kanzu_Support_Desk::get_settings();
-            if ( $settings['kanzu_support_version'] == KSD_VERSION ) {//Bail out if it's a re-activation
-                return;
-            }          
-            //Check if it's an upgrade. If it is, run the updates. @since 1.1.0
-            if ( $settings['kanzu_support_version'] != KSD_VERSION ) {                
-                $settings['kanzu_support_version'] =  KSD_VERSION;   //Update the version
-                $upgraded_settings = apply_filters( 'ksd_upgrade_settings', $settings );
-                do_action ( 'ksd_upgrade_plugin' );//Mainly holds changes to the tables. (and all other changes really)               
-                Kanzu_Support_Desk::update_settings( $upgraded_settings );                            
+            if ( isset( $settings['kanzu_support_version'] ) ){//Reactivation or upgrade
+                if ( $settings['kanzu_support_version'] == KSD_VERSION ) {//Bail out if it's a re-activation
+                    return;
+                }          
+                //Check if it's an upgrade. If it is, run the updates. @since 1.1.0
+                if ( $settings['kanzu_support_version'] != KSD_VERSION ) {                
+                    $settings['kanzu_support_version'] =  KSD_VERSION;   //Update the version
+                    $upgraded_settings = apply_filters( 'ksd_upgrade_settings', $settings );
+                    do_action ( 'ksd_upgrade_plugin' );//Mainly holds changes to the tables. (and all other changes really)               
+                    Kanzu_Support_Desk::update_settings( $upgraded_settings );                            
+                    set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
+                    return;
+                 }
+            }
+            else{
+                //This is a new installation. Yippee! 
+                self::create_tables();
+                self::set_default_options(); 	            
                 set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
-                return;
-             }
-            //This is a new installation. Yippee! 
-            self::create_tables();
-            self::set_default_options(); 	            
-            set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
+            }
 	}
         
        /**
