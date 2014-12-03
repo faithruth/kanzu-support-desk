@@ -111,7 +111,7 @@ Yes; KSD will work with any theme
 
 == Upgrade Notice ==
 = 1.1.1 =
-* Gracefully handle errors in dashboard AJAX response & better styling for settings
+* Create KSD tables, gracefully handle errors in dashboard AJAX response & better styling for settings
 
 = 1.1.0 =
 * Feedback options added, optional add-ons updated, intro tour on activation
