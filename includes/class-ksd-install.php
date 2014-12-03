@@ -152,7 +152,7 @@ class KSD_Install {
 				`cust_account_status` ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
 				`cust_creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
 				`cust_created_by` BIGINT(20), 
-				`cust_lastmodification_date` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+				`cust_lastmodification_date` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
 				`cust_modified_by` BIGINT(20),
                                 UNIQUE ( `cust_email` )
 				);
@@ -168,7 +168,7 @@ class KSD_Install {
                                 `tkt_cust_id` BIGINT(20) NOT NULL, 
                                 `tkt_assigned_by` BIGINT(20) NOT NULL, 
                                 `tkt_assigned_to` BIGINT(20) NULL, 
-				`tkt_time_updated` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP, 
+				`tkt_time_updated` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP, 
 				`tkt_updated_by` BIGINT(20) NOT NULL,                                 
 				`tkt_private_note` TEXT,
                                 KEY (`tkt_assigned_to`,`tkt_assigned_by`,`tkt_cust_id`),
@@ -184,7 +184,7 @@ class KSD_Install {
 				`rep_is_bcc` BOOLEAN DEFAULT FALSE,
 				`rep_date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 				`rep_created_by` BIGINT(20) NOT NULL,
-				`rep_date_modified` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+				`rep_date_modified` TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
 				`rep_message` TEXT NOT NULL,
                                 CONSTRAINT `rep_tktid_fk`
                                 FOREIGN KEY (`rep_tkt_id`) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
