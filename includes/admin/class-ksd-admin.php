@@ -104,7 +104,7 @@ class KSD_Admin {
 	public function enqueue_admin_scripts() { 
 		
 		//Load the script for Google charts. Load this before the next script. 
-                wp_enqueue_script( KSD_SLUG . '-admin-gcharts', '//google.com/jsapi', array(), KSD_VERSION ); 
+                wp_enqueue_script( KSD_SLUG . '-admin-gcharts', '//www.google.com/jsapi', array(), KSD_VERSION ); 
                 wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'/assets/js/ksd-admin.js', array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION ); 
 		
                 //Variables to send to the admin JS script
