@@ -94,6 +94,9 @@ final class Kanzu_Support_Desk {
 	 * When the plugin is deleted, the uninstall.php file is loaded.
 	 */
 	register_activation_hook( __FILE__, array( 'KSD_Install', 'activate' ) );
+        
+        //Register a de-activation hook
+        register_deactivation_hook( __FILE__, array( 'KSD_Install', 'deactivate' ) );
 	
         }
 	

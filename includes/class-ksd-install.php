@@ -88,10 +88,35 @@ class KSD_Install {
             else{
                 //This is a new installation. Yippee! 
                 self::create_tables();
-                self::set_default_options(); 	            
+                self::set_default_options(); 	      
                 set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
             }
+            
 	}
+        
+        
+        /**
+         * Do de-activation stuff.
+         */
+        public static function deactivate (){
+            
+            //De-activate in later action because of bug in de-activating at this point.
+            //http://wordpress.stackexchange.com/questions/27850/deactivate-plugin-upon-deactivation-of-another-plugin
+            add_action('update_option_active_plugins', array( 'KSD_Install', 'deactivate_addons' ) );
+            
+        }
+        
+        
+        /**
+         * De-activate addons.
+         */
+        public static function deactivate_addons(){
+
+            $ksd_addons = (array)get_option( 'ksd_active_addons', array() );
+            
+            deactivate_plugins ( $ksd_addons );
+            delete_option('ksd_active_addons');
+        }
         
        /**
 	 * Redirect to a welcome page on activation

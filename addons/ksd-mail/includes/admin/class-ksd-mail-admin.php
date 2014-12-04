@@ -43,6 +43,10 @@ class KSD_Mail_Admin {
 
                 //add action to ksd_mail_check hook. This has to be added here otherwise it won't run
                 add_action( 'ksd_mail_check', array( $this, 'check_mailbox' ) );
+                
+                //Main plugin de-activate filter
+                //add_filter('ksd_deactivate', array( $this, 'ksd_deactivate'));
+                add_action('ksd_deactivate', array( $this, 'ksd_deactivate'));
 	}
         
                     
@@ -163,7 +167,7 @@ class KSD_Mail_Admin {
         public function do_updates() {
 	// retrieve our license key from the DB 
         $mail_settings  =   KSD_Mail::get_settings();
-	$license_key    =   trim( $mail_settings[ 'ksd_mail_license_key' ] );   
+	$license_key    = isset( $mail_settings[ 'ksd_mail_license_key' ] ) ? trim( $mail_settings[ 'ksd_mail_license_key' ] ) : null;   
         
         //Display notice if no license is set or if the license is invalid
         if ( empty ( $license_key ) || 'invalid' == $mail_settings['ksd_mail_license_status'] ){
@@ -410,6 +414,19 @@ class KSD_Mail_Admin {
             $this->create_cron_schedule();
             $this->create_cron_hook();
         }   
+        
+        /**
+         * 
+         * @param array $filter 
+         * @return array
+         */
+        //public function ksd_deactivate( $filter ){
+        public function ksd_deactivate( ){
+            
+            //$filter['ksd-mail'] = KSD_MAIL_DIR . '/ksd-mail.php' ;
+            //return $filter;
+            
+        }
         
         
 }

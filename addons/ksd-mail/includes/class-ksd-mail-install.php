@@ -59,31 +59,52 @@ class KSD_Mail_Install {
 	 * @since    1.0.0
 	 *
 	 */
-	public static function activate() { 
+	public static function activate() {          
              // Bail if activating from network, or bulk. @since 1.1.0
             if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
             }
-            
+
+            //Add plugin to active plugin list
+            self::append_to_activelist();
+
             //Check for re-activation. 
             $ksd_mail_settings   =   KSD_Mail::get_settings();            
             if ( isset ( $ksd_mail_settings['ksd_mail_version'] ) &&  $ksd_mail_settings['ksd_mail_version'] == KSD_MAIL_VERSION ) {//Bail out if it's a re-activation
                 return;
             }
+            
+
+            
             //If it's an upgrade, do nothing
-             if ($ksd_mail_settings['ksd_mail_version'] != KSD_MAIL_VERSION ) {  
+             if (  isset ( $ksd_mail_settings['ksd_mail_version'] ) && $ksd_mail_settings['ksd_mail_version'] != KSD_MAIL_VERSION ) {  
                  return;
              }
+             
             //This is a new installation. Yippee! 
             self::set_default_options(); 	
             
+
+            
 	}
+        
+        /**
+         * Append plugin to active plugin list
+         * @since    1.1.1
+         * 
+         */
+        public static function append_to_activelist (){
+            $ksd_addons             = (array)get_option( 'ksd_active_addons', array() );
+            $ksd_addons['ksd-mail'] =  'ksd-mail/ksd-mail.php'; 
+            add_option( 'ksd_active_addons', $ksd_addons ); //for initial activation
+            update_option( 'ksd_active_addons', $ksd_addons ); //for re-activation
+        }
         
         /**
          * Fired when the plugin is deactivated
          * @since 1.0.1
          */
-        public static function deactivate() { 
+        public static function deactivate () { 
           //Delete cron entries
           $ksd_mail_admin = KSD_Mail_Admin::get_instance();
           $ksd_mail_admin->delete_cron_schedule();
@@ -91,37 +112,37 @@ class KSD_Mail_Install {
         
  
  
-             private static function set_default_options() {                  
-                
-                 KSD_Mail::update_settings( self::get_default_options() );                    
-            }
-            
-            /**
-             * Get default settings
-             */
-            public static function get_default_options(){
-             
-                return  array (
-                        /** KSD Version info ********************************************************/
-                        'ksd_mail_version'                  => KSD_MAIL_VERSION,
-                    
-                        /** Mail Settings ************************************************************/
-                        'ksd_mail_server'                   => 'mail.example.com',
-                        'ksd_mail_account'                  => 'user@example.com',
-                        'ksd_mail_check_freq'               => '30', //minutes
-                        'ksd_mail_mailbox'                  => 'INBOX',//default mail box
-                        'ksd_mail_password'                 => '',
-                        'ksd_mail_protocol'                 => 'pop3',
-                        'ksd_mail_port'                     => '110',
-                        'ksd_mail_validate_certificate'     => 'NO',
-                        'ksd_mail_useSSL'                   => 'NO',
-                        'ksd_mail_lastrun_time'             => date( 'U' ),
-                        
-                        /** License Information ************************************************************/
-                        'ksd_mail_license_key'              => '',
-                        'ksd_mail_license_status'           => 'invalid'
-                    );
-            }
+        private static function set_default_options() {                  
+
+            KSD_Mail::update_settings( self::get_default_options() );                    
+       }
+
+        /**
+         * Get default settings
+         */
+        public static function get_default_options(){
+
+            return  array (
+                    /** KSD Version info ********************************************************/
+                    'ksd_mail_version'                  => KSD_MAIL_VERSION,
+
+                    /** Mail Settings ************************************************************/
+                    'ksd_mail_server'                   => 'mail.example.com',
+                    'ksd_mail_account'                  => 'user@example.com',
+                    'ksd_mail_check_freq'               => '30', //minutes
+                    'ksd_mail_mailbox'                  => 'INBOX',//default mail box
+                    'ksd_mail_password'                 => '',
+                    'ksd_mail_protocol'                 => 'pop3',
+                    'ksd_mail_port'                     => '110',
+                    'ksd_mail_validate_certificate'     => 'NO',
+                    'ksd_mail_useSSL'                   => 'NO',
+                    'ksd_mail_lastrun_time'             => date( 'U' ),
+
+                    /** License Information ************************************************************/
+                    'ksd_mail_license_key'              => '',
+                    'ksd_mail_license_status'           => 'invalid'
+                );
+        }
  
 }
 

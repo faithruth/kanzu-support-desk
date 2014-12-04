@@ -12,7 +12,7 @@
  * Domain Path:       /languages
  *
  */
-
+ 
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
@@ -86,6 +86,7 @@ final class KSD_Mail {
 	}
 
 	public function __construct(){
+            
             //Define constants
             $this->define_constants();
 
@@ -100,6 +101,7 @@ final class KSD_Mail {
             
             //Register a de-activation hook
             register_deactivation_hook( __FILE__, array( 'KSD_Mail_Install', 'deactivate' ) );
+            
 
         }
 	
@@ -144,8 +146,10 @@ final class KSD_Mail {
             }
             //The rest
             include_once( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail-processor.php' );
-            include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-tickets-controller.php' );
-            include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-users-controller.php' );
+            if ( defined(KSD_PLUGIN_DIR) ){
+                include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-tickets-controller.php' );
+                include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-users-controller.php' );
+            }
             include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
             
 
@@ -191,7 +195,7 @@ final class KSD_Mail {
                  return true;
              }  
              else{
-                 $this->ksd_mail_admin_notices = array( 
+                 self::$ksd_mail_admin_notices = array( 
                      'error' => __( 'Kanzu Support Desk must be active to use this plugin. Please activate it first','kanzu-support-desk' )
                  );
                 return false;
