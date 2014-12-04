@@ -115,7 +115,7 @@ Yes; KSD will work with any theme
 
 == Upgrade Notice ==
 = 1.1.3 =
-* De-activation of addons when KSD plugin is de-activated.
+* De-activation of add-ons when KSD plugin is de-activated.
 
 = 1.1.2 =
 * Support for PHP < 5.3 added, support for graphs on sites with SSL (HTTPS)
