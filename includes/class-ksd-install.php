@@ -265,7 +265,6 @@ class KSD_Install {
              */
             public static function log_initial_tickets ( ){
                 
-                
                 global $current_user;
                 get_currentuserinfo();
                 
@@ -284,7 +283,9 @@ class KSD_Install {
                 $tickets = array(    
                     array(
                         'subject' => 'Welcome to Kanzu Support Desk.',
-                        'message' => 'Hi '.  $firstname .' <br />,  The KSD Team would like to ',
+                        'message' => 'Hi '.  $firstname .', <br />  The KSD Team welcomes to the KSD community. '
+                        . 'Enjoy this cool plugin.<br /><br />'
+                        . 'KSD Team.',
                         'channel' => 'STAFF',
                         'status'  => 'OPEN',
                         'email'   => $email,
@@ -293,7 +294,10 @@ class KSD_Install {
                     ),
                     array(
                         'subject' => 'Quick Intro to Kanzu Support Desk Features.',
-                        'message' => 'Quick Intro to Kanzu Support Desk Features',
+                        'message' => 'Hi '.  $firstname .', <br />'
+                        . 'We have prepared a quick intro to get you started with this plugin at '
+                        . '<a href="http://www.kanzucode.com"></a>.<br /><br />'
+                        . 'KSD Team',
                         'channel' => 'STAFF',
                         'status'  => 'OPEN',
                         'email'   => $email,
@@ -302,7 +306,10 @@ class KSD_Install {
                     ),
                     array(
                         'subject' => 'KSD Documentation.',
-                        'message' => 'KSD Documentation',
+                        'message' => 'Hi '.  $firstname .', <br />'
+                        . 'Learn how you can get the most out of this plugin by extending it\'s functionality.'
+                        . 'Go to <a href="http://www.kanzucode.com"></a>.<br /><br />'
+                        . 'KSD Team.',
                         'channel' => 'STAFF',
                         'status'  => 'OPEN',
                         'email'   => $email,
@@ -311,7 +318,9 @@ class KSD_Install {
                     ),
                     array(
                         'subject' => 'KSD Addons and other goodies.',
-                        'message' => 'KSD Addons and other goodies',
+                        'message' => 'Hi '.  $firstname .', <br />'
+                        . 'Browse your addons to and find which best suits your needs. <br /><br />'
+                        . 'KSD Team',
                         'channel' => 'STAFF',
                         'status'  => 'OPEN',
                         'email'   => $email,
@@ -320,7 +329,9 @@ class KSD_Install {
                     ),
                     array(
                         'subject' => 'KSD on social networks.',
-                        'message' => 'KSD on social networks',
+                        'message' => 'Hi '.  $firstname .', <br />'
+                        . 'Facebook: <a href="http://facebook.com/ksd"></a><br /><br />'
+                        . 'KSD Team',
                         'channel' => 'STAFF',
                         'status'  => 'OPEN',
                         'email'   => $email,
@@ -341,10 +352,8 @@ class KSD_Install {
                         
                     //Log the ticket
                     do_action( 'ksd_log_new_ticket', $new_ticket );
+                    
                 }
-                 
-                 
-                
             }
  
 
