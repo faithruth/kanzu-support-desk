@@ -65,9 +65,6 @@ class KSD_Mail_Install {
 		return;
             }
 
-            //Add plugin to active plugin list
-            self::append_to_activelist();
-
             //Check for re-activation. 
             $ksd_mail_settings   =   KSD_Mail::get_settings();            
             if ( isset ( $ksd_mail_settings['ksd_mail_version'] ) &&  $ksd_mail_settings['ksd_mail_version'] == KSD_MAIL_VERSION ) {//Bail out if it's a re-activation
@@ -84,21 +81,8 @@ class KSD_Mail_Install {
             //This is a new installation. Yippee! 
             self::set_default_options(); 	
             
-
-            
 	}
         
-        /**
-         * Append plugin to active plugin list
-         * @since    1.1.1
-         * 
-         */
-        public static function append_to_activelist (){
-            $ksd_addons             = (array)get_option( 'ksd_active_addons', array() );
-            $ksd_addons['ksd-mail'] =  'ksd-mail/ksd-mail.php'; 
-            add_option( 'ksd_active_addons', $ksd_addons ); //for initial activation
-            update_option( 'ksd_active_addons', $ksd_addons ); //for re-activation
-        }
         
         /**
          * Fired when the plugin is deactivated
