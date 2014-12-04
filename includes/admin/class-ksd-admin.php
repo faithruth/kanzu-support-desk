@@ -583,9 +583,9 @@ class KSD_Admin {
          *              by an add-on
          */
         public function log_new_ticket( $new_ticket_array=null ){
-                //In add-on mode, this function was called by an add-on
+                //In add-on mode, this function was called by an add-on                            
                 $add_on_mode = ( is_array( $new_ticket_array ) ? true : false );
-                    
+
                 if( ! $add_on_mode ){//Check for NONCE if not in add-on mode
                     if ( ! wp_verify_nonce( $_POST['new-ticket-nonce'], 'ksd-new-ticket' ) ){
                              die ( __('Busted!','kanzu-support-desk') );
@@ -622,11 +622,11 @@ class KSD_Admin {
                 $new_ticket->tkt_message_excerpt    = wp_trim_words( sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_message' ] )  ), $ksd_excerpt_length );
                 $new_ticket->tkt_message            = sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_message' ] ));
                 $new_ticket->tkt_channel            = $tkt_channel;
-                $new_ticket->tkt_status             = $tkt_status;
+                $new_ticket->tkt_status             = $tkt_status;             
                 
                 //Server side validation for the inputs. Only holds if we aren't in add-on mode
-                if ( ( ! $add_on_mode && strlen( $new_ticket->tkt_subject ) < 2 || strlen( $new_ticket->tkt_message ) < 2) ) { 
-                    throw new Exception( __('Error | Your subject and message should be at least 2 characters', 'kanzu-support-desk'), -1 );
+                if ( ( ! $add_on_mode && strlen( $new_ticket->tkt_subject ) < 2 || strlen( $new_ticket->tkt_message ) < 2 ) ) {
+                     throw new Exception( __('Error | Your subject and message should be at least 2 characters','kanzu-support-desk'), -1 );
                 }
                 
                 //These other fields are only available if a ticket is logged from the admin side so we need to 
