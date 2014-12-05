@@ -63,7 +63,6 @@ class KSD_Install {
 	 */
 	public static function activate() { 
             
-            
             // Bail if activating from network, or bulk. @since 1.1.0
             if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
@@ -103,7 +102,7 @@ class KSD_Install {
             
             //De-activate in later action because of bug in de-activating at this point.
             //http://wordpress.stackexchange.com/questions/27850/deactivate-plugin-upon-deactivation-of-another-plugin
-            add_action( 'update_option_active_plugins', array( $this, 'deactivate_addons' ) );
+            add_action( 'update_option_active_plugins', array( 'KSD_Install', 'deactivate_addons' ) );
             
         }
         

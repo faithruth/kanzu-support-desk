@@ -479,7 +479,8 @@ class KSD_Admin {
         
         public function reply_ticket( $ticket_reply_array=null ){
                 //In add-on mode, this function was called by an add-on
-                $add_on_mode = ( !is_null( $ticket_reply_array ) ? true : false );
+            $add_on_mode = ( is_array( $ticket_reply_array ) ? true : false );
+            
             if ( ! $add_on_mode ){//Check for NONCE if not in add-on mode    
                if ( ! wp_verify_nonce( $_POST['edit-ticket-nonce'], 'ksd-edit-ticket' ) ){
 			 die ( __('Busted!','kanzu-support-desk') );
@@ -507,7 +508,7 @@ class KSD_Admin {
                    $response = $RC->add_reply( $new_reply );
                    
                    if( $add_on_mode ){
-                       die();//End the party if this came from an add-on
+                       return;//End the party if this came from an add-on
                    }
                    if ( $response > 0 ){
                       echo json_encode($new_reply->rep_message );
@@ -550,7 +551,8 @@ class KSD_Admin {
                     //Get a $_POST array to send to the reply_ticket function
                     $_POST['tkt_id'] = $the_ticket[0]->tkt_id;//The ticket ID
                     $_POST['ksd_ticket_reply'] = $new_ticket->tkt_message;//Get the reply
-                    $this->reply_ticket( $_POST ); //This function has a die() in it so no risk of proceeding beyond this point
+                    $this->reply_ticket( $_POST ); 
+                    return; //die removed because it was triggering a fatal error in addons
                }               
             }
             //This is a new ticket
