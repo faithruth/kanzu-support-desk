@@ -44,9 +44,10 @@ class KSD_Mail_Admin {
                 //add action to ksd_mail_check hook. This has to be added here otherwise it won't run
                 add_action( 'ksd_mail_check', array( $this, 'check_mailbox' ) );
                 
-                //Main plugin de-activate filter
-                //add_filter('ksd_deactivate', array( $this, 'ksd_deactivate'));
-                add_action('ksd_deactivate', array( $this, 'ksd_deactivate'));
+                //If the main plugin, KSD, gets deactivated
+                add_action( 'ksd_deactivated', array( 'KSD_Mail_Install', 'ksd_deactivated' ), 2 , 1 );  //We give this a very high priority (2) to ensure
+                                                                                        //that it runs earlier than all other add-on logic. That
+                                                                                        //other add-on logic would fail to run on realizing that KSD isn't active
 	}
         
                     
@@ -414,21 +415,7 @@ class KSD_Mail_Admin {
             $this->create_cron_schedule();
             $this->create_cron_hook();
         }   
-        
-        /**
-         * 
-         * @param array $filter 
-         * @return array
-         */
-        //public function ksd_deactivate( $filter ){
-        public function ksd_deactivate( ){
-            
-            //$filter['ksd-mail'] = KSD_MAIL_DIR . '/ksd-mail.php' ;
-            //return $filter;
-            
-        }
-        
-        
+                    
 }
 endif;
 

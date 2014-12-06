@@ -96,25 +96,14 @@ class KSD_Install {
         
         
         /**
-         * Do de-activation stuff.
+         * Do de-activation stuff. We call action ksd_deactivated for all 
+         * add-ons to clean-up and then deactivate themselves
          */
         public static function deactivate (){
-            
-            //De-activate in later action because of bug in de-activating at this point.
-            //http://wordpress.stackexchange.com/questions/27850/deactivate-plugin-upon-deactivation-of-another-plugin
-            add_action( 'update_option_active_plugins', array( 'KSD_Install', 'deactivate_addons' ) );
-            
-        }
+            do_action ( 'ksd_deactivated' );            
+        }        
         
-        
-        /**
-         * De-activate addons.
-         */
-        public static function deactivate_addons(){
-            $ksd_addons = apply_filters( 'ksd_deactivate', array() );
-            deactivate_plugins ( $ksd_addons );
-        }
-        
+                
        /**
 	 * Redirect to a welcome page on activation
 	 */
