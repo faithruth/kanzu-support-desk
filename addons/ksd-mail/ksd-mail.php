@@ -146,10 +146,7 @@ final class KSD_Mail {
             }
             //The rest
             include_once( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail-processor.php' );
-            if ( defined(KSD_PLUGIN_DIR) ){
-                include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-tickets-controller.php' );
-                include_once( KSD_PLUGIN_DIR . '/includes/controllers/class-ksd-users-controller.php' );
-            }
+ 
             include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
             
 
@@ -187,17 +184,19 @@ final class KSD_Mail {
          }
          
          /**
-          * Check whether Kanzu Support Desk is active or not
+          * Check whether Kanzu Support Desk is active or not. 
+          * De-activate self if KSD isn't active
           * @return boolean 
           */
          public static function is_KSD_active (){
-             if( class_exists('Kanzu_Support_Desk') ){
+             if( class_exists( 'Kanzu_Support_Desk' ) ){
                  return true;
              }  
              else{
                  self::$ksd_mail_admin_notices = array( 
                      'error' => __( 'Kanzu Support Desk must be active to use this plugin. Please activate it first','kanzu-support-desk' )
                  );
+                 KSD_Mail_Install::ksd_deactivated();
                 return false;
             }
          }

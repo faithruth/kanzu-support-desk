@@ -45,10 +45,7 @@ class KSD_Admin {
                 
 		// Add an action link pointing to the settings page.
 		add_filter( 'plugin_action_links_' . plugin_basename( KSD_PLUGIN_FILE ), array( $this, 'add_action_links' ) );		
-   
-                //Add plugin to active addons
-                add_filter( 'ksd_deactivate', array( $this, 'append_to_activelist' ) );
-                
+                 
 		//Handle AJAX calls
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
                 add_action( 'wp_ajax_ksd_log_new_ticket', array( $this, 'log_new_ticket' ));
