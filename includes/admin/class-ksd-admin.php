@@ -510,6 +510,7 @@ class KSD_Admin {
                    if( $add_on_mode ){
                        return;//End the party if this came from an add-on
                    }
+                   
                    if ( $response > 0 ){
                       echo json_encode($new_reply->rep_message );
                    }else{
@@ -696,8 +697,10 @@ class KSD_Admin {
                 //If this was initiated by the email add-on, end the party here
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "EMAIL") ){
                      $this->send_email( $cust_email );
-                     die();
+                     return;
                 }
+                
+                if( $add_on_mode ) return; //For addon mode to ensure graceful exit from function
                 
                 echo json_encode( $new_ticket_status );
                 die();// IMPORTANT: don't leave this out

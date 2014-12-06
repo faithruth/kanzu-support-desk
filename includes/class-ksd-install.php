@@ -62,7 +62,7 @@ class KSD_Install {
 	 *
 	 */
 	public static function activate() { 
-            
+
             // Bail if activating from network, or bulk. @since 1.1.0
             if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 		return;
@@ -274,10 +274,10 @@ class KSD_Install {
                 $firstname = $current_user->user_firstname;
                 
                 $date = date_create( date('Y-m-d') );
-                $date2 = date_sub($date, date_interval_create_from_date_string('1 days'));
-                $date3 = date_sub($date, date_interval_create_from_date_string('3 days'));
-                $date4 = date_sub($date, date_interval_create_from_date_string('4 days'));
-                $date5 = date_sub($date, date_interval_create_from_date_string('5 days'));
+                $date2 = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('1 days'));
+                $date3 = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('2 days'));
+                $date4 = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('3 days'));
+                $date5 = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('4 days'));
                 
                 $tickets = array(    
                     array(
@@ -289,7 +289,7 @@ class KSD_Install {
                         'status'  => 'OPEN',
                         'email'   => $email,
                         'fullname'=> $fullname,
-                        'time'    => $date
+                        'time_logged'    =>  date_format($date, 'Y-m-d h:i:s')
                     ),
                     array(
                         'subject' => 'Quick Intro to Kanzu Support Desk Features.',
@@ -301,7 +301,7 @@ class KSD_Install {
                         'status'  => 'OPEN',
                         'email'   => $email,
                         'fullname'=> $fullname,
-                        'time'    => $date2
+                        'time_logged'    => date_format($date2, 'Y-m-d h:i:s')
                     ),
                     array(
                         'subject' => 'KSD Documentation.',
@@ -313,7 +313,7 @@ class KSD_Install {
                         'status'  => 'OPEN',
                         'email'   => $email,
                         'fullname'=> $fullname,
-                        'time'    => $date3
+                        'time_logged'    => date_format($date3, 'Y-m-d h:i:s')
                     ),
                     array(
                         'subject' => 'KSD Addons and other goodies.',
@@ -324,7 +324,7 @@ class KSD_Install {
                         'status'  => 'OPEN',
                         'email'   => $email,
                         'fullname'=> $fullname,
-                        'time'    => $date4
+                        'time_logged'    => date_format($date4, 'Y-m-d h:i:s')
                     ),
                     array(
                         'subject' => 'KSD on social networks.',
@@ -335,7 +335,7 @@ class KSD_Install {
                         'status'  => 'OPEN',
                         'email'   => $email,
                         'fullname'=> $fullname,
-                        'time'    => $date5
+                        'time_logged'    => date_format($date5, 'Y-m-d h:i:s')
                     ),
                 );
                 
@@ -347,12 +347,13 @@ class KSD_Install {
                     $new_ticket->tkt_status             = $tkt['status'];
                     $new_ticket->cust_email             = $tkt['email'];
                     $new_ticket->cust_fullname          = $tkt['fullname'];
-                    $new_ticket->tkt_time_logged        = $tkt['time'];
+                    $new_ticket->tkt_time_logged        = $tkt['time_logged'];
                         
                     //Log the ticket
                     do_action( 'ksd_log_new_ticket', $new_ticket );
                     
                 }
+                
             }
  
 
