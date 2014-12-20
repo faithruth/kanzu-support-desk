@@ -19,21 +19,21 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
 			
 		$this->_formats = array(
                     'tkt_id' 		 => '%d', 
-                    'tkt_subject' 		 => '%s', 		
-                    'tkt_message'            => '%s', 
-                    'tkt_message_excerpt'	 => '%s',
-                    'tkt_channel' 		 => '%s',
-                    'tkt_status' 		 => '%s',
+                    'tkt_subject'        => '%s', 		
+                    'tkt_message'        => '%s', 
+                    'tkt_message_excerpt'=> '%s',
+                    'tkt_channel' 	 => '%s',
+                    'tkt_status' 	 => '%s',
                     'tkt_assigned_by' 	 => '%s',  
-                    'tkt_cust_id'            => '%s',
+                    'tkt_cust_id'        => '%s',
                     'tkt_assigned_to' 	 => '%s',  
-                    'tkt_severity' 		 => '%s', 
+                    'tkt_severity' 	 => '%s', 
                     'tkt_resolution' 	 => '%s', 
                     'tkt_time_logged' 	 => '%s', 
                     'tkt_time_updated' 	 => '%s', 
-                    'tkt_private_note'  	 => '%s',
+                    'tkt_private_note'   => '%s',
                     'tkt_tags' 		 => '%s',
-                    'tkt_customer_rating'    => '%d'
+                    'tkt_customer_rating'=> '%d'
                 );
 	}
 	

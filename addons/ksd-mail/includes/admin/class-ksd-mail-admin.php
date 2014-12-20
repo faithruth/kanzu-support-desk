@@ -47,10 +47,10 @@ class KSD_Mail_Admin {
                 //If the main plugin, KSD, gets deactivated
                 add_action( 'ksd_deactivated', array( 'KSD_Mail_Install', 'ksd_deactivated' ), 2 , 1 );  //We give this a very high priority (2) to ensure
                                                                                         //that it runs earlier than all other add-on logic. That
-                                                                                        //other add-on logic would fail to run on realizing that KSD isn't active
-	}
+                                                                                        //other add-on logic would fail to run on realizing that KSD isn't active                
+        }
         
-                    
+                            
 	/**
 	 * Return an instance of this class.
 	 *
@@ -391,8 +391,7 @@ class KSD_Mail_Admin {
         public function delete_cron_schedule(){
             
             //Unschedule all cron jobs attached to our 'ksd_mail_check' hook
-            wp_clear_scheduled_hook( 'ksd_mail_check' );      
-           
+            wp_clear_scheduled_hook( 'ksd_mail_check' );     
         }
         
         

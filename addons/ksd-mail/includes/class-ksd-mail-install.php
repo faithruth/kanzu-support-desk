@@ -99,10 +99,9 @@ class KSD_Mail_Install {
          * @since 1.0.1
          */
         public static function ksd_deactivated(){
-            deactivate_plugins( KSD_MAIL_PLUGIN_FILE, true ); //We add 'true' to ensure that the deactivation hook runs
+            deactivate_plugins( KSD_MAIL_PLUGIN_FILE );
         }
         
- 
  
         private static function set_default_options() {                  
 

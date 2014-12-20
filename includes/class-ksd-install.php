@@ -100,9 +100,19 @@ class KSD_Install {
          * add-ons to clean-up and then deactivate themselves
          */
         public static function deactivate (){
-            do_action ( 'ksd_deactivated' );            
+            
+            add_action('update_option_active_plugins', array( 'KSD_Install' , 'deactivate_addons'));
         }        
         
+        
+        public static function deactivate_addons(){
+            $addons = array();
+            $addons  = apply_filters( 'ksd_active_addons_list', $addons );
+            
+            error_log( print_r( $addons, true));
+            do_action('ksd_deactivate');
+            //deactivate_plugins( 'ksd-mail/ksd-mail.php' );
+        }
                 
        /**
 	 * Redirect to a welcome page on activation
@@ -327,6 +337,8 @@ class KSD_Install {
                         'time_logged'    => date_format($date5, 'Y-m-d h:i:s')
                     ),
                 );
+                
+                error_log( print_r($tickets, true));
                 
                 foreach ( $tickets as $tkt ){
                     $new_ticket                         = new stdClass(); 
