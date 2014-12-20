@@ -349,6 +349,8 @@ class KSD_Install {
                     $new_ticket->cust_email             = $tkt['email'];
                     $new_ticket->cust_fullname          = $tkt['fullname'];
                     $new_ticket->tkt_time_logged        = $tkt['time_logged'];
+                    $new_ticket->tkt_logged_by          = $current_user->ID;
+                    $new_ticket->tkt_assigned_to        = $current_user->ID;
                         
                     //Log the ticket
                     do_action( 'ksd_log_new_ticket', $new_ticket );
