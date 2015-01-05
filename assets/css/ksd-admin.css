@@ -978,6 +978,14 @@ span.feedback_note{
   cursor: pointer;
 }
 
+/*KSD Ticket OPEN class*/
+.ksd_open_ticket a {
+    font-weight:bold;
+}
+.ksd_open_ticket{
+    font-weight:bold;
+}
+
 
 /**
  * Jquery UI CSS.  
