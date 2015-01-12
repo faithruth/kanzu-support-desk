@@ -378,19 +378,13 @@ jQuery( document ).ready(function() {
                                      jQuery(current_tab+' .ticket-list').html( ticketListData);
                                      
                                     jQuery.each( respObj[0], function( key, value ) {
-                                            open_tkt_class=""; //class to show which tickets open and which have been resolved.
-                                            if (  value.tkt_status == 'OPEN'){
-                                                open_tkt_class="ksd_open_ticket";
-                                                console.log( open_tkt_class );
-                                            }
-                                                
-                                            ticketListData = '<div class="ksd-row-data ticket-list-item" id="ksd_tkt_id_'+value.tkt_id+'">';
+                                            ticketListData = '<div class="ksd-row-data ticket-list-item ksd-'+(value.tkt_status).toLowerCase()+'-ticket" id="ksd_tkt_id_'+value.tkt_id+'">';
                                             ticketListData += 	'<div class="ticket-info">';
                                             ticketListData += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
-                                            ticketListData += 	'<span class="customer_name '+open_tkt_class+'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+'</a></span>';
-                                            ticketListData +=	'<span class="subject-and-message-excerpt '+open_tkt_class +'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject;
-                                            ticketListData += 	' - '+value.tkt_message_excerpt+'</span></a>';                                            
-                                            ticketListData += 	'<span class="ticket-time '+open_tkt_class+'">'+value.tkt_time_logged+'</span>';
+                                            ticketListData += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+'</a></span>';
+                                            ticketListData +=	'<span class="subject-and-message-excerpt"><a class="ksd-tkt-subject"href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a>';
+                                            ticketListData += 	'<a class="ksd-message-excerpt" href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit"> - '+value.tkt_message_excerpt+'</a></span>';                                            
+                                            ticketListData += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
                                             ticketListData += 	'</div>';
                                             ticketListData += 	'<div class="ticket-actions" id="tkt_'+value.tkt_id+'">';
                                             ticketListData += 	'<a href="#" class="trash" id="tkt_'+value.tkt_id+'">'+ksd_admin.ksd_labels.tkt_trash+'</a> | ';
@@ -404,8 +398,8 @@ jQuery( document ).ready(function() {
                                             jQuery(current_tab+' .ticket-list').append( ticketListData );
                                     });//eof:jQUery.each
 
-                                    /**Add class .alternate to every other row in the tickets table.*/
-                                    jQuery(".ticket-list .ksd-row-data").filter(':even').addClass("alternate");
+                                    /**Add class .alternate to every ticket that's not OPEN.*/
+                                    jQuery(".ticket-list .ksd-row-data:not(.ksd-open-ticket)").addClass("alternate");                                    
                                     
                                     RowCtrlEffects();
                             }
