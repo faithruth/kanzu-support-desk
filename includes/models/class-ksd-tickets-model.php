@@ -142,4 +142,27 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
             }           
             return $obj[0]->count;
          }
+        
+        /*
+         * 
+         */
+        public function get_all_and_reply_cnt( $filter, $value_parameters=array() ){
+            $query = '
+                SELECT T.*, 
+                COALESCE(cnt,0) AS rep_count
+                FROM kanzu.ksd401_kanzusupport_tickets T
+                LEFT JOIN 
+                ( 
+                SELECT count(*) as cnt, rep_tkt_id 
+                FROM kanzu.ksd401_kanzusupport_replies 
+                GROUP BY rep_tkt_id
+                ) R ON R.rep_tkt_id = T.tkt_id
+                    ';
+            
+            $query = $query . ' WHERE ' . $filter;
+            return $this->exec_prepare_query( $query, $value_parameters );
+        }
+         
+         
+         
  }

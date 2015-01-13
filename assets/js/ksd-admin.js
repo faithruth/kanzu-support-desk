@@ -331,7 +331,7 @@ jQuery( document ).ready(function() {
         //Default values
         if( typeof(search)=== 'undefined' )  search = "";
         if( typeof(limit) === 'undefined' )  limit = 5;
-        if( typeof(offset)=== 'undefined' )  offset = 0;
+        if( typeof(offset)=== 'undefined' || jQuery.isNumeric(offset) === false )  offset = 0;
         
                     if(jQuery(current_tab).hasClass("pending"))//Check if the tab has been loaded before
                     {
@@ -343,7 +343,6 @@ jQuery( document ).ready(function() {
                                 limit:  limit,
                                 offset: offset
                         };		
-
                         
                         jQuery.post(ksd_admin.ajax_url, data, function(response) {
                             
@@ -381,13 +380,18 @@ jQuery( document ).ready(function() {
                                             open_tkt_class=""; //class to show which tickets open and which have been resolved.
                                             if (  value.tkt_status == 'OPEN'){
                                                 open_tkt_class="ksd_open_ticket";
-                                                console.log( open_tkt_class );
                                             }
-                                                
+                                            console.log( value );
+                                            //Number of replies
+                                            kst_tkt_replies = "";
+                                            if(value.rep_count > 0){
+                                               kst_tkt_replies = " (" + value.rep_count+ ") ";
+                                            }
+                                             
                                             ticketListData = '<div class="ksd-row-data ticket-list-item" id="ksd_tkt_id_'+value.tkt_id+'">';
                                             ticketListData += 	'<div class="ticket-info">';
                                             ticketListData += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
-                                            ticketListData += 	'<span class="customer_name '+open_tkt_class+'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+'</a></span>';
+                                            ticketListData += 	'<span class="customer_name '+open_tkt_class+'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by + kst_tkt_replies + '</a></span>';
                                             ticketListData +=	'<span class="subject-and-message-excerpt '+open_tkt_class +'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject;
                                             ticketListData += 	' - '+value.tkt_message_excerpt+'</span></a>';                                            
                                             ticketListData += 	'<span class="ticket-time '+open_tkt_class+'">'+value.tkt_time_logged+'</span>';

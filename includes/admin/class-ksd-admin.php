@@ -283,7 +283,7 @@ class KSD_Admin {
                     $filter .= " LIMIT %d , %d " ;
                     $value_parameters[] = $offset;//The order of items in $value_parameters is very important. 
                     $value_parameters[] = $limit;//The order of placeholders should correspond to the order of entries in the array
-
+                
                     //Results count
                     $tickets = new KSD_Tickets_Controller(); 
                     $count   = $tickets->get_pre_limit_count( $count_filter,$count_value_parameters );
@@ -319,7 +319,8 @@ class KSD_Admin {
 	 */
 	public function filter_ticket_view( $filter = "", $value_parameters=array() ) {
 		$tickets = new KSD_Tickets_Controller();                 
-                $tickets_raw = $tickets->get_tickets( $filter,$value_parameters ); 	
+                //$tickets_raw = $tickets->get_tickets( $filter,$value_parameters ); 	
+                $tickets_raw = $tickets->get_tickets_n_reply_cnt( $filter,$value_parameters ); 	
                 //Process the tickets for viewing on the view. Replace the username and the time with cleaner versions
                 foreach ( $tickets_raw as $ksd_ticket ) {
                     $this->format_ticket_for_viewing( $ksd_ticket );

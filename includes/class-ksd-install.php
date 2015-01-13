@@ -109,9 +109,7 @@ class KSD_Install {
             $addons = array();
             $addons  = apply_filters( 'ksd_active_addons_list', $addons );
             
-            error_log( print_r( $addons, true));
             do_action('ksd_deactivate');
-            //deactivate_plugins( 'ksd-mail/ksd-mail.php' );
         }
                 
        /**
@@ -337,8 +335,6 @@ class KSD_Install {
                         'time_logged'    => date_format($date5, 'Y-m-d h:i:s')
                     ),
                 );
-                
-                error_log( print_r($tickets, true));
                 
                 foreach ( $tickets as $tkt ){
                     $new_ticket                         = new stdClass(); 
