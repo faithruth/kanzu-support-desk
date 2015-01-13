@@ -1021,7 +1021,7 @@ class KSD_Admin {
                 'options' => array(
                     'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
                     __( 'Add-ons' ,'kanzu-support-desk'),
-                    __( 'Activate an add-on to allow your customers to log tickets using other channels','kanzu-support-desk')
+                    __( 'Activate an add-on to allow your customers to log tickets using other channels such as email','kanzu-support-desk')
                     ),
                     'position' => array( 'edge' => 'top', 'align' => 'left' )
                 )

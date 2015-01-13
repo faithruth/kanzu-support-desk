@@ -439,6 +439,7 @@ ul.dashboard-statistics-summary li {
     padding: 10px 0 8px;
     margin: 0;
     line-height: 20px;
+    border-bottom: 2px solid #F1F1F1;
 }
 .ticket-list-item input{
     float: left;
@@ -979,11 +980,11 @@ span.feedback_note{
 }
 
 /*KSD Ticket OPEN class*/
-.ksd_open_ticket a {
+.ksd-open-ticket a.ksd-tkt-subject,.ksd-open-ticket .customer_name a{
     font-weight:bold;
 }
-.ksd_open_ticket{
-    font-weight:bold;
+.ksd-open-ticket{
+    background-color: #FFF;
 }
 
 
