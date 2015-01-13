@@ -147,18 +147,18 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
          * 
          */
         public function get_all_and_reply_cnt( $filter, $value_parameters=array() ){
-            $query = '
+            global $wpdb;
+            $query = "
                 SELECT T.*, 
                 COALESCE(cnt,0) AS rep_count
-                FROM kanzu.ksd401_kanzusupport_tickets T
+                FROM {$wpdb->prefix}kanzusupport_tickets T
                 LEFT JOIN 
                 ( 
                 SELECT count(*) as cnt, rep_tkt_id 
-                FROM kanzu.ksd401_kanzusupport_replies 
+                FROM {$wpdb->prefix}kanzusupport_replies
                 GROUP BY rep_tkt_id
                 ) R ON R.rep_tkt_id = T.tkt_id
-                    ';
-            
+                    ";
             $query = $query . ' WHERE ' . $filter;
             return $this->exec_prepare_query( $query, $value_parameters );
         }
