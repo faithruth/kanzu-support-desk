@@ -326,6 +326,42 @@ jQuery( document ).ready(function() {
         this.ksdRefreshTicketsPage();
         };
 
+
+        /*
+         * Total ticket indicator in ticket filters
+         */
+        
+        _totalTicketsPerFilter = function(){
+            var data = {
+                action : 'ksd_filter_totals',
+                ksd_admin_nonce : ksd_admin.ksd_admin_nonce
+            };		
+            
+            jQuery.post(ksd_admin.ajax_url, data, function(response) {
+                var respObj = {};
+                
+                //To catch cases when the ajax response is not json
+                try{
+                    //to reduce cost of recalling parse
+                    respObj = JSON.parse(response); 
+                }catch( err){
+                    KSDUtils.showDialog("error", err);  
+                    return;
+                }
+                
+                if(jQuery.isArray(respObj)){
+                    jQuery("#ticket-tabs ul li:eq(0) span").html( "(" + respObj[0].tab1 + ")" );
+                    jQuery("#ticket-tabs ul li:eq(1) span").html( "(" + respObj[0].tab2 + ")" );
+                    jQuery("#ticket-tabs ul li:eq(2) span").html( "(" + respObj[0].tab3 + ")" );
+                    jQuery("#ticket-tabs ul li:eq(3) span").html( "(" + respObj[0].tab4 + ")" );
+                    jQuery("#ticket-tabs ul li:eq(4) span").html( "(" + respObj[0].tab5 + ")" );
+                    jQuery("#ticket-tabs ul li:eq(5) span").html( "(" + respObj[0].tab6 + ")" );
+                }
+                
+            });
+        }
+
+
     this.getTickets = function( current_tab, search, limit, offset ){
         
         //Default values
@@ -382,7 +418,6 @@ jQuery( document ).ready(function() {
                                             if (  value.tkt_status == 'OPEN'){
                                                 open_tkt_class="ksd_open_ticket";
                                             }
-                                            console.log( value );
                                             //Number of replies
                                             kst_tkt_replies = "";
                                             if(value.rep_count > 0){
@@ -429,6 +464,10 @@ jQuery( document ).ready(function() {
                             var total_rows = respObj[1];
                             var currentpage = offset+1; 
                             _loadTicketPagination(tab_id, currentpage, total_rows, limit);
+                            
+                            //Refresh Totals
+                            _totalTicketsPerFilter();
+                            
                             
                            });//eof:jQuery.post	
                     }//eof:if                

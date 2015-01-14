@@ -48,6 +48,7 @@ class KSD_Admin {
                  
 		//Handle AJAX calls
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ));
+                add_action( 'wp_ajax_ksd_filter_totals', array( $this, 'filter_totals' ));
                 add_action( 'wp_ajax_ksd_log_new_ticket', array( $this, 'log_new_ticket' ));
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
@@ -228,6 +229,38 @@ class KSD_Admin {
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-replies-controller.php");  
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-customers-controller.php");  
 	}
+        
+        
+        /**
+         * Returns total tickets in each ticket filter category ie All, Resolved, etc...
+         */
+        public function filter_totals(){
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                  die ( __('Busted!','kanzu-support-desk') );                         
+            }
+          
+            try{
+                $this->do_admin_includes();
+                
+                $settings = Kanzu_Support_Desk::get_settings();
+                $recency = $settings['recency_definition'];
+                
+                $tickets = new KSD_Tickets_Controller(); 
+                $response  = $tickets->get_filter_totals( get_current_user_id() ,$recency );
+                
+                echo json_encode($response);
+                die();// IMPORTANT: don't leave this out
+                    
+                    
+            }catch( Exception $e){
+                $response = array(
+                    'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode())
+                );
+                echo json_encode($response);	
+                die();// IMPORTANT: don't leave this out
+            } 
+        }
+        
 	/** 
 	 * Filter tickets in the 'tickets' view 
 	 */

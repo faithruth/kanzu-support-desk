@@ -116,6 +116,17 @@ class KSD_Tickets_Controller extends KSD_Controller {
         public function get_pre_limit_count( $filter, $value_parameters ){
            return  $this->_model->get_pre_limit_count( $filter,$value_parameters );
         }
+        
+        /**
+         * Returns the total number of tickets in each ticket filter category.
+         * 
+         * @param int $user_id
+         * @param int $recency
+         * @return 
+         */
+        public function get_filter_totals( $user_id, $recency){
+             return  $this->_model->get_filter_totals( $user_id,$recency );
+        }
 
 
 }

@@ -163,6 +163,47 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
             return $this->exec_prepare_query( $query, $value_parameters );
         }
          
+        
+       /* Returns the number of tickets in each ticket filter category
+        * 
+        * My unresolved, All,Unassigned,Recently updated,Recently resolved,Resolved
+        * @param int user_id
+        */ 
+       public function get_filter_totals( $user_id, $recency){
+           global $wpdb;
+           $query = "
+                SELECT * FROM (
+                SELECT COUNT(*) AS tab1 FROM {$wpdb->prefix}kanzusupport_tickets A
+                WHERE A.tkt_assigned_to = %d AND tkt_status != 'RESOLVED'
+                ) T1,
+                (SELECT COUNT(*) AS tab2 FROM {$wpdb->prefix}kanzusupport_tickets B
+                WHERE B.tkt_status != 'RESOLVED'
+                ) T2,
+                (
+                SELECT COUNT(*) AS tab3 FROM {$wpdb->prefix}kanzusupport_tickets C
+                WHERE C.tkt_assigned_to IS NULL 
+                ) T3,
+                (
+                SELECT COUNT(*) AS tab4 FROM {$wpdb->prefix}kanzusupport_tickets D
+                WHERE  D.tkt_time_updated < DATE_SUB(NOW(), INTERVAL %d HOUR)
+                ) T4,
+                (
+                SELECT COUNT(*) AS tab5 FROM {$wpdb->prefix}kanzusupport_tickets E
+                WHERE  E.tkt_time_updated < DATE_SUB(NOW(), INTERVAL %d HOUR) AND tkt_status = 'RESOLVED'
+                ) T5,
+                (
+                SELECT COUNT(*) AS tab6 FROM {$wpdb->prefix}kanzusupport_tickets F
+                WHERE  F.tkt_status = 'RESOLVED'
+                ) T6
+                    ";
+           
+           $value_parameters = array();
+           $value_parameters[] = $user_id;
+           $value_parameters[] = $recency;
+           $value_parameters[] = $recency;
+           
+           return $this->exec_prepare_query( $query, $value_parameters );
+       }
          
          
  }
