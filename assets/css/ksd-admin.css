@@ -423,7 +423,7 @@ ul.dashboard-statistics-summary li {
 }
 
 ul.dashboard-statistics-summary li.ksd-dash-click:hover{
-    cursor: default;
+    cursor: pointer;
     text-decoration: underline;
 }
 
