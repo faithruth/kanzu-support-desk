@@ -419,6 +419,7 @@ ul.dashboard-statistics-summary li {
   float: left;
   line-height: 70px;
   width: 25%;
+  font-size: 20px;
 }
 /*Pointers*/
 .wp-pointer-buttons a.ksd-next {
