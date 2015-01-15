@@ -810,7 +810,7 @@ class KSD_Admin {
                         $output_array[] = array( $y_axis_label,$x_axis_label );
                         
 			foreach ( $tickets_raw as $ticket ) {
-				$output_array[] = array ($ticket->date_logged,(float)$ticket->ticket_volume);//@since 1.1.2 Added casting since JSON_NUMERIC_CHECK was kicked out 			
+				$output_array[] = array ( date_format(date_create($ticket->date_logged),'d-m-Y') ,(float)$ticket->ticket_volume);//@since 1.1.2 Added casting since JSON_NUMERIC_CHECK was kicked out 			
 			}        
                         echo json_encode( $output_array );//@since 1.1.2 Removed JSON_NUMERIC_CHECK which is only supported PHP >=5.3
 			die();//Important
