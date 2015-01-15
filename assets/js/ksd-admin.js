@@ -147,7 +147,51 @@ jQuery( document ).ready(function() {
                 this.statistics();
                 this.charts();
         };
-	
+        
+        
+        /**
+         * 
+         * Add click events to the dashboard summaries
+         */
+	_AddClickEventToSummaries = function(){
+            
+            //Total Open Tickets
+            jQuery("#admin-kanzu-support-desk ul.dashboard-statistics-summary li:eq(0)").click(function(){
+                jQuery("#tabs").tabs("option", "active", 1);
+                jQuery("#ticket-tabs").tabs("option", "active", 0);
+                
+                var tab_id = 1;
+                var currentTabID = "#tickets-tab-1";
+                var limit = jQuery( currentTabID+" .ksd-pagination-limit" ).val();                
+                var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
+                jQuery( currentTabID ).addClass("pending");
+                _ShowLoadingImage(true);
+                var curPage = _getCurrentPage( tab_id);
+                 _this.getTickets( currentTabID,search_text,limit, curPage-1);  
+                 
+                jQuery('.admin-ksd-title h2').html('Tickets' ); 
+            });
+            
+            //Unassigned Tickets
+            jQuery("#admin-kanzu-support-desk ul.dashboard-statistics-summary li:eq(1)").click(function(){
+                jQuery("#tabs").tabs("option", "active", 1);
+                jQuery("#ticket-tabs").tabs("option", "active", 2);  
+                
+                var tab_id = 3;
+                var currentTabID = "#tickets-tab-3";
+                var limit = jQuery( currentTabID+" .ksd-pagination-limit" ).val();                
+                var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
+                jQuery( currentTabID ).addClass("pending");
+                _ShowLoadingImage(true);
+                var curPage = _getCurrentPage( tab_id);
+                 _this.getTickets( currentTabID,search_text,limit, curPage-1);  
+                 
+                jQuery('.admin-ksd-title h2').html('Tickets' );
+            });
+            
+            
+            
+        }
     /*
      * Show statistics summary.
      */
@@ -174,10 +218,13 @@ jQuery( document ).ready(function() {
                        var openTickets = ( 'undefined' !== typeof raw_response.open_tickets[0] ? raw_response.open_tickets[0].open_tickets : 0)
                        var averageResponseTime = ( 'undefined' !== typeof raw_response.average_response_time ? raw_response.average_response_time : '00:00' );
                        var the_summary_stats = "";
-                       the_summary_stats+= "<li>"+openTickets+" <span>"+ksd_admin.ksd_labels.dashboard_open_tickets+"</span></li>";
-                       the_summary_stats+= "<li>"+unassignedTickets+" <span>"+ksd_admin.ksd_labels.dashboard_unassigned_tickets+"</span></li>";
+                       the_summary_stats+= "<li class='ksd-dash-click'>"+openTickets+" <span>"+ksd_admin.ksd_labels.dashboard_open_tickets+"</span></li>";
+                       the_summary_stats+= "<li class='ksd-dash-click'>"+unassignedTickets+" <span>"+ksd_admin.ksd_labels.dashboard_unassigned_tickets+"</span></li>";
                        the_summary_stats+= "<li>"+averageResponseTime+" <span>"+ksd_admin.ksd_labels.dashboard_avg_response_time+"</span></li>";
-                       jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);                                   
+                       jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);  
+                       
+                       //Add click events
+                       _AddClickEventToSummaries();
                 });	
         }
     }//eof:statistics

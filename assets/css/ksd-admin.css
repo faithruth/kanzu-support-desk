@@ -421,6 +421,12 @@ ul.dashboard-statistics-summary li {
   width: 25%;
   font-size: 20px;
 }
+
+ul.dashboard-statistics-summary li.ksd-dash-click:hover{
+    cursor: default;
+    text-decoration: underline;
+}
+
 /*Pointers*/
 .wp-pointer-buttons a.ksd-next {
   margin-right: 22px;
