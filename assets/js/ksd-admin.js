@@ -68,8 +68,32 @@ jQuery( document ).ready(function() {
                 this.toggleViewsToHide();
                 //Use an accordion in case we have multiple setting blocks
                 this.enableAccordion();
+                
+                this.changeSubmitBtnVal();
         }
 
+        /*
+         * 
+         */
+        this.changeSubmitBtnVal = function(){
+            jQuery('.ksd-send-email :checkbox').click(function(){
+                var $this = jQuery(this);
+                var $that = jQuery('[name=ksd-submit-admin-new-ticket]');
+                // $this will contain a reference to the checkbox   
+                if ($this.is(':checked')) {
+                    $that.val('Send')
+                } else {
+                    $that.val('Save')
+                }
+            });
+            
+            
+    
+
+            
+            
+        }
+        
 	/*
 	 * Submit Settings form.
 	 */
@@ -153,7 +177,7 @@ jQuery( document ).ready(function() {
          * 
          * Add click events to the dashboard summaries
          */
-	_AddClickEventToSummaries = function(){
+	_addClickEventToSummaries = function(){
             
             //Total Open Tickets
             jQuery("#admin-kanzu-support-desk ul.dashboard-statistics-summary li:eq(0)").click(function(){
@@ -224,7 +248,7 @@ jQuery( document ).ready(function() {
                        jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);  
                        
                        //Add click events
-                       _AddClickEventToSummaries();
+                       _addClickEventToSummaries();
                 });	
         }
     }//eof:statistics
