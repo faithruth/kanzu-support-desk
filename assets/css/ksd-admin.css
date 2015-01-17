@@ -228,11 +228,7 @@ ul.ksd-top-nav li{
 }
 #ticket-tabs div.pending{
 }
-
-.ksd-hide-pending{
-    display:none;
-}
-#admin-kanzu-support-desk div.ksd-pending2{
+#admin-kanzu-support-desk div.ksd-loading-tickets{
    	background-image: url("../images/loading.gif");
 	background-repeat: no-repeat;
 	background-position: center;
@@ -278,6 +274,11 @@ a.new-ticket:hover {
 .ksd-subject,.ksd-message,.ksd-tags{
     width: 100%;
 }
+.ksd-severity-and-assign{
+    width: 50%;
+    float: right;
+    text-align: right;
+}
 .ksd-assign-to,.ksd-severity{
     width: 50%;
 }
@@ -304,7 +305,8 @@ a.new-ticket:hover {
     border: 1px solid #fff;
     color: #fff;
     padding: 5px 40px;
-    float: right;
+    float: left;
+    clear: both;
 }
 #ksd-single-ticket{
     padding-left: 15px;
@@ -421,6 +423,7 @@ ul.dashboard-statistics-summary li {
   line-height: 1.2;
   padding-top: 12px;
   width: 25%;
+  color: #2ea2cc;
 }
 ul.dashboard-statistics-summary li span {
   color: #999;

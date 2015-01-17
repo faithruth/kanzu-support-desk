@@ -34,8 +34,13 @@ class KSD_Install {
 	public function __construct() { 
 		//Re-direct on plugin activation
 		add_action( 'admin_init', array( $this, 'redirect_to_dashboard'    ) );
-                //Upgrade settings
+
+                //Upgrade settings when the plugin is upgraded
                 add_filter( 'ksd_upgrade_settings',  array( $this, 'upgrade_settings' ) );
+               
+                //Upgrade everything else apart from plugin settings 
+                add_action('ksd_upgrade_plugin',array( $this, 'upgrade_plugin' ));
+               
 	}
  
 	/**
@@ -148,6 +153,28 @@ class KSD_Install {
             }
             return $settings;
         }
+        
+        /**
+         * During plugin upgrade, this makes all the required changes
+         * apart from plugin setting changes which are done by {@link upgrade_settings}
+         * @since 1.2.0
+         */
+        public function upgrade_plugin(){
+            global $wpdb;  
+            $wpdb->hide_errors();	
+            $dbChanges = null;//Holds all DB change queries
+           switch ( KSD_VERSION ){
+                case '1.2.0':
+                    //Add 'NEW' to tkt_status ENUM, change the default tkt_status from 'OPEN' to 'NEW'
+                    $dbChanges="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_status` `tkt_status` ENUM('NEW','OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'NEW';";
+                    break;
+            } 
+            if( !is_null( $dbChanges ) ){//Make the Db changes. We use $wpdb->query instead of dbDelta because of
+                                        //how strict and verbose the dbDelta alternative is. We'd
+                                        //need to rewrite CREATE table statements for dbDelta.
+                  $wpdb->query( $dbChanges );                 
+            }
+        }
  
        /**
 	* Create KSD tables
@@ -181,7 +208,7 @@ class KSD_Install {
 				`tkt_message` TEXT NOT NULL,
                                 `tkt_message_excerpt` TEXT NOT NULL, 
 				`tkt_channel` ENUM('STAFF','FACEBOOK','TWITTER','SUPPORT_TAB','EMAIL','CONTACT_FORM') DEFAULT 'STAFF',
-				`tkt_status` ENUM('OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'OPEN',
+				`tkt_status` ENUM('NEW','OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'NEW',
 				`tkt_severity` ENUM ('URGENT', 'HIGH', 'MEDIUM','LOW') DEFAULT 'LOW', 
 				`tkt_time_logged` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 				
                                 `tkt_cust_id` BIGINT(20) NOT NULL, 
@@ -278,61 +305,61 @@ class KSD_Install {
                 
                 $tickets = array(    
                     array(
-                        'subject' => 'Welcome to Kanzu Support Desk.',
-                        'message' => 'Hi '.  $firstname .', <br />  The KSD Team welcomes to the KSD community. '
-                        . 'Enjoy this cool plugin.<br /><br />'
-                        . 'KSD Team.',
-                        'channel' => 'STAFF',
-                        'status'  => 'OPEN',
-                        'email'   => $email,
-                        'fullname'=> $fullname,
-                        'time_logged'    =>  date_format($date, 'Y-m-d h:i:s')
+                        'subject'       => __("Welcome to Kanzu Support Desk.","kanzu-support-desk"),
+                        'message'       => __("Hi {$firstname},<br />"
+                                        ."Welcome to the Kanzu Support Desk (KSD) community *cue Happy Music and energetic dancers!*. Thanks for choosing us. We are all about making it simple for you to provide amazing customer support."
+                                        ."We can't wait for you to get started!<br /><br />"
+                                        . "The KSD Team.","kanzu-support-desk"),
+                        'channel'       => "STAFF",
+                        'status'        => "NEW",
+                        'email'         => $email,
+                        'fullname'      => $fullname,
+                        'time_logged'   =>  date_format($date, 'Y-m-d h:i:s')
                     ),
                     array(
-                        'subject' => 'Quick Intro to Kanzu Support Desk Features.',
-                        'message' => 'Hi '.  $firstname .', <br />'
-                        . 'We have prepared a quick intro to get you started with this plugin at '
-                        . '<a href="http://www.kanzucode.com"></a>.<br /><br />'
-                        . 'KSD Team',
-                        'channel' => 'STAFF',
-                        'status'  => 'OPEN',
-                        'email'   => $email,
-                        'fullname'=> $fullname,
-                        'time_logged'    => date_format($date2, 'Y-m-d h:i:s')
+                        'subject'       => __("Quick Intro to Kanzu Support Desk Features","kanzu-support-desk"),
+                        'message'       => __("We did this thing where learning how to get the most out of your KSD experience is a breeze. Tap 'Next' on the tour to navigate through our"
+                        . "introductory tour. If you'd like to get a much deeper appreciation of how everything works, check out our <a href='http://www.kanzucode.com/documentation' target='_blank'>documentation</a>.<br /><br />"
+                        . "The KSD Team","kanzu-support-desk"),
+                        'channel'       => 'STAFF',
+                        'status'        => 'OPEN',
+                        'email'         => $email,
+                        'fullname'      => $fullname,
+                        'time_logged'   => date_format($date2, 'Y-m-d h:i:s')
                     ),
                     array(
-                        'subject' => 'KSD Documentation.',
-                        'message' => 'Hi '.  $firstname .', <br />'
-                        . 'Learn how you can get the most out of this plugin by extending it\'s functionality.'
-                        . 'Go to <a href="http://www.kanzucode.com"></a>.<br /><br />'
-                        . 'KSD Team.',
-                        'channel' => 'STAFF',
-                        'status'  => 'OPEN',
-                        'email'   => $email,
-                        'fullname'=> $fullname,
-                        'time_logged'    => date_format($date3, 'Y-m-d h:i:s')
+                        'subject'       => __("KSD Documentation","kanzu-support-desk"),
+                        'message'       => __("We know the things strange documentation makes you go through. We won't make you go through that.<br />"
+                                            . "Learn how to get even more out of KSD from our rich resources <a href='http://www.kanzucode.com/documentation' target='_blank'>here</a>.<br /><br />"
+                                            . 'The KSD Team.',"kanzu-support-desk"),
+                        'channel'       => 'STAFF',
+                        'status'        => 'OPEN',
+                        'email'         => $email,
+                        'fullname'      => $fullname,
+                        'time_logged'   => date_format($date3, 'Y-m-d h:i:s')
                     ),
                     array(
-                        'subject' => 'KSD Addons and other goodies.',
-                        'message' => 'Hi '.  $firstname .', <br />'
-                        . 'Browse your addons to and find which best suits your needs. <br /><br />'
-                        . 'KSD Team',
-                        'channel' => 'STAFF',
-                        'status'  => 'OPEN',
-                        'email'   => $email,
-                        'fullname'=> $fullname,
-                        'time_logged'    => date_format($date4, 'Y-m-d h:i:s')
+                        'subject'       => __("KSD Add-ons and other goodies.","kanzu-support-desk"),
+                        'message'       => __("Kanzu Support Desk does get even more powerful."
+                                            . " We have a neat set of add-ons that power-up your experience. Check out the add-ons tab to get a load of them!<br /><br />"
+                                            . "The KSD Team","kanzu-support-desk"),
+                        'channel'       => 'STAFF',
+                        'status'        => 'OPEN',
+                        'email'         => $email,
+                        'fullname'      => $fullname,
+                        'time_logged'   => date_format($date4, 'Y-m-d h:i:s')
                     ),
                     array(
-                        'subject' => 'KSD on social networks.',
-                        'message' => 'Hi '.  $firstname .', <br />'
-                        . 'Facebook: <a href="http://facebook.com/ksd"></a><br /><br />'
-                        . 'KSD Team',
-                        'channel' => 'STAFF',
-                        'status'  => 'OPEN',
-                        'email'   => $email,
-                        'fullname'=> $fullname,
-                        'time_logged'    => date_format($date5, 'Y-m-d h:i:s')
+                        'subject'       => __("Get in touch. Seriously","kanzu-support-desk"),
+                        'message'       => __("{$firstname}, this cannot work without you. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>"
+                                            . "What's your experience with Kanzu Support Desk? What do you like? What do you love? What don't you like? What do you want us to fix or improve?<br />"
+                                            . "Reply this email or <a href='mailto:feedback@kanzucode.com'>send a new one</a><br /><br />"
+                                            . "The KSD Team","kanzu-support-desk"),
+                        'channel'       => 'STAFF',
+                        'status'        => 'PENDING',
+                        'email'         => 'feedback@kanzucode.com',
+                        'fullname'      => $fullname,
+                        'time_logged'   => date_format($date5, 'Y-m-d h:i:s')
                     ),
                 );
                 
@@ -354,8 +381,6 @@ class KSD_Install {
                 }
                 
             }
- 
-
 
 }
 
