@@ -511,7 +511,7 @@ jQuery( document ).ready(function() {
                                             ticketListData += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="change_status">'+ksd_admin.ksd_labels.tkt_change_status+'</a> | ';
                                             ticketListData += 	'<a href="#" id="tkt_'+value.tkt_id+'" class="assign_to">'+ksd_admin.ksd_labels.tkt_assign_to+'</a>';
                                             ticketListData += 	ksd_admin.ksd_agents_list;
-                                            ticketListData += 	'<ul class="status hidden"><li>OPEN</li><li>ASSIGNED</li><li>PENDING</li><li>RESOLVED</li></ul>';
+                                            ticketListData += 	'<ul class="status hidden"><li>OPEN</li><li>PENDING</li><li>RESOLVED</li></ul>';
                                             ticketListData += 	'</div>';
                                             ticketListData +=     '</div>';
                                             
