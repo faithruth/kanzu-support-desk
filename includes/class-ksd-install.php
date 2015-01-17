@@ -162,7 +162,6 @@ class KSD_Install {
         public function upgrade_plugin(){
             global $wpdb;  
             $wpdb->hide_errors();	
-            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
             $dbChanges = null;//Holds all DB change queries
            switch ( KSD_VERSION ){
                 case '1.2.0':
@@ -170,8 +169,10 @@ class KSD_Install {
                     $dbChanges="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_status` `tkt_status` ENUM('NEW','OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'NEW';";
                     break;
             } 
-            if(!is_null($dbChanges)){//Make the Db changes
-                 dbDelta($dbChanges);                  
+            if( !is_null( $dbChanges ) ){//Make the Db changes. We use $wpdb->query instead of dbDelta because of
+                                        //how strict and verbose the dbDelta alternative is. We'd
+                                        //need to rewrite CREATE table statements for dbDelta.
+                  $wpdb->query( $dbChanges );                 
             }
         }
  
