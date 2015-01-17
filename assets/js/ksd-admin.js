@@ -125,6 +125,7 @@ jQuery( document ).ready(function() {
         
          //Add Tooltips for the settings panel
          jQuery( ".help_tip" ).tooltip();
+         jQuery("span.ksd-tkt-status a").tooltip();
          
 	}//eof:submitSettingsForm
  
@@ -242,9 +243,9 @@ jQuery( document ).ready(function() {
                        var openTickets = ( 'undefined' !== typeof raw_response.open_tickets[0] ? raw_response.open_tickets[0].open_tickets : 0)
                        var averageResponseTime = ( 'undefined' !== typeof raw_response.average_response_time ? raw_response.average_response_time : '00:00' );
                        var the_summary_stats = "";
-                       the_summary_stats+= "<li class='ksd-dash-click'>"+openTickets+" <span>"+ksd_admin.ksd_labels.dashboard_open_tickets+"</span></li>";
-                       the_summary_stats+= "<li class='ksd-dash-click'>"+unassignedTickets+" <span>"+ksd_admin.ksd_labels.dashboard_unassigned_tickets+"</span></li>";
-                       the_summary_stats+= "<li>"+averageResponseTime+" <span>"+ksd_admin.ksd_labels.dashboard_avg_response_time+"</span></li>";
+                       the_summary_stats+= "<li class='ksd-dash-click'><span>"+ksd_admin.ksd_labels.dashboard_open_tickets+"</span>"+openTickets+"</li>";
+                       the_summary_stats+= "<li class='ksd-dash-click'><span>"+ksd_admin.ksd_labels.dashboard_unassigned_tickets+"</span>"+unassignedTickets+"</li>";
+                       the_summary_stats+= "<li><span>"+ksd_admin.ksd_labels.dashboard_avg_response_time+"</span>"+averageResponseTime+"</li>";
                        jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);  
                        
                        //Add click events
@@ -495,10 +496,11 @@ jQuery( document ).ready(function() {
                                                kst_tkt_replies = " (" + value.rep_count+ ") ";
                                             }
                                              
-                                            ticketListData = '<div class="ksd-row-data ticket-list-item ksd-'+(value.tkt_status).toLowerCase()+'-ticket" id="ksd_tkt_id_'+value.tkt_id+'">';
+                                            ticketListData = '<div class="ksd-row-data ticket-list-item ksd-'+(value.tkt_status).toLowerCase()+'-ticket '+(value.tkt_severity).toLowerCase()+'" id="ksd_tkt_id_'+value.tkt_id+'">';
                                             ticketListData += 	'<div class="ticket-info">';
                                             ticketListData += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
-                                            ticketListData += 	'<span class="customer_name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+ kst_tkt_replies + '</a></span>';
+                                            ticketListData +=   '<span class="ksd-tkt-status '+(value.tkt_status).toLowerCase()+'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit" title="'+(value.tkt_status).toLowerCase()+'">'+(value.tkt_status).charAt(0)+'</a></span>';  
+                                            ticketListData += 	'<span class="ksd-tkt-customer-name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+ kst_tkt_replies + '</a></span>';
                                             ticketListData +=	'<span class="subject-and-message-excerpt"><a class="ksd-tkt-subject"href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a>';
                                             ticketListData += 	'<a class="ksd-message-excerpt" href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit"> - '+value.tkt_message_excerpt+'</a></span>';                                            
                                             ticketListData += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
