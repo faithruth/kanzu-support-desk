@@ -1094,17 +1094,17 @@ jQuery( document ).ready(function() {
         
         /*
          * Show loading image.
-         * classes used in css - ksd-pending2,  ksd-hide-pending
+         * classes used in css - hidden,  ksd-loading-tickets
          * 
          */
         _ShowLoadingImage = function(show){
              if (typeof(show) === 'undefined') show=false;
                          
              if ( show === true){
-                jQuery("div.ksd-pending2").removeClass('ksd-hide-pending');
+                jQuery("div.ksd-loading-tickets").removeClass('hidden');
             }
              else{
-                jQuery("div.ksd-pending2").addClass('ksd-hide-pending');
+                jQuery("div.ksd-loading-tickets").addClass('hidden');
             }
         };
         
