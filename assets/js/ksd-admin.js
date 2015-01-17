@@ -190,7 +190,6 @@ jQuery( document ).ready(function() {
                 var limit = jQuery( currentTabID+" .ksd-pagination-limit" ).val();                
                 var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
                 jQuery( currentTabID ).addClass("pending");
-                _ShowLoadingImage(true);
                 var curPage = _getCurrentPage( tab_id);
                  _this.getTickets( currentTabID,search_text,limit, curPage-1);  
                  
@@ -207,7 +206,6 @@ jQuery( document ).ready(function() {
                 var limit = jQuery( currentTabID+" .ksd-pagination-limit" ).val();                
                 var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
                 jQuery( currentTabID ).addClass("pending");
-                _ShowLoadingImage(true);
                 var curPage = _getCurrentPage( tab_id);
                  _this.getTickets( currentTabID,search_text,limit, curPage-1);  
                  
@@ -435,6 +433,8 @@ jQuery( document ).ready(function() {
 
 
     this.getTickets = function( current_tab, search, limit, offset ){
+        //Show a loading dialog
+        jQuery( current_tab ).addClass('ksd-loading-tickets');
         
         //Default values
         if( typeof(search)=== 'undefined' )  search = "";
@@ -529,7 +529,7 @@ jQuery( document ).ready(function() {
                             }//eof:if
 
                             jQuery(current_tab).removeClass("pending");
-                            _ShowLoadingImage(false);
+                            jQuery( current_tab ).removeClass('ksd-loading-tickets');//Remove loading image
                             
                             
                             //Add Navigation
@@ -650,6 +650,7 @@ jQuery( document ).ready(function() {
 		/**AJAX: Delete a ticket **/
 		jQuery("#ticket-tabs").on('click','.ticket-actions a.trash',function(event) {
 	            event.preventDefault();
+                    console.log("CLiked");
                     
 	             var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
 	             jQuery( "#delete-dialog" ).dialog({
@@ -899,7 +900,6 @@ jQuery( document ).ready(function() {
             }	
             /**Do AJAX calls for filtering tickets on click of any of the tabs**/
             jQuery( "#ticket-tabs li a" ).click(function() {
-                    _ShowLoadingImage(true);
                     _this.getTickets( jQuery(this).attr('href') );
             });	
 
@@ -1068,7 +1068,6 @@ jQuery( document ).ready(function() {
                 var tab_id_name="#tickets-tab-"+tab_id;
                 //alert("limit:" + limit + " search:" + search_text);
                 jQuery(tab_id_name).addClass("pending");
-                _ShowLoadingImage(true);
                  _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );
                 
             });
@@ -1083,7 +1082,6 @@ jQuery( document ).ready(function() {
                 var tab_id_name="#tickets-tab-"+tab_id;
                 //alert("limit:" + limit + " search:" + search_text);
                 jQuery(tab_id_name).addClass("pending");
-                _ShowLoadingImage(true);
                  _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );                   
                 }
 
@@ -1093,21 +1091,6 @@ jQuery( document ).ready(function() {
             
         };
         
-        /*
-         * Show loading image.
-         * classes used in css - hidden,  ksd-loading-tickets
-         * 
-         */
-        _ShowLoadingImage = function(show){
-             if (typeof(show) === 'undefined') show=false;
-                         
-             if ( show === true){
-                jQuery("div.ksd-loading-tickets").removeClass('hidden');
-            }
-             else{
-                jQuery("div.ksd-loading-tickets").addClass('hidden');
-            }
-        };
         
         //AJAX:: When the refresh button is hit
         this.ksdRefreshTicketsPage = function() {           
@@ -1117,7 +1100,6 @@ jQuery( document ).ready(function() {
                 var limit = jQuery( currentTabID+" .ksd-pagination-limit" ).val();                
                 var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
                 jQuery( currentTabID ).addClass("pending");
-                _ShowLoadingImage(true);
                 var curPage = _getCurrentPage( tab_id);
                  _this.getTickets( currentTabID,search_text,limit, curPage-1);                   
                 });
@@ -1134,7 +1116,6 @@ jQuery( document ).ready(function() {
                 var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
                 
                 jQuery(tab_id_name).addClass("pending");
-                _ShowLoadingImage(true);
                  _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit);
                  
             });
@@ -1148,7 +1129,6 @@ jQuery( document ).ready(function() {
                     var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
 
                     jQuery(tab_id_name).addClass("pending");
-                    _ShowLoadingImage(true);
                      _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit);
                 }
             });
@@ -1287,7 +1267,6 @@ jQuery( document ).ready(function() {
                         var search_text = jQuery("input[name=ksd_tkt_search_input_"+tab_id+"]").val();
                         
                          jQuery( _getTabId(tab_id) ).addClass("pending");
-                         _ShowLoadingImage(true);
                           _this.getTickets( _getTabId(tab_id), search_text, limit, cpage-1);
                         
                     });
