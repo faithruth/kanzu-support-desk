@@ -899,6 +899,7 @@ jQuery( document ).ready(function() {
             }	
             /**Do AJAX calls for filtering tickets on click of any of the tabs**/
             jQuery( "#ticket-tabs li a" ).click(function() {
+                    _ShowLoadingImage(true);
                     _this.getTickets( jQuery(this).attr('href') );
             });	
 
