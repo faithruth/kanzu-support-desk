@@ -424,16 +424,30 @@ jQuery( document ).ready(function() {
             });
         }
 
+    /**
+     * Get tickets. Show a loading dialog while the tickets are being retrieved
+     * @param string current_tab The ID of the current tickets tab, including the # e.g. #tickets-tab-1
+     * @param string search The search string specified
+     * @param int limit How many tickets to display
+     * @param int offset The offset
+     * @param boolean overlayLoading Whether to overlay the 'Loading' dialog during ticket loading or not.
+     *                  We overlay the loading dialog when we refresh, paginate or search in a ticket view. Otherwise, we don't
+     * @returns N/A. Writes returned tickets to the UI
+     */    
+    this.getTickets = function( current_tab, search, limit, offset, overlayLoading ){
 
-    this.getTickets = function( current_tab, search, limit, offset ){
-        //Show a loading dialog
-        jQuery( current_tab ).addClass('ksd-loading-tickets');
-        
         //Default values
         if( typeof(search)=== 'undefined' )  search = "";
         if( typeof(limit) === 'undefined' )  limit = 5;
         if( typeof(offset)=== 'undefined' || jQuery.isNumeric(offset) === false )  offset = 0;
-        
+        if( typeof(overlayLoading) === 'undefined' )  overlayLoading = false;
+        //Show a loading dialog
+        if ( overlayLoading ){
+           jQuery('.ksd-loading-tickets-overlay').removeClass('hidden'); 
+        }else{
+            jQuery( current_tab ).addClass('ksd-loading-tickets');
+        }
+
                     if(jQuery(current_tab).hasClass("pending"))//Check if the tab has been loaded before
                     {
                         var data = {
@@ -522,7 +536,12 @@ jQuery( document ).ready(function() {
                             }//eof:if
 
                             jQuery(current_tab).removeClass("pending");
-                            jQuery( current_tab ).removeClass('ksd-loading-tickets');//Remove loading image
+                            if ( overlayLoading ){
+                                jQuery('.ksd-loading-tickets-overlay').addClass('hidden'); 
+                            }else{
+                                jQuery( current_tab ).removeClass('ksd-loading-tickets');//Remove loading image
+                            }
+                            
                             
                             
                             //Add Navigation
@@ -1061,7 +1080,7 @@ jQuery( document ).ready(function() {
                 var tab_id_name="#tickets-tab-"+tab_id;
                 //alert("limit:" + limit + " search:" + search_text);
                 jQuery(tab_id_name).addClass("pending");
-                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );
+                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit, 0, true );
                 
             });
             
@@ -1075,7 +1094,7 @@ jQuery( document ).ready(function() {
                 var tab_id_name="#tickets-tab-"+tab_id;
                 //alert("limit:" + limit + " search:" + search_text);
                 jQuery(tab_id_name).addClass("pending");
-                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit );                   
+                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit, 0, true );                   
                 }
 
                 
@@ -1094,7 +1113,7 @@ jQuery( document ).ready(function() {
                 var search_text = jQuery( currentTabID+" .ksd_tkt_search_input").val();//Get val from the class on the input field, no need for ID
                 jQuery( currentTabID ).addClass("pending");
                 var curPage = _getCurrentPage( tab_id);
-                 _this.getTickets( currentTabID,search_text,limit, curPage-1);                   
+                 _this.getTickets( currentTabID,search_text,limit, curPage-1, true );                   
                 });
         };
         
@@ -1109,7 +1128,7 @@ jQuery( document ).ready(function() {
                 var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
                 
                 jQuery(tab_id_name).addClass("pending");
-                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit);
+                 _this.getTickets( "#tickets-tab-"+tab_id, search_text, limit, 0, true );
                  
             });
             
