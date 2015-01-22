@@ -525,7 +525,7 @@ class KSD_Admin {
                     }
                     $new_reply = new stdClass(); 
                     $new_reply->rep_tkt_id    	 =  $_POST['tkt_id'] ;
-                    $new_reply->rep_message 	 = sanitize_text_field( stripslashes ( $_POST['ksd_ticket_reply'] ) );
+                    $new_reply->rep_message 	 = wp_kses_post( $_POST['ksd_ticket_reply']  );
                     if ( strlen( $new_reply->rep_message ) < 2 && ! $add_on_mode ){//If the response sent it too short
                        throw new Exception( __("Error | Reply too short", 'kanzu-support-desk'), -1 );
                     }
@@ -542,7 +542,7 @@ class KSD_Admin {
                    }
                    
                    if ( $response > 0 ){
-                      echo json_encode($new_reply->rep_message );
+                      echo json_encode(  esc_html( $new_reply->rep_message )  );
                    }else{
                        throw new Exception( __("Error", 'kanzu-support-desk'), -1 );
                    }
@@ -652,8 +652,9 @@ class KSD_Admin {
                 //We sanitize each input before storing it in the database
                 $new_ticket = new stdClass(); 
                 $new_ticket->tkt_subject    	    = sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_subject' ] ) );
-                $new_ticket->tkt_message_excerpt    = wp_trim_words( sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_message' ] )  ), $ksd_excerpt_length );
-                $new_ticket->tkt_message            = sanitize_text_field( stripslashes( $_POST[ 'ksd_tkt_message' ] ));
+                $sanitized_message                  = wp_kses_post( $_POST[ 'ksd_tkt_message' ] );
+                $new_ticket->tkt_message_excerpt    = wp_trim_words( $sanitized_message, $ksd_excerpt_length );
+                $new_ticket->tkt_message            = $sanitized_message;
                 $new_ticket->tkt_channel            = $tkt_channel;
                 $new_ticket->tkt_status             = $tkt_status;             
                 

@@ -487,7 +487,7 @@ jQuery( document ).ready(function() {
                                     jQuery.each( respObj[0], function( key, value ) {
 
                                             open_tkt_class=""; //class to show which tickets open and which have been resolved.
-                                            if (  value.tkt_status == 'OPEN'){
+                                            if (  value.tkt_status === 'OPEN'){
                                                 open_tkt_class="ksd_open_ticket";
                                             }
                                             //Number of replies
@@ -983,7 +983,7 @@ jQuery( document ).ready(function() {
                             }                             
                              the_ticket = respObj;
                              jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_assigned_by+"-"+the_ticket.tkt_subject);
-                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message);
+                             jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message).text();
                              jQuery("#ksd-single-ticket textarea[name=tkt_private_note]").val(the_ticket.tkt_private_note);
                              jQuery("#ticket-replies").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
                              //Make the 'Back' button visible
