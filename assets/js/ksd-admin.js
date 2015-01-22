@@ -488,10 +488,15 @@ jQuery( document ).ready(function() {
                                             if(value.rep_count > 0){
                                                kst_tkt_replies = " (" + value.rep_count+ ") ";
                                             }
+                                            
+                                            //Severity flag
+                                            ksd_severity=value.tkt_severity.toLowerCase();
+                                            
                                              
                                             ticketListData = '<div class="ksd-row-data ticket-list-item ksd-'+(value.tkt_status).toLowerCase()+'-ticket '+(value.tkt_severity).toLowerCase()+'" id="ksd_tkt_id_'+value.tkt_id+'">';
                                             ticketListData += 	'<div class="ticket-info">';
                                             ticketListData += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
+                                            ticketListData +=   '<span class="ksd-tkt-severity-'+ksd_severity+'" title="'+ksd_severity+'"> &nbsp; &nbsp; &nbsp;</span>';  
                                             ticketListData +=   '<span class="ksd-tkt-status '+(value.tkt_status).toLowerCase()+'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit" title="'+(value.tkt_status).toLowerCase()+'">'+(value.tkt_status).charAt(0)+'</a></span>';  
                                             ticketListData += 	'<span class="ksd-tkt-customer-name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+ kst_tkt_replies + '</a></span>';
                                             ticketListData +=	'<span class="subject-and-message-excerpt"><a class="ksd-tkt-subject"href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a>';
