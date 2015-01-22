@@ -79,19 +79,12 @@ jQuery( document ).ready(function() {
             jQuery('.ksd-send-email :checkbox').click(function(){
                 var $this = jQuery(this);
                 var $that = jQuery('[name=ksd-submit-admin-new-ticket]');
-                // $this will contain a reference to the checkbox   
                 if ($this.is(':checked')) {
                     $that.val('Send')
                 } else {
                     $that.val('Save')
                 }
             });
-            
-            
-    
-
-            
-            
         }
         
 	/*
