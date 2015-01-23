@@ -1024,7 +1024,19 @@ class KSD_Admin {
                     __( 'The tickets' ,'kanzu-support-desk'),
                     __( 'All your tickets are displayed here. Filter tickets using the filters at the top left','kanzu-support-desk'),
                     __( 'Search, refresh and paginate the view using the buttons at the top right.' ,'kanzu-support-desk'),
-                    __( 'View ticket details by clicking on a single ticket' ,'kanzu-support-desk')
+                    __( 'View ticket details by clicking on a single ticket' ,'kanzu-support-desk')                    
+                            ),
+                    'position' => array( 'edge' => 'top', 'align' => 'left' )
+                )
+            );
+            $p[] = array(
+                'target' => '#dashboard',
+                'options' => array(
+                    'content' => sprintf( '<span><h3> %s </h3><ul class="tour"><li class="new">N</li><li class="open">O</li><li class="pending">P</li><li class="resolved">R</li></ul></p><p>%s </p><p><img width="157" height="166" src="%s" /></p><p> %s </p></span>',
+                    __( 'Ticket Status & Severity' ,'kanzu-support-desk'),                    
+                    __( 'These labels show New, Open, Pending & Resolved tickets respectively' ,'kanzu-support-desk'),
+                     KSD_PLUGIN_URL.'/assets/images/ksd-severity-indicators.png',
+                    __( 'The Red and Orange borders show tickets with Urgent & High severity respectively' ,'kanzu-support-desk')
                             ),
                     'position' => array( 'edge' => 'top', 'align' => 'left' )
                 )

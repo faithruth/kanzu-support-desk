@@ -339,7 +339,7 @@ jQuery( document ).ready(function() {
   
                 //Move to the next tab when 'Next' is clicked
                 jQuery( 'a.ksd-next' ).click( function(){                     
-                    if( pointerContentIndex < 5 ){
+                    if( pointerContentIndex < 6  ){
                         ++pointerContentIndex;
                     }
                     else{//End of the tour
@@ -357,7 +357,15 @@ jQuery( document ).ready(function() {
                         return;
                     }
                    jQuery('.wp-pointer-content span').html(pointer[pointerContentIndex].options.content);
-                   jQuery( "#tabs" ).tabs( "option", "active", pointerContentIndex );
+                   if ( pointerContentIndex >= 2 ){//At pointerContentIndex == 2, we are displaying ticket
+                                                  //instructions. We display two different sets of instructions, one after 
+                                                  //another so we compensate for this by decrementing pointerContentIndex 
+                      displayTabIndex = pointerContentIndex - 1;
+                    }
+                    else{
+                       displayTabIndex = pointerContentIndex;
+                    }
+                    jQuery( "#tabs" ).tabs( "option", "active", displayTabIndex );
                 });
                 }
             };

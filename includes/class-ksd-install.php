@@ -292,72 +292,77 @@ class KSD_Install {
                 get_currentuserinfo();
                 
                 
-                $email   = $current_user->user_email;
-                $fullname= $current_user->user_firstname .  ', ' . 
+                $email      = $current_user->user_email;
+                $fullname   = $current_user->user_firstname .  ', ' . 
                            $current_user->user_lastname;
-                $firstname = $current_user->user_firstname;
+                $firstname  = $current_user->user_firstname;
                 
-                $date = date_create( date('Y-m-d') );
-                $date2 = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('1 days'));
-                $date3 = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('2 days'));
-                $date4 = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('3 days'));
-                $date5 = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('4 days'));
+                $date       = date_create( date('Y-m-d') );
+                $date2      = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('1 days'));
+                $date3      = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('2 days'));
+                $date4      = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('3 days'));
+                $date5      = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('4 days'));
                 
                 $tickets = array(    
                     array(
-                        'subject'       => __("Welcome to Kanzu Support Desk.","kanzu-support-desk"),
-                        'message'       => __("Hi {$firstname},<br />"
+                        'subject'       => __( "Welcome to Kanzu Support Desk.","kanzu-support-desk" ),
+                        'message'       => __( "Hi {$firstname},<br />"
                                         ."Welcome to the Kanzu Support Desk (KSD) community *cue Happy Music and energetic dancers!*. Thanks for choosing us. We are all about making it simple for you to provide amazing customer support."
                                         ."We can't wait for you to get started!<br /><br />"
-                                        . "The KSD Team.","kanzu-support-desk"),
+                                        . "The KSD Team.","kanzu-support-desk" ),
                         'channel'       => "STAFF",
                         'status'        => "NEW",
+                        'severity'      => 'HIGH',
                         'email'         => $email,
                         'fullname'      => $fullname,
                         'time_logged'   =>  date_format($date, 'Y-m-d h:i:s')
                     ),
                     array(
-                        'subject'       => __("Quick Intro to Kanzu Support Desk Features","kanzu-support-desk"),
-                        'message'       => __("We did this thing where learning how to get the most out of your KSD experience is a breeze. Tap 'Next' on the tour to navigate through our"
+                        'subject'       => __( "Quick Intro to Kanzu Support Desk Features","kanzu-support-desk" ),
+                        'message'       => __( "We arranged a simple walk-through to get you started. From the on-screen instructions, click 'Next' to proceed with the "
                         . "introductory tour. If you'd like to get a much deeper appreciation of how everything works, check out our <a href='http://www.kanzucode.com/documentation' target='_blank'>documentation</a>.<br /><br />"
-                        . "The KSD Team","kanzu-support-desk"),
+                        . "The KSD Team","kanzu-support-desk" ),
                         'channel'       => 'STAFF',
                         'status'        => 'OPEN',
+                        'severity'      => 'URGENT',
                         'email'         => $email,
                         'fullname'      => $fullname,
-                        'time_logged'   => date_format($date2, 'Y-m-d h:i:s')
+                        'time_logged'   => date_format($date, 'Y-m-d h:i:s')
                     ),
                     array(
-                        'subject'       => __("KSD Documentation","kanzu-support-desk"),
-                        'message'       => __("We know the things strange documentation makes you go through. We won't make you go through that.<br />"
+                        'subject'       => __( "KSD Documentation","kanzu-support-desk" ),
+                        'message'       => __( "We made every effort to make KSD simple but powerful.<br />"
                                             . "Learn how to get even more out of KSD from our rich resources <a href='http://www.kanzucode.com/documentation' target='_blank'>here</a>.<br /><br />"
-                                            . 'The KSD Team.',"kanzu-support-desk"),
+                                            . 'The KSD Team.',"kanzu-support-desk" ),
                         'channel'       => 'STAFF',
                         'status'        => 'OPEN',
+                        'severity'      => 'LOW',
                         'email'         => $email,
                         'fullname'      => $fullname,
                         'time_logged'   => date_format($date3, 'Y-m-d h:i:s')
                     ),
                     array(
-                        'subject'       => __("KSD Add-ons and other goodies.","kanzu-support-desk"),
-                        'message'       => __("Kanzu Support Desk does get even more powerful."
-                                            . " We have a neat set of add-ons that power-up your experience. Check out the add-ons tab to get a load of them!<br /><br />"
-                                            . "The KSD Team","kanzu-support-desk"),
+                        'subject'       => __( "KSD Add-ons and other goodies.","kanzu-support-desk" ),
+                        'message'       => __( "Kanzu Support Desk can go even a notch higher;"
+                                            . " we have a neat set of add-ons that power-up your experience. Check out the add-ons tab to get a load of them!<br /><br />"
+                                            . "The KSD Team","kanzu-support-desk" ),
                         'channel'       => 'STAFF',
                         'status'        => 'OPEN',
+                        'severity'      => 'LOW',
                         'email'         => $email,
                         'fullname'      => $fullname,
                         'time_logged'   => date_format($date4, 'Y-m-d h:i:s')
                     ),
                     array(
-                        'subject'       => __("Get in touch. Seriously","kanzu-support-desk"),
-                        'message'       => __("{$firstname}, this cannot work without you. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>"
+                        'subject'       => __( "Get in touch. Seriously","kanzu-support-desk" ),
+                        'message'       => __( "{$firstname}, this cannot work without you *sob sob*. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>"
                                             . "What's your experience with Kanzu Support Desk? What do you like? What do you love? What don't you like? What do you want us to fix or improve?<br />"
-                                            . "Reply this email or <a href='mailto:feedback@kanzucode.com'>send a new one</a><br /><br />"
+                                            . "We'd love to hear from you. <a href='mailto:feedback@kanzucode.com'>Click to send us an email</a><br /><br />"
                                             . "The KSD Team","kanzu-support-desk"),
                         'channel'       => 'STAFF',
                         'status'        => 'PENDING',
-                        'email'         => 'feedback@kanzucode.com',
+                        'severity'      => 'LOW',
+                        'email'         => $email,
                         'fullname'      => $fullname,
                         'time_logged'   => date_format($date5, 'Y-m-d h:i:s')
                     ),
@@ -369,6 +374,7 @@ class KSD_Install {
                     $new_ticket->tkt_message            = $tkt['message'];
                     $new_ticket->tkt_channel            = $tkt['channel'];
                     $new_ticket->tkt_status             = $tkt['status'];
+                    $new_ticket->tkt_severity           = $tkt['severity'];
                     $new_ticket->cust_email             = $tkt['email'];
                     $new_ticket->cust_fullname          = $tkt['fullname'];
                     $new_ticket->tkt_time_logged        = $tkt['time_logged'];

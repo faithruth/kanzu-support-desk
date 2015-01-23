@@ -477,16 +477,27 @@ ul.dashboard-statistics-summary li.ksd-dash-click:hover{
   text-align: center;
   width: 2%;
 }
-.ticket-list-item span.new,.ticket-list-item span.assigned{    
+ul.tour {
+  list-style-type: none;
+  text-align: center;
+}
+ul.tour li {
+  border-radius: 50px;
+  color: #fff;
+  display: inline;
+  margin: 0 3px;
+  padding: 5px;
+}
+.ticket-list-item span.new,.ticket-list-item span.assigned,ul.tour li.new{    
     background-color: #2ea2cc;  
 }
-.ticket-list-item span.open{
+.ticket-list-item span.open,ul.tour li.open{
   background-color: #008000;  
 }
-.ticket-list-item span.pending{
+.ticket-list-item span.pending,ul.tour li.pending{
   background-color: #9361d3;  
 }
-.ticket-list-item span.resolved{
+.ticket-list-item span.resolved,ul.tour li.resolved{
   background-color: #bcc1c5;  
 }
 .ticket-list-item span.ksd-tkt-status a{
