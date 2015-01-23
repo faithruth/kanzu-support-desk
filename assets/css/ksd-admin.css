@@ -512,7 +512,7 @@ ul.dashboard-statistics-summary li.ksd-dash-click:hover{
 .ticket-list-item .ticket-time {
   float: right;
   text-align: right;
-  width: 9%;
+  width: 6%; /*width: 9%;*/
   padding-right: 1%;
 }
 .ticket-list-item .description{
@@ -1369,3 +1369,33 @@ span.feedback_note{
 	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
 }
  
+
+/*Ticket Severity*/
+.ksd-ticket-severity-low{ 
+
+}
+
+.ksd-tkt-severity-low{
+   /* background-image: url("../images/severity-flag-black-icon-16.png");
+    width:16px;
+    height:16px;*/
+   width:3%;
+}
+.ksd-tkt-severity-medium{
+    background-image: url("../images/severity-flag-blue-icon-16.png");
+    width:16px;
+    height:16px;
+    width:3%;
+}
+.ksd-tkt-severity-high{
+    background-image: url("../images/severity-flag-yellow-icon-16.png");
+    width:16px;
+    height:16px;
+    width:3%;
+}
+.ksd-tkt-severity-urgent{
+    background-image: url("../images/severity-flag-red-icon-16.png");
+    width:16px;
+    height:16px;
+    width:3%;
+}
