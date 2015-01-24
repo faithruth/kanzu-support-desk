@@ -1006,15 +1006,16 @@ class KSD_Admin {
              //The content is entered into the array based on which tab it'll show on
              //Content for tab 1 is entered first and for tab n is entered at $p[n]
              $p[] = array(
-                'target' => '#dashboard',
-                'options' => array(
-                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
-                    __( 'Kanzu Support Desk Dashboard' ,'kanzu-support-desk'),
-                    __( 'Your dashboard displays your performance statistics','kanzu-support-desk')
+                "target" => "#dashboard",
+                "options" => array(
+                    "content" => sprintf( "<span><h3> %s </h3> <p> %s </p><p> %s </p></span>",
+                    __( "Kanzu Support Desk Dashboard" ,"kanzu-support-desk"),
+                    __( "Welcome to Kanzu Support Desk! Thanks for choosing us. Let's see where everything is. First off...","kanzu-support-desk"),
+                    __( "Your dashboard displays your performance statistics","kanzu-support-desk")
                     ),
-                    'button2'  => __( 'Next', 'kanzu-support-desk' ),
-                    'function' => 'window.location="' . admin_url( 'admin.php?page=wpseo_titles' ) . '";',
-                    'position' => array( 'edge' => 'top', 'align' => 'left' )
+                    "button2"  => __( "Next", "kanzu-support-desk" ),
+                    "function" => 'window.location="' . admin_url( 'admin.php?page=wpseo_titles' ) . '";',
+                    "position" => array( 'edge' => 'top', 'align' => 'left' )
                 )
             );
             $p[] = array(
@@ -1075,9 +1076,10 @@ class KSD_Admin {
             $p[] = array(
                 'target' => '#dashboard',
                 'options' => array(
-                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
+                    'content' => sprintf( '<span><h3> %s </h3> <p> %s </p><p> %s </p></span>',
                     __( 'Help' ,'kanzu-support-desk'),
-                    __( 'Resource center to help you make the most of your Kanzu Support Desk experience','kanzu-support-desk')
+                    __( 'Resource center to help you make the most of your Kanzu Support Desk experience','kanzu-support-desk'),
+                    __( "That's it! Dive right in. To take this tour again, click 'Enable Tour Mode' in your settings tab, update your settings then refresh your page","kanzu-support-desk")
                     ),
                     'position' => array( 'edge' => 'top', 'align' => 'left' )
                 )

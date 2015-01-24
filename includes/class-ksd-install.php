@@ -280,11 +280,10 @@ class KSD_Install {
                     );
             }
             
+
             /**
-             * Create initial tickets
-             */
-            /**
-             * Log initial tickets so that dashboard line graph shows.
+             * Log initial tickets so that dashboard line graph shows and user
+             * gets more details on the product
              */
             public static function log_initial_tickets ( ){
                 
@@ -292,21 +291,19 @@ class KSD_Install {
                 get_currentuserinfo();
                 
                 
-                $email      = $current_user->user_email;
-                $fullname   = $current_user->user_firstname .  ', ' . 
-                           $current_user->user_lastname;
-                $firstname  = $current_user->user_firstname;
+                $email          = $current_user->user_email;
+                $fullname       = $current_user->user_firstname.' ' .$current_user->user_lastname;
+                $display_name   = $current_user->display_name;
                 
-                $date       = date_create( date('Y-m-d') );
-                $date2      = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('1 days'));
-                $date3      = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('2 days'));
-                $date4      = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('3 days'));
-                $date5      = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('4 days'));
+                $date           = date_create( date('Y-m-d') );
+                $date3          = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('2 days'));
+                $date4          = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('3 days'));
+                $date5          = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('4 days'));
                 
                 $tickets = array(    
                     array(
                         'subject'       => __( "Welcome to Kanzu Support Desk.","kanzu-support-desk" ),
-                        'message'       => __( "Hi {$firstname},<br />"
+                        'message'       => __( "Hi {$display_name},<br />"
                                         ."Welcome to the Kanzu Support Desk (KSD) community *cue Happy Music and energetic dancers!*. Thanks for choosing us. We are all about making it simple for you to provide amazing customer support."
                                         ."We can't wait for you to get started!<br /><br />"
                                         . "The KSD Team.","kanzu-support-desk" ),
@@ -355,7 +352,7 @@ class KSD_Install {
                     ),
                     array(
                         'subject'       => __( "Get in touch. Seriously","kanzu-support-desk" ),
-                        'message'       => __( "{$firstname}, this cannot work without you *sob sob*. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>"
+                        'message'       => __( "{$display_name}, this cannot work without you *sob sob*. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>"
                                             . "What's your experience with Kanzu Support Desk? What do you like? What do you love? What don't you like? What do you want us to fix or improve?<br />"
                                             . "We'd love to hear from you. <a href='mailto:feedback@kanzucode.com'>Click to send us an email</a><br /><br />"
                                             . "The KSD Team","kanzu-support-desk"),
