@@ -59,7 +59,7 @@ if we can say so ourselves :-)
 
 = After activation =
 You'll be redirected to 'Kanzu Support Desk' > Dashboard. This'll display your performance statistics when you receive new tickets. Navigate to 'Kanzu Support Desk' > 'Settings' to change your settings.
-Please check [our documentation] (http://kanzucode.com/work/kanzu-support-desk/) for a more detailed walk-through should you need it
+Please check [our documentation] (http://kanzucode.com/work/kanzu-support-desk-docs/) for a more detailed walk-through should you need it
 
 == Frequently Asked Questions ==
 
@@ -73,7 +73,7 @@ With an optional add-on activated, yes they can. By default though, they can use
 
 = Where can I find KSD documentation and user guides? =
 
-For help setting-up and configuring KSD, please refer to our [user guide] (http://kanzucode.com/work/kanzu-support-desk/)
+For help setting-up and configuring KSD, please refer to our [user guide] (http://kanzucode.com/work/kanzu-support-desk-docs/)
 
 = Where can I get support? =
 
