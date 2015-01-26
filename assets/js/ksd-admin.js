@@ -385,6 +385,7 @@ jQuery( document ).ready(function() {
 
         this.deleteTicket();
         this.attachChangeTicketStatusEvents();
+        this.attachAssignToEvents();
         this.uiSingleTicketView();
         
         //Search
@@ -595,28 +596,29 @@ jQuery( document ).ready(function() {
 			
 		});		
         
-      //---------------------------------------------------------------------------------
-        /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
-    	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
-    		event.preventDefault();//Important otherwise the page skips around
-                //jQuery(".ticket-actions a.change_status'").hide();
-    		var tkt_id= jQuery(this).parent().attr('id').replace("tkt_",""); //Get the ticket ID
-    		jQuery("#tkt_"+tkt_id+" ul.ksd_agent_list").toggleClass("hidden");
-                jQuery(this).parent().find(".status").addClass("hidden");
-                
-    	});
-    	
-    	//---------------------------------------------------------------------------------
-            /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
-    	jQuery("#ticket-tabs").on('click','.ticket-actions ul.ksd_agent_list li',function() {
+        /*
+         * 
+         *Return the ticket row to normal size when mouse leaves the ticket options(ie trash, change status, assign) when
+         */
+    	jQuery("#ticket-tabs").on('mouseleave','.ksd-row-data',function(event) {
+            event.preventDefault();//Important otherwise the page skips around
+            jQuery(this).parent().find(".ticket-actions ul").addClass("hidden");
+         });
+        
+	}//eof:
+        
+        /**
+         * AJAX: Send an AJAX request to re-assign a ticket
+         * @param int tkt_id The ticket ID
+         * @param int assign_assigned_to The ID of the user to assign the ticket to
+         */
+        this.reassignTicket = function( tkt_id, assign_assigned_to ){
                 KSDUtils.showDialog("loading");
-    		var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
-    		var assign_assigned_to = jQuery(this).attr("id");
     		jQuery.post(	ksd_admin.ajax_url, 
     						{ 	action : 'ksd_assign_to',
     							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
     							tkt_id : tkt_id,
-                                                            ksd_current_user_id : ksd_admin.ksd_current_user_id,
+                                                        ksd_current_user_id : ksd_admin.ksd_current_user_id,
     							tkt_assign_assigned_to : assign_assigned_to
     						}, 
     				function(response) {	
@@ -636,25 +638,9 @@ jQuery( document ).ready(function() {
                                         return ;
                                     }
                                     KSDUtils.showDialog("success",respObj);
-    				});		
-    	});
-        
-        
-        
-        /*
-         * 
-         *Return the ticket row to normal size when mouse leaves the ticket options(ie trash, change status, assign) when
-         */
-    	jQuery("#ticket-tabs").on('mouseleave','.ksd-row-data',function(event) {
-            event.preventDefault();//Important otherwise the page skips around
-            jQuery(this).parent().find(".ticket-actions ul").addClass("hidden");
-         });
-        
-        
-        
-        
-        
-	}//eof:
+    				});	
+            
+        };
 	
         this.deleteTicket = function(){
 		//---------------------------------------------------------------------------------
@@ -858,13 +844,7 @@ jQuery( document ).ready(function() {
             jQuery( "#tabs" ).tabs( "option", "active", activeTab );
             //Set the title
             jQuery('.admin-ksd-title h2').html(ksd_admin.admin_tab.replace("ksd-","").replace("-"," "));
-
-            /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
-            jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function( event ) {
-                    event.preventDefault();//Important otherwise the page skips around
-                    var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-                    jQuery(".ticket_"+tkt_id+" ul.assign_to").toggleClass("hidden");
-            });
+ 
             /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
             jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to li',function() {
                     ksd_show_dialog("loading");
@@ -986,6 +966,36 @@ jQuery( document ).ready(function() {
                 });
             }
         };
+        this.attachAssignToEvents = function(){
+        //---------------------------------------------------------------------------------
+        /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
+    	jQuery("#ticket-tabs").on('click','.ticket-actions a.assign_to',function(event) {
+    		event.preventDefault();//Important otherwise the page skips around
+                //jQuery(".ticket-actions a.change_status'").hide();
+    		var tkt_id= jQuery(this).parent().attr('id').replace("tkt_",""); //Get the ticket ID
+    		jQuery("#tkt_"+tkt_id+" ul.ksd_agent_list").toggleClass("hidden");
+                jQuery(this).parent().find(".status").addClass("hidden");
+                
+    	});
+        //Re-assign a ticket 
+       jQuery("#ticket-tabs").on('click','.ticket-actions ul.ksd_agent_list li',function() {
+            var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
+            var assign_assigned_to = jQuery(this).attr("id");
+            _this.reassignTicket( tkt_id,assign_assigned_to );
+    	});
+        /**In single ticket view, Hide/Show the agent list when 'Assign to' is clicked*/
+            if (jQuery("#ksd-single-ticket").length){  
+                jQuery(".ksd-top-nav").on('click','a.assign_to',function(event) {
+                        event.preventDefault();//Important otherwise the page skips around
+                        jQuery("ul.ksd_agent_list").toggleClass("hidden");
+                });
+                jQuery(".ksd-top-nav").on('click','ul.ksd_agent_list li',function() {
+                    var tkt_id = jQuery.urlParam('ticket');
+                    var assign_assigned_to = jQuery(this).attr("id");              
+                    _this.reassignTicket( tkt_id,assign_assigned_to );                    
+                });
+            };
+         };
   
         this.uiSingleTicketView = function(){
         /**AJAX: In single ticket view mode, get the current ticket's description, sender and subject and any private notes*/

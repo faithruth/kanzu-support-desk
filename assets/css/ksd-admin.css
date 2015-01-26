@@ -187,13 +187,13 @@ ul.ksd-top-nav li{
     padding: 0 10px;    
     position: relative;
 }
-ul.ksd-top-nav li ul.status {
+ul.ksd-top-nav li ul.status,ul.ksd-top-nav li ul.ksd_agent_list{
     left: 0;
     margin-top: 5px;
     position: absolute; 
     top: 100%;
 }
-ul.ksd-top-nav li ul.status li {
+ul.ksd-top-nav li ul.status li,ul.ksd-top-nav li ul.ksd_agent_list li {
     background-color: #fff;
     cursor: pointer;
     float: left;
@@ -204,7 +204,7 @@ ul.ksd-top-nav li ul.status li {
     border-right: 1px solid #CCC;
     border-left: 1px solid #CCC;
 }
-ul.ksd-top-nav li ul.status li:hover{
+ul.ksd-top-nav li ul.status li:hover,ul.ksd-top-nav li ul.ksd_agent_list li:hover{
     background-color: #2ea2cc;
     color: #FFF;
 }

@@ -109,12 +109,7 @@ class KSD_Admin {
 		
                 //Variables to send to the admin JS script
                 $ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );//This determines which tab to show as active
-                
-                $agents_list = "<ul class='ksd_agent_list hidden'>";//The available list of agents
-                foreach (  get_users() as $agent ) {
-                    $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
-                }
-                $agents_list .= "</ul>";
+               
                 
                 //Get intro tour messages if we are in tour mode @since 1.1.0
                 $tour_pointer_messages['ksd_intro_tour'] =  $this->load_intro_tour();
@@ -134,7 +129,7 @@ class KSD_Admin {
                 $admin_labels_array['tkt_reply']                    = __('Reply','kanzu-support-desk');
                 $admin_labels_array['tkt_forward']                  = __('Forward','kanzu-support-desk');
                 $admin_labels_array['tkt_update_note']              = __('Update Note','kanzu-support-desk');
-                $admin_labels_array['msg_still_loading']            = __('Still Loading...','kanzu-support-desk');
+                $admin_labels_array['msg_still_loading']            = __('Loading Replies...','kanzu-support-desk');
                 $admin_labels_array['msg_loading']                  = __('Loading...','kanzu-support-desk');
                 $admin_labels_array['msg_sending']                  = __('Sending...','kanzu-support-desk');
                 $admin_labels_array['msg_error']                    = __('An unexpected error occured. Kindly retry','kanzu-support-desk');
@@ -148,7 +143,7 @@ class KSD_Admin {
                                             'ajax_url'              =>  admin_url( 'admin-ajax.php'),
                                             'ksd_admin_nonce'       =>  wp_create_nonce( 'ksd-admin-nonce' ),
                                             'ksd_tickets_url'       =>  admin_url( 'admin.php?page=ksd-tickets'),
-                                            'ksd_agents_list'       =>  $agents_list,
+                                            'ksd_agents_list'       =>  self::get_agent_list(),
                                             'ksd_current_user_id'   =>  get_current_user_id(),
                                             'ksd_labels'            =>  $admin_labels_array,
                                             'ksd_tour_pointers'     =>  $tour_pointer_messages
@@ -157,6 +152,19 @@ class KSD_Admin {
 		
 
 	}
+        
+        /**
+         * Get a list of agents
+         * @return An unordered list of agents
+         */
+        public static function get_agent_list(){
+            $agents_list = "<ul class='ksd_agent_list hidden'>";//The available list of agents
+                foreach (  get_users() as $agent ) {
+                    $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
+                }
+             $agents_list .= "</ul>";
+             return $agents_list;
+        }
 
 	
 	/**

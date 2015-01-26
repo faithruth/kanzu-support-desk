@@ -2,8 +2,8 @@
     <li class="back"><a href="<?php echo admin_url('admin.php?page=ksd-tickets'); ?>" class="add-new-h2"><?php _e('Back','kanzu-support-desk'); ?></a></li>
     <li><a href="<?php echo admin_url('admin.php?page=ksd-new-ticket'); ?>" class="add-new-h2"><?php _e('New Ticket','kanzu-support-desk'); ?></a></li>
     <li>
-        <a href="#" class="add-new-h2"><?php _e('Assign To','kanzu-support-desk'); ?></a>
-        <ul class="ksd_agent_list hidden"></ul>
+        <a href="#" class="add-new-h2 assign_to"><?php _e('Assign To','kanzu-support-desk'); ?></a>
+        <?php echo KSD_Admin::get_agent_list(); ?>
     </li>
     <li>
         <a href="#" class="add-new-h2 change_status"><?php _e('Change Status','kanzu-support-desk'); ?></a>
