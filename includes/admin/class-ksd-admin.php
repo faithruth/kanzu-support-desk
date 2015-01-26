@@ -906,10 +906,25 @@ class KSD_Admin {
             }                
             try{
                 $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
+                
                 //Iterate through the new settings and save them. 
                 foreach ( $updated_settings as $option_name => $default_value ) {
-                    $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
+                    
+                    if ( is_array( $_POST[$option_name] ) ) {
+                        foreach( $_POST[$option_name] as $k => $v ){
+                            $updated_settings[$option_name][$k] = sanitize_text_field ($v );
+                        }
+                        
+                    }else{
+                        if( ! isset( $_POST[$option_name] ) || $_POST[$option_name] == '' ){
+                            unset( $_POST[$option_name] );
+                        }
+                        else{                        
+                            $updated_settings[$option_name] = sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) ;
+                        }
+                    }
                 }
+                
                 Kanzu_Support_Desk::kanzu_support_log_me( print_r($_POST,true));
                 //Apply the settings filter to get settings from add-ons
                 $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
