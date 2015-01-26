@@ -52,6 +52,7 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_log_new_ticket', array( $this, 'log_new_ticket' ));
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ));
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ));
+                add_action( 'wp_ajax_ksd_change_severity', array( $this, 'change_severity' ));                
                 add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ));
                 add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ));
                 add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ));   
@@ -458,6 +459,37 @@ class KSD_Admin {
                 $updated_ticket = new stdClass();
 		$updated_ticket->tkt_id = $_POST['tkt_id'];
 		$updated_ticket->new_tkt_status = $_POST['tkt_status'];
+                
+		$tickets = new KSD_Tickets_Controller();	
+                
+                if( $tickets->update_ticket( $updated_ticket ) ){
+                    echo json_encode( __("Updated","kanzu-support-desk"));
+                }else {
+                    throw new Exception( __("Failed","kanzu-support-desk") , -1);
+                }
+		die();// IMPORTANT: don't leave this out
+            }catch( Exception $e){ 
+                $response = array( 
+                    'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode())
+                );
+                echo json_encode($response);	
+                die();// IMPORTANT: don't leave this out
+            }  
+	}
+        /**
+         * Change ticket's severity
+         * @throws Exception
+         */
+        public function change_severity(){
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                    die ( __('Busted!','kanzu-support-desk') );
+            }
+            
+            try{
+                $this->do_admin_includes();	
+                $updated_ticket = new stdClass();
+		$updated_ticket->tkt_id = $_POST['tkt_id'];
+		$updated_ticket->new_tkt_severity = $_POST['tkt_severity'];
                 
 		$tickets = new KSD_Tickets_Controller();	
                 

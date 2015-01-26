@@ -187,13 +187,13 @@ ul.ksd-top-nav li{
     padding: 0 10px;    
     position: relative;
 }
-ul.ksd-top-nav li ul.status,ul.ksd-top-nav li ul.ksd_agent_list{
+ul.ksd-top-nav li ul.status,ul.ksd-top-nav li ul.ksd_agent_list,ul.ksd-top-nav li ul.severity{
     left: 0;
     margin-top: 5px;
     position: absolute; 
     top: 100%;
 }
-ul.ksd-top-nav li ul.status li,ul.ksd-top-nav li ul.ksd_agent_list li {
+ul.ksd-top-nav li ul.status li,ul.ksd-top-nav li ul.ksd_agent_list li,ul.ksd-top-nav li ul.severity li {
     background-color: #fff;
     cursor: pointer;
     float: left;
@@ -204,7 +204,7 @@ ul.ksd-top-nav li ul.status li,ul.ksd-top-nav li ul.ksd_agent_list li {
     border-right: 1px solid #CCC;
     border-left: 1px solid #CCC;
 }
-ul.ksd-top-nav li ul.status li:hover,ul.ksd-top-nav li ul.ksd_agent_list li:hover{
+ul.ksd-top-nav li ul.status li:hover,ul.ksd-top-nav li ul.ksd_agent_list li:hover,ul.ksd-top-nav li ul.severity li:hover{
     background-color: #2ea2cc;
     color: #FFF;
 }
@@ -558,10 +558,10 @@ ul.tour li {
   width: 63%;
 }
 .ticket-list div.high{
-  border-left: 2px solid red;  
+  border-left: 3px solid orange;  
 }
 .ticket-list div.urgent{
-  border-left: 2px solid orange;  
+  border-left: 3px solid red;  
 }
 .ticket-list-item .subject-and-message-excerpt a,.ticket-list-item .ksd-tkt-customer-name a{
     text-decoration: none;

@@ -13,6 +13,15 @@
             <li>RESOLVED</li>
         </ul>
     </li>
+    <li>
+        <a href="#" class="add-new-h2 change_severity"><?php _e('Change Severity','kanzu-support-desk'); ?></a>
+        <ul class="severity hidden">
+            <li>LOW</li>
+            <li>MEDIUM</li>
+            <li>HIGH</li>
+            <li>URGENT</li>
+        </ul>
+    </li>
 </ul>
 <div id="ksd-single-ticket">
     <h1 class="ksd-single-ticket-subject"></h1>

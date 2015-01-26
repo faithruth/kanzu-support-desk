@@ -386,6 +386,7 @@ jQuery( document ).ready(function() {
         this.deleteTicket();
         this.attachChangeTicketStatusEvents();
         this.attachAssignToEvents();
+        this.attachChangeSeverityEvents();
         this.uiSingleTicketView();
         
         //Search
@@ -620,6 +621,40 @@ jQuery( document ).ready(function() {
     							tkt_id : tkt_id,
                                                         ksd_current_user_id : ksd_admin.ksd_current_user_id,
     							tkt_assign_assigned_to : assign_assigned_to
+    						}, 
+    				function(response) {	
+                                    var respObj = {};
+                                    //To catch cases when the ajax response is not json
+                                    try{
+                                        //to reduce cost of recalling parse
+                                        respObj = JSON.parse(response); 
+                                    }catch( err){
+                                        KSDUtils.showDialog("error", err);  
+                                        return;
+                                    }
+
+                                    //Check for error in request.
+                                    if ( 'undefined' !== typeof(respObj.error) ){
+                                        KSDUtils.showDialog("error", respObj.error.message  );
+                                        return ;
+                                    }
+                                    KSDUtils.showDialog("success",respObj);
+    				});	
+            
+        };
+        
+        /**
+         * Change a ticket's severity
+         * @param int tkt_id
+         * @param string tkt_severity New severity
+         */
+        this.changeTicketSeverity = function( tkt_id,tkt_severity ){
+                KSDUtils.showDialog("loading");
+    		jQuery.post(	ksd_admin.ajax_url, 
+    						{ 	action : 'ksd_change_severity',
+    							ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
+    							tkt_id : tkt_id,                                                 
+    							tkt_severity : tkt_severity
     						}, 
     				function(response) {	
                                     var respObj = {};
@@ -993,6 +1028,24 @@ jQuery( document ).ready(function() {
                     var tkt_id = jQuery.urlParam('ticket');
                     var assign_assigned_to = jQuery(this).attr("id");              
                     _this.reassignTicket( tkt_id,assign_assigned_to );                    
+                });
+            };
+         };
+         
+         /**
+          * Attach events to the items used to change ticket severity
+          */
+         this.attachChangeSeverityEvents = function(){
+            /**In single ticket view, Hide/Show the severity list when 'Change Severity' is clicked*/
+            if (jQuery("#ksd-single-ticket").length){  
+                jQuery(".ksd-top-nav").on('click','a.change_severity',function(event) {
+                        event.preventDefault();//Important otherwise the page skips around
+                        jQuery("ul.severity").toggleClass("hidden");
+                });
+                jQuery(".ksd-top-nav").on('click','ul.severity li',function() {
+                    var tkt_id = jQuery.urlParam('ticket');
+                    var tkt_severity = jQuery(this).text();            
+                    _this.changeTicketSeverity( tkt_id,tkt_severity );                    
                 });
             };
          };
