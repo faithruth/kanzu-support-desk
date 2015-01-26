@@ -910,8 +910,11 @@ class KSD_Admin {
                 foreach ( $updated_settings as $option_name => $default_value ) {
                     $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                 }
+                Kanzu_Support_Desk::kanzu_support_log_me( print_r($_POST,true));
                 //Apply the settings filter to get settings from add-ons
                 $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
+                
+                Kanzu_Support_Desk::kanzu_support_log_me( print_r($updated_settings,true));
                 
                 $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
                 
@@ -1183,6 +1186,7 @@ class KSD_Admin {
             $active_addons['ksd-mail'] =  'ksd-mail/ksd-mail.php'; 
             return $active_addons;
         }
+        
 }
 endif;
 

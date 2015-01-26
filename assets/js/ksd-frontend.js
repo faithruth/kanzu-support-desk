@@ -1,11 +1,12 @@
 jQuery( document ).ready(function() { 
-   /**Toggle display of new ticket form on click of the Support button*/
-   jQuery( "#ksd-new-ticket-frontend-wrap" ).toggle( "slide" ); //Hide it by default
+   /**Toggle display of new ticket form on click of the Support button*/   
+   if( jQuery("button#ksd-new-ticket-frontend").length ){//Check if the button exists.
+   jQuery( ".ksd-form-hidden-tab" ).toggle( "slide" ); //Hide it by default
     jQuery( "button#ksd-new-ticket-frontend" ).click(function(e) {//Toggle on button click
         e.preventDefault();
-        jQuery( "#ksd-new-ticket-frontend-wrap" ).toggle( "slide" );
+        jQuery( ".ksd-form-hidden-tab" ).toggle( "slide" );
     });
-    
+   };
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function(form){
         jQuery( 'img.ksd_loading_button' ).show();//Show the loading button
@@ -74,7 +75,7 @@ jQuery( document ).ready(function() {
      
     //Close the support tab if the close button is clicked
     jQuery ( '#ksd-new-ticket-frontend-wrap img.ksd_close_button' ).click(function(){
-         jQuery( "#ksd-new-ticket-frontend-wrap" ).toggle( "slide" );
+         jQuery( ".ksd-form-hidden-tab" ).toggle( "slide" );
     });
     
   });
