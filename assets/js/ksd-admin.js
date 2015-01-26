@@ -384,7 +384,7 @@ jQuery( document ).ready(function() {
         this.editTicketForm();
 
         this.deleteTicket();
-        this.changeTicketStatus();
+        this.attachChangeTicketStatusEvents();
         this.uiSingleTicketView();
         
         //Search
@@ -932,15 +932,11 @@ jQuery( document ).ready(function() {
         
         };
         
-        /*
-         * Change ticket status
+              /*
+         * Changes a ticket's status
          */
-        this.changeTicketStatus = function(){
-            /**AJAX: Send the AJAX request when a new status is chosen**/
-            jQuery("#ticket-tabs").on('click','.ticket-actions ul.status li',function() {
+        this.changeTicketStatus = function( tkt_id, tkt_status ){
                     KSDUtils.showDialog("loading");
-                    var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
-                    var tkt_status = jQuery(this).text();
                     jQuery.post(	ksd_admin.ajax_url, 
                                                     { 	action : 'ksd_change_status',
                                                             ksd_admin_nonce : ksd_admin.ksd_admin_nonce,
@@ -965,19 +961,42 @@ jQuery( document ).ready(function() {
                                         }
                                         KSDUtils.showDialog("success", respObj);				                            
                                     });		
+       
+        };
+        
+        /**
+         * Attach an event to the items that change ticket status
+         */
+        this.attachChangeTicketStatusEvents = function(){
+             /**AJAX: Send the AJAX request when a new status is chosen**/
+            jQuery("#ticket-tabs").on('click','.ticket-actions ul.status li',function() {
+                var tkt_id =jQuery(this).parent().parent().attr("id").replace("tkt_","");//Get the ticket ID
+                var tkt_status = jQuery(this).text();
+                _this.changeTicketStatus( tkt_id, tkt_status );
             });
-                
+                            
             /**Hide/Show the change ticket options on click of a ticket's 'change status' item**/
             jQuery("#ticket-tabs").on('click','.ticket-actions a.change_status',function(event) {
                     event.preventDefault();//Important otherwise the page skips around
                     var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
                     jQuery(".ticket_"+tkt_id+" ul.status").toggleClass("hidden");
             });
-
-        
+            
+            /**In single ticket view, Hide/Show the change status options*/
+            if (jQuery("#ksd-single-ticket").length){  
+                jQuery(".ksd-top-nav").on('click','a.change_status',function(event) {
+                        event.preventDefault();//Important otherwise the page skips around
+                        jQuery("ul.status").toggleClass("hidden");
+                });
+                jQuery(".ksd-top-nav").on('click','ul.status li',function() {
+                    var tkt_id = jQuery.urlParam('ticket');
+                    var tkt_status = jQuery(this).text();                   
+                    _this.changeTicketStatus( tkt_id, tkt_status );
+                    
+                });
+            }
         };
-        
-        
+  
         this.uiSingleTicketView = function(){
         /**AJAX: In single ticket view mode, get the current ticket's description, sender and subject and any private notes*/
          if(jQuery("#ksd-single-ticket .description").hasClass("pending")){             
@@ -1003,7 +1022,9 @@ jQuery( document ).ready(function() {
                                 return ;
                             }                             
                              the_ticket = respObj;
-                             jQuery("#ksd-single-ticket .author_and_subject").html(the_ticket.tkt_assigned_by+"-"+the_ticket.tkt_subject);
+                             jQuery("#ksd-single-ticket h1.ksd-single-ticket-subject").html(the_ticket.tkt_subject);
+                             jQuery("#ksd-single-ticket span.author").html(the_ticket.tkt_assigned_by);//@TODO Use customer name                               
+                             jQuery("#ksd-single-ticket span.date").html(the_ticket.tkt_time_logged);//@TODO Format this
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message).text();
                              jQuery("#ksd-single-ticket textarea[name=tkt_private_note]").val(the_ticket.tkt_private_note);
                              jQuery("#ticket-replies").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
