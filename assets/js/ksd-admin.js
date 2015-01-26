@@ -593,17 +593,7 @@ jQuery( document ).ready(function() {
                                 jQuery("#ksd_row_all_" + tab_id ).removeClass('ksd-row-all-show').addClass("ksd-row-all-hide");
 			}
 			
-		});
-		
-		//---------------------------------------------------------------------------------
-        /**Hide/Show the change ticket options on click of a ticket's 'change status' item**/
-	jQuery("#ticket-tabs").on('click','.ticket-actions a.change_status',function(event) {
-		event.preventDefault();//Important otherwise the page skips around
-		var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-		jQuery("#tkt_"+tkt_id+" ul.status").toggleClass("hidden");
-                jQuery(this).parent().find(".ksd_agent_list").addClass("hidden");
-                
-	});
+		});		
         
       //---------------------------------------------------------------------------------
         /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
@@ -671,7 +661,6 @@ jQuery( document ).ready(function() {
 		/**AJAX: Delete a ticket **/
 		jQuery("#ticket-tabs").on('click','.ticket-actions a.trash',function(event) {
 	            event.preventDefault();
-                    console.log("CLiked");
                     
 	             var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
 	             jQuery( "#delete-dialog" ).dialog({
@@ -977,9 +966,10 @@ jQuery( document ).ready(function() {
                             
             /**Hide/Show the change ticket options on click of a ticket's 'change status' item**/
             jQuery("#ticket-tabs").on('click','.ticket-actions a.change_status',function(event) {
-                    event.preventDefault();//Important otherwise the page skips around
-                    var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
-                    jQuery(".ticket_"+tkt_id+" ul.status").toggleClass("hidden");
+                   event.preventDefault();//Important otherwise the page skips around
+                   var tkt_id= jQuery(this).attr('id').replace("tkt_",""); //Get the ticket ID
+                   jQuery("#tkt_"+tkt_id+" ul.status").toggleClass("hidden");
+                   jQuery(this).parent().find(".ksd_agent_list").addClass("hidden");
             });
             
             /**In single ticket view, Hide/Show the change status options*/
