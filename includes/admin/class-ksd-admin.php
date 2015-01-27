@@ -1187,6 +1187,29 @@ class KSD_Admin {
             return $active_addons;
         }
         
+        /**
+         * Logs application msgs/logs.
+         * keys: log_name, log_msg, log_type=INFO|WARNING|ERROR
+         * @param Object $log Log message object
+         * @since 1.2.1
+         */
+        public function do_log_msg( &$log){
+            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-log-controller.php");  
+
+            $L = new KSD_Log_Controller();
+            $L->add_log($log);
+        }
+        
+        
+        /**
+         * Retrieve log msgs from the db.
+         * 
+         * @param type $num
+         * @param type $filter
+         */
+        public static function get_log_msgs( $num, $filter){
+            //TODO: Complete this.
+        }
 }
 endif;
 

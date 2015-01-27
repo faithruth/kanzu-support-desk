@@ -48,6 +48,8 @@ class KSD_Mail_Admin {
                 add_action( 'ksd_deactivated', array( 'KSD_Mail_Install', 'ksd_deactivated' ), 2 , 1 );  //We give this a very high priority (2) to ensure
                                                                                         //that it runs earlier than all other add-on logic. That
                                                                                         //other add-on logic would fail to run on realizing that KSD isn't active                
+                //Catch all email deamon errors
+                set_error_handler(array($this, "errorHandler"));
         }
         
                             
@@ -209,6 +211,24 @@ class KSD_Mail_Admin {
             }
           }
         
+        /**
+         * Handles mail plugin errors.
+         * 
+         * @param int $errno   Error number 
+         * @param string $errstr  Error message
+         * @param string $errfile Error file
+         * @param int $errline Line with error in the file
+         */
+
+        public function errorHandler($errno, $errstr, $errfile, $errline){
+
+            $log           = new stdClass();
+            $log->log_name = 'KSD Mail';
+            $log->log_type = 'ERROR';
+            $log->log_msg  = $errstr;
+
+            do_action('ksd_log_msg', $log);            
+        }
                     
         /*
          * Checks mailbox for new tickets to log.
