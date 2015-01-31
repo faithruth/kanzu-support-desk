@@ -25,7 +25,7 @@ class KSD_FrontEnd {
         //Handle AJAX
         add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ));
         //Add a shortcode for the front-end form
-        add_shortcode( 'ksd-form', array( $this,'form_short_code' ) );
+        add_shortcode( 'ksd_support_form', array( $this,'form_short_code' ) );
     }
     
     /**
