@@ -1,6 +1,8 @@
 <div id="ksd-new-ticket-frontend-wrap" class="<?php echo $form_position_class; ?>">
-   <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
-    <form id="ksd-new-ticket" method="POST" class="ksd-new-ticket-frontend <?php echo $form_position_class; ?>">
+    <div class="ksd-close-form-wrapper">
+        <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
+    </div>
+    <form id="ksd-new-ticket" method="POST" class="ksd-new-ticket-frontend <?php echo $form_position_class; ?>-form">
         <ul>
         <li class="ksd-name">               
               <input type="text" value="<?php _e('Name','kanzu-support-desk'); ?>" size="30" name="ksd_cust_fullname" label="Customer Name" class="ksd-customer-name" minlength="2" required/>
@@ -23,5 +25,5 @@
         <input name="ksd_tkt_channel" type="hidden" value="support_tab" />
         <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
     </form>
-    <div class="ksd-new-ticket-response hidden"></div>
+    <div class="<?php echo $form_position_class; ?>-form-response hidden"></div>
 </div>

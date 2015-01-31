@@ -9,10 +9,10 @@ jQuery( document ).ready(function() {
    };
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function(form){
-        targetFormClass = '.ksd-form-hidden-tab';//The wrapper class for the form being targetted. We use this to
-                                                //make sure that the proceeding actions are on the correct form
-        if( jQuery(form).hasClass('ksd-form-short-code')){
-           targetFormClass = '.ksd-form-short-code';
+        targetFormClass = '.ksd-form-hidden-tab-form';  //The wrapper class for the form being targetted. We use this to
+                                                        //make sure that the proceeding actions are on the correct form
+        if( jQuery(form).hasClass('ksd-form-short-code-form')){
+           targetFormClass = '.ksd-form-short-code-form';
         }
         jQuery( targetFormClass+' img.ksd_loading_button' ).show();//Show the loading button
         jQuery('form'+targetFormClass+' :submit').hide(); //Hide the submit button
@@ -23,10 +23,10 @@ jQuery( document ).ready(function() {
                             var respObj = JSON.parse(response);
                             //Show the response received. Check for errors
                             if ( 'undefined' !== typeof(respObj.error) ){
-                                jQuery ( targetFormClass+' div.ksd-new-ticket-response').show().text(respObj.error.message);
+                                jQuery ( 'div'+targetFormClass+'-response' ).show().text(respObj.error.message);
                                 return ;
                             }
-                            jQuery ( targetFormClass+' div.ksd-new-ticket-response').show().text(respObj);
+                            jQuery ( 'div'+targetFormClass+'-response' ).show().text(respObj);
                             //Remove the form
                             jQuery( 'form'+targetFormClass ).remove();
                 });
