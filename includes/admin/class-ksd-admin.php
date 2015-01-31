@@ -907,14 +907,17 @@ class KSD_Admin {
             try{
                 $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
                 //Iterate through the new settings and save them. 
-                foreach ( $updated_settings as $option_name => $default_value ) {
+                foreach ( $updated_settings as $option_name => $current_value ) {
                     $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                 }
-                Kanzu_Support_Desk::kanzu_support_log_me( print_r($_POST,true));
+                //For a checkbox, if it is unchecked then it won't be set in $_POST
+                $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns");
+                //Iterate through the checkboxes and set the value to "no" for all that aren't set
+                foreach ( $checkbox_names as $checkbox_name ){
+                     $updated_settings[$checkbox_name] = ( !isset ( $_POST[$checkbox_name] ) ? "no" : $updated_settings[$checkbox_name] );
+                }                
                 //Apply the settings filter to get settings from add-ons
                 $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
-                
-                Kanzu_Support_Desk::kanzu_support_log_me( print_r($updated_settings,true));
                 
                 $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
                 
