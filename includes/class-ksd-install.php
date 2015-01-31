@@ -246,13 +246,6 @@ class KSD_Install {
                                 FOREIGN KEY ( `assign_tkt_id` ) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
                                 ON DELETE CASCADE 
 				);
-                                CREATE TABLE `{$wpdb->prefix}kanzusupport_log` (
-                                `log_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                `log_name` VARCHAR(200) NOT NULL DEFAULT 'KSD Plugin',
-                                `log_msg` TEXT,
-                                `log_type` VARCHAR(200),
-                                `log_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                                );
                                 ";
       dbDelta($kanzusupport_tables);                     
  }
