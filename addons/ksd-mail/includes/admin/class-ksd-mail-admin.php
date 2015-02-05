@@ -55,7 +55,7 @@ class KSD_Mail_Admin {
                 add_action( 'admin_notices', array ( $this,'show_errors') );
                 
                 //Catch all email deamon errors.
-                set_error_handler(array($this, "error_handler"), 
+                set_error_handler( array( $this, "error_handler" ), 
                         E_ERROR ^ E_CORE_ERROR ^ E_COMPILE_ERROR ^ E_USER_ERROR ^
                         E_RECOVERABLE_ERROR ^  E_WARNING ^  E_CORE_WARNING ^ 
                         E_COMPILE_WARNING ^ E_USER_WARNING ^ E_NOTICE ^  E_USER_NOTICE ^ 
@@ -271,6 +271,7 @@ class KSD_Mail_Admin {
         public function show_errors ( ) {
 
             $opt = get_option('ksd_mail_log');
+            //@TODO Check if exists first
             $errname = $opt['name'];
             $errstr  = $opt['msg'];
             $errline  = $opt['line'];

@@ -81,9 +81,6 @@ class KSD_Mail_Install {
             //This is a new installation. Yippee! 
             self::set_default_options(); 	
             
-            //Create error log options
-            add_option( 'ksd_mail_log');
-            
 	}
         
         
