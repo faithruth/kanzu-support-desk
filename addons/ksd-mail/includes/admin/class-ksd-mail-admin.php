@@ -374,7 +374,7 @@ class KSD_Mail_Admin {
          * @return boolean
          */
         private function do_license_modifications( $action, $license=null ) {
-                $response_message = __( 'An error occured. Please retry','kanzu-support-desk' );
+                $response_message = __( 'An error occurred. Please retry','kanzu-support-desk' );
            
                  // retrieve the license from the database
 		$mail_settings  = KSD_Mail::get_settings();

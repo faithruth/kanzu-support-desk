@@ -103,7 +103,7 @@ class KSD_FrontEnd {
                 );
 		$google_recaptcha_response = wp_remote_get( add_query_arg( $recaptcha_args, 'https://www.google.com/recaptcha/api/siteverify' ), array( 'sslverify' => false ) );
 		 if ( is_wp_error( $google_recaptcha_response ) ) { 
-                     $response['message'] = __( "Sorry, an error occured. Please retry","kanzu-support-desk" );
+                     $response['message'] = __( "Sorry, an error occurred. Please retry","kanzu-support-desk" );
                      return $response;
                  }
                 $recaptcha_text = json_decode( wp_remote_retrieve_body( $google_recaptcha_response ) );
@@ -114,16 +114,16 @@ class KSD_FrontEnd {
                 else{
                     switch( $recaptcha_text->{'error-codes'}[0] ){
                         case 'missing-input-secret':
-                            $response['message'] = __( "Sorry, an error occured due to a missing reCAPTCHA secret key. Please refresh the page and retry.","kanzu-support-desk" );
+                            $response['message'] = __( "Sorry, an error occurred due to a missing reCAPTCHA secret key. Please refresh the page and retry.","kanzu-support-desk" );
                             break;
                         case 'invalid-input-secret':
-                            $response['message'] = __( "Sorry, an error occured due to an invalid or malformed reCAPTCHA secret key. Please refresh the page and retry.","kanzu-support-desk" );
+                            $response['message'] = __( "Sorry, an error occurred due to an invalid or malformed reCAPTCHA secret key. Please refresh the page and retry.","kanzu-support-desk" );
                             break;
                         case 'missing-input-response':
-                            $response['message'] = __( "Sorry, an error occured due to a missing reCAPTCHA input response. Please refresh the page and retry.","kanzu-support-desk" );
+                            $response['message'] = __( "Sorry, an error occurred due to a missing reCAPTCHA input response. Please refresh the page and retry.","kanzu-support-desk" );
                             break;
                         case 'invalid-input-response':
-                            $response['message'] = __( "Sorry, an error occured due to an invalid or malformed reCAPTCHA input response. Please refresh the page and retry.","kanzu-support-desk" );
+                            $response['message'] = __( "Sorry, an error occurred due to an invalid or malformed reCAPTCHA input response. Please refresh the page and retry.","kanzu-support-desk" );
                             break;
                         default: 
                             $response['message'] = $settings['recaptcha_error_message'];

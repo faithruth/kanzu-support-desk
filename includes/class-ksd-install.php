@@ -146,7 +146,7 @@ class KSD_Install {
                      $settings['enable_recaptcha']          = "no";
                      $settings['recaptcha_site_key']        = "";
                      $settings['recaptcha_secret_key']      = "";
-                     $settings['recaptcha_error_message']   = "Sorry, an error occured. If this persists, kindly get in touch with the site administrator on {$user_info->user_email}";
+                     $settings['recaptcha_error_message']   = "Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on {$user_info->user_email}";
                     break;
             }
             return $settings;
@@ -277,7 +277,7 @@ class KSD_Install {
                         'enable_recaptcha'                  => "no",//@since 1.3.1 Not on by default since user needs to create & provide reCAPTCHA site & secret keys
                         'recaptcha_site_key'                => "",
                         'recaptcha_secret_key'              => "",
-                        'recaptcha_error_message'           => "Sorry, an error occured. If this persists, kindly get in touch with the site administrator on {$user_info->user_email}"
+                        'recaptcha_error_message'           => "Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on {$user_info->user_email}"
                     );
             }
             
