@@ -23,6 +23,10 @@
         </ul>
         <input name="action" type="hidden" value="ksd_log_new_ticket" />
         <input name="ksd_tkt_channel" type="hidden" value="support_tab" />
+        <!--Add Google reCAPTCHA-->
+        <?php if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
+            <div class="g-recaptcha" data-sitekey="<?php echo $settings['recaptcha_site_key']; ?>"></div>
+        <?php endif; ?>
         <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
     </form>
     <div class="<?php echo $form_position_class; ?>-form-response hidden"></div>

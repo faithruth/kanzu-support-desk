@@ -1,7 +1,7 @@
 === Kanzu Support Desk ===
 Contributors: kanzucode
-Donate link: http://kanzucode.com/
-Tags: ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
+Donate link: https://kanzucode.com/
+Tags: customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.1
 Stable tag: 1.3.0
