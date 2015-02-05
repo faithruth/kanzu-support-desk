@@ -15,7 +15,13 @@
         </li>
           <li class="ksd-message">     
               <textarea value="<?php _e('Message','kanzu-support-desk'); ?>" rows="7" class="ksd-message" name="ksd_tkt_message" required></textarea>
-          </li>  
+          </li>
+        <!--Add Google reCAPTCHA-->
+        <?php if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
+            <li class="ksd-g-recaptcha">
+                <div class="g-recaptcha" data-sitekey="<?php echo $settings['recaptcha_site_key']; ?>"></div>
+            </li>
+        <?php endif; ?>
           <li class="ksd-frontend-submit">
             <img src="<?php echo KSD_PLUGIN_URL.'assets/images/loading_button.gif'; ?>" class="hidden ksd_loading_button" width="45" height="35" />
             <input type="submit" value="<?php _e( "Send Message","kanzu-support-desk" ); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
@@ -23,10 +29,6 @@
         </ul>
         <input name="action" type="hidden" value="ksd_log_new_ticket" />
         <input name="ksd_tkt_channel" type="hidden" value="support_tab" />
-        <!--Add Google reCAPTCHA-->
-        <?php if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
-            <div class="g-recaptcha" data-sitekey="<?php echo $settings['recaptcha_site_key']; ?>"></div>
-        <?php endif; ?>
         <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
     </form>
     <div class="<?php echo $form_position_class; ?>-form-response hidden"></div>
