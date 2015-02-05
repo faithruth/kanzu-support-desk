@@ -101,21 +101,12 @@ class KSD_Install {
         
         
         /**
-         * Do de-activation stuff. We call action ksd_deactivated for all 
-         * add-ons to clean-up and then deactivate themselves
+         * Do de-activation stuff. Currently, doesn't do a thing
          */
         public static function deactivate (){
-            
-            add_action('update_option_active_plugins', array( 'KSD_Install' , 'deactivate_addons'));
+            //Currently doesn't do a thing
         }        
         
-        
-        public static function deactivate_addons(){
-            $addons = array();
-            $addons  = apply_filters( 'ksd_active_addons_list', $addons );
-            
-            do_action('ksd_deactivate');
-        }
                 
        /**
 	 * Redirect to a welcome page on activation

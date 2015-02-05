@@ -164,7 +164,7 @@ final class KSD_Mail {
                 return $mail_settings;
             }
             else{
-                exit();
+                 return;
             }            
          }
          /**
@@ -179,7 +179,7 @@ final class KSD_Mail {
                   return update_option( KSD_OPTIONS_KEY, $base_settings);                   
               }
               else{
-                exit();
+                return;
             }
          }
          
@@ -194,9 +194,8 @@ final class KSD_Mail {
              }  
              else{
                  self::$ksd_mail_admin_notices = array( 
-                     'error' => __( 'Kanzu Support Desk must be active to use this plugin. Please activate it first','kanzu-support-desk' )
+                     'error' => __( 'Kanzu Support Desk Mail | The Kanzu Support Desk plugin must be active to use this plugin. Please activate it first.','kanzu-support-desk' )
                  );
-                 KSD_Mail_Install::ksd_deactivated();
                 return false;
             }
          }

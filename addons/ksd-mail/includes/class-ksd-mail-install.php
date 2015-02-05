@@ -94,15 +94,7 @@ class KSD_Mail_Install {
           $ksd_mail_admin->delete_cron_schedule();
         }
         
-        /**
-         * Run when the main KSD plugin is deactivated
-         * @since 1.0.1
-         */
-        public static function ksd_deactivated(){
-            deactivate_plugins( KSD_MAIL_PLUGIN_FILE );
-        }
-        
- 
+
         private static function set_default_options() {                  
 
             KSD_Mail::update_settings( self::get_default_options() );                    

@@ -45,12 +45,6 @@ class KSD_Mail_Admin {
                 //add action to ksd_mail_check hook. This has to be added here otherwise it won't run
                 add_action( 'ksd_mail_check', array( $this, 'check_mailbox' ) );
                 
-                //If the main plugin, KSD, gets deactivated
-                add_action( 'ksd_deactivated', array( 'KSD_Mail_Install', 'ksd_deactivated' ), 2 , 1 );  //We give this a very high priority (2) to ensure
-                                                                                        //that it runs earlier than all other add-on logic. That
-                                                                                        //other add-on logic would fail to run on realizing that KSD isn't active                
-                                                                                        //
-
                 //Log errors as notices
                 add_action( 'admin_notices', array ( $this,'show_errors') );
                 
@@ -85,7 +79,9 @@ class KSD_Mail_Admin {
          * @param array $current_settings Array holding the current settings
          */
         public function show_settings( $current_settings ){
-            include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-settings.php' );
+            if ( KSD_Mail::is_KSD_active() ){
+                include( KSD_MAIL_DIR . '/includes/admin/views/html-admin-settings.php' );
+            }
         }
 
  
@@ -183,7 +179,7 @@ class KSD_Mail_Admin {
 	$license_key    = isset( $mail_settings[ 'ksd_mail_license_key' ] ) ? trim( $mail_settings[ 'ksd_mail_license_key' ] ) : null;   
         
         //Display notice if no license is set or if the license is invalid
-        if ( empty ( $license_key ) || 'invalid' == $mail_settings['ksd_mail_license_status'] ){
+        if ( ( empty ( $license_key ) || 'invalid' == $mail_settings['ksd_mail_license_status'] ) && KSD_Mail::is_KSD_active() ){
             KSD_Mail::$ksd_mail_admin_notices = array(
                 "error"=> __( "Kanzu Support Desk Mail | You need to provide a valid license key before this plugin can function","kanzu-support-desk" )
                 );
