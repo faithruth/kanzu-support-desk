@@ -31,6 +31,8 @@ class KSD_Mail_Uninstall {
           $ksd_mail_admin = KSD_Mail_Admin::get_instance();
           $ksd_mail_admin->delete_cron_schedule();
           
+          //Delete mail addon log option
+          delete_option( 'ksd_mail_log');
           
     }
 

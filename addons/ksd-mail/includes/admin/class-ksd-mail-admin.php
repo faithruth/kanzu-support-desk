@@ -38,6 +38,7 @@ class KSD_Mail_Admin {
                 //Display admin notices
                 add_action( 'admin_notices', array ( $this,'display_admin_notice') );
                 
+
                 //Set-up actions
                 $this->setup_actions( 'invalid' );
 
@@ -48,8 +49,17 @@ class KSD_Mail_Admin {
                 add_action( 'ksd_deactivated', array( 'KSD_Mail_Install', 'ksd_deactivated' ), 2 , 1 );  //We give this a very high priority (2) to ensure
                                                                                         //that it runs earlier than all other add-on logic. That
                                                                                         //other add-on logic would fail to run on realizing that KSD isn't active                
-                //Catch all email deamon errors @TODO no camelCase for function_names.
-                set_error_handler(array($this, "errorHandler"));
+                                                                                        //
+
+                //Log errors as notices
+                add_action( 'admin_notices', array ( $this,'show_errors') );
+                
+                //Catch all email deamon errors.
+                set_error_handler(array($this, "error_handler"), 
+                        E_ERROR ^ E_CORE_ERROR ^ E_COMPILE_ERROR ^ E_USER_ERROR ^
+                        E_RECOVERABLE_ERROR ^  E_WARNING ^  E_CORE_WARNING ^ 
+                        E_COMPILE_WARNING ^ E_USER_WARNING ^ E_NOTICE ^  E_USER_NOTICE ^ 
+                        E_DEPRECATED    ^  E_USER_DEPRECATED    ^  E_PARSE);
         }
         
                             
@@ -213,23 +223,71 @@ class KSD_Mail_Admin {
         
         /**
          * Handles mail plugin errors.
+         * 
          * @TODO Switch to something like this http://code.tutsplus.com/articles/display-php-errors-as-wordpress-admin-alerts--wp-23993
          * @param int $errno   Error number 
          * @param string $errstr  Error message
          * @param string $errfile Error file
          * @param int $errline Line with error in the file
+         * @since 1.3.0
          */
 
-        public function errorHandler($errno, $errstr, $errfile, $errline){
-
-            $log           = new stdClass();
-            $log->log_name = 'KSD Mail';
-            $log->log_type = 'ERROR';
-            $log->log_msg  = $errstr;
-
-            do_action('ksd_log_msg', $log);            
+        public function error_handler($errno, $errstr, $errfile, $errline){
+            error_log( $errstr );
+            $errorType = array (
+                E_ERROR                => 'ERROR',
+                E_CORE_ERROR           => 'CORE ERROR',
+                E_COMPILE_ERROR        => 'COMPILE ERROR',
+                E_USER_ERROR           => 'USER ERROR',
+                E_RECOVERABLE_ERROR    => 'RECOVERABLE ERROR',
+                E_WARNING              => 'WARNING',
+                E_CORE_WARNING         => 'CORE WARNING',
+                E_COMPILE_WARNING      => 'COMPILE WARNING',
+                E_USER_WARNING         => 'USER WARNING',
+                E_NOTICE               => 'NOTICE',
+                E_USER_NOTICE          => 'USER NOTICE',
+                E_DEPRECATED           => 'DEPRECATED',
+                E_USER_DEPRECATED      => 'USER_DEPRECATED',
+                E_PARSE                => 'PARSING ERROR'
+           );
+            
+            if (array_key_exists($errno, $errorType)) {
+                    $errname = $errorType[$errno];
+                } else {
+                    $errname = 'UNKNOWN ERROR';
+            }
+            
+            update_option( 'ksd_mail_log', array(
+                'type' => 'ERROR',
+                'name' => $errname,
+                'msg'  => $errstr,
+                'line' => $errline,
+                'file' => $errfile,
+                'no' => $errno
+                )
+            );
         }
-                    
+               
+        public function show_errors ( ) {
+
+            $opt = get_option('ksd_mail_log');
+            $errname = $opt['name'];
+            $errstr  = $opt['msg'];
+            $errline  = $opt['line'];
+            $errfile  = $opt['file'];
+            $errno  = $opt['no'];
+            
+            ob_start();?>
+            <div class="error">
+              <p>
+                Kanzu Support Desk Mail | <?php echo $errname; ?> [<?php echo $errno; ?>]: <?php echo $errstr; ?> in <?php echo $errfile; ?> on line <?php echo $errline; ?>.
+              <p/>
+            </div>
+            <?php
+            echo ob_get_clean();
+
+        }
+        
         /*
          * Checks mailbox for new tickets to log.
          * @TODO Display connection-related errors as admin notices
