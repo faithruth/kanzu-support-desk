@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( ! class_exists( 'KSD_Mail_Admin' ) ) :
 
+include_once( KSD_MAIL_DIR . '/include/libraries/php-imap/ImapMailbox.php' );
+
 class KSD_Mail_Admin {
 
 	/**
@@ -295,7 +297,7 @@ class KSD_Mail_Admin {
         
         /*
          * Checks mailbox for new tickets to log.
-         * @TODO Display connection-related errors as admin notices
+         * 
          */
             public function check_mailbox(){     
             //Get the settings
@@ -316,40 +318,63 @@ class KSD_Mail_Admin {
             $mail_settings['ksd_mail_lastrun_time'] = date( 'U' );
             KSD_Mail::update_settings( $mail_settings );
                     
-            $m_box = new KSD_Mail_Processor();
+            //Connection details setup
+            $the_mailbox="";
+            //Append the ssl Flag if the user chose to always use SSL
+            $mail_settings['ksd_mail_protocol'] = ( "yes" == $mail_settings['ksd_mail_useSSL'] ? $mail_settings['ksd_mail_protocol'].'/ssl' : $mail_settings['ksd_mail_protocol'] );
 
-            if ( ! $m_box->connect() ) {
-                    _e( "Can not connect to mailbox.", "ksd-mail" );//@TODO Display admin notice
-                    return;
+            //Cater for self-signed certificates
+            if( "yes" == $mail_settings['ksd_mail_validate_certificate'] ) {
+                $the_mailbox = "{" . 
+                                $mail_settings['ksd_mail_server'] . ": " . 
+                                $mail_settings['ksd_mail_port'] . "/" . 
+                                $mail_settings['ksd_mail_protocol'] . "}" .
+                                $mail_settings['ksd_mail_mailbox'];
+            }
+            else {
+                $the_mailbox = "{" . 
+                                $mail_settings['ksd_mail_server']. ":" .
+                                $mail_settings['ksd_mail_port'] . "/" . 
+                                $mail_settings['ksd_mail_protocol'] .
+                                "/novalidate-cert}". 
+                                $mail_settings['ksd_mail_mailbox'];    
+            }
+            
+            $attachments_dir = KSD_MAIL_DIR . '/assets/attachments';
+            
+            $mailbox = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
+            $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
+            
+            $mailsIds = array();
+
+            // Get some mail
+            $mailsIds = $mailbox->searchMailBox( 'ALL' );
+            if( ! $mailsIds ) {
+                //No email tickets.
+                return;
             }
 
-            $count = $m_box->numMsgs();
-
-            for ( $i=1; $i <= $count; $i++)
-            {
-
-                    $msg = array();
-                    $msg = $m_box->getMessage($i);
-
-                    $mail_mailbox = $msg['headers']->from[0]->mailbox;
-                    $mail_host    = $msg['headers']->from[0]->host;                    
-                    
-                    $new_ticket                         = new stdClass(); 
-                    $new_ticket->tkt_subject            = $msg['headers']->subject;
-                    $new_ticket->tkt_message            = $msg['text'];;
-                    $new_ticket->tkt_channel            = "EMAIL";
-                    $new_ticket->tkt_status             = "OPEN";
-                    $new_ticket->cust_email             = $mail_mailbox . "@" . $mail_host;
-                    $new_ticket->cust_fullname          = $msg['headers']->from[0]->personal;
-                    $new_ticket->tkt_time_logged        = $msg['headers']->MailDate;
-                        
-                    //Log the ticket
-                    do_action( 'ksd_log_new_ticket', $new_ticket );
-
+            foreach ( $mailsIds as $mailId ) {
+                //$mailId = reset($mailsIds);
+                $mail = $mailbox->getMail($mailId);                                   
+                $new_ticket                         = new stdClass(); 
+                $new_ticket->tkt_subject            = $mail->subject;
+                $new_ticket->tkt_message            = $msg['text'];;
+                $new_ticket->tkt_channel            = "EMAIL";
+                $new_ticket->tkt_status             = "OPEN";
+                $new_ticket->cust_email             = $mail->fromAddress;
+                $new_ticket->cust_fullname          = $mail->fromName;
+                $new_ticket->tkt_time_logged        = $mail->date;
+                
+                //Get one attachment for now.
+                //TODO: iterate over all attachments and add them to the attachments field.
+                //$attachments = array();
+                //$attachments = $mail->getAttachments();
+                //$new_ticket->tkt_attachments         = basename( $attachments[0]->filePath );
+                
+                //Log the ticket
+                do_action( 'ksd_log_new_ticket', $new_ticket );
             }
-
-
-            $m_box->disconnect();
 
         }//eof:
         
