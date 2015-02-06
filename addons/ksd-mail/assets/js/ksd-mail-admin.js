@@ -25,5 +25,27 @@ jQuery( document ).ready(function() {
                          }
                     );
     });
+    
+    //Change mail port depending on user's settings 
+    changeMailPort = function( protocol, useSSL ){
+        var defaultPort = 110;
+        if ( protocol === 'IMAP' && useSSL ){
+            defaultPort = 993;
+        }
+        if ( protocol === 'IMAP' && !useSSL ){
+            defaultPort = 143;
+        }
+        if ( protocol === 'POP3' && useSSL ){
+            defaultPort = 995;
+        }
+        jQuery("input[name=ksd_mail_port]").val(defaultPort);
+    };
+    //Attach events to change in useSSL and protocol settings
+    jQuery( "input[name=ksd_mail_useSSL]" ).on( "click", function(){
+        changeMailPort(jQuery( "select[name=ksd_mail_protocol] option:selected" ).text(),jQuery( "input[name=ksd_mail_useSSL]:checked" ).length);
+    });
+    jQuery( "select[name=ksd_mail_protocol]" ).change(function() {
+        changeMailPort(jQuery( "select[name=ksd_mail_protocol] option:selected" ).text(),jQuery( "input[name=ksd_mail_useSSL]:checked" ).length);
+    });
 });
 
