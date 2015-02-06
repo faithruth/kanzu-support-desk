@@ -25,6 +25,18 @@ jQuery( document ).ready(function() {
                          }
                     );
     });
+    /**
+     * Monitor any change in the mail settings. We do this so that if they are
+     * changed, we initiate a new connection to the mail server
+     * and if it fails, inform the user immediately
+     */
+    mailSettingsChanged = function(){
+       jQuery("input[name=ksd_mail_settings_changed]").val("yes");
+    }
+    //Add an event to all mail settings to monitor for changes
+    jQuery( "input[name^='ksd_mail_']" ).change(function() { 
+       mailSettingsChanged();
+    });
     
     //Change mail port depending on user's settings 
     changeMailPort = function( protocol, useSSL ){
@@ -46,6 +58,7 @@ jQuery( document ).ready(function() {
     });
     jQuery( "select[name=ksd_mail_protocol]" ).change(function() {
         changeMailPort(jQuery( "select[name=ksd_mail_protocol] option:selected" ).text(),jQuery( "input[name=ksd_mail_useSSL]:checked" ).length);
+        mailSettingsChanged();//The event monitoring changes to mail settings was attached to input fields. This is a select so we attach it too
     });
 });
 
