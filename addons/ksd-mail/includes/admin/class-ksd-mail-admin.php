@@ -271,9 +271,9 @@ class KSD_Mail_Admin {
             $opt = get_option('ksd_mail_log');
             
             //Ensure that the option exists first or isset
-            if ( $opt == false || $opt == null || is_array( $opt) == false  || 
-                    count( $opt) == 0 ) 
-                return; 
+            if ( $opt == false || $opt == null || is_array( $opt) == false  || count( $opt) == 0 ) {
+                return;                 
+            }
             
             $errname = $opt['type'];
             $errstr  = $opt['msg'];
@@ -282,12 +282,11 @@ class KSD_Mail_Admin {
             $errno   = $opt['no'];
             
             //Clear error 
-            update_option( 'ksd_mail_log', array());
-            
+            update_option( 'ksd_mail_log', array());            
             ob_start();?>
             <div class="error">
               <p>
-                Kanzu Support Desk Mail | <?php echo $errstr; ?> .
+                <?php printf( __( "Kanzu Support Desk Mail |  %s", "kanzu-support-desk" ), $errstr ); ?>
               <p/>
             </div>
             <?php
