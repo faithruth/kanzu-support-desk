@@ -254,30 +254,38 @@ class KSD_Mail_Admin {
             }
             
             update_option( 'ksd_mail_log', array(
-                'type' => 'ERROR',
-                'name' => $errname,
+                'type' => $errname,
                 'msg'  => $errstr,
                 'line' => $errline,
                 'file' => $errfile,
-                'no' => $errno
+                'no' => $errno,
+                'time' => date('Ymdhhmi')
                 )
             );
         }
                
         public function show_errors ( ) {
-
+            
             $opt = get_option('ksd_mail_log');
-            //@TODO Check if exists first
-            $errname = $opt['name'];
+            
+            //Ensure that the option exists first or isset
+            if ( $opt == false || $opt == null || is_array( $opt) == false  || 
+                    count( $opt) == 0 ) 
+                return; 
+            
+            $errname = $opt['type'];
             $errstr  = $opt['msg'];
-            $errline  = $opt['line'];
-            $errfile  = $opt['file'];
-            $errno  = $opt['no'];
+            $errline = $opt['line'];
+            $errfile = $opt['file'];
+            $errno   = $opt['no'];
+            
+            //Clear error 
+            update_option( 'ksd_mail_log', array());
             
             ob_start();?>
             <div class="error">
               <p>
-                Kanzu Support Desk Mail | <?php echo $errname; ?> [<?php echo $errno; ?>]: <?php echo $errstr; ?> in <?php echo $errfile; ?> on line <?php echo $errline; ?>.
+                Kanzu Support Desk Mail | <?php echo $errstr; ?> .
               <p/>
             </div>
             <?php
