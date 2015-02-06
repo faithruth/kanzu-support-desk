@@ -63,7 +63,7 @@ Add shortcode **[ksd_support_form]** anywhere you want the support form to be di
 
 To add CAPTCHA to the form, go [here](https://www.google.com/recaptcha/admin), get Google reCAPTCHA keys and then add them to your KSD settings
 
-Please check out [our documentation here](http://kanzucode.com/work/kanzu-support-desk-docs/) for a more detailed walk-through should you need it
+Please check out [our documentation here](https://kanzucode.com/documentation/wordpress-customer-service-plugin-ksd-getting-started/) for a more detailed walk-through should you need it
 
 == Frequently Asked Questions ==
 
@@ -77,7 +77,7 @@ With an optional add-on activated, yes they can. By default though, they can use
 
 = Where can I find KSD documentation and user guides? =
 
-For help setting-up and configuring KSD, please refer to our [user guide](http://kanzucode.com/work/kanzu-support-desk-docs/)
+For help setting-up and configuring KSD, please refer to our [user guide](https://kanzucode.com/documentation/wordpress-customer-service-plugin-ksd-getting-started/)
 
 = Where can I get support? =
 
