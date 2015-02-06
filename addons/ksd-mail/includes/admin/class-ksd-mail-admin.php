@@ -347,7 +347,7 @@ class KSD_Mail_Admin {
             $mailsIds = array();
 
             // Get some mail
-            $mailsIds = $mailbox->searchMailBox( 'ALL' );
+            $mailsIds = $mailbox->searchMailBox( 'NEW' );
             if( ! $mailsIds ) {
                 //No email tickets.
                 return;
@@ -358,7 +358,7 @@ class KSD_Mail_Admin {
                 $mail = $mailbox->getMail($mailId);                                   
                 $new_ticket                         = new stdClass(); 
                 $new_ticket->tkt_subject            = $mail->subject;
-                $new_ticket->tkt_message            = $msg['text'];;
+                $new_ticket->tkt_message            = $mail->textHtml;
                 $new_ticket->tkt_channel            = "EMAIL";
                 $new_ticket->tkt_status             = "OPEN";
                 $new_ticket->cust_email             = $mail->fromAddress;
