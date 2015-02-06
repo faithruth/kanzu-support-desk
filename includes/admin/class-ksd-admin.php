@@ -64,7 +64,7 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ));  
                 add_action( 'wp_ajax_ksd_send_feedback', array( $this, 'send_feedback' ));  
                 add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ));              
-                
+                add_action( 'wp_ajax_ksd_get_notifications', array( $this, 'get_notifications' ));  
 	}
 	
 
@@ -1178,6 +1178,29 @@ class KSD_Admin {
              endswitch;
                      $headers = 'From: '.$settings['ticket_mail_from_name'].' <'.$settings['ticket_mail_from_email'].'>' . "\r\n";
              return wp_mail( $to, $subject, $message, $headers ); 
+         }
+         
+         /**
+          * Retrieve Kanzu Support Desk notifications. These are currently
+          * retrieved from the KSD blog feed, http://blog.kanzucode.com/feed/
+          * @since 1.3.2
+          */
+         public function get_notifications(){
+            ob_start();  
+            if ( false === ( $cache = get_transient( 'ksd_notifications_feed' ) ) ) {
+		$feed = wp_remote_get( 'http://blog.kanzucode.com/feed/', array( 'sslverify' => false ) );
+		if ( ! is_wp_error( $feed ) ) {                   
+			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
+				$cache = wp_remote_retrieve_body( $feed );
+				set_transient( 'ksd_notifications_feed', $cache, 86400 );//Check everyday
+			}
+		} else {
+			$cache = '<div class="error"><p>' . __( 'There was an error retrieving the latest notifications from the server. A re-attempt will be made later.', 'kanzu-support-desk' ) . '</div>';
+		}
+            }
+            echo json_encode( $cache );
+            echo ob_get_clean();    
+            die();
          }
          
          /**

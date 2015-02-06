@@ -164,6 +164,7 @@ jQuery( document ).ready(function() {
         this.init = function(){
                 this.statistics();
                 this.charts();
+                this.notifications();
         };
         
         
@@ -285,7 +286,47 @@ jQuery( document ).ready(function() {
               }catch( err ){
                   jQuery('#ksd_dashboard_chart').html( err );
               }
-	}//eof:charts
+	};//eof:charts
+        this.notifications = function(){
+            //Show/Hide the notifications panel
+            jQuery ( '.admin-ksd-title span.more_nav img' ).click(function(e){
+                e.preventDefault();
+                jQuery(this).toggleClass("active");
+                jQuery( "#ksd-notifications" ).toggle( "slide" );
+        });
+            //Retrieve the notifications
+                try{
+                        jQuery.post( ksd_admin.ajax_url, 
+                                {   action : 'ksd_get_notifications',
+                                    ksd_admin_nonce : ksd_admin.ksd_admin_nonce
+                                }, 
+                                function( response ) {                                        
+                                    var respObj = JSON.parse(response);
+                                    if ( 'undefined' !== typeof(respObj.error) ){
+                                        jQuery('#ksd-notifications').html( respObj.error.message );
+                                        return ;
+                                    }
+                                    //Parse the XML. We chose to do it here, rather than in the PHP (at the server end)
+                                    //for better performance (no impact on the server)
+                                    notificationsXML = jQuery.parseXML( respObj );
+                                    notificationData    =   '<ul>';
+                                    jQuery(notificationsXML).find("item").each(function(i, item) {
+                                          blogPost = jQuery(this); 
+                                          notificationData  +=  '<li>';
+                                          notificationData  +=  '<a href="'+blogPost.find('link').text()+'" target="_blank" class="post-title">'+blogPost.find('title').text()+'</a>';
+                                          notificationData  +=  '<span class="date-published">'+blogPost.find('pubDate').text()+'</span>';
+                                          notificationData  +=  '<a href="'+blogPost.find('link').text()+'" target="_blank" class="excerpt"><p>'+blogPost.find('description').text()+'</p></a>';
+                                          notificationData  +=  '</li>';
+                                          return i<2;//Stops the loop after the first 3 items are returned
+                                     });
+                                    notificationData    +=   '</ul>';
+                                    //Add the entries to the div*/
+                                    jQuery( "#ksd-notifications" ).html( notificationData );            
+                                });
+                            }catch( err ){
+                  jQuery('#ksd-notifications').html( err );
+              }
+        };//eof:notifications
         };//eof:Dashboard
         
         /*---------------------------------------------------------------*/
