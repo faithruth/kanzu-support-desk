@@ -315,7 +315,7 @@ jQuery( document ).ready(function() {
                                           notificationData  +=  '<li>';
                                           notificationData  +=  '<a href="'+blogPost.find('link').text()+'" target="_blank" class="post-title">'+blogPost.find('title').text()+'</a>';
                                           notificationData  +=  '<span class="date-published">'+blogPost.find('pubDate').text()+'</span>';
-                                          notificationData  +=  '<a href="'+blogPost.find('link').text()+'" target="_blank" class="excerpt"><p>'+blogPost.find('description').text()+'</p></a>';
+                                          notificationData  +=  '<a href="'+blogPost.find('link').text()+'" target="_blank" class="excerpt"><p>'+blogPost.find('description').text().substr(0, 100)+'...</p></a>';
                                           notificationData  +=  '</li>';
                                           return i<2;//Stops the loop after the first 3 items are returned
                                      });
