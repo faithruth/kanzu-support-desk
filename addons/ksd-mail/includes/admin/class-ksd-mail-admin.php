@@ -298,6 +298,8 @@ class KSD_Mail_Admin {
          * 
          */
             public function check_mailbox(){     
+
+            try{
             //Get the settings
             $mail_settings  =   KSD_Mail::get_settings();
             
@@ -373,6 +375,11 @@ class KSD_Mail_Admin {
                 //Log the ticket
                 do_action( 'ksd_log_new_ticket', $new_ticket );
             }
+
+           }
+           catch ( Exception $e  ) {
+               $this->error_handler( $e->getCode() ,  $e->getMessage() , 'NaN', 'NaN');
+           }
 
         }//eof:
         
