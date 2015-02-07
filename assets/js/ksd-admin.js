@@ -362,7 +362,18 @@ jQuery( document ).ready(function() {
                 var pointerContentIndex = 0;
                 if( ksd_admin.ksd_tour_pointers.ksd_intro_tour ){//If pointers are set, show them off 
                     var pointer = ksd_admin.ksd_tour_pointers.ksd_intro_tour;
-                     options = jQuery.extend( pointer[pointerContentIndex].options, {
+                    
+                    /**
+                     * Create a pointer using content defined at pointer[pointerContentIndex]
+                     * and display on a particular tab (dashboard, tickets, etc). The tab to display
+                     * it on is defined in pointer[pointerContentIndex].tab
+                     * @param int pointerContentIndex
+                     */
+                    generatePointer = function( pointerContentIndex ){
+                        //Change the active tab
+                        jQuery( "#tabs" ).tabs( "option", "active", pointer[pointerContentIndex].tab );
+                        //Generate the pointer options
+                        options = jQuery.extend( pointer[pointerContentIndex].options, {
                         close: function() {
                            /* jQuery.post( ksd_admin.ajax_url, {
                                 pointer: 'ksd_intro_tour',
@@ -373,14 +384,23 @@ jQuery( document ).ready(function() {
                                 action: 'ksd_disable_tour_mode'
                             });
                         }
-                    }); 
-                jQuery( pointer[pointerContentIndex].target ).pointer( options ).pointer('open');
-                //Inject a 'Next' button into the pointer
-                jQuery( 'a.close' ).after('<a href="#" class="ksd-next button-primary">'+ksd_admin.ksd_labels.pointer_next+'</a>');
-  
-                //Move to the next tab when 'Next' is clicked
-                jQuery( 'a.ksd-next' ).click( function(){                     
-                    if( pointerContentIndex < 6  ){
+                        }); 
+                        //Open the pointer
+                        jQuery( pointer[pointerContentIndex].target ).pointer( options ).pointer('open');
+                        //Inject a 'Next' button into the pointer
+                        jQuery( 'a.close' ).after('<a href="#" class="ksd-next button-primary">'+ksd_admin.ksd_labels.pointer_next+'</a>');
+                    };
+                     
+                  generatePointer( pointerContentIndex );       
+                //Move to the next pointer when 'Next' is clicked
+                //Event needs to be attached this way since the link was manually injected into the HTML
+                jQuery( 'body' ).on( 'click', 'a.ksd-next', function(e){     
+                    e.preventDefault();
+                    //Close the current pointer
+                    //jQuery( pointer[pointerContentIndex].target ).pointer('close');
+                    //Manually hide the parent
+                    jQuery(this).parents('.wp-pointer').hide();
+                    if( pointerContentIndex < pointer.length  ){
                         ++pointerContentIndex;
                     }
                     else{//End of the tour
@@ -393,20 +413,11 @@ jQuery( document ).ready(function() {
                         jQuery.post( ksd_admin.ajax_url, {
                                 action: 'ksd_disable_tour_mode'
                         });
-                        //Close the pointer
-                        jQuery( pointer[pointerContentIndex].target ).pointer('close');
                         return;
                     }
-                   jQuery('.wp-pointer-content span').html(pointer[pointerContentIndex].options.content);
-                   if ( pointerContentIndex >= 2 ){//At pointerContentIndex == 2, we are displaying ticket
-                                                  //instructions. We display two different sets of instructions, one after 
-                                                  //another so we compensate for this by decrementing pointerContentIndex 
-                      displayTabIndex = pointerContentIndex - 1;
-                    }
-                    else{
-                       displayTabIndex = pointerContentIndex;
-                    }
-                    jQuery( "#tabs" ).tabs( "option", "active", displayTabIndex );
+                   //Open the next pointer
+                   generatePointer( pointerContentIndex );   
+               
                 });
                 }
             };
