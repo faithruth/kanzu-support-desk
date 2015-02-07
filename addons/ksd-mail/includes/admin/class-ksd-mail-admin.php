@@ -13,7 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 if ( ! class_exists( 'KSD_Mail_Admin' ) ) :
 
-include_once( KSD_MAIL_DIR . '/include/libraries/php-imap/ImapMailbox.php' );
 
 class KSD_Mail_Admin {
 
