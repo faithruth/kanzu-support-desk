@@ -346,7 +346,7 @@ class KSD_Mail_Admin {
             $mailsIds = array();
 
             // Get some mail
-            $mailsIds = $mailbox->searchMailBox( 'NEW' );
+            $mailsIds = $mailbox->searchMailBox( 'UNSEEN' );
             if( ! $mailsIds ) {
                 //No email tickets.
                 return;
