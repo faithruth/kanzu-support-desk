@@ -1439,7 +1439,9 @@ jQuery( document ).ready(function() {
                     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                    ga('create', 'UA-48956820-3', 'auto');//@TODO Tracking ID is visible
+                    //ga('create', 'UA-48956820-3', 'auto');//@TODO Tracking ID is visible
+                    ga('create', 'UA-48956820-3', { 'cookieDomain': 'none' });//@TODO For localhost testing only. DO NOT DEPLOY!!
+                    
                     ga('set', {
                         'appName': 'Kanzu Support Desk',
                         'appId': 'kanzu-support-desk',
