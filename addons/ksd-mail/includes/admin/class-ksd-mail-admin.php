@@ -38,7 +38,9 @@ class KSD_Mail_Admin {
                 
                 //Display admin notices
                 add_action( 'admin_notices', array ( $this,'display_admin_notice') );
-                
+
+                //Check/test connection mail details.	
+                add_action( 'wp_ajax_ksd_mail_test_connection', array( $this, 'ksd_mail_test_connection' ) );
 
                 //Set-up actions
                 $this->setup_actions( 'invalid' );
@@ -527,6 +529,72 @@ class KSD_Mail_Admin {
             $this->create_cron_schedule();
             $this->create_cron_hook();
         }   
+
+        /**
+         * Check if connection succeeds with connection details
+         * 
+         * @param Array Settings  array
+         * @return bool True on success and false on failure
+         * @since 1.1.0
+         */
+        public function check_connection( $mail_settings = array() ){
+
+            //Connection details setup
+            $the_mailbox="";
+            //Append the ssl Flag if the user chose to always use SSL
+            $mail_settings['ksd_mail_protocol'] = ( "yes" == $mail_settings['ksd_mail_useSSL'] ? $mail_settings['ksd_mail_protocol'].'/ssl' : $mail_settings['ksd_mail_protocol'] );
+
+            //Cater for self-signed certificates
+            if( "yes" == $mail_settings['ksd_mail_validate_certificate'] ) {
+                $the_mailbox = "{" . 
+                    $mail_settings['ksd_mail_server'] . ":" . 
+                    $mail_settings['ksd_mail_port'] . "/" . 
+                    $mail_settings['ksd_mail_protocol'] . "}" .
+                    $mail_settings['ksd_mail_mailbox'];
+            }
+            else {
+                $the_mailbox = "{" . 
+                    $mail_settings['ksd_mail_server']. ":" .
+                    $mail_settings['ksd_mail_port'] . "/" . 
+                    $mail_settings['ksd_mail_protocol'] .
+                    "/novalidate-cert}". 
+                    $mail_settings['ksd_mail_mailbox'];    
+            }
+            
+            $attachments_dir = KSD_MAIL_DIR . '/assets/attachments';
+            
+            $imap = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
+            $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
+            
+            
+            try{
+                $imap->getImapStream( true );
+                $imap->disconnect();
+                return true;
+            }catch( Exception $e ) {
+                //Suppress imap fatal errors
+                imap_alerts();
+                imap_errors();
+                return false;
+            }
+            
+        }
+        
+        /*
+         * To test the connection mail details through ajax request.
+         * @since 1.1.0
+         */
+        public function  ksd_mail_test_connection ( ) {
+            /*if ( ! wp_verify_nonce( $_POST['update-settings-nonce'], 'ksd-update-settings' ) ){
+                die ( __('Busted!','kanzu-support-desk') );
+            } */  
+            
+            if ( false == $this->check_connection( $_POST ) ) {
+				echo 'Connection failed! Check settings.';
+		    } else {
+				echo 'Connection succeeded.';
+		    }
+        }
                     
 }
 endif;

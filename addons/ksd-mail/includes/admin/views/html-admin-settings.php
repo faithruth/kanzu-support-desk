@@ -48,4 +48,8 @@ $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Enable use of secure connections (SSL). Note that you will need to use the correct corresponding port. Defaults are 993 (IMAP/SSL) and 995 (POP3/SSL)','kanzu-support-desk')  ;?>"/>
                        <input name="ksd_mail_settings_changed" type="hidden" value="no" />    
                    </div> 
+                   <div class="setting">
+                       <input  style="padding: 0px 12px 2px;" class="button-small button " type="button" name="ksd_mail_test_connection" value="<?php _e("Test connection"); ?>" />
+                       <span id="ksd_mail_test_connection"></span>
+                   </div> 
                 </div>
