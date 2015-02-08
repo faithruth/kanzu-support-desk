@@ -908,7 +908,7 @@ jQuery( document ).ready(function() {
             /*Switch the active tab depending on what page has been selected*/
             activeTab=0;        
             switch(ksd_admin.admin_tab){
-                    case "ksd-tickets":
+                    case "ksd-tickets":  
                             activeTab=1;
                     break;
                     case "ksd-new-ticket":
@@ -968,7 +968,11 @@ jQuery( document ).ready(function() {
 
             /**Change the title onclick of a side navigation tab*/
             jQuery( "#tabs .ksd-main-nav li a" ).click(function() {
-                    jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#","").replace("_"," "));//Remove the hashtag, replace _ with a space
+                    var screenName = jQuery(this).attr('href').replace("#","").replace("_"," ");//Remove the hashtag, replace _ with a space
+                    jQuery('.admin-ksd-title h2').html(screenName);
+                    if ( "yes" === ksd_admin.enable_anonymous_tracking ){
+                        ga('send', 'screenview', {'screenName': screenName });
+                    }
             });
             
             /**Pre-populate the first tab in the tickets view*/
@@ -1420,6 +1424,32 @@ jQuery( document ).ready(function() {
         };
 };
 
+        
+        /*---------------------------------------------------------------*/
+        /*************************************ANALYTICS*********************/
+        /*---------------------------------------------------------------*/
+        KSDAnalytics = function(){
+        _this = this;
+            this.init = function(){
+                if ( "yes" !== ksd_admin.enable_anonymous_tracking ){
+                    return;
+                }
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+                    ga('create', 'UA-48956820-3', 'auto');//@TODO Tracking ID is visible
+                    ga('set', {
+                        'appName': 'Kanzu Support Desk',
+                        'appId': 'kanzu-support-desk',
+                        'appVersion': ksd_admin.ksd_version
+                      });
+
+                    ga('send', 'screenview', {'screenName': ksd_admin.admin_tab.replace("ksd-","").replace("-"," ") });
+            };
+         };
+
         //Settings
         Settings = new KSDSettings();
         Settings.init();
@@ -1435,5 +1465,9 @@ jQuery( document ).ready(function() {
         //Tickets
         Tickets = new KSDTickets();
         Tickets.init();
+        
+        //Analytics
+        Analytics = new KSDAnalytics();
+        Analytics.init();
          
 });

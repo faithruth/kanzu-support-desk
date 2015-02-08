@@ -135,25 +135,27 @@ class KSD_Admin {
                 $admin_labels_array['msg_sending']                  = __('Sending...','kanzu-support-desk');
                 $admin_labels_array['msg_error']                    = __('An unexpected error occurred. Kindly retry','kanzu-support-desk');
                 $admin_labels_array['pointer_next']                 = __('Next','kanzu-support-desk');
-                        
+                //Get current settings
+                $settings = Kanzu_Support_Desk::get_settings();
                 
                 //Localization allows us to send variables to the JS script
                 wp_localize_script( KSD_SLUG . '-admin-js',
                                     'ksd_admin',
-                                    array(  'admin_tab'             =>  $ksd_admin_tab,
-                                            'ajax_url'              =>  admin_url( 'admin-ajax.php'),
-                                            'ksd_admin_nonce'       =>  wp_create_nonce( 'ksd-admin-nonce' ),
-                                            'ksd_tickets_url'       =>  admin_url( 'admin.php?page=ksd-tickets'),
-                                            'ksd_agents_list'       =>  self::get_agent_list(),
-                                            'ksd_current_user_id'   =>  get_current_user_id(),
-                                            'ksd_labels'            =>  $admin_labels_array,
-                                            'ksd_tour_pointers'     =>  $tour_pointer_messages
+                                    array(  'admin_tab'                 =>  $ksd_admin_tab,
+                                            'ajax_url'                  =>  admin_url( 'admin-ajax.php'),
+                                            'ksd_admin_nonce'           =>  wp_create_nonce( 'ksd-admin-nonce' ),
+                                            'ksd_tickets_url'           =>  admin_url( 'admin.php?page=ksd-tickets'),
+                                            'ksd_agents_list'           =>  self::get_agent_list(),
+                                            'ksd_current_user_id'       =>  get_current_user_id(),
+                                            'ksd_labels'                =>  $admin_labels_array,
+                                            'ksd_tour_pointers'         =>  $tour_pointer_messages,
+                                            'enable_anonymous_tracking' =>  $settings['enable_anonymous_tracking'],
+                                            'ksd_version'               =>  KSD_VERSION
                                         )
                                     );
-		
 
 	}
-        
+                            
         /**
          * Get a list of agents
          * @return An unordered list of agents
