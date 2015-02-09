@@ -1448,9 +1448,13 @@ jQuery( document ).ready(function() {
                         'appVersion': ksd_admin.ksd_version
                       });
 
-                    ga('send', 'screenview', {'screenName': ksd_admin.admin_tab.replace("ksd-","").replace("-"," ") });
+                    ga('send', 'screenview', {'screenName': ksd_admin.admin_tab.replace("ksd-","").replace("-"," ") });//@TODO Add page & page title to this
             };
          };
+         
+        //Analytics
+        Analytics = new KSDAnalytics();
+        Analytics.init();
 
         //Settings
         Settings = new KSDSettings();
@@ -1466,10 +1470,7 @@ jQuery( document ).ready(function() {
         
         //Tickets
         Tickets = new KSDTickets();
-        Tickets.init();
-        
-        //Analytics
-        Analytics = new KSDAnalytics();
-        Analytics.init();
+        Tickets.init();       
+
          
 });

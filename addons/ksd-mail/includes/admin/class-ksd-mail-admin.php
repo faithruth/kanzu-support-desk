@@ -585,15 +585,12 @@ class KSD_Mail_Admin {
          * @since 1.1.0
          */
         public function  ksd_mail_test_connection ( ) {
-            /*if ( ! wp_verify_nonce( $_POST['update-settings-nonce'], 'ksd-update-settings' ) ){
-                die ( __('Busted!','kanzu-support-desk') );
-            } */  
-            
             if ( false == $this->check_connection( $_POST ) ) {
-				echo 'Connection failed! Check settings.';
+			_e( 'Sorry, your connection failed. Please check your settings.','kanzu-support-desk');
 		    } else {
-				echo 'Connection succeeded.';
+			_e ( "YAY! Your connection succeeded!","kanzu-support-desk" );
 		    }
+           die();//important otherwise output will have a 0 at the end         
         }
                     
 }

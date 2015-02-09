@@ -687,6 +687,16 @@ ul.edit-ticket-options li.selected{
 #update-settings .ksd-reset {
   right: 210px;
 }
+#update-settings .ksd-button {
+  clear: both;
+  float: left;
+  margin-top: 15px;
+  padding: 0 12px;
+}
+#update-settings span#ksd_mail_test_connection {
+  clear: both;
+  float: left;
+}
 #settings-accordion{
   padding-top: 12px;
 }
