@@ -84,13 +84,9 @@ jQuery( document ).ready(function() {
                     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');  
 
                     ga('create', 'UA-48956820-3', 'auto');      
-                    
-                    ga('set', {
-                        'appName': 'Kanzu Support Desk',
-                        'appId': 'kanzu-support-desk',
-                        'appVersion': ksd_admin.ksd_version
-                      });     
-                //Send the screen view for the current page. This is called the first time the page is loaded
+                    ga('require', 'linkid', 'linkid.js');
+ 
+                //Send the page view for the current page. This is called the first time the page is loaded
                 //so we get the current admin_tab from ksd_admin.admin_tab
                 this.sendPageView( ksd_admin.admin_tab );
             };
@@ -984,7 +980,7 @@ jQuery( document ).ready(function() {
             }
             jQuery( "#tabs" ).tabs( "option", "active", activeTab );
             //Set the title
-            jQuery('.admin-ksd-title h2').html(ksd_admin.admin_tab.replace("ksd-","").replace("-"," "));
+            jQuery('.admin-ksd-title h2').html( ksd_admin.admin_tab.replace("ksd-","").replace(/\-/g," ") );
  
             /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
             jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to li',function() {

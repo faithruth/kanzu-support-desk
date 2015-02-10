@@ -52,11 +52,11 @@ class KSD_Mail_Admin {
                 add_action( 'admin_notices', array ( $this,'show_errors') );
                 
                 //Catch all email deamon errors.
-                set_error_handler( array( $this, "error_handler" ), 
+               /* set_error_handler( array( $this, "error_handler" ), 
                         E_ERROR ^ E_CORE_ERROR ^ E_COMPILE_ERROR ^ E_USER_ERROR ^
                         E_RECOVERABLE_ERROR ^  E_WARNING ^  E_CORE_WARNING ^ 
                         E_COMPILE_WARNING ^ E_USER_WARNING ^ E_NOTICE ^  E_USER_NOTICE ^ 
-                        E_DEPRECATED    ^  E_USER_DEPRECATED    ^  E_PARSE);
+                        E_DEPRECATED    ^  E_USER_DEPRECATED    ^  E_PARSE);*/
         }
         
                             
@@ -223,7 +223,6 @@ class KSD_Mail_Admin {
         /**
          * Handles mail plugin errors.
          * 
-         * @TODO Switch to something like this http://code.tutsplus.com/articles/display-php-errors-as-wordpress-admin-alerts--wp-23993
          * @param int $errno   Error number 
          * @param string $errstr  Error message
          * @param string $errfile Error file
