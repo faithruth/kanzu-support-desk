@@ -55,6 +55,60 @@ jQuery( document ).ready(function() {
         KSDUtils.isNumber = function(){
             return typeof n === "number" && isFinite(n) && n%1===0;
         };
+        
+        /**
+         * Capitalize the first letter in a string
+         * @param {string} theString String to capitalize e.g. hello or HELLO
+         * @returns string capitalizedString e.g. Hello (all other letters are switched to lowercase, the first to uppercase
+         */
+        KSDUtils.capitalizeFirstLetter  = function( theString ){
+            return theString.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                return letter.toUpperCase();
+            });
+        };
+        
+                
+        /*---------------------------------------------------------------*/
+        /*************************************ANALYTICS*********************/
+        /*---------------------------------------------------------------*/
+            KSDAnalytics = function(){
+            _this = this;
+            };
+            KSDAnalytics.init = function(){
+                if ( "yes" !== ksd_admin.enable_anonymous_tracking ){
+                    return;
+                }
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');  
+
+                    ga('create', 'UA-48956820-3', 'auto');      
+                    
+                    ga('set', {
+                        'appName': 'Kanzu Support Desk',
+                        'appId': 'kanzu-support-desk',
+                        'appVersion': ksd_admin.ksd_version
+                      });     
+                //Send the screen view for the current page. This is called the first time the page is loaded
+                //so we get the current admin_tab from ksd_admin.admin_tab
+                this.sendPageView( ksd_admin.admin_tab );
+            };
+            /**
+             * Send a page view to Google Analytics
+             * @param {string} current_admin_tab ID of the screen view to send. e.g. ksd-tickets
+             * @returns none
+             */
+            KSDAnalytics.sendPageView = function( current_admin_tab ){
+                pageName  =   KSDUtils.capitalizeFirstLetter( current_admin_tab.replace("ksd-","").replace(/\-/g," ") );
+                if ( pageName === "Kanzu Support Desk" ){//For instances where user directly clicks the main KSD menu item, its title is "Kanzu Support Desk" and it displays the dashboard so we translate it here
+                    pageName = "Dashboard";
+                    current_admin_tab = "ksd-dashboard";
+                }
+                thePage     =   '/'+current_admin_tab;//NB: Page names must start with a / 
+                pageTitle   =   pageName+" - Kanzu Support Desk";   
+                ga( 'send', 'pageview', { 'page': thePage, 'title': pageTitle } ); 
+            };
 
         /*---------------------------------------------------------------*/
         /****************************SETTINGS****************************/
@@ -968,10 +1022,9 @@ jQuery( document ).ready(function() {
 
             /**Change the title onclick of a side navigation tab*/
             jQuery( "#tabs .ksd-main-nav li a" ).click(function() {
-                    var screenName = jQuery(this).attr('href').replace("#","").replace("_"," ");//Remove the hashtag, replace _ with a space
-                    jQuery('.admin-ksd-title h2').html(screenName);
+                    jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#","").replace("_"," "));//Remove the hashtag, replace _ with a space
                     if ( "yes" === ksd_admin.enable_anonymous_tracking ){
-                        ga('send', 'screenview', {'screenName': screenName });
+                       KSDAnalytics.sendPageView(jQuery(this).attr('href').replace("#","ksd-").replace("_","-"));//Make it match the admin_tab format e.g. ksd-dashboard, ksd-tickets, etc
                     }
             });
             
@@ -1424,37 +1477,10 @@ jQuery( document ).ready(function() {
         };
 };
 
-        
-        /*---------------------------------------------------------------*/
-        /*************************************ANALYTICS*********************/
-        /*---------------------------------------------------------------*/
-        KSDAnalytics = function(){
-        _this = this;
-            this.init = function(){
-                if ( "yes" !== ksd_admin.enable_anonymous_tracking ){
-                    return;
-                }
-                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                    //ga('create', 'UA-48956820-3', 'auto');//@TODO Tracking ID is visible
-                    ga('create', 'UA-48956820-3', { 'cookieDomain': 'none' });//@TODO For localhost testing only. DO NOT DEPLOY!!
-                    
-                    ga('set', {
-                        'appName': 'Kanzu Support Desk',
-                        'appId': 'kanzu-support-desk',
-                        'appVersion': ksd_admin.ksd_version
-                      });
-
-                    ga('send', 'screenview', {'screenName': ksd_admin.admin_tab.replace("ksd-","").replace("-"," ") });//@TODO Add page & page title to this
-            };
-         };
          
         //Analytics
-        Analytics = new KSDAnalytics();
-        Analytics.init();
+        KSDAnalytics.init();
 
         //Settings
         Settings = new KSDSettings();
