@@ -50,13 +50,7 @@ class KSD_Mail_Admin {
                 
                 //Log errors as notices
                 add_action( 'admin_notices', array ( $this,'show_errors') );
-                
-                //Catch all email deamon errors.
-               /* set_error_handler( array( $this, "error_handler" ), 
-                        E_ERROR ^ E_CORE_ERROR ^ E_COMPILE_ERROR ^ E_USER_ERROR ^
-                        E_RECOVERABLE_ERROR ^  E_WARNING ^  E_CORE_WARNING ^ 
-                        E_COMPILE_WARNING ^ E_USER_WARNING ^ E_NOTICE ^  E_USER_NOTICE ^ 
-                        E_DEPRECATED    ^  E_USER_DEPRECATED    ^  E_PARSE);*/
+
         }
         
                             
@@ -220,51 +214,7 @@ class KSD_Mail_Admin {
             }
           }
         
-        /**
-         * Handles mail plugin errors.
-         * 
-         * @param int $errno   Error number 
-         * @param string $errstr  Error message
-         * @param string $errfile Error file
-         * @param int $errline Line with error in the file
-         * @since 1.3.0
-         */
 
-        public function error_handler($errno, $errstr, $errfile, $errline){
-            error_log( $errstr );
-            $errorType = array (
-                E_ERROR                => 'ERROR',
-                E_CORE_ERROR           => 'CORE ERROR',
-                E_COMPILE_ERROR        => 'COMPILE ERROR',
-                E_USER_ERROR           => 'USER ERROR',
-                E_RECOVERABLE_ERROR    => 'RECOVERABLE ERROR',
-                E_WARNING              => 'WARNING',
-                E_CORE_WARNING         => 'CORE WARNING',
-                E_COMPILE_WARNING      => 'COMPILE WARNING',
-                E_USER_WARNING         => 'USER WARNING',
-                E_NOTICE               => 'NOTICE',
-                E_USER_NOTICE          => 'USER NOTICE',
-                E_DEPRECATED           => 'DEPRECATED',
-                E_USER_DEPRECATED      => 'USER_DEPRECATED',
-                E_PARSE                => 'PARSING ERROR'
-           );
-            
-            if (array_key_exists($errno, $errorType)) {
-                    $errname = $errorType[$errno];
-                } else {
-                    $errname = 'UNKNOWN ERROR';
-            }
-            
-            update_option( 'ksd_mail_log', array(
-                'type' => $errname,
-                'msg'  => $errstr,
-                'line' => $errline,
-                'file' => $errfile,
-                'no' => $errno,
-                'time' => date('Ymdhhmi')
-                )
-            );
-        }
                
         public function show_errors ( ) {
             
@@ -274,12 +224,8 @@ class KSD_Mail_Admin {
             if ( $opt == false || $opt == null || is_array( $opt) == false  || count( $opt) == 0 ) {
                 return;                 
             }
-            
-            $errname = $opt['type'];
+          
             $errstr  = $opt['msg'];
-            $errline = $opt['line'];
-            $errfile = $opt['file'];
-            $errno   = $opt['no'];
             
             //Clear error 
             update_option( 'ksd_mail_log', array());            
@@ -298,7 +244,7 @@ class KSD_Mail_Admin {
          * Checks mailbox for new tickets to log.
          * 
          */
-            public function check_mailbox(){     
+            public function check_mailbox ( ) {     
 
             try{
             //Get the settings
@@ -345,6 +291,24 @@ class KSD_Mail_Admin {
             
             $mailbox = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
             $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
+            
+            
+            
+            //Test connection  settings
+            try{
+                $mailbox->getImapStream( true );
+            }catch( Exception $e ) {
+                //Suppress imap fatal errors
+               imap_alerts();
+               imap_errors();
+                
+                update_option( 'ksd_mail_log', array(
+                'msg'  => _e('Error establishing connection! Check settings.'),
+                'time' => date('Ymdhhmi')
+                )
+            );
+                return;
+            }
             
             $mailsIds = array();
 
