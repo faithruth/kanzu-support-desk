@@ -54,6 +54,8 @@ Yes. [Kanzu Support Desk](http://wordpress.org/plugins/kanzu-support-desk/).
 * Replaced ksd mail processor class with php-imap
 * Monitor changes to KSD Mail settings
 * Added test connection button
+* Mail port changes automatically based on user's settings
+* Retrieve only unread emails
 
 = 1.1.0 =
 * Tickets logged by an action
