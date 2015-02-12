@@ -339,6 +339,9 @@ class KSD_Mail_Admin {
                 
                 //Log the ticket
                 do_action( 'ksd_log_new_ticket', $new_ticket );
+                
+                //Mark mail as read.
+                $mailbox->markMailAsRead( $mailId );
             }
 
            }
