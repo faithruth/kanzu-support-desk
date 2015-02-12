@@ -95,10 +95,10 @@ class KSD_Mail_Admin {
 	 * @since    1.0.0
 	 */
 	private function setup_actions( $action_type ){	
-            if ( 'invalid' === $action_type ){                
+            /*if ( 'invalid' === $action_type ){              
                 //Display KSD mail license in a separate licenses tab
                 add_filter( 'ksd_display_licenses', array( $this, 'display_licences' ) );     
-                
+                  */
                 //Add JS
                 add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
                 
@@ -107,8 +107,8 @@ class KSD_Mail_Admin {
                                 
                 //Save mail settings with the overall KSD settings
                 add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );     
-            }
-            else{
+           /* }
+            else{ */
                 //Add extra settings to the KSD Settings view
 		add_action( 'ksd_display_settings', array( $this, 'show_settings' ) ); 
                 
@@ -124,7 +124,7 @@ class KSD_Mail_Admin {
                 //Schedule mail check
                 $this->schedule_mail_check();
 
-            }
+          /*  } */
 
 	}
         
@@ -318,6 +318,8 @@ class KSD_Mail_Admin {
                 //No email tickets.
                 return;
             }
+            
+            global $current_user;    
 
             foreach ( $mailsIds as $mailId ) {
                 //$mailId = reset($mailsIds);
@@ -330,6 +332,8 @@ class KSD_Mail_Admin {
                 $new_ticket->cust_email             = $mail->fromAddress;
                 $new_ticket->cust_fullname          = $mail->fromName;
                 $new_ticket->tkt_time_logged        = $mail->date;
+                $new_ticket->tkt_assigned_to        = $current_user->ID;
+                        
                 
                 //Get one attachment for now.
                 //TODO: iterate over all attachments and add them to the attachments field.

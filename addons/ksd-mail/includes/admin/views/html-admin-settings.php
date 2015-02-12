@@ -32,6 +32,23 @@ $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
                        <input type="text" value="<?php echo $mail_settings['ksd_mail_mailbox']; ?>" size="30" name="ksd_mail_mailbox" />
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('The mailbox to query. You almost never need to change this','kanzu-support-desk')  ;?>"/>
                    </div>
+                   <div class="setting">
+                       <label for="ksd_mail_default_user_id"><?php _e("Assign to","kanzu-support-desk"); ?></label>
+                       <select name="ksd_mail_default_user_id">
+                            <!-- -->
+                            <?php foreach (  get_users() as $agent ) {
+                                global $current_user;    
+                                
+                            ?>
+                            <option value="<?php echo $agent->userID; ?>" 
+                                    <?php echo ( $agent->ID == @$current_settings['ksd_mail_default_user_id'])? 'selected="selected"': '' ?>
+                                    > 
+                                    <?php echo $agent->display_name; ?>  
+                            </option>
+                            <?php } ?>
+                       </select>
+ <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('User to assign tickets to by defualt.','kanzu-support-desk')  ;?>"/>
+                   </div> 
                   <div class="setting">
                        <label for="ksd_mail_check_freq"><?php _e("Mailbox Check Frequency ( In minutes ) ","kanzu-support-desk"); ?></label>                       
                        <input name="ksd_mail_check_freq"  type="text" size="30" value="<?php echo $mail_settings['ksd_mail_check_freq']; ?>"  />
@@ -41,13 +58,13 @@ $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
                        <label for="ksd_mail_validate_certificate"><?php _e("Validate Certificate","kanzu-support-desk"); ?></label>                       
                        <input name="ksd_mail_validate_certificate"  type="checkbox" <?php checked( $mail_settings['ksd_mail_validate_certificate'], "yes" ) ?> value="yes"  />
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Validate your SSL certificate during connection. Use only if you have a valid SSL certificate otherwise it will fail','kanzu-support-desk')  ;?>"/>
-                   </div> 
+                   </div>
                    <div class="setting">
                        <label for="ksd_mail_useSSL"><?php _e("Always use secure connection(SSL)?","kanzu-support-desk"); ?></label>
                        <input name="ksd_mail_useSSL"  type="checkbox" <?php checked( $mail_settings['ksd_mail_useSSL'], "yes" ) ?> value="yes"  />
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('Enable use of secure connections (SSL). Note that you will need to use the correct corresponding port. Defaults are 993 (IMAP/SSL) and 995 (POP3/SSL)','kanzu-support-desk')  ;?>"/>
-                       <input name="ksd_mail_settings_changed" type="hidden" value="no" />    
-                   </div> 
+                       <input name="ksd_mail_settings_changed" type="hidden" value="no" /> 
+                   </div>  
                    <div class="setting">
                        <input class="button-small button button-primary ksd-button" type="button" name="ksd_mail_test_connection" value="<?php _e("Test Connection"); ?>" />
                        <span id="ksd_mail_test_connection"></span>

@@ -104,7 +104,7 @@ class KSD_Mail_Install {
          * Get default settings
          */
         public static function get_default_options(){
-
+            global $current_user;
             return  array (
                     /** KSD Version info ********************************************************/
                     'ksd_mail_version'                  => KSD_MAIL_VERSION,
@@ -123,7 +123,10 @@ class KSD_Mail_Install {
 
                     /** License Information ************************************************************/
                     'ksd_mail_license_key'              => '',
-                    'ksd_mail_license_status'           => 'invalid'
+                    'ksd_mail_license_status'           => 'invalid',
+                
+                    /**Default user to assign email tickets to **/
+                    'ksd_mail_default_user_id'          =>  $current_user->ID
                 );
         }
  
