@@ -573,8 +573,8 @@ class KSD_Admin {
                     }
                     //Get the customer's email address and send them this reply
                     $CC = new KSD_Customers_Controller();
-                    $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );                   
-                    $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, $customer_details[0]->tkt_subject );
+                    $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );  //NOTE: Prefix the reply subject with Re:                 
+                    $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, 'Re: '.$customer_details[0]->tkt_subject );
 
                    $RC = new KSD_Replies_Controller(); 
                    $response = $RC->add_reply( $new_reply );

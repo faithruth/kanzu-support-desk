@@ -95,10 +95,10 @@ class KSD_Mail_Admin {
 	 * @since    1.0.0
 	 */
 	private function setup_actions( $action_type ){	
-            /*if ( 'invalid' === $action_type ){              
+            if ( 'invalid' === $action_type ){              
                 //Display KSD mail license in a separate licenses tab
                 add_filter( 'ksd_display_licenses', array( $this, 'display_licences' ) );     
-                  */
+                  
                 //Add JS
                 add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
                 
@@ -107,8 +107,8 @@ class KSD_Mail_Admin {
                                 
                 //Save mail settings with the overall KSD settings
                 add_filter( 'ksd_settings', array( $this, 'save_settings' ), 10, 2 );     
-           /* }
-            else{ */
+            }
+            else{ 
                 //Add extra settings to the KSD Settings view
 		add_action( 'ksd_display_settings', array( $this, 'show_settings' ) ); 
                 
@@ -124,7 +124,7 @@ class KSD_Mail_Admin {
                 //Schedule mail check
                 $this->schedule_mail_check();
 
-          /*  } */
+            } 
 
 	}
         
@@ -255,12 +255,12 @@ class KSD_Mail_Admin {
             $last_run = (int) $mail_settings['ksd_mail_lastrun_time']; //saved as unix timestamp
             $now = (int) date( 'U' );
             $interval = $now - $last_run ;
-            
-            if ( $interval  < ( $run_freq * 60 ) ){               
-                _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
-                return;
-            }
-            
+         //@TODO Run interval check disabled temporarily for tests   
+        //    if ( $interval  < ( $run_freq * 60 ) ){               
+        //        _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
+           //     return;
+          //  }
+         //   
             //Update last run time.
             $mail_settings['ksd_mail_lastrun_time'] = date( 'U' );
             KSD_Mail::update_settings( $mail_settings );
@@ -555,7 +555,7 @@ class KSD_Mail_Admin {
          * @since 1.1.0
          */
         public function  ksd_mail_test_connection ( ) {
-            if ( false == $this->check_connection( $_POST ) ) {
+            if ( false === $this->check_connection( $_POST ) ) {
 			_e( 'Sorry, your connection failed. Please check your settings.','kanzu-support-desk');
 		    } else {
 			_e ( "YAY! Your connection succeeded!","kanzu-support-desk" );
