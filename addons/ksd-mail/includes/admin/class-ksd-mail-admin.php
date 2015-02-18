@@ -249,18 +249,19 @@ class KSD_Mail_Admin {
             try{
             //Get the settings
             $mail_settings  =   KSD_Mail::get_settings();
-            
+            $ksd_settings   = Kanzu_Support_Desk::get_settings();
+             
             //Get last run time 
             $run_freq = (int) $mail_settings['ksd_mail_check_freq'] ; //in minutes
             $last_run = (int) $mail_settings['ksd_mail_lastrun_time']; //saved as unix timestamp
             $now = (int) date( 'U' );
             $interval = $now - $last_run ;
-         //@TODO Run interval check disabled temporarily for tests   
-        //    if ( $interval  < ( $run_freq * 60 ) ){               
-        //        _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
-           //     return;
-          //  }
-         //   
+            
+                if ( $interval  < ( $run_freq * 60 ) ){               
+                    _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
+                return;
+            }
+            
             //Update last run time.
             $mail_settings['ksd_mail_lastrun_time'] = date( 'U' );
             KSD_Mail::update_settings( $mail_settings );
@@ -303,10 +304,10 @@ class KSD_Mail_Admin {
                imap_errors();
                 
                 update_option( 'ksd_mail_log', array(
-                'msg'  => _e('Error establishing connection! Check settings.'),
-                'time' => date('Ymdhhmi')
-                )
-            );
+                    'msg'  => _e('Error establishing connection! Check settings.'),
+                    'time' => date('Ymdhhmi')
+                    )
+                );
                 return;
             }
             
@@ -332,8 +333,12 @@ class KSD_Mail_Admin {
                 $new_ticket->cust_email             = $mail->fromAddress;
                 $new_ticket->cust_fullname          = $mail->fromName;
                 $new_ticket->tkt_time_logged        = $mail->date;
-                $new_ticket->tkt_assigned_to        = $current_user->ID;
-                        
+                
+                 //check whether auto assignment is unabled
+                if ( $ksd_settings['auto_assign_user'] != '' || $ksd_settings['auto_assign_user'] != null ) {
+                    $new_ticket->tkt_assigned_to        = $ksd_settings['auto_assign_user'];
+                }
+
                 
                 //Get one attachment for now.
                 //TODO: iterate over all attachments and add them to the attachments field.
