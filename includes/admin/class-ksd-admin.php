@@ -573,8 +573,8 @@ class KSD_Admin {
                     }
                     //Get the customer's email address and send them this reply
                     $CC = new KSD_Customers_Controller();
-                    $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );  //NOTE: Prefix the reply subject with Re:                 
-                    $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, 'Re: '.$customer_details[0]->tkt_subject );
+                    $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );               
+                    $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, 'Re: '.$customer_details[0]->tkt_subject );//NOTE: Prefix the reply subject with Re:    
 
                    $RC = new KSD_Replies_Controller(); 
                    $response = $RC->add_reply( $new_reply );
@@ -616,7 +616,9 @@ class KSD_Admin {
                //Check whether it is a new ticket or a reply. We match against subject and ticket initiator
                 $value_parameters   = array();
                 $filter             = " tkt_subject = %s AND tkt_status != %d AND tkt_assigned_by = %d ";
-                $value_parameters[] = $new_ticket->tkt_subject ;
+                $value_parameters[] = sanitize_text_field( str_ireplace( "Re:", "", $new_ticket->tkt_subject ) ) ;  //Remove the Re: prefix from the subject of replies. @TODO Stands the
+                                                                                                                    //very, very remote risk of removing other Re:'s in the subject if they exist
+                                                                                                                    //Note that we use str_ireplace because it is less expensive than preg_replace
                 $value_parameters[] = 'RESOLVED' ;
                 $value_parameters[] = $new_ticket->tkt_cust_id ;
                 $the_ticket = $TC->get_tickets( $filter, $value_parameters );
