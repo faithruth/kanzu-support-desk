@@ -257,10 +257,10 @@ class KSD_Mail_Admin {
             $now = (int) date( 'U' );
             $interval = $now - $last_run ;
             
-                if ( $interval  < ( $run_freq * 60 ) ){               
-                    _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
-                return;
-            }
+           //     if ( $interval  < ( $run_freq * 60 ) ){             //@TODO Comment out for tests  
+            //        _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
+           //     return;
+         //   }
             
             //Update last run time.
             $mail_settings['ksd_mail_lastrun_time'] = date( 'U' );
@@ -324,7 +324,8 @@ class KSD_Mail_Admin {
 
             foreach ( $mailsIds as $mailId ) {
                 //$mailId = reset($mailsIds);
-                $mail = $mailbox->getMail($mailId);                                   
+                $mail = $mailbox->getMail($mailId);    
+                KSD_Mail::ksd_mail_log_me( $mail );                        
                 $new_ticket                         = new stdClass(); 
                 $new_ticket->tkt_subject            = $mail->subject;
                 $new_ticket->tkt_message            = $mail->textHtml;

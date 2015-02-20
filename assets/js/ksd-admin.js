@@ -864,6 +864,23 @@ jQuery( document ).ready(function() {
                         }
                 });
         };
+        
+        /**
+         * Format ticket replies. Hide extra content from
+         * the previous message and generally make the displayed reply
+         * more user-friendly
+         */        
+        this.formatTicketReplies = function(){
+            //First append the icon that'll be used to toggle reply extra content
+            jQuery('#ksd-single-ticket .gmail_extra').before('<div class="replies-more" title="'+ksd_admin.ksd_labels.lbl_toggle_trimmed_content+'"></div>');
+            //Add an event to that icon
+            jQuery('#ksd-single-ticket .description').on('click','.replies-more',function() {
+                jQuery('.gmail_extra').toggle('slide');
+            });
+            //Initially, hide the content
+            jQuery('.gmail_extra').toggle();
+        };
+        
             this.editTicketForm = function(){            
                 jQuery("form#edit-ticket").validate({
                    submitHandler: function( form ) {
@@ -1219,6 +1236,8 @@ jQuery( document ).ready(function() {
                                      });
                                      //Toggle the color of the reply background
                                      jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
+                                     //Clean-up the replies to make them more user--friendly
+                                     _this.formatTicketReplies();
                                  });
                          });	
          }
@@ -1471,6 +1490,7 @@ jQuery( document ).ready(function() {
                         
                     });
         };
+
 };
 
 

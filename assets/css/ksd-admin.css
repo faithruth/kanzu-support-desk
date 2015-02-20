@@ -446,6 +446,22 @@ h1.ksd-single-ticket-subject {
     margin-top: 10px;
     padding-left: 15px;
 }
+.replies-more {
+    background-color: #f1f1f1;
+    background-image: url("../images/icons/ellipsis.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    border: 1px solid #ddd;
+    clear: both;
+    cursor: pointer;
+    height: 10px;
+    margin-top: 12px;
+    opacity: 0.3;
+    width: 20px;
+}
+div.replies-more:hover{
+    opacity: 0.9;
+}
 .ticket-reply {
   border-bottom: 1px solid #ccc;
   padding: 15px 5px;
