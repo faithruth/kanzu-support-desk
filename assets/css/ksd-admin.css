@@ -392,8 +392,8 @@ h1.ksd-single-ticket-subject {
 #ksd-single-ticket .description {
   border-bottom: 1px solid #ccc;
   border-top: 1px solid #ccc;
-  margin: 0 15px;
-  padding: 20px 0;
+  margin: 0;
+  padding: 20px 15px;
 }
 #ksd-single-ticket .ksd-submit{
     float: left;
@@ -443,8 +443,8 @@ h1.ksd-single-ticket-subject {
     width: 100%;
 }
 #ticket-replies{
-    margin-top: 10px;
-    padding-left: 15px;
+    margin-top: 0;
+    padding-left: 0;
 }
 .replies-more {
     background-color: #f1f1f1;
@@ -464,7 +464,7 @@ div.replies-more:hover{
 }
 .ticket-reply {
   border-bottom: 1px solid #ccc;
-  padding: 15px 5px;
+  padding: 15px;
 }
 #new-ticket input.ksd-submit:hover{
    cursor: pointer; 

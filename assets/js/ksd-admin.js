@@ -874,10 +874,10 @@ jQuery( document ).ready(function() {
             //First append the icon that'll be used to toggle reply extra content
             jQuery('#ksd-single-ticket .gmail_extra').before('<div class="replies-more" title="'+ksd_admin.ksd_labels.lbl_toggle_trimmed_content+'"></div>');
             //Add an event to that icon
-            jQuery('#ksd-single-ticket .description').on('click','.replies-more',function() {
-                jQuery('.gmail_extra').toggle('slide');
+            jQuery('#ksd-single-ticket').on('click','.replies-more',function() {
+                jQuery( this).parent('.ticket-reply').find('.gmail_extra').toggle('slide');//Go up the DOM, find the ticket reply then find the extra content in it
             });
-            //Initially, hide the content
+            //Initially, hide all the extra content
             jQuery('.gmail_extra').toggle();
         };
         
