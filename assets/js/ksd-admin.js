@@ -867,17 +867,24 @@ jQuery( document ).ready(function() {
         
         /**
          * Format ticket replies. Hide extra content from
-         * the previous message and generally make the displayed reply
+         * the previous message and generally make the displayed content
          * more user-friendly
          */        
-        this.formatTicketReplies = function(){
-            //First append the icon that'll be used to toggle reply extra content
-            jQuery('#ksd-single-ticket .gmail_extra').before('<div class="replies-more" title="'+ksd_admin.ksd_labels.lbl_toggle_trimmed_content+'"></div>');
-            //Add an event to that icon
+        this.formatTicketReplies = function(){            
+           /* #1 First append the icon that'll be used to toggle reply extra content. Match the extra content
+                 from the various email clients. Currently matches Gmail & Outlook. To be expanded
+                 -------------------------------------------------------------------------------------------*/
+            //Match Outlook extra content and wrap it in .gmail_extra class. Note that for replies from GMail clients, .gmail_extra is there by default
+            jQuery('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="gmail_extra"></div>');
+            //Match Gmail extra content (both the manually inserted one, above, and the one sent by Gmail Clients)
+            jQuery('#ksd-single-ticket .gmail_extra').before('<div class="replies-more" title="'+ksd_admin.ksd_labels.lbl_toggle_trimmed_content+'"></div>');            
+            
+            // #2 Add an event to that icon we appended
             jQuery('#ksd-single-ticket').on('click','.replies-more',function() {
-                jQuery( this).parent('.ticket-reply').find('.gmail_extra').toggle('slide');//Go up the DOM, find the ticket reply then find the extra content in it
-            });
-            //Initially, hide all the extra content
+                jQuery( this).parents('.ticket-reply').find('.gmail_extra').toggle('slide');//Go up the DOM, find the ticket reply then find the extra content in it
+             });
+             
+            //#3 Initially, hide all the extra content
             jQuery('.gmail_extra').toggle();
         };
         
