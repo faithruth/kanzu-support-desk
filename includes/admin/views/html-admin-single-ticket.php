@@ -50,7 +50,8 @@
             </div>
        </div>
         <input name="action" type="hidden" value="ksd_reply_ticket" />
-        <input name="tkt_id" type="hidden" value="<?php echo $_GET['ticket'];?>" />        
+        <input name="tkt_id" type="hidden" value="<?php echo $_GET['ticket'];?>" />  
+        <input name="ksd_rep_created_by" type="hidden" value="<?php echo get_current_user_id();?>" />           
         <?php wp_nonce_field( 'ksd-edit-ticket', 'edit-ticket-nonce' ); ?>
         <input type="submit" value="<?php  _e('Reply','kanzu-support-desk');?>" name="edit-ticket" id="edit-ticket-submit" class="button button-primary button-large ksd-submit"/>        
     </form>

@@ -620,7 +620,7 @@ jQuery( document ).ready(function() {
                                             ticketListData += 	'<div class="ticket-info">';
                                             ticketListData += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
                                             ticketListData +=   '<span class="ksd-tkt-status '+(value.tkt_status).toLowerCase()+'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit" title="'+(value.tkt_status).toLowerCase()+'">'+(value.tkt_status).charAt(0)+'</a></span>';  
-                                            ticketListData += 	'<span class="ksd-tkt-customer-name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+ kst_tkt_replies + '</a></span>';
+                                            ticketListData += 	'<span class="ksd-tkt-customer-name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_cust_id+ kst_tkt_replies + '</a></span>';
                                             ticketListData +=	'<span class="subject-and-message-excerpt"><a class="ksd-tkt-subject"href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a>';
                                             ticketListData += 	'<a class="ksd-message-excerpt" href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit"> - '+value.tkt_message_excerpt+'</a></span>';                                            
                                             ticketListData += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
@@ -1211,7 +1211,7 @@ jQuery( document ).ready(function() {
                             }                             
                              the_ticket = respObj;
                              jQuery("#ksd-single-ticket h1.ksd-single-ticket-subject").html(the_ticket.tkt_subject);
-                             jQuery("#ksd-single-ticket span.author").html(the_ticket.tkt_assigned_by);//@TODO Use customer name                               
+                             jQuery("#ksd-single-ticket span.author").html(the_ticket.tkt_cust_id);//@TODO Use customer name                               
                              jQuery("#ksd-single-ticket span.date").html(the_ticket.tkt_time_logged);//@TODO Format this
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message).text();
                              jQuery("#ksd-single-ticket textarea[name=tkt_private_note]").val(the_ticket.tkt_private_note);
@@ -1246,6 +1246,7 @@ jQuery( document ).ready(function() {
                                      repliesData = "";
                                      jQuery.each( respObj, function( key, value ) {
                                          repliesData += "<div class='ticket-reply'>";
+                                         repliesData += "<span class='reply_author'>"+value.rep_created_by+"</span>";
                                          repliesData += "<span class='reply_date'>"+value.rep_date_created+"</span>";
                                          repliesData += "<div class='reply_message'>"+value.rep_message+"</div>";
                                          repliesData += "</div>";                             

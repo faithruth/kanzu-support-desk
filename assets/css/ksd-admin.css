@@ -469,7 +469,11 @@ div.replies-more:hover{
 #ticket-replies .reply_date {
   float: right;
   text-align: right;
-  width: 100%;
+  width: 50%;
+}
+.reply_author {
+  float: left;
+  width: 50%;
 }
 #new-ticket input.ksd-submit:hover{
    cursor: pointer; 
@@ -675,6 +679,9 @@ ul.edit-ticket-options li.selected{
   float: left;
   font-weight: bold;
   width: 200px;
+}
+#update-settings h3{
+  margin-bottom: 0;  
 }
 #update-settings input {
   padding: 10px;

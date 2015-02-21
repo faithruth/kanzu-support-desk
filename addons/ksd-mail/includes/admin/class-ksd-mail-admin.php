@@ -350,7 +350,7 @@ class KSD_Mail_Admin {
                 //Log the ticket
                 do_action( 'ksd_log_new_ticket', $new_ticket );
                 
-                //Mark mail as read.
+                //Mark mail as read. @TODO Do this in a way that takes care of ticket-logging failure
                 $mailbox->markMailAsRead( $mailId );
             }
 
