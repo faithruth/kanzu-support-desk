@@ -871,21 +871,25 @@ jQuery( document ).ready(function() {
          * more user-friendly
          */        
         this.formatTicketReplies = function(){            
-           /* #1 First append the icon that'll be used to toggle reply extra content. Match the extra content
-                 from the various email clients. Currently matches Gmail & Outlook. To be expanded
+           /* #1 First match extra content from various email clients and wrap it in class 'ksd_extra'. We match the extra content
+                 based on knowing that content's structure. Currently matches Gmail (Android and Desktop) & Outlook. To be expanded
                  -------------------------------------------------------------------------------------------*/
-            //Match Outlook extra content and wrap it in .gmail_extra class. Note that for replies from GMail clients, .gmail_extra is there by default
-            jQuery('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="gmail_extra"></div>');
-            //Match Gmail extra content (both the manually inserted one, above, and the one sent by Gmail Clients)
-            jQuery('#ksd-single-ticket .gmail_extra').before('<div class="replies-more" title="'+ksd_admin.ksd_labels.lbl_toggle_trimmed_content+'"></div>');            
+            //Match Outlook extra content  
+            jQuery('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="ksd_extra"></div>');
+            //Match Gmail ( Android and Desktop ) clients
+            jQuery('div.gmail_quote').addClass('ksd_extra');
+            //@TODO Add more mail clients, IOS particularly
             
-            // #2 Add an event to that icon we appended
+            /* #2 To the content we've wrapped in class 'ksd_extra' in #1 above, append the icon that'll be used to toggle the extra content*/
+            jQuery('#ksd-single-ticket .ksd_extra').before('<div class="replies-more" title="'+ksd_admin.ksd_labels.lbl_toggle_trimmed_content+'"></div>');            
+
+            // #3 Add an event to that icon we appended
             jQuery('#ksd-single-ticket').on('click','.replies-more',function() {
-                jQuery( this).parents('.ticket-reply').find('.gmail_extra').toggle('slide');//Go up the DOM, find the ticket reply then find the extra content in it
+                jQuery( this).parents('.ticket-reply').find('.ksd_extra').toggle('slide');//Go up the DOM, find the ticket reply then find the extra content in it
              });
              
-            //#3 Initially, hide all the extra content
-            jQuery('.gmail_extra').toggle();
+            //#4 Initially, hide all the extra content
+            jQuery('.ksd_extra').toggle();
         };
         
             this.editTicketForm = function(){            

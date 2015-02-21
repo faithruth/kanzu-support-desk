@@ -328,7 +328,7 @@ class KSD_Mail_Admin {
                 KSD_Mail::ksd_mail_log_me( $mail );                        
                 $new_ticket                         = new stdClass(); 
                 $new_ticket->tkt_subject            = $mail->subject;
-                $new_ticket->tkt_message            = $mail->textHtml;
+                $new_ticket->tkt_message            = ( !empty( $mail->textHtml ) ? $mail->textHtml : $mail->textPlain );
                 $new_ticket->tkt_channel            = "EMAIL";
                 $new_ticket->tkt_status             = "OPEN";
                 $new_ticket->cust_email             = $mail->fromAddress;
