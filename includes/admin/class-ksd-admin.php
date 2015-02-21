@@ -572,17 +572,18 @@ class KSD_Admin {
                     if ( strlen( $new_reply->rep_message ) < 2 && ! $add_on_mode ){//If the response sent it too short
                        throw new Exception( __("Error | Reply too short", 'kanzu-support-desk'), -1 );
                     }
-                    //Get the customer's email address and send them this reply
-                    $CC = new KSD_Customers_Controller();
-                    $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );               
-                    $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, 'Re: '.$customer_details[0]->tkt_subject );//NOTE: Prefix the reply subject with Re:    
-
+                   //Add the reply to the replies table
                    $RC = new KSD_Replies_Controller(); 
                    $response = $RC->add_reply( $new_reply );
                    
                    if( $add_on_mode ){
-                       return;//End the party if this came from an add-on
+                       return;//End the party if this came from an add-on. All an add-on needs if for the reply to be logged
                    }
+                   
+                    //Get the customer's email address and send them this reply.
+                    $CC = new KSD_Customers_Controller();
+                    $customer_details   = $CC->get_customer_by_ticketID( $new_reply->rep_tkt_id );               
+                    $this->send_email( $customer_details[0]->cust_email, $new_reply->rep_message, 'Re: '.$customer_details[0]->tkt_subject );//NOTE: Prefix the reply subject with Re:    
                    
                    if ( $response > 0 ){
                       echo json_encode(  esc_html( $new_reply->rep_message )  );
@@ -817,7 +818,7 @@ class KSD_Admin {
             $CC = new KSD_Customers_Controller();
             //If the ticket was logged by staff from the admin end, then the username is available in wp_users. Otherwise, we retrive the name
             //from the KSD customers table
-            $tmp_tkt_assigned_by = ( 'STAFF' === $ticket->tkt_channel ? $users->get_user($ticket->tkt_assigned_by)->user_nicename : $CC->get_customer($ticket->tkt_assigned_by)->cust_firstname );
+            $tmp_tkt_assigned_by = ( 'STAFF' === $ticket->tkt_channel ? $users->get_user($ticket->tkt_assigned_by)->display_name : $CC->get_customer($ticket->tkt_assigned_by)->cust_firstname );
             
             //Replace the tkt_assigned_by name with a prettier one
             $ticket->tkt_assigned_by = str_replace($ticket->tkt_assigned_by,$tmp_tkt_assigned_by,$ticket->tkt_assigned_by);

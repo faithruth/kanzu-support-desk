@@ -878,6 +878,8 @@ jQuery( document ).ready(function() {
             jQuery('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="ksd_extra"></div>');
             //Match Gmail ( Android and Desktop ) clients
             jQuery('div.gmail_quote').addClass('ksd_extra');
+            //Match Yahoo desktop clients. Written separately from the rest merely for legibility
+            jQuery('div.yahoo_quoted').addClass('ksd_extra');
             //@TODO Add more mail clients, IOS particularly
             
             /* #2 To the content we've wrapped in class 'ksd_extra' in #1 above, append the icon that'll be used to toggle the extra content*/
