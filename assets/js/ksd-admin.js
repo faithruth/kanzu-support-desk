@@ -874,7 +874,7 @@ jQuery( document ).ready(function() {
            /* #1 First match extra content from various email clients and wrap it in class 'ksd_extra'. We match the extra content
                  based on knowing that content's structure. Currently matches Gmail (Android and Desktop) & Outlook. To be expanded
                  -------------------------------------------------------------------------------------------*/
-            //Match Outlook extra content  
+            //Match Outlook 2013 extra content  @TODO Add mobile outlook, outlook 2007 and 2010
             jQuery('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="ksd_extra"></div>');
             //Match Gmail ( Android and Desktop ) clients
             jQuery('div.gmail_quote').addClass('ksd_extra');
@@ -1215,7 +1215,7 @@ jQuery( document ).ready(function() {
                              jQuery("#ksd-single-ticket span.date").html(the_ticket.tkt_time_logged);//@TODO Format this
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message).text();
                              jQuery("#ksd-single-ticket textarea[name=tkt_private_note]").val(the_ticket.tkt_private_note);
-                             jQuery("#ticket-replies").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
+                             jQuery("#ticket-replies p.loading").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
                              //Make the 'Back' button visible
                              jQuery(".top-nav li.back").removeClass("hidden");
 
@@ -1243,10 +1243,14 @@ jQuery( document ).ready(function() {
                                         return ;
                                     }
                                     
-                                     jQuery("#ticket-replies").html("") ; //Clear the replies div
+                                     repliesData = "";
                                      jQuery.each( respObj, function( key, value ) {
-                                     jQuery("#ticket-replies").append("<div class='ticket-reply'>"+value.rep_message+"</div>");                                    
+                                         repliesData += "<div class='ticket-reply'>";
+                                         repliesData += "<span class='reply_date'>"+value.rep_date_created+"</span>";
+                                         repliesData += "<div class='reply_message'>"+value.rep_message+"</div>";
+                                         repliesData += "</div>";                             
                                      });
+                                     jQuery("#ticket-replies").html(repliesData) ; 
                                      //Toggle the color of the reply background
                                      jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
                                      //Clean-up the replies to make them more user--friendly

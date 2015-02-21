@@ -548,6 +548,7 @@ class KSD_Admin {
          * @param Array $ticket_reply_array The ticket reply Array. This exists wnen this function is called
          * by an add-on
          * @TODO Handle add-on replies. They don't provide tkt_id so get it
+         * @TODO MAKE SURE rep_created_by IS POPULATED
          */
         
         public function reply_ticket( $ticket_reply_array=null ){

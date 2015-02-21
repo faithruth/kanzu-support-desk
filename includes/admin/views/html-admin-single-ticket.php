@@ -33,7 +33,7 @@
         <?php  _e('Loading...','kanzu-support-desk');?>
     </div>
     <div id="ticket-replies">
-        <?php  _e('Loading...','kanzu-support-desk');?>
+        <p style="padding-left: 15px;" class="loading"><?php  _e('Loading...','kanzu-support-desk');?></p>
     </div>
     <div class="edit-ticket">
     <form id="edit-ticket" method="POST">

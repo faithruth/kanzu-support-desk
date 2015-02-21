@@ -466,6 +466,11 @@ div.replies-more:hover{
   border-bottom: 1px solid #ccc;
   padding: 15px;
 }
+#ticket-replies .reply_date {
+  float: right;
+  text-align: right;
+  width: 100%;
+}
 #new-ticket input.ksd-submit:hover{
    cursor: pointer; 
 }
