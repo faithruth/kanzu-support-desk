@@ -153,6 +153,14 @@ class KSD_Mail_Admin {
                            }                       
                     }
                 }
+                    
+                error_log( 'T---------' );
+                //Check connection
+                if( $new_settings['ksd_mail_settings_changed'] == 'yes' ){
+                    $this->check_connection(); 
+                }
+                
+                
                 return $current_settings;               
         }
         
@@ -230,7 +238,7 @@ class KSD_Mail_Admin {
          */
 
         public function error_handler($errno, $errstr, $errfile, $errline){
-            error_log( $errstr );
+            
             $errorType = array (
                 E_ERROR                => 'ERROR',
                 E_CORE_ERROR           => 'CORE ERROR',
@@ -285,7 +293,7 @@ class KSD_Mail_Admin {
             ob_start();?>
             <div class="error">
               <p>
-                <?php printf( __( "Kanzu Support Desk Mail |  %s", "kanzu-support-desk" ), $errstr ); ?>
+                <?php printf( __( "Kanzu Support Desk Mail | %s", "kanzu-support-desk" ), $errstr ); ?>
               <p/>
             </div>
             <?php
@@ -527,6 +535,56 @@ class KSD_Mail_Admin {
             $this->create_cron_schedule();
             $this->create_cron_hook();
         }   
+        
+        
+        /**
+         * Check if connection succeeds with connection details
+         * 
+         * @return bool true on success and false on failure
+         * @since 1.1.0
+         */
+        public function check_connection(){
+            //Get the settings
+            $mail_settings  =   KSD_Mail::get_settings();
+            //Connection details setup
+            $the_mailbox="";
+            //Append the ssl Flag if the user chose to always use SSL
+            $mail_settings['ksd_mail_protocol'] = ( "yes" == $mail_settings['ksd_mail_useSSL'] ? $mail_settings['ksd_mail_protocol'].'/ssl' : $mail_settings['ksd_mail_protocol'] );
+
+            //Cater for self-signed certificates
+            if( "yes" == $mail_settings['ksd_mail_validate_certificate'] ) {
+                $the_mailbox = "{" . 
+                                $mail_settings['ksd_mail_server'] . ": " . 
+                                $mail_settings['ksd_mail_port'] . "/" . 
+                                $mail_settings['ksd_mail_protocol'] . "}" .
+                                $mail_settings['ksd_mail_mailbox'];
+            }
+            else {
+                $the_mailbox = "{" . 
+                                $mail_settings['ksd_mail_server']. ":" .
+                                $mail_settings['ksd_mail_port'] . "/" . 
+                                $mail_settings['ksd_mail_protocol'] .
+                                "/novalidate-cert}". 
+                                $mail_settings['ksd_mail_mailbox'];    
+            }
+            
+            $attachments_dir = KSD_MAIL_DIR . '/assets/attachments';
+            
+            $imap = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
+            $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
+            
+            try{
+                $imap->initImapStream();
+            }catch( Exception $e){
+                //Connection failure.
+                //TODO: Show notice
+                
+                return false;
+            }
+            $imap->disconnect();
+            return true;
+            
+        }
                     
 }
 endif;
