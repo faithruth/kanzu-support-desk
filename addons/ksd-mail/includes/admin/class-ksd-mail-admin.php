@@ -47,7 +47,7 @@ class KSD_Mail_Admin {
                 add_action( 'admin_notices', array ( $this,'display_admin_notice') );
 
                 //Check/test connection mail details.	
-                add_action( 'wp_ajax_ksd_mail_test_connection', array( $this, 'ksd_mail_test_connection' ) );
+                add_action( 'wp_ajax_ksd_test_mail_connection', array( $this, 'test_mail_connection' ) );
 
                 //Set-up actions
                 $this->setup_actions( 'invalid' );
@@ -60,6 +60,13 @@ class KSD_Mail_Admin {
                 
                 //Log errors as notices
                 add_action( 'admin_notices', array ( $this,'show_errors') );
+                
+                 //Catch all email deamon errors.
+               set_error_handler( array( $this, "error_handler" ), 
+                        E_ERROR ^ E_CORE_ERROR ^ E_COMPILE_ERROR ^ E_USER_ERROR ^
+                        E_RECOVERABLE_ERROR ^  E_WARNING ^  E_CORE_WARNING ^ 
+                        E_COMPILE_WARNING ^ E_USER_WARNING ^ E_NOTICE ^  E_USER_NOTICE ^ 
+                        E_DEPRECATED    ^  E_USER_DEPRECATED    ^  E_PARSE);
 
         }
         
@@ -231,8 +238,54 @@ class KSD_Mail_Admin {
             }
           }
         
-
-               
+        /**
+         * Handles mail plugin errors.
+         * Currently, does nothing. Still requires further testing
+         * @param int $errno   Error number 
+         * @param string $errstr  Error message
+         * @param string $errfile Error file
+         * @param int $errline Line with error in the file
+         * @since 1.3.0
+         */
+        public function error_handler($errno, $errstr, $errfile, $errline){
+            $errorType = array (
+                E_ERROR                => 'ERROR',
+                E_CORE_ERROR           => 'CORE ERROR',
+                E_COMPILE_ERROR        => 'COMPILE ERROR',
+                E_USER_ERROR           => 'USER ERROR',
+                E_RECOVERABLE_ERROR    => 'RECOVERABLE ERROR',
+                E_WARNING              => 'WARNING',
+                E_CORE_WARNING         => 'CORE WARNING',
+                E_COMPILE_WARNING      => 'COMPILE WARNING',
+                E_USER_WARNING         => 'USER WARNING',
+                E_NOTICE               => 'NOTICE',
+                E_USER_NOTICE          => 'USER NOTICE',
+                E_DEPRECATED           => 'DEPRECATED',
+                E_USER_DEPRECATED      => 'USER_DEPRECATED',
+                E_PARSE                => 'PARSING ERROR'
+           );
+            
+            if (array_key_exists($errno, $errorType)) {
+                    $errname = $errorType[$errno];
+                } else {
+                    $errname = 'UNKNOWN ERROR';
+            }
+            
+            update_option( 'ksd_mail_log', array(
+                'type' => $errname,
+                'msg'  => $errstr,
+                'line' => $errline,
+                'file' => $errfile,
+                'no' => $errno,
+                'time' => date('Ymdhhmi')
+                )
+            );
+        }
+        
+        /**
+         * Display mail-related errors
+         * @return type
+         */
         public function show_errors ( ) {
             
             $opt = get_option('ksd_mail_log');
@@ -245,7 +298,8 @@ class KSD_Mail_Admin {
             $errstr  = $opt['msg'];
             
             //Clear error 
-            update_option( 'ksd_mail_log', array());            
+            update_option( 'ksd_mail_log', array());     
+            return;//@TODO We kill the execution here. Errors still need to first be properly sieved
             ob_start();?>
             <div class="error">
               <p>
@@ -519,8 +573,7 @@ class KSD_Mail_Admin {
            
             try{
                 self::$mailbox->getImapStream( true );
-                if( $isTest ){ //If we were merely testing the connection settings, end the party here 
-                    self::$mailbox->disconnect();
+                if( $isTest ){ //If we were merely testing the connection settings, end the party here. The connection is closed in self::$mailbox's destructor
                     return true;
                 }
             }catch( Exception $e ) {
@@ -533,16 +586,20 @@ class KSD_Mail_Admin {
         }
         
         /*
-         * To test the connection mail details through ajax request.
+         * Test the user's current mail details through AJAX request.
          * @since 1.1.0
          */
-        public function  ksd_mail_test_connection ( ) {
+        public function  test_mail_connection ( ) {
+            if ( ! wp_verify_nonce( $_POST['update-settings-nonce'], 'ksd-update-settings' ) ){
+                die ( __('Busted!','kanzu-support-desk') );
+            }   
             if ( false === $this->check_connection( $_POST ) ) {
-			_e( 'Sorry, your connection failed. Please change your settings and try again.','kanzu-support-desk' );
+			$response = __( "Sorry, your connection failed. Please change your settings and try again.","kanzu-support-desk" );
 		    } else {
-			_e ( "Woohoo! Your connection succeeded! Let's roll","kanzu-support-desk" );
+			$response = __( "Woohoo! Your connection succeeded! Let's roll","kanzu-support-desk" );
 		    }
-           die();//important otherwise output will have a 0 at the end         
+            echo json_encode( $response );
+            die();//important otherwise output will have a 0 at the end         
         }
                     
 }

@@ -721,7 +721,7 @@ ul.edit-ticket-options li.selected{
   margin-top: 15px;
   padding: 0 12px;
 }
-#update-settings span#ksd_mail_test_connection {
+#update-settings span#test_mail_connection {
   clear: both;
   float: left;
 }

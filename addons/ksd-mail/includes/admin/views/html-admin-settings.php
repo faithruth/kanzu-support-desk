@@ -49,7 +49,7 @@ $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
                        <input name="ksd_mail_settings_changed" type="hidden" value="no" /> 
                    </div>  
                    <div class="setting">
-                       <input class="button-small button button-primary ksd-button" type="button" name="ksd_mail_test_connection" value="<?php _e("Test Connection"); ?>" />
-                       <span id="ksd_mail_test_connection"></span>
+                       <input class="button-small button button-primary ksd-button" type="button" name="test_mail_connection" value="<?php _e("Test Connection"); ?>" />
+                       <span id="test_mail_connection"></span>
                    </div> 
                 </div>
