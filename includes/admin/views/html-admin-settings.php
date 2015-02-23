@@ -43,22 +43,17 @@
                    <textarea cols="60" rows="4" name="tab_message_on_submit"><?php echo $settings['tab_message_on_submit']; ?></textarea>
              </div>
                 <div class="setting">
-                    <label for="auto_assign user"><?php _e("Assign new tickets to","kanzu-support-desk"); ?></label>
-                    <select name="auto_assign user">
-                         <!-- -->
-                         <?php foreach (  get_users() as $agent ) {
-                             global $current_user;    
-
-                         ?>
-                         <option value="<?php echo $agent->userID; ?>" 
-                                 <?php echo ( $agent->ID == @$settings['auto_assign user'])? 'selected="selected"': '' ?>
-                                 > 
-                                 <?php echo $agent->display_name; ?>  
+                    <label for="auto_assign_user"><?php _e("Auto-assign new tickets to","kanzu-support-desk"); ?></label>
+                    <select name="auto_assign_user">
+                         <?php foreach (  get_users() as $agent ) {?>
+                         <option value="<?php echo $agent->ID; ?>" 
+                            <?php selected( $agent->ID, $settings['auto_assign_user'] ); ?>> 
+                            <?php echo $agent->display_name; ?>  
                          </option>
                          <?php } ?>
-                         <option value="">No one</option>
+                         <option value=""><?php _e("No One","kanzu-support-desk"); ?></option>
                     </select>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('User to assign new tickets to if unassigned.','kanzu-support-desk')  ;?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('If set, new tickets are automatically assigned to this user.','kanzu-support-desk')  ;?>"/>
                 </div> 
              <div class="setting">
                 <label for="tour_mode"><?php _e( "Enable tour mode","kanzu-support-desk" ); ?></label>                

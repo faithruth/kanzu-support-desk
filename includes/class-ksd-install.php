@@ -320,7 +320,7 @@ class KSD_Install {
                     if( !is_wp_error($user_id) ) {
                         //Get all tickets created by this customer and update the ID
                         global $wpdb;
-                        $TC = new KSD_Tickets_Controller();//@TODO Check usage of tkt_assigned_by AND tkt_assigned_to
+                        $TC = new KSD_Tickets_Controller(); 
                         $update_query = "UPDATE `{$wpdb->prefix}kanzusupport_tickets` SET `tkt_cust_id` = {$user_id} WHERE `tkt_cust_id` = {$customer->cust_id};";
                         $TC->exec_query( $update_query );//Chose to use a custom query since this is just a one-off
                     }
@@ -353,7 +353,7 @@ class KSD_Install {
                         'recaptcha_secret_key'              => "",
                         'recaptcha_error_message'           => "Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on {$user_info->user_email}",
                         'enable_anonymous_tracking'         => "no", //@since 1.3.2,
-                        'auto_assign_user'                  => ''   //@since 1.4.0. Use to  assign new tickets to when this option is set   
+                        'auto_assign_user'                  => ''   //@since 1.4.1. Used to auto-assign new tickets when set 
                     );
             }
             

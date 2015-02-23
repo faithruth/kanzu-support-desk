@@ -353,7 +353,7 @@ jQuery( document ).ready(function() {
                                 function( response ) {                                        
                                     var respObj = JSON.parse(response);
                                     if ( 'undefined' !== typeof(respObj.error) ){
-                                        jQuery('#ksd-notifications').html( respObj.error.message );
+                                        jQuery('#ksd-notifications').html( respObj.error );
                                         return ;
                                     }
                                     //Parse the XML. We chose to do it here, rather than in the PHP (at the server end)
@@ -450,7 +450,7 @@ jQuery( document ).ready(function() {
                     //jQuery( pointer[pointerContentIndex].target ).pointer('close');
                     //Manually hide the parent
                     jQuery(this).parents('.wp-pointer').hide();
-                    if( pointerContentIndex < pointer.length  ){
+                    if( pointerContentIndex <= ( pointer.length - 2 )  ){//We subtract 2 because of how we are doing the incrementing; tour will automatically end after the array's contents are done
                         ++pointerContentIndex;
                     }
                     else{//End of the tour
@@ -1211,7 +1211,7 @@ jQuery( document ).ready(function() {
                             }                             
                              the_ticket = respObj;
                              jQuery("#ksd-single-ticket h1.ksd-single-ticket-subject").html(the_ticket.tkt_subject);
-                             jQuery("#ksd-single-ticket span.author").html(the_ticket.tkt_cust_id);//@TODO Use customer name                               
+                             jQuery("#ksd-single-ticket span.author").html(the_ticket.tkt_cust_id);                              
                              jQuery("#ksd-single-ticket span.date").html(the_ticket.tkt_time_logged);//@TODO Format this
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message).text();
                              jQuery("#ksd-single-ticket textarea[name=tkt_private_note]").val(the_ticket.tkt_private_note);

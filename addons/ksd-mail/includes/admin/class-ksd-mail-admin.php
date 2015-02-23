@@ -335,12 +335,6 @@ class KSD_Mail_Admin {
                 $new_ticket->cust_fullname          = $mail->fromName;
                 $new_ticket->tkt_time_logged        = $mail->date;
                 
-                 //check whether auto assignment is unabled
-                if ( $ksd_settings['auto_assign_user'] != '' || $ksd_settings['auto_assign_user'] != null ) {
-                    $new_ticket->tkt_assigned_to        = $ksd_settings['auto_assign_user'];
-                }
-
-                
                 //Get one attachment for now.
                 //TODO: iterate over all attachments and add them to the attachments field.
                 //$attachments = array();

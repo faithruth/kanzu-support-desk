@@ -18,8 +18,8 @@ $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
                    <div class="setting">
                        <label for="ksd_mail_protocol"><?php _e("Protocol","kanzu-support-desk"); ?></label>
                        <select name="ksd_mail_protocol">
-                           <option value="pop3" <?php selected( "pop3", $mail_settings['ksd_mail_protocol'] ) ?>>POP3</option>
-                           <option value="imap"  <?php selected( "imap", $mail_settings['ksd_mail_protocol'] ) ?> >IMAP</option>
+                           <option value="pop3" <?php selected( "pop3", $mail_settings['ksd_mail_protocol'] ); ?>>POP3</option>
+                           <option value="imap"  <?php selected( "imap", $mail_settings['ksd_mail_protocol'] ); ?> >IMAP</option>
                        </select>
                    </div> 
                        <div class="setting">

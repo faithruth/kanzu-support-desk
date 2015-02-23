@@ -133,7 +133,7 @@ class KSD_Admin {
                 $admin_labels_array['msg_still_loading']            = __('Loading Replies...','kanzu-support-desk');
                 $admin_labels_array['msg_loading']                  = __('Loading...','kanzu-support-desk');
                 $admin_labels_array['msg_sending']                  = __('Sending...','kanzu-support-desk');
-                $admin_labels_array['msg_error']                    = __('An unexpected error occurred. Kindly retry','kanzu-support-desk');
+                $admin_labels_array['msg_error']                    = __('Sorry, an unexpected error occurred. Kindly retry. Thank you.','kanzu-support-desk');
                 $admin_labels_array['pointer_next']                 = __('Next','kanzu-support-desk');
                 $admin_labels_array['lbl_toggle_trimmed_content']   = __('Toggle Trimmed Content','kanzu-support-desk');
                 //Get current settings
@@ -551,8 +551,8 @@ class KSD_Admin {
          * Add a reply to a single ticket
          * @param Array $ticket_reply_array The ticket reply Array. This exists wnen this function is called
          * by an add-on
-         * @TODO Handle add-on replies. They don't provide tkt_id so get it
-         * @TODO MAKE SURE rep_created_by IS POPULATED
+         * Note that add-ons have to provide tkt_id too. It's retrieved in the check before this function
+         * is called
          */
         
         public function reply_ticket( $ticket_reply_array=null ){
@@ -720,12 +720,18 @@ class KSD_Admin {
                 if ( isset( $_POST[ 'ksd_tkt_severity' ] ) ) {
                     $new_ticket->tkt_severity           =  $_POST[ 'ksd_tkt_severity' ] ;   
                 }
-                if ( isset( $_POST[ 'ksd_tkt_assigned_to' ] ) ) {
+                if ( isset( $_POST[ 'ksd_tkt_assigned_to' ] ) && !empty( $_POST[ 'ksd_tkt_assigned_to' ] ) ) {
                     $new_ticket->tkt_assigned_to    =  $_POST[ 'ksd_tkt_assigned_to' ] ;
-                }
-               
+                }   
+                               
                 //Get the settings. We need them for tickets logged from the support tab
                 $settings = Kanzu_Support_Desk::get_settings();
+                
+                 //If the ticket wasn't assigned by the user, check whether auto-assignment is set so we auto-assign it
+                if ( empty( $_POST[ 'ksd_tkt_assigned_to' ] ) &&  !empty( $settings['auto_assign_user'] ) ) {
+                    $new_ticket->tkt_assigned_to    = $settings['auto_assign_user'];                    
+                }
+
                 //Return a different message based on the channel the request came on
                 $output_messages_by_channel = array();
                 $output_messages_by_channel[ 'STAFF' ] = __("Ticket Logged", "kanzu-support-desk");
@@ -759,7 +765,7 @@ class KSD_Admin {
                 }   
                 
                 //Set 'logged by' to the ID of whoever logged it ( admin side tickets ) or to the customer's ID ( for tickets from the front-end )
-               $new_ticket->tkt_assigned_by   = ( isset( $_POST[ 'ksd_tkt_assigned_by' ] ) ? sanitize_text_field( $_POST[ 'ksd_tkt_assigned_by' ] ) : $new_ticket->tkt_cust_id );
+               $new_ticket->tkt_assigned_by   = ( !empty( $_POST[ 'ksd_tkt_assigned_by' ] ) ? sanitize_text_field( $_POST[ 'ksd_tkt_assigned_by' ] ) : $new_ticket->tkt_cust_id );
                 
                //Log date and time if given
                if (isset( $_POST[ 'ksd_tkt_time_logged' ] ) ){
@@ -930,7 +936,7 @@ class KSD_Admin {
                 $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
                 
                 if( true === $status){
-                    do_action('ksd_settings_saved');
+                    do_action( 'ksd_settings_saved' );
                    echo json_encode(  __("Settings Updated"));
                 }else{
                     throw new Exception(__("Update failed. Please retry. "  ), -1);
@@ -986,7 +992,7 @@ class KSD_Admin {
 				set_transient( 'ksd_add_ons_feed', $cache, 3600 );
 			}
 		} else {
-			$cache = '<div class="error"><p>' . __( 'There was an error retrieving the add-ons list from the server. Please try again later.', 'kanzu-support-desk' ) . '</div>';
+			$cache = '<div class="add-on-error add-ons"><p>' . __( 'Sorry, an error occurred while retrieving the add-ons list. A re-attempt will be made later. Thank you.', 'kanzu-support-desk' ) . '</div>';
 		}
             }
         echo $cache;
@@ -1181,9 +1187,11 @@ class KSD_Admin {
                         'user_email'    => $customer->user_email,
                         'display_name'  => empty( $customer->last_name ) ? $customer->first_name : $customer->first_name.' '.$customer->last_name,
                         'first_name'    => $customer->first_name,
-                        'role'          => 'ksd_customer',
-                        'last_name'     => $customer->last_name
+                        'role'          => 'ksd_customer'
                     );
+                    if( !empty( $customer->last_name )){//Add the username if it was provided
+                        $userdata['last_name']  =   $customer->last_name;
+                    }
                     $user_id = wp_insert_user( $userdata ) ;
                     if( !is_wp_error($user_id) ) {
                         return $user_id;
@@ -1253,7 +1261,7 @@ class KSD_Admin {
 				set_transient( 'ksd_notifications_feed', $cache, 86400 );//Check everyday
 			}
 		} else {
-			$cache = '<div class="error"><p>' . __( 'There was an error retrieving the latest notifications from the server. A re-attempt will be made later.', 'kanzu-support-desk' ) . '</div>';
+                    $cache["error"] =  __( "Sorry, an error occurred while retrieving the latest notifications. A re-attempt will be made later. Thank you.","kanzu-support-desk" );
 		}
             }
             echo json_encode( $cache );
