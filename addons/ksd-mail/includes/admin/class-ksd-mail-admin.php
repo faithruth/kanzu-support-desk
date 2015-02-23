@@ -549,7 +549,6 @@ class KSD_Mail_Admin {
             $this->create_cron_schedule();
             $this->create_cron_hook();
         }   
-<<<<<<< HEAD
         
         
         /**
@@ -561,18 +560,7 @@ class KSD_Mail_Admin {
         public function check_connection(){
             //Get the settings
             $mail_settings  =   KSD_Mail::get_settings();
-=======
 
-        /**
-         * Check if connection succeeds with connection details
-         * 
-         * @param Array Settings  array
-         * @return bool True on success and false on failure
-         * @since 1.1.0
-         */
-        public function check_connection( $mail_settings = array() ){
-
->>>>>>> c53f2da400575ce05ed3dc52bcb2a5f070d8be65
             //Connection details setup
             $the_mailbox="";
             //Append the ssl Flag if the user chose to always use SSL
@@ -581,7 +569,6 @@ class KSD_Mail_Admin {
             //Cater for self-signed certificates
             if( "yes" == $mail_settings['ksd_mail_validate_certificate'] ) {
                 $the_mailbox = "{" . 
-<<<<<<< HEAD
                                 $mail_settings['ksd_mail_server'] . ": " . 
                                 $mail_settings['ksd_mail_port'] . "/" . 
                                 $mail_settings['ksd_mail_protocol'] . "}" .
@@ -594,41 +581,13 @@ class KSD_Mail_Admin {
                                 $mail_settings['ksd_mail_protocol'] .
                                 "/novalidate-cert}". 
                                 $mail_settings['ksd_mail_mailbox'];    
-=======
-                    $mail_settings['ksd_mail_server'] . ":" . 
-                    $mail_settings['ksd_mail_port'] . "/" . 
-                    $mail_settings['ksd_mail_protocol'] . "}" .
-                    $mail_settings['ksd_mail_mailbox'];
-            }
-            else {
-                $the_mailbox = "{" . 
-                    $mail_settings['ksd_mail_server']. ":" .
-                    $mail_settings['ksd_mail_port'] . "/" . 
-                    $mail_settings['ksd_mail_protocol'] .
-                    "/novalidate-cert}". 
-                    $mail_settings['ksd_mail_mailbox'];    
->>>>>>> c53f2da400575ce05ed3dc52bcb2a5f070d8be65
             }
             
             $attachments_dir = KSD_MAIL_DIR . '/assets/attachments';
             
             $imap = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
             $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
-            
-<<<<<<< HEAD
-            try{
-                $imap->initImapStream();
-            }catch( Exception $e){
-                //Connection failure.
-                //TODO: Show notice
-                
-                return false;
-            }
-            $imap->disconnect();
-            return true;
-            
-        }
-=======
+
             
             try{
                 $imap->getImapStream( true );
@@ -655,7 +614,6 @@ class KSD_Mail_Admin {
 		    }
            die();//important otherwise output will have a 0 at the end         
         }
->>>>>>> c53f2da400575ce05ed3dc52bcb2a5f070d8be65
                     
 }
 endif;
