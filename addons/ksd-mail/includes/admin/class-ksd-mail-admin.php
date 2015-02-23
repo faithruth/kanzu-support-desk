@@ -590,7 +590,7 @@ class KSD_Mail_Admin {
          * @since 1.1.0
          */
         public function  test_mail_connection ( ) {
-            if ( ! wp_verify_nonce( $_POST['update-settings-nonce'], 'ksd-update-settings' ) ){
+            if ( ! wp_verify_nonce( $_POST['ksd_mail_connection_nonce'], 'ksd-admin-nonce' ) ){
                 die ( __('Busted!','kanzu-support-desk') );
             }   
             if ( false === $this->check_connection( $_POST ) ) {
