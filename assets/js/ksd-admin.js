@@ -1253,9 +1253,11 @@ jQuery( document ).ready(function() {
                                      });
                                      jQuery("#ticket-replies").html(repliesData) ; 
                                      //Toggle the color of the reply background
-                                     jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
+                                    // jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
                                      //Clean-up the replies to make them more user--friendly
                                      _this.formatTicketReplies();
+                                     //Scroll to the bottom
+                                     jQuery('html, body').animate({ scrollTop: jQuery(".edit-ticket").offset().top}, 1400, "swing" );
                                  });
                          });	
          }
