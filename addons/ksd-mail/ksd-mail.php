@@ -3,7 +3,7 @@
  * Plugin Name:       Kanzu Support Desk - Mail
  * Plugin URI:        http://kanzucode.com/add-ons/kanzu-support-desk-email/
  * Description:       Adds capability to log new support tickets via email in Kanzu Support Desk.
- * Version:           1.1.0
+ * Version:           1.2.0
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
  * Text Domain:       kanzu-support-desk
@@ -24,7 +24,7 @@ final class KSD_Mail {
 	/**
 	 * @var string
 	 */
-	public $version = '1.1.0';
+	public $version = '1.2.0';
 	
 	
 	/**

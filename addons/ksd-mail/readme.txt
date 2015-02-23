@@ -4,7 +4,7 @@ Donate link: http://kanzucode.com/
 Tags: ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.0
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,7 @@ KSD Mail is an add-on for Kanzu Support Desk (KSD).It enables the logging of tic
 Adds the capability to log tickets  via email.
 
 == Installation ==
+ Install and activate [Kanzu Support Desk](http://wordpress.org/plugins/kanzu-support-desk/). Then follow the following steps:
 
 = Using The WordPress Dashboard =
 
@@ -38,14 +39,24 @@ Adds the capability to log tickets  via email.
 3. Upload the `ksd-mail` directory to the `/wp-content/plugins/` directory
 4. Activate the plugin in the Plugin dashboard
 
+= After Activation =
+ Go to **Kanzu Support Desk > Settings** and a mail section will have been added. Kindly fill in your mail details. For help on what details to enter, check out [our documentation here](https://kanzucode.com/documentation/kanzu-support-desk-mail-configuration/)
+
 == Frequently Asked Questions ==
 
 = Any prerequistes prior to installing =
 
-Yes. Kanzu Support Desk.
+Yes. [Kanzu Support Desk](http://wordpress.org/plugins/kanzu-support-desk/).
 
 
 == Changelog ==
+= 1.2.0, February 10, 2015 =
+* Replaced ksd mail processor class with php-imap
+* Monitor changes to KSD Mail settings
+* Added test connection button
+* Mail port changes automatically based on user's settings
+* Retrieve only unread emails
+
 = 1.1.0 =
 * Tickets logged by an action
 

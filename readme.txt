@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.1
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,14 @@ Yes; KSD will work with any theme
 7. Private note support
 
 == Changelog ==
+= 1.4.0, February 10, 2015 =
+ * Added Analytics
+ * Added sweet notifications panel
+ * Added client-side validation for Google reCAPTCHA  
+ * Introductory tour updated to be more user-friendly
+ * Fixed typo. occured updated to occurred 
+ * Documentation links updated
+
 = 1.3.1, February 05, 2015 =
  * CAPTCHA added to front-end form
 
@@ -147,6 +155,9 @@ Yes; KSD will work with any theme
 * Launched.
 
 == Upgrade Notice ==
+= 1.4.0 =
+* New Notifications panel to keep you updated & client-side validation for Google reCAPTCHA
+
 = 1.3.1 =
 * CAPTCHA form added to front-end form
 

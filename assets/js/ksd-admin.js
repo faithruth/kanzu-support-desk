@@ -55,6 +55,56 @@ jQuery( document ).ready(function() {
         KSDUtils.isNumber = function(){
             return typeof n === "number" && isFinite(n) && n%1===0;
         };
+        
+        /**
+         * Capitalize the first letter in a string
+         * @param {string} theString String to capitalize e.g. hello or HELLO
+         * @returns string capitalizedString e.g. Hello (all other letters are switched to lowercase, the first to uppercase
+         */
+        KSDUtils.capitalizeFirstLetter  = function( theString ){
+            return theString.toLowerCase().replace(/\b[a-z]/g, function(letter) {
+                return letter.toUpperCase();
+            });
+        };
+        
+                
+        /*---------------------------------------------------------------*/
+        /*************************************ANALYTICS*********************/
+        /*---------------------------------------------------------------*/
+            KSDAnalytics = function(){
+            _this = this;
+            };
+            KSDAnalytics.init = function(){
+                if ( "yes" !== ksd_admin.enable_anonymous_tracking ){
+                    return;
+                }
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');  
+
+                    ga('create', 'UA-48956820-3', 'auto');      
+                    ga('require', 'linkid', 'linkid.js');
+ 
+                //Send the page view for the current page. This is called the first time the page is loaded
+                //so we get the current admin_tab from ksd_admin.admin_tab
+                this.sendPageView( ksd_admin.admin_tab );
+            };
+            /**
+             * Send a page view to Google Analytics
+             * @param {string} current_admin_tab ID of the screen view to send. e.g. ksd-tickets
+             * @returns none
+             */
+            KSDAnalytics.sendPageView = function( current_admin_tab ){
+                pageName  =   KSDUtils.capitalizeFirstLetter( current_admin_tab.replace("ksd-","").replace(/\-/g," ") );
+                if ( pageName === "Kanzu Support Desk" ){//For instances where user directly clicks the main KSD menu item, its title is "Kanzu Support Desk" and it displays the dashboard so we translate it here
+                    pageName = "Dashboard";
+                    current_admin_tab = "ksd-dashboard";
+                }
+                thePage     =   '/'+current_admin_tab;//NB: Page names must start with a / 
+                pageTitle   =   pageName+" - Kanzu Support Desk";   
+                ga( 'send', 'pageview', { 'page': thePage, 'title': pageTitle } ); 
+            };
 
         /*---------------------------------------------------------------*/
         /****************************SETTINGS****************************/
@@ -570,7 +620,7 @@ jQuery( document ).ready(function() {
                                             ticketListData += 	'<div class="ticket-info">';
                                             ticketListData += 	'<input type="checkbox" value="'+value.tkt_id+'" name="ticket_ids[]" id="ticket_checkbox_'+value.tkt_id+'">';
                                             ticketListData +=   '<span class="ksd-tkt-status '+(value.tkt_status).toLowerCase()+'"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit" title="'+(value.tkt_status).toLowerCase()+'">'+(value.tkt_status).charAt(0)+'</a></span>';  
-                                            ticketListData += 	'<span class="ksd-tkt-customer-name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_assigned_by+ kst_tkt_replies + '</a></span>';
+                                            ticketListData += 	'<span class="ksd-tkt-customer-name"><a href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_cust_id+ kst_tkt_replies + '</a></span>';
                                             ticketListData +=	'<span class="subject-and-message-excerpt"><a class="ksd-tkt-subject"href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit">'+value.tkt_subject+'</a>';
                                             ticketListData += 	'<a class="ksd-message-excerpt" href="'+ksd_admin.ksd_tickets_url+'&ticket='+value.tkt_id+'&action=edit"> - '+value.tkt_message_excerpt+'</a></span>';                                            
                                             ticketListData += 	'<span class="ticket-time">'+value.tkt_time_logged+'</span>';
@@ -814,6 +864,36 @@ jQuery( document ).ready(function() {
                         }
                 });
         };
+        
+        /**
+         * Format ticket replies. Hide extra content from
+         * the previous message and generally make the displayed content
+         * more user-friendly
+         */        
+        this.formatTicketReplies = function(){            
+           /* #1 First match extra content from various email clients and wrap it in class 'ksd_extra'. We match the extra content
+                 based on knowing that content's structure. Currently matches Gmail (Android and Desktop) & Outlook. To be expanded
+                 -------------------------------------------------------------------------------------------*/
+            //Match Outlook 2013 extra content  @TODO Add mobile outlook, outlook 2007 and 2010
+            jQuery('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="ksd_extra"></div>');
+            //Match Gmail ( Android and Desktop ) clients
+            jQuery('div.gmail_quote').addClass('ksd_extra');
+            //Match Yahoo desktop clients. Written separately from the rest merely for legibility
+            jQuery('div.yahoo_quoted').addClass('ksd_extra');
+            //@TODO Add more mail clients, IOS particularly
+            
+            /* #2 To the content we've wrapped in class 'ksd_extra' in #1 above, append the icon that'll be used to toggle the extra content*/
+            jQuery('#ksd-single-ticket .ksd_extra').before('<div class="replies-more" title="'+ksd_admin.ksd_labels.lbl_toggle_trimmed_content+'"></div>');            
+
+            // #3 Add an event to that icon we appended
+            jQuery('#ksd-single-ticket').on('click','.replies-more',function() {
+                jQuery( this).parents('.ticket-reply').find('.ksd_extra').toggle('slide');//Go up the DOM, find the ticket reply then find the extra content in it
+             });
+             
+            //#4 Initially, hide all the extra content
+            jQuery('.ksd_extra').toggle();
+        };
+        
             this.editTicketForm = function(){            
                 jQuery("form#edit-ticket").validate({
                    submitHandler: function( form ) {
@@ -908,7 +988,7 @@ jQuery( document ).ready(function() {
             /*Switch the active tab depending on what page has been selected*/
             activeTab=0;        
             switch(ksd_admin.admin_tab){
-                    case "ksd-tickets":
+                    case "ksd-tickets":  
                             activeTab=1;
                     break;
                     case "ksd-new-ticket":
@@ -930,7 +1010,7 @@ jQuery( document ).ready(function() {
             }
             jQuery( "#tabs" ).tabs( "option", "active", activeTab );
             //Set the title
-            jQuery('.admin-ksd-title h2').html(ksd_admin.admin_tab.replace("ksd-","").replace("-"," "));
+            jQuery('.admin-ksd-title h2').html( ksd_admin.admin_tab.replace("ksd-","").replace(/\-/g," ") );
  
             /**AJAX: Send the AJAX request to change ticket owner on selecting new person to 'Assign to'**/
             jQuery("#ticket-tabs").on('click','.ticket-actions ul.assign_to li',function() {
@@ -969,6 +1049,9 @@ jQuery( document ).ready(function() {
             /**Change the title onclick of a side navigation tab*/
             jQuery( "#tabs .ksd-main-nav li a" ).click(function() {
                     jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#","").replace("_"," "));//Remove the hashtag, replace _ with a space
+                    if ( "yes" === ksd_admin.enable_anonymous_tracking ){
+                       KSDAnalytics.sendPageView(jQuery(this).attr('href').replace("#","ksd-").replace("_","-"));//Make it match the admin_tab format e.g. ksd-dashboard, ksd-tickets, etc
+                    }
             });
             
             /**Pre-populate the first tab in the tickets view*/
@@ -1128,11 +1211,11 @@ jQuery( document ).ready(function() {
                             }                             
                              the_ticket = respObj;
                              jQuery("#ksd-single-ticket h1.ksd-single-ticket-subject").html(the_ticket.tkt_subject);
-                             jQuery("#ksd-single-ticket span.author").html(the_ticket.tkt_assigned_by);//@TODO Use customer name                               
+                             jQuery("#ksd-single-ticket span.author").html(the_ticket.tkt_cust_id);//@TODO Use customer name                               
                              jQuery("#ksd-single-ticket span.date").html(the_ticket.tkt_time_logged);//@TODO Format this
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message).text();
                              jQuery("#ksd-single-ticket textarea[name=tkt_private_note]").val(the_ticket.tkt_private_note);
-                             jQuery("#ticket-replies").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
+                             jQuery("#ticket-replies p.loading").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
                              //Make the 'Back' button visible
                              jQuery(".top-nav li.back").removeClass("hidden");
 
@@ -1160,12 +1243,19 @@ jQuery( document ).ready(function() {
                                         return ;
                                     }
                                     
-                                     jQuery("#ticket-replies").html("") ; //Clear the replies div
+                                     repliesData = "";
                                      jQuery.each( respObj, function( key, value ) {
-                                     jQuery("#ticket-replies").append("<div class='ticket-reply'>"+value.rep_message+"</div>");                                    
+                                         repliesData += "<div class='ticket-reply'>";
+                                         repliesData += "<span class='reply_author'>"+value.rep_created_by+"</span>";
+                                         repliesData += "<span class='reply_date'>"+value.rep_date_created+"</span>";
+                                         repliesData += "<div class='reply_message'>"+value.rep_message+"</div>";
+                                         repliesData += "</div>";                             
                                      });
+                                     jQuery("#ticket-replies").html(repliesData) ; 
                                      //Toggle the color of the reply background
                                      jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
+                                     //Clean-up the replies to make them more user--friendly
+                                     _this.formatTicketReplies();
                                  });
                          });	
          }
@@ -1418,7 +1508,13 @@ jQuery( document ).ready(function() {
                         
                     });
         };
+
 };
+
+
+         
+        //Analytics
+        KSDAnalytics.init();
 
         //Settings
         Settings = new KSDSettings();
@@ -1434,6 +1530,7 @@ jQuery( document ).ready(function() {
         
         //Tickets
         Tickets = new KSDTickets();
-        Tickets.init();
+        Tickets.init();       
+
          
 });

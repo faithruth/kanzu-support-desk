@@ -60,5 +60,30 @@ jQuery( document ).ready(function() {
         changeMailPort(jQuery( "select[name=ksd_mail_protocol] option:selected" ).text(),jQuery( "input[name=ksd_mail_useSSL]:checked" ).length);
         mailSettingsChanged();//The event monitoring changes to mail settings was attached to input fields. This is a select so we attach it too
     });
+
+
+    //Test mail connection settings
+    jQuery( "input[name='ksd_mail_test_connection']" ).click(function() {
+         jQuery('#ksd_mail_test_connection').html('Checking...');
+         
+         jQuery.post(    ksd_admin.ajax_url, 
+                             {  action              : 'ksd_mail_test_connection',
+                                ksd_mail_connection_nonce     : ksd_admin.ksd_admin_nonce,
+                                ksd_mail_server     : jQuery('input[name=ksd_mail_server]').val(),
+                                ksd_mail_account    : jQuery('input[name=ksd_mail_account]').val(),
+                                ksd_mail_password   : jQuery('input[name=ksd_mail_password]').val(),
+                                ksd_mail_protocol   : jQuery('select[name=ksd_mail_protocol]').val(),
+                                ksd_mail_port       : jQuery('input[name=ksd_mail_port]').val(),
+                                ksd_mail_mailbox    : jQuery('input[name=ksd_mail_mailbox]').val(),
+                                ksd_mail_validate_certificate : jQuery('input[name=ksd_mail_validate_certificate]').val(),
+                                ksd_mail_useSSL     : jQuery('input[name=ksd_mail_useSSL]').val(),
+                             }, 
+                         function( response ) {
+                             jQuery('#ksd_mail_test_connection').html(response );
+                         }
+                    );
+                    
+    });
+
 });
 

@@ -42,6 +42,24 @@
                    <label for="tab_message_on_submit"><?php _e( "Tab message on ticket submission","kanzu-support-desk" ); ?></label>
                    <textarea cols="60" rows="4" name="tab_message_on_submit"><?php echo $settings['tab_message_on_submit']; ?></textarea>
              </div>
+                <div class="setting">
+                    <label for="auto_assign user"><?php _e("Assign new tickets to","kanzu-support-desk"); ?></label>
+                    <select name="auto_assign user">
+                         <!-- -->
+                         <?php foreach (  get_users() as $agent ) {
+                             global $current_user;    
+
+                         ?>
+                         <option value="<?php echo $agent->userID; ?>" 
+                                 <?php echo ( $agent->ID == @$settings['auto_assign user'])? 'selected="selected"': '' ?>
+                                 > 
+                                 <?php echo $agent->display_name; ?>  
+                         </option>
+                         <?php } ?>
+                         <option value="">No one</option>
+                    </select>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('User to assign new tickets to if unassigned.','kanzu-support-desk')  ;?>"/>
+                </div> 
              <div class="setting">
                 <label for="tour_mode"><?php _e( "Enable tour mode","kanzu-support-desk" ); ?></label>                
                 <input name="tour_mode"  type="checkbox" <?php checked( $settings['tour_mode'], "yes" ) ?> value="yes"  />
@@ -66,6 +84,11 @@
                    <label for="recaptcha_error_message"><?php _e( "Message on reCAPTCHA failure","kanzu-support-desk" ); ?></label>
                    <textarea cols="60" rows="4" name="recaptcha_error_message"><?php echo $settings['recaptcha_error_message']; ?></textarea>
                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("Message to display in case Google reCAPTCHA continuously fails. This is very unlikely but just in case.",'kanzu-support-desk')  ;?>"/>
+             </div>
+             <div class="setting">
+                <label for="enable_anonymous_tracking"><?php _e( "Allow tracking?","kanzu-support-desk" ); ?></label>                
+                <input name="enable_anonymous_tracking"  type="checkbox" <?php checked( $settings['enable_anonymous_tracking'], "yes" ) ?> value="yes"  />
+                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e( "To focus our efforts solely on making KSD serve you better (and NOT waste time on features you don't need), we need some information on how you interact with the plugin. We won't track ANY user details so your security and privacy are safe. Please enable this.",'kanzu-support-desk')  ;?>"/>
              </div>
         </div>   
              <?php 
