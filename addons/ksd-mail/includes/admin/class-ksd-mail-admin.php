@@ -24,6 +24,13 @@ class KSD_Mail_Admin {
 	 * @var      object
 	 */
 	protected static $instance = null;   
+        
+        /** An instance of the mailbox
+         * 
+         * @since 1.1.3
+         * @var object 
+         */
+        protected static $mailbox;
 
 
         /**
@@ -47,6 +54,9 @@ class KSD_Mail_Admin {
 
                 //add action to ksd_mail_check hook. This has to be added here otherwise it won't run
                 add_action( 'ksd_mail_check', array( $this, 'check_mailbox' ) );
+                
+                //Mark mail as read when the new ticket is logged successfully
+                add_action( 'ksd_new_ticket_logged', array( $this, 'new_ticket_logged', 10, 2 ) );
                 
                 //Log errors as notices
                 add_action( 'admin_notices', array ( $this,'show_errors') );
@@ -148,6 +158,13 @@ class KSD_Mail_Admin {
                              $current_settings[KSD_MAIL_OPTIONS_KEY][$option_name] = sanitize_text_field ( stripslashes ( $new_settings[$option_name] ) );
                            }                       
                     }
+                    //That done, deal with checkboxes. When unchecked, they aren't sent in $new_settings
+                                    //For a checkbox, if it is unchecked then it won't be set in $_POST
+                $checkbox_names = array( "ksd_mail_useSSL","ksd_mail_validate_certificate" );
+                    //Iterate through the checkboxes and set the value to "no" for all that aren't set
+                    foreach ( $checkbox_names as $checkbox_name ){
+                        $current_settings[KSD_MAIL_OPTIONS_KEY][$checkbox_name] = ( !isset ( $new_settings[$checkbox_name] ) ? "no" : $new_settings[$checkbox_name] );
+                    }     
                 }
                 return $current_settings;               
         }
@@ -221,7 +238,7 @@ class KSD_Mail_Admin {
             $opt = get_option('ksd_mail_log');
             
             //Ensure that the option exists first or isset
-            if ( $opt == false || $opt == null || is_array( $opt) == false  || count( $opt) == 0 ) {
+            if ( empty( $opt ) || !is_array( $opt) ) {
                 return;                 
             }
           
@@ -249,7 +266,6 @@ class KSD_Mail_Admin {
             try{
             //Get the settings
             $mail_settings  =   KSD_Mail::get_settings();
-            $ksd_settings   = Kanzu_Support_Desk::get_settings();
              
             //Get last run time 
             $run_freq = (int) $mail_settings['ksd_mail_check_freq'] ; //in minutes
@@ -266,66 +282,18 @@ class KSD_Mail_Admin {
             $mail_settings['ksd_mail_lastrun_time'] = date( 'U' );
             KSD_Mail::update_settings( $mail_settings );
                     
-            //Connection details setup
-            $the_mailbox="";
-            //Append the ssl Flag if the user chose to always use SSL
-            $mail_settings['ksd_mail_protocol'] = ( "yes" == $mail_settings['ksd_mail_useSSL'] ? $mail_settings['ksd_mail_protocol'].'/ssl' : $mail_settings['ksd_mail_protocol'] );
-
-            //Cater for self-signed certificates
-            if( "yes" == $mail_settings['ksd_mail_validate_certificate'] ) {
-                $the_mailbox = "{" . 
-                                $mail_settings['ksd_mail_server'] . ": " . 
-                                $mail_settings['ksd_mail_port'] . "/" . 
-                                $mail_settings['ksd_mail_protocol'] . "}" .
-                                $mail_settings['ksd_mail_mailbox'];
-            }
-            else {
-                $the_mailbox = "{" . 
-                                $mail_settings['ksd_mail_server']. ":" .
-                                $mail_settings['ksd_mail_port'] . "/" . 
-                                $mail_settings['ksd_mail_protocol'] .
-                                "/novalidate-cert}". 
-                                $mail_settings['ksd_mail_mailbox'];    
-            }
+            $this->check_connection( $mail_settings, false );
             
-            $attachments_dir = KSD_MAIL_DIR . '/assets/attachments';
-            
-            $mailbox = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
-            $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
-            
-            
-            
-            //Test connection  settings
-            try{
-                $mailbox->getImapStream( true );
-            }catch( Exception $e ) {
-                //Suppress imap fatal errors
-               imap_alerts();
-               imap_errors();
-                
-                update_option( 'ksd_mail_log', array(
-                    'msg'  => _e('Error establishing connection! Check settings.'),
-                    'time' => date('Ymdhhmi')
-                    )
-                );
-                return;
-            }
-            
-            $mailsIds = array();
-
             // Get some mail
-            $mailsIds = $mailbox->searchMailBox( 'UNSEEN' );
+            $mailsIds = self::$mailbox->searchMailBox( 'UNSEEN' );
             if( ! $mailsIds ) {
                 //No email tickets.
                 return;
             }
-            
-            global $current_user;    
 
             foreach ( $mailsIds as $mailId ) {
                 //$mailId = reset($mailsIds);
-                $mail = $mailbox->getMail($mailId);    
-                KSD_Mail::ksd_mail_log_me( $mail );                        
+                $mail = self::$mailbox->getMail( $mailId );                     
                 $new_ticket                         = new stdClass(); 
                 $new_ticket->tkt_subject            = $mail->subject;
                 $new_ticket->tkt_message            = ( !empty( $mail->textHtml ) ? $mail->textHtml : $mail->textPlain );
@@ -334,6 +302,8 @@ class KSD_Mail_Admin {
                 $new_ticket->cust_email             = $mail->fromAddress;
                 $new_ticket->cust_fullname          = $mail->fromName;
                 $new_ticket->tkt_time_logged        = $mail->date;
+                $new_ticket->addon_tkt_id           = $mailId;  //Used to inform the main plugin what add-on ID is used for this ticket. The main plugin
+                                                                //sends back ticket logging results which we use to mark this as logged or not logged
                 
                 //Get one attachment for now.
                 //TODO: iterate over all attachments and add them to the attachments field.
@@ -343,11 +313,8 @@ class KSD_Mail_Admin {
                 
                 //Log the ticket
                 do_action( 'ksd_log_new_ticket', $new_ticket );
-                
-                //Mark mail as read. @TODO Do this in a way that takes care of ticket-logging failure
-                $mailbox->markMailAsRead( $mailId );
             }
-
+            //Note that self::$mailbox disconnects the connection to the mailbox automatically in its destructor method
            }
            catch ( Exception $e  ) {
                $this->error_handler( $e->getCode() ,  $e->getMessage() , 'NaN', 'NaN');
@@ -355,6 +322,18 @@ class KSD_Mail_Admin {
 
         }//eof:
         
+        /**
+         * Mark mail as read when tickets (both new and replies) are logged successfully
+         * @param int $mail_id The mail ID
+         * @param int $ticket_id The ticket ID in the database
+         */
+        public function new_ticket_logged( $mail_id, $ticket_id ){
+            if( $ticket_id > 0 ){                            
+                //Mark mail as read.   
+                self::$mailbox->markMailAsRead( $mail_id );
+            }
+            
+        }
         /**
          * Enqueue scripts used by KSD Mail. We add them to the footer to 
          * make use of Kanzu Support's localized variables. We also list the Kanzu Support desk
@@ -503,11 +482,12 @@ class KSD_Mail_Admin {
         /**
          * Check if connection succeeds with connection details
          * 
-         * @param Array Settings  array
-         * @return bool True on success and false on failure
+         * @param Array $mail_settings  An array of the current mail settings
+         * @param boolean $isTest Whether or not this is a test connection
+         * @return turns self::$mailbox into a connection resource on success and returns false on failure
          * @since 1.1.0
          */
-        public function check_connection( $mail_settings = array() ){
+        public function check_connection( $mail_settings = array(), $isTest = true ){
 
             //Connection details setup
             $the_mailbox="";
@@ -517,30 +497,32 @@ class KSD_Mail_Admin {
             //Cater for self-signed certificates
             if( "yes" == $mail_settings['ksd_mail_validate_certificate'] ) {
                 $the_mailbox = "{" . 
-                    $mail_settings['ksd_mail_server'] . ":" . 
-                    $mail_settings['ksd_mail_port'] . "/" . 
-                    $mail_settings['ksd_mail_protocol'] . "}" .
-                    $mail_settings['ksd_mail_mailbox'];
+                                $mail_settings['ksd_mail_server'] . ": " . 
+                                $mail_settings['ksd_mail_port'] . "/" . 
+                                $mail_settings['ksd_mail_protocol'] . "}" .
+                                $mail_settings['ksd_mail_mailbox'];
             }
             else {
                 $the_mailbox = "{" . 
-                    $mail_settings['ksd_mail_server']. ":" .
-                    $mail_settings['ksd_mail_port'] . "/" . 
-                    $mail_settings['ksd_mail_protocol'] .
-                    "/novalidate-cert}". 
-                    $mail_settings['ksd_mail_mailbox'];    
+                                $mail_settings['ksd_mail_server']. ":" .
+                                $mail_settings['ksd_mail_port'] . "/" . 
+                                $mail_settings['ksd_mail_protocol'] .
+                                "/novalidate-cert}". 
+                                $mail_settings['ksd_mail_mailbox'];    
             }
             
             $attachments_dir = KSD_MAIL_DIR . '/assets/attachments';
             
-            $imap = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
+            self::$mailbox = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
             $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
-            
-            
+
+           
             try{
-                $imap->getImapStream( true );
-                $imap->disconnect();
-                return true;
+                self::$mailbox->getImapStream( true );
+                if( $isTest ){ //If we were merely testing the connection settings, end the party here 
+                    self::$mailbox->disconnect();
+                    return true;
+                }
             }catch( Exception $e ) {
                 //Suppress imap fatal errors
                 imap_alerts();
@@ -556,9 +538,9 @@ class KSD_Mail_Admin {
          */
         public function  ksd_mail_test_connection ( ) {
             if ( false === $this->check_connection( $_POST ) ) {
-			_e( 'Sorry, your connection failed. Please check your settings.','kanzu-support-desk');
+			_e( 'Sorry, your connection failed. Please change your settings and try again.','kanzu-support-desk' );
 		    } else {
-			_e ( "YAY! Your connection succeeded!","kanzu-support-desk" );
+			_e ( "Woohoo! Your connection succeeded! Let's roll","kanzu-support-desk" );
 		    }
            die();//important otherwise output will have a 0 at the end         
         }

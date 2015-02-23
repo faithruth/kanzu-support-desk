@@ -41,7 +41,7 @@
 		<div class="response" id="mce-success-response" style="display:none"></div>
             </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
             <div style="position: absolute; left: -5000px;"><input type="text" name="b_072b3e28db_dc9cab2edd" tabindex="-1" value=""></div>
-            <div class="clear"><input type="submit" value="I'm in!" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+            <div class="clear"><input type="submit" value="Send me tips!" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
             </div>
         </form>
     </div>

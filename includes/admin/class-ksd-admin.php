@@ -410,7 +410,7 @@ class KSD_Admin {
             try{
                 $RC = new KSD_Replies_Controller();
                 $query = " rep_tkt_id = %d";
-                $value_parameters = array ($_POST['tkt_id']);
+                $value_parameters[] = $_POST['tkt_id'];
                 $replies = $RC->get_replies( $query,$value_parameters );
                 //Replace the rep_created_by ID with the name of the reply creator
                 foreach ( $replies as $reply ){
@@ -583,6 +583,7 @@ class KSD_Admin {
                    $response = $RC->add_reply( $new_reply );
                    
                    if( $add_on_mode ){
+                       do_action( 'ksd_new_ticket_logged', $_POST['addon_tkt_id'], $response );
                        return;//End the party if this came from an add-on. All an add-on needs if for the reply to be logged
                    }
                    
@@ -631,11 +632,12 @@ class KSD_Admin {
                 $the_ticket = $TC->get_tickets( $filter, $value_parameters );
                 if ( count( $the_ticket ) > 0  ){//this is a reply
                     //Get a $_POST array to send to the reply_ticket function
-                    $_POST['tkt_id'] = $the_ticket[0]->tkt_id;//The ticket ID
-                    $_POST['ksd_ticket_reply'] = $new_ticket->tkt_message;//Get the reply
-                    $_POST['ksd_rep_created_by'] = $new_ticket->tkt_cust_id;//The customer's ID
+                    $_POST['tkt_id']                = $the_ticket[0]->tkt_id;//The ticket ID
+                    $_POST['ksd_ticket_reply']      = $new_ticket->tkt_message;//Get the reply
+                    $_POST['ksd_rep_created_by']    = $new_ticket->tkt_cust_id;//The customer's ID
+                    $_POST['addon_tkt_id']          = $new_ticket->addon_tkt_id;//The add-on's ID for this ticket
                     $this->reply_ticket( $_POST ); 
-                    return; //die removed because it was triggering a fatal error in addons
+                    return; //die removed because it was triggering a fatal error in add-ons
                }               
             }
             //This is a new ticket
@@ -785,8 +787,8 @@ class KSD_Admin {
                     $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by ); 
                 }   
 
-                //For add-ons to do something after new ticket is added.
-                do_action( 'ksd_new_ticket_logged', $new_ticket );
+                //For add-ons to do something after new ticket is added. We share the ID and the final status
+                do_action( 'ksd_new_ticket_logged', $_POST['ksd_addon_tkt_id'], $new_ticket_status );
                 
                 //If this was initiated by the email add-on, end the party here
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "EMAIL") ){

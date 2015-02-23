@@ -104,7 +104,6 @@ class KSD_Mail_Install {
          * Get default settings
          */
         public static function get_default_options(){
-            global $current_user;
             return  array (
                     /** KSD Version info ********************************************************/
                     'ksd_mail_version'                  => KSD_MAIL_VERSION,
@@ -117,8 +116,8 @@ class KSD_Mail_Install {
                     'ksd_mail_password'                 => '',
                     'ksd_mail_protocol'                 => 'IMAP',
                     'ksd_mail_port'                     => '143',
-                    'ksd_mail_validate_certificate'     => 'NO',
-                    'ksd_mail_useSSL'                   => 'NO',
+                    'ksd_mail_validate_certificate'     => 'no',
+                    'ksd_mail_useSSL'                   => 'no',
                     'ksd_mail_lastrun_time'             => date( 'U' ),
 
                     /** License Information ************************************************************/
