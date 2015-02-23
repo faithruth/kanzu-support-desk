@@ -85,6 +85,16 @@
                 <input name="enable_anonymous_tracking"  type="checkbox" <?php checked( $settings['enable_anonymous_tracking'], "yes" ) ?> value="yes"  />
                 <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e( "To focus our efforts solely on making KSD serve you better (and NOT waste time on features you don't need), we need some information on how you interact with the plugin. We won't track ANY user details so your security and privacy are safe. Please enable this.",'kanzu-support-desk')  ;?>"/>
              </div>
+             <div class="setting">
+                <label for="ticket_management_roles"><?php _e( "Roles that manage tickets","kanzu-support-desk" ); ?></label>                
+                <ul class="ksd-multiple-checkboxes"><?php
+                    global $wp_roles;
+                    foreach( $wp_roles->roles as $role => $role_info ){?>
+                       <li><input name="ticket_management_roles[]"  type="checkbox" <?php checked( $settings['ticket_management_roles'], "yes" ) ?> value="<?php echo $role;?>"  /><label><?php echo $role_info['name'];?></label></li>  
+                   <?php }   ?>
+                </ul>
+                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e( "Only users with these roles can manage tickets. All other users won't have access to your support desk.",'kanzu-support-desk')  ;?>"/>
+             </div>
         </div>   
              <?php 
              //Retrieve extra settings from add-ons. Pass current settings to them

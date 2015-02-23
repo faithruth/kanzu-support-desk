@@ -744,6 +744,27 @@ ul.edit-ticket-options li.selected{
         box-shadow:1px 1px 3px rgba(0,0,0,.1);
         text-align:center;
 } 
+#update-settings ul.ksd-multiple-checkboxes {
+    float: left;
+    margin-top: 0;
+    width: 70%;
+}
+.ksd-multiple-checkboxes > li {
+    float: left;
+    width: 30%;
+}
+#update-settings .ksd-multiple-checkboxes input {
+    float: left;
+    margin: 0;
+    padding: 0;
+    width: 10%;
+}
+#update-settings .ksd-multiple-checkboxes label {
+    float: left;
+    font-weight: normal;
+    line-height: 15px;
+    width: 90%;
+}
 .ksd-blue{
     color: #2ea2cc;
 } 
