@@ -280,7 +280,7 @@ class KSD_Mail_Admin {
                     $errname = 'UNKNOWN ERROR';
             }
             
-            update_option( 'ksd_mail_log', array(
+          /*  update_option( 'ksd_mail_log', array(
                 'type' => $errname,
                 'msg'  => $errstr,
                 'line' => $errline,
@@ -288,7 +288,7 @@ class KSD_Mail_Admin {
                 'no' => $errno,
                 'time' => date('Ymdhhmi')
                 )
-            );
+            );*/
         }
 
         

@@ -163,7 +163,7 @@ class KSD_Admin {
          * @return An unordered list of agents
          */
         public static function get_agent_list( $roles ){
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-users-controller.php");//@since 1.4.1 filter the list to return users in certain roles
+            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-users-controller.php");//@since 1.5.0 filter the list to return users in certain roles
             $UC = new KSD_Users_Controller();
             $tmp_user_IDs = $UC->get_users_with_roles( $roles );
             foreach ( $tmp_user_IDs as $userID ){
@@ -795,16 +795,18 @@ class KSD_Admin {
                 }   
 
                 //For add-ons to do something after new ticket is added. We share the ID and the final status
-                do_action( 'ksd_new_ticket_logged', $_POST['ksd_addon_tkt_id'], $new_ticket_status );
-                
+                if ( isset( $_POST['ksd_addon_tkt_id'] ) ) {                    
+                    do_action( 'ksd_new_ticket_logged', $_POST['ksd_addon_tkt_id'], $new_ticket_status );
+                }
                 //If this was initiated by the email add-on, end the party here
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "EMAIL") ){
                      $this->send_email( $cust_email );
                      return;
                 }
                 
-                if( $add_on_mode ) return; //For addon mode to ensure graceful exit from function
-                
+                if( $add_on_mode ) {
+                    return; //For addon mode to ensure graceful exit from function. 
+                }
                 echo json_encode( $new_ticket_status );
                 die();// IMPORTANT: don't leave this out
                 
@@ -929,10 +931,10 @@ class KSD_Admin {
             }                
             try{
                 $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
-                //Iterate through the new settings and save them. We skip all multiple checkboxes; those are handled later. As of 1.4.1, there's only one set of multiple checkboxes, ticket_management_roles
+                //Iterate through the new settings and save them. We skip all multiple checkboxes; those are handled later. As of 1.5.0, there's only one set of multiple checkboxes, ticket_management_roles
                 foreach ( $updated_settings as $option_name => $current_value ) {
                     if( $option_name == 'ticket_management_roles' ){
-                        continue;//Don't handle multiple checkboxes in here @since 1.4.1
+                        continue;//Don't handle multiple checkboxes in here @since 1.5.0
                     }
                     $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                 }
@@ -942,7 +944,7 @@ class KSD_Admin {
                 foreach ( $checkbox_names as $checkbox_name ){
                      $updated_settings[$checkbox_name] = ( !isset ( $_POST[$checkbox_name] ) ? "no" : $updated_settings[$checkbox_name] );
                 }      
-                //Now handle the multiple checkboxes. As of 1.4.1, only have ticket_management_roles. If it isn't set, use administrator
+                //Now handle the multiple checkboxes. As of 1.5.0, only have ticket_management_roles. If it isn't set, use administrator
                 $updated_settings['ticket_management_roles'] = !isset( $_POST['ticket_management_roles'] ) ? "administrator" : $this->convert_multiple_checkbox_to_setting( $_POST['ticket_management_roles'] );
             
                 //Apply the settings filter to get settings from add-ons
@@ -1291,7 +1293,7 @@ class KSD_Admin {
           * e.g. SELECT field1,field2 from table where REGEXP 'value1|value2|value3'
           * @param Array $multiple_checbox_array An array of the checked checkboxes in a set of multiple checkboxes
           * @return string A |-separated list of the checked values
-          * @since 1.4.1
+          * @since 1.5.0
           */
          private function convert_multiple_checkbox_to_setting( $multiple_checbox_array ){
              $setting_string = "administrator";//By default, the administrator has access

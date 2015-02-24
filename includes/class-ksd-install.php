@@ -27,7 +27,7 @@ class KSD_Install {
         
         /**
          * The DB version
-         * @since 1.4.1
+         * @since 1.5.0
          * @var int
          */
         protected static $ksd_db_version = 100;
@@ -101,7 +101,7 @@ class KSD_Install {
                 self::create_tables();
                 self::set_default_options(); 	
                 self::log_initial_tickets();
-                self::create_roles();//@since 1.4.1                        
+                self::create_roles();//@since 1.5.0                        
                 set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
             }
             
@@ -147,7 +147,7 @@ class KSD_Install {
         public function upgrade_settings( $settings ){
             //Compare the user's current settings array against our new default array and pick-up any settings they don't have 
             //We'd have loved to use array_diff_key for this but it only exists for PHP 5 >= 5.1.0
-            //For any setting that doesn't exist, we define it and assign it the default value @since 1.4.1
+            //For any setting that doesn't exist, we define it and assign it the default value @since 1.5.0
             foreach ( self::get_default_options() as $setting_key => $setting_default_value ){
                 if( !isset( $settings[$setting_key] ) ){
                    $settings[$setting_key] =  $setting_default_value;
@@ -166,7 +166,7 @@ class KSD_Install {
         public function upgrade_plugin( $previous_version ){
             global $wpdb;  
             $wpdb->hide_errors();	
-            //@since 1.4.1 Switch case based on target version removed. @TODO Update this to be version conscious
+            //@since 1.5.0 Switch case based on target version removed. @TODO Update this to be version conscious
             $dbChanges = array();//Holds all DB change queries
             //Add 'NEW' to tkt_status ENUM, change the default tkt_status from 'OPEN' to 'NEW'
             $dbChanges[]="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_status` `tkt_status` ENUM('NEW','OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'NEW';";
@@ -272,7 +272,7 @@ class KSD_Install {
             
             /**
              * Create custom user roles
-             * @since 1.4.1
+             * @since 1.5.0
              */
             private static function create_roles(){
                 add_role( 'ksd_customer', __( 'KSD Customer', 'kanzu-support-desk' ), array(
@@ -284,7 +284,7 @@ class KSD_Install {
             
             /**
              * Migrate customers from {$wpdb->prefix}kanzusupport_customers to {$wpdb->prefix}users
-             * @since 1.4.1
+             * @since 1.5.0
              */
             private function move_customers_to_wp_users(){            
                require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
@@ -353,8 +353,8 @@ class KSD_Install {
                         'recaptcha_secret_key'              => "",
                         'recaptcha_error_message'           => "Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on {$user_info->user_email}",
                         'enable_anonymous_tracking'         => "no", //@since 1.3.2,
-                        'auto_assign_user'                  => '',   //@since 1.4.1. Used to auto-assign new tickets when set 
-                        'ticket_management_roles'           => 'administrator' //@since 1.4.1. Who can manage your tickets
+                        'auto_assign_user'                  => '',   //@since 1.5.0. Used to auto-assign new tickets when set 
+                        'ticket_management_roles'           => 'administrator' //@since 1.5.0. Who can manage your tickets
                     );
             }
             
