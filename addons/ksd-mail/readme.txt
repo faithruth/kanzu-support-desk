@@ -4,7 +4,7 @@ Donate link: http://kanzucode.com/
 Tags: ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.0
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,13 @@ Yes. [Kanzu Support Desk](http://wordpress.org/plugins/kanzu-support-desk/).
 
 
 == Changelog ==
+= 1.3.0, February 24, 2015 =
+ * Better-styled email conversations. Toggle extra content,scroll to new email
+ * Tested with Gmail (desktop,mobile),IOS,Yahoo(desktop & mobile) & Outlook
+ * Mark mail as read after ticket is logged successfully
+ * Fallback and read plain-text email if email isn't HTML
+ * Test mail connection button added
+
 = 1.2.0, February 10, 2015 =
 * Replaced ksd mail processor class with php-imap
 * Monitor changes to KSD Mail settings

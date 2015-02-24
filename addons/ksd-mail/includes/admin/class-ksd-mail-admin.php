@@ -338,10 +338,10 @@ class KSD_Mail_Admin {
             $now = (int) date( 'U' );
             $interval = $now - $last_run ;
             
-           //     if ( $interval  < ( $run_freq * 60 ) ){             //@TODO Comment out for tests  
-            //        _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
-           //     return;
-         //   }
+            if ( $interval  < ( $run_freq * 60 ) ){              
+                _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
+                return;
+            }
             
             //Update last run time.
             $mail_settings['ksd_mail_lastrun_time'] = date( 'U' );
