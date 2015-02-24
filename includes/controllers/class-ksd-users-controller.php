@@ -42,11 +42,9 @@ class KSD_Users_Controller extends KSD_Controller
 	/*
 	*Update user details
 	*/
-	public function update_user(&$user){
+	public function update_user ( &$user ) {
 		return $this->_model->update_user( $user );
 	}
-	
-	
 }
 
 ?>

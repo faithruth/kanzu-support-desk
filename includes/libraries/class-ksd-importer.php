@@ -49,7 +49,11 @@
         } 
      
         
-        public  function showform(){
+        /**
+         * Display the upload form.
+         * @since 1.4.0
+         */
+        public  function showform ( ) {
             echo '
                  At the moment only csv files are supported. The file  should have the fields below in the same order as they are listed.
                  
@@ -64,6 +68,7 @@
                     <li>time_logged=DD-MM-YYYY HH24:MI:SS</li>
                     <li>customer_email</li>
                     <li>assigned_by=email</li>
+                    <li>assigned_to=email</li>
                     <li>time_last_updated=DD-MM-YYYY HH24:MI:SS</li>
                     <li>private_note</li>
                 </ol>
@@ -78,66 +83,71 @@ T,Ticket subject, Ticket Message,STAFF,NEW,HIGH,21-02-2015 14:00 09:00:00,custom
                     </pre>
                 </div>
 
-                <form>
-                <input type="file" name="ksdimport"/> <input type="submit" name="submit" value="Import"/>
+                <form action="?import=ksdimporter" method="post"enctype="multipart/form-data" >
+                <div>
+                   <div class="">
+                       <label for="ksd_mail_server">Select file to import </label>
+                       <input type="file" size="30" name="ksdimport" />
+                   </div>
+                   <div class="">
+                       <input class="button-small button button-primary ksd-button" type="submit" name="submit" value="Import" />
+                   </div> 
+                </div>   
                 </form>
+
                  ';
         }
         
         
         /**
-         * The main controller for the actual import stage.
+         * Parses cvs file and imports the tickets in the appropriate table.
          *
-         * @param string $file Path to file to import
          * @since 1.4.0 
          */
         function handle_import ( ) {
+            
+            if ( ! isset($_POST['submit']) ) return;
+            
+            if ( empty( $_FILES ) ) return; //@TODO: Add notice on error
+            
+            $file = $_FILES['ksdimport']['tmp_name'];
+            
+            global $current_user;
+            $c_id = $current_user->ID;
+            
+            $fh = fopen( $file , "r");
+            
+            while ( ( $rw = fgetcsv($fh, 0, "," ) ) !== FALSE) {
 
-            if ( ! isset($_POST) ) return;
-            
-            $file = wp_import_handle_upload();
-             
-            if ( isset( $file['error'] ) ) {
-                echo '<p><strong>' . __( 'Sorry, there has been an error.', 'kanzu-support-desk' ) . '</strong><br />';
-                echo esc_html( $file['error'] ) . '</p>';
-                return false;
-            } else if ( ! file_exists( $file['file'] ) ) {
-                echo '<p><strong>' . __( 'Sorry, there has been an error.', 'kanzu-support-desk' ) . '</strong><br />';
-                printf( __( 'The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem.', 'wordpress-importer' ), esc_html( $file['file'] ) );
-                echo '</p>';
-                return false;
-            }
-            
-            
-            $columns = array(
-                'marker',
-                'subject',
-                'message',
-                'channel',
-                'status',
-                'severity',
-                'time_logged',
-                'customer_email',
-                'assigned_by',
-                'time_updated',
-                'updated_by',
-                'private_note'
-            );
-            
-           //
-           include_once( KSD_PLUGIN_DIR.  "includes/libraries/File_CSV_DataSource/DataSource.php");  
-           $csv = new File_CSV_DataSource;
-           $csv->load( $file );
-
-           var_dump( $csv->connect( $columns ));
-           /*
-            foreach ( $csv->connect( $columns ) as $csv_data ) {
-                //test do_action again.
-            }
-            * 
-            */         
+                //@TODO: Check for format errors and validate some fields
+                
+                $new_ticket                         = new stdClass(); 
+                $new_ticket->tkt_subject            = $rw[1];
+                $new_ticket->tkt_message            = $rw[2];
+                $new_ticket->tkt_channel            = $rw[3];
+                $new_ticket->tkt_status             = $rw[4]; //EMAIL will trigger  an email!!!
+                $new_ticket->tkt_severity           = $rw[5];                
+                $new_ticket->tkt_time_logged        = date_format( new DateTime($rw[6]), 'Y-m-d h:i:s'); 
+                $new_ticket->cust_email             = $rw[7] ;
+                $new_ticket->tkt_updated_by         = $c_id;
+                $new_ticket->tkt_assigned_by        = get_user_by( 'email',   $rw[8] )->ID;
+                $new_ticket->tkt_assigned_to        = get_user_by( 'email',   $rw[9] )->ID;
+                $new_ticket->tkt_time_updated       = date_format( new DateTime($rw[10]), 'Y-m-d h:i:s');
+                $new_ticket->tkt_private_note       = $rw[11];
+                
+                $new_ticket->tkt_logged_by          = $c_id;
+                $new_ticket->tkt_assigned_to        = $c_id;
+                
+                
+                //Log the ticket
+                do_action( 'ksd_log_new_ticket', $new_ticket );
+                
+                //@TODO: Import replies 
+           }
+           
+       
+           //@TODO: Add notice when done
         }
-
  }
  
  
