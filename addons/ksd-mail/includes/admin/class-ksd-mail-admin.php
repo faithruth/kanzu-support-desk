@@ -173,6 +173,13 @@ class KSD_Mail_Admin {
                         $current_settings[KSD_MAIL_OPTIONS_KEY][$checkbox_name] = ( !isset ( $new_settings[$checkbox_name] ) ? "no" : $new_settings[$checkbox_name] );
                     }     
                 }
+                    
+                //Check connection
+                if( $new_settings['ksd_mail_settings_changed'] == 'yes' ){
+                    $this->check_connection(); 
+                }
+                
+                
                 return $current_settings;               
         }
         
@@ -238,6 +245,7 @@ class KSD_Mail_Admin {
             }
           }
         
+
         /**
          * Handles mail plugin errors.
          * Currently, does nothing. Still requires further testing
@@ -248,6 +256,7 @@ class KSD_Mail_Admin {
          * @since 1.3.0
          */
         public function error_handler($errno, $errstr, $errfile, $errline){
+
             $errorType = array (
                 E_ERROR                => 'ERROR',
                 E_CORE_ERROR           => 'CORE ERROR',
@@ -281,11 +290,13 @@ class KSD_Mail_Admin {
                 )
             );
         }
+
         
         /**
          * Display mail-related errors
          * @return type
          */
+
         public function show_errors ( ) {
             
             $opt = get_option('ksd_mail_log');
@@ -303,7 +314,7 @@ class KSD_Mail_Admin {
             ob_start();?>
             <div class="error">
               <p>
-                <?php printf( __( "Kanzu Support Desk Mail |  %s", "kanzu-support-desk" ), $errstr ); ?>
+                <?php printf( __( "Kanzu Support Desk Mail | %s", "kanzu-support-desk" ), $errstr ); ?>
               <p/>
             </div>
             <?php
@@ -532,9 +543,10 @@ class KSD_Mail_Admin {
             $this->create_cron_schedule();
             $this->create_cron_hook();
         }   
-
+        
+        
         /**
-         * Check if connection succeeds with connection details
+         * Check if connection succeeds with the current connection details
          * 
          * @param Array $mail_settings  An array of the current mail settings
          * @param boolean $isTest Whether or not this is a test connection
@@ -542,6 +554,7 @@ class KSD_Mail_Admin {
          * @since 1.1.0
          */
         public function check_connection( $mail_settings = array(), $isTest = true ){
+
 
             //Connection details setup
             $the_mailbox="";
@@ -570,7 +583,6 @@ class KSD_Mail_Admin {
             self::$mailbox = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
             $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
 
-           
             try{
                 self::$mailbox->getImapStream( true );
                 if( $isTest ){ //If we were merely testing the connection settings, end the party here. The connection is closed in self::$mailbox's destructor

@@ -65,6 +65,17 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_send_feedback', array( $this, 'send_feedback' ));  
                 add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ));              
                 add_action( 'wp_ajax_ksd_get_notifications', array( $this, 'get_notifications' ));  
+                
+                
+                //Register KSD tickets importer
+                add_action( 'admin_init', array( $this, 'ksd_importer_init') );
+                
+                
+                //Add KSD Importer to tool box
+                add_action( 'tool_box',  array($this, 'ksd_addto_toolbox') );
+                
+                
+                
 	}
 	
 
@@ -1279,6 +1290,46 @@ class KSD_Admin {
         public static function append_to_activelist ( $active_addons ){
             $active_addons['ksd-mail'] =  'ksd-mail/ksd-mail.php'; 
             return $active_addons;
+        }
+        
+        
+        /**
+         * Registers KSD Ticket Importer utility.
+         * 
+         * @since 1.4.0
+         */
+        public static function ksd_importer_init ( ) {
+            $id     = 'ksdimporter';
+            $name   = 'KSD Importer';
+            $description = 'Import support tickets into Kanzu Support Desk plugin.';
+            
+            include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-importer.php");  
+            $importer = new KSD_Importer();
+            $callback    = array( $importer, 'dispatch');
+            register_importer( $id, $name, $description, $callback ) ;
+            
+        }
+        
+        public static function ksd_addto_toolbox(){
+            if ( current_user_can( 'import' ) ) :
+                echo '
+                <div class="tool-box">
+                    <h3 class="title"> ' . __('KSD Importer') . '</h3>
+                     <p>
+                     Import tickets into Kanzu Support Desk. Use the  <a href="?import=ksdimporter">KSD Importer </a>
+                     </p>
+                </div>
+            ';
+            else:
+                echo '
+                <div class="tool-box">
+                    <h3 class="title"> ' . __('KSD Importer') . '</h3>
+                     <p>
+                     You do not have the capability to import tickets!
+                     </p>
+                </div>
+            ';
+            endif;
         }
   
 }
