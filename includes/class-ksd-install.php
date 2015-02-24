@@ -353,7 +353,8 @@ class KSD_Install {
                         'recaptcha_secret_key'              => "",
                         'recaptcha_error_message'           => "Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on {$user_info->user_email}",
                         'enable_anonymous_tracking'         => "no", //@since 1.3.2,
-                        'auto_assign_user'                  => ''   //@since 1.4.1. Used to auto-assign new tickets when set 
+                        'auto_assign_user'                  => '',   //@since 1.4.1. Used to auto-assign new tickets when set 
+                        'ticket_management_roles'           => 'administrator' //@since 1.4.1. Who can manage your tickets
                     );
             }
             

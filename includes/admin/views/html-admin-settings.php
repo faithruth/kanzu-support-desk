@@ -90,10 +90,10 @@
                 <ul class="ksd-multiple-checkboxes"><?php
                     global $wp_roles;
                     foreach( $wp_roles->roles as $role => $role_info ){?>
-                       <li><input name="ticket_management_roles[]"  type="checkbox" <?php checked( $settings['ticket_management_roles'], "yes" ) ?> value="<?php echo $role;?>"  /><label><?php echo $role_info['name'];?></label></li>  
+                       <li><input name="ticket_management_roles[]"  type="checkbox" <?php echo false !== strpos( $settings['ticket_management_roles'], $role ) ? 'checked' : ''; ?> value="<?php echo $role;?>"  /><label><?php echo $role_info['name'];?></label></li>  
                    <?php }   ?>
                 </ul>
-                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e( "Only users with these roles can manage tickets. All other users won't have access to your support desk.",'kanzu-support-desk')  ;?>"/>
+                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e( "Only users with these roles can manage tickets. All other users won't have access to your support desk. Note that the Administrator role always has access.",'kanzu-support-desk')  ;?>"/>
              </div>
         </div>   
              <?php 

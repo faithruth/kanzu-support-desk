@@ -157,7 +157,7 @@ class KSD_Admin {
                                             'ajax_url'                  =>  admin_url( 'admin-ajax.php'),
                                             'ksd_admin_nonce'           =>  wp_create_nonce( 'ksd-admin-nonce' ),
                                             'ksd_tickets_url'           =>  admin_url( 'admin.php?page=ksd-tickets'),
-                                            'ksd_agents_list'           =>  self::get_agent_list(),
+                                            'ksd_agents_list'           =>  self::get_agent_list( $settings['ticket_management_roles'] ),
                                             'ksd_current_user_id'       =>  get_current_user_id(),
                                             'ksd_labels'                =>  $admin_labels_array,
                                             'ksd_tour_pointers'         =>  $tour_pointer_messages,
@@ -170,11 +170,18 @@ class KSD_Admin {
                             
         /**
          * Get a list of agents
+         * @param string $roles The WP Roles with access to KSD
          * @return An unordered list of agents
          */
-        public static function get_agent_list(){
+        public static function get_agent_list( $roles ){
+            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-users-controller.php");//@since 1.4.1 filter the list to return users in certain roles
+            $UC = new KSD_Users_Controller();
+            $tmp_user_IDs = $UC->get_users_with_roles( $roles );
+            foreach ( $tmp_user_IDs as $userID ){
+                $user_IDs[] = $userID->user_id;
+            }            
             $agents_list = "<ul class='ksd_agent_list hidden'>";//The available list of agents
-                foreach (  get_users() as $agent ) {
+                foreach (  get_users( array( 'include' => $user_IDs ) ) as $agent ) {
                     $agents_list .= "<li ID=".$agent->ID.">".esc_html( $agent->display_name )."</li>";
                 }
              $agents_list .= "</ul>";
@@ -933,8 +940,11 @@ class KSD_Admin {
             }                
             try{
                 $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
-                //Iterate through the new settings and save them. 
+                //Iterate through the new settings and save them. We skip all multiple checkboxes; those are handled later. As of 1.4.1, there's only one set of multiple checkboxes, ticket_management_roles
                 foreach ( $updated_settings as $option_name => $current_value ) {
+                    if( $option_name == 'ticket_management_roles' ){
+                        continue;//Don't handle multiple checkboxes in here @since 1.4.1
+                    }
                     $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                 }
                 //For a checkbox, if it is unchecked then it won't be set in $_POST
@@ -942,7 +952,10 @@ class KSD_Admin {
                 //Iterate through the checkboxes and set the value to "no" for all that aren't set
                 foreach ( $checkbox_names as $checkbox_name ){
                      $updated_settings[$checkbox_name] = ( !isset ( $_POST[$checkbox_name] ) ? "no" : $updated_settings[$checkbox_name] );
-                }                
+                }      
+                //Now handle the multiple checkboxes. As of 1.4.1, only have ticket_management_roles. If it isn't set, use administrator
+                $updated_settings['ticket_management_roles'] = !isset( $_POST['ticket_management_roles'] ) ? "administrator" : $this->convert_multiple_checkbox_to_setting( $_POST['ticket_management_roles'] );
+            
                 //Apply the settings filter to get settings from add-ons
                 $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
                 
@@ -1280,6 +1293,23 @@ class KSD_Admin {
             echo json_encode( $cache );
             echo ob_get_clean();    
             die();
+         }
+         
+         /**
+          * Convert the multiple checkbox input, which is an array in $_POST, into a setting,
+          * which is a string of the values separated by |. We save them this way since we use
+          * them in an SQL REGEXP which uses them as is 
+          * e.g. SELECT field1,field2 from table where REGEXP 'value1|value2|value3'
+          * @param Array $multiple_checbox_array An array of the checked checkboxes in a set of multiple checkboxes
+          * @return string A |-separated list of the checked values
+          * @since 1.4.1
+          */
+         private function convert_multiple_checkbox_to_setting( $multiple_checbox_array ){
+             $setting_string = "administrator";//By default, the administrator has access
+             foreach ( $multiple_checbox_array as $checkbox ){
+                 $setting_string.="|".$checkbox;                
+             }       
+             return $setting_string;
          }
          
          /**

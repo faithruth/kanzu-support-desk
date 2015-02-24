@@ -255,7 +255,7 @@ class KSD_Mail_Admin {
          * @param int $errline Line with error in the file
          * @since 1.3.0
          */
-        public function error_handler($errno, $errstr, $errfile, $errline){
+        public function error_handler( $errno, $errstr, $errfile, $errline ){
 
             $errorType = array (
                 E_ERROR                => 'ERROR',
