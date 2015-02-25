@@ -4,7 +4,7 @@ Donate link: http://kanzucode.com/
 Tags: ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.0
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,10 @@ Yes. [Kanzu Support Desk](http://wordpress.org/plugins/kanzu-support-desk/).
 
 
 == Changelog ==
+= 1.3.1, February 25, 2015 =
+ * Add check to see whether IMAP extension is enabled
+ * Add support for PHP < 5.3 ( but greater than 5.2.4, which is the lowest WordPress supports )
+
 = 1.3.0, February 24, 2015 =
  * Better-styled email conversations. Toggle extra content,scroll to new email
  * Tested with Gmail (desktop,mobile),IOS,Yahoo(desktop & mobile) & Outlook

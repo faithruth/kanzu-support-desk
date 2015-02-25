@@ -585,7 +585,7 @@ class KSD_Mail_Admin {
             $attachments_dir = KSD_MAIL_DIR . '/assets/attachments';
             //First thing: Make sure the IMAP extension is enabled
             if( ! extension_loaded( 'imap' ) ){
-                return array ( 'connected' => false, 'response' => sprintf( __( 'Sorry, your host has not enabled the PHP IMAP extension. Please contact them or <a href="%s" target="_blank" >visit our documentation.</a> Thank you.', 'kanzu-support-desk' ), 'http://kanzucode.com/documentation' ) );
+                return array ( 'connected' => false, 'response' => sprintf( __( 'Sorry, your host has not enabled the PHP IMAP extension. Please contact them or <a href="%s" target="_blank" >visit our documentation.</a> Thank you.', 'kanzu-support-desk' ), 'https://kanzucode.com/kanzu-support-desk-docs/how-to-enable-imap-support-in-php/' ) );
             }
             self::$mailbox = new KSD_Mail_ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
             $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
