@@ -146,9 +146,8 @@ final class KSD_Mail {
             }
             //The rest
             include_once( KSD_MAIL_DIR . '/includes/libraries/php-imap/ImapMailbox.php' ); 
-
-            include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );
-            
+            include_once( KSD_MAIL_DIR . '/includes/libraries/class-ksd-mail-imap-mailbox.php' ); 
+            include_once( KSD_MAIL_DIR .  '/includes/admin/class-ksd-mail-admin.php' );           
 
         }
 	

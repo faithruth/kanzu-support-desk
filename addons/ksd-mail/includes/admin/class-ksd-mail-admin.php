@@ -180,7 +180,7 @@ class KSD_Mail_Admin {
                     
                 //Check connection
                 if( $new_settings['ksd_mail_settings_changed'] == 'yes' ){
-                    $this->check_connection(); 
+                    $this->check_connection( $new_settings[KSD_MAIL_OPTIONS_KEY], false ); 
                 }
                 
                 
@@ -554,12 +554,12 @@ class KSD_Mail_Admin {
          * 
          * @param Array $mail_settings  An array of the current mail settings
          * @param boolean $isTest Whether or not this is a test connection
-         * @return turns self::$mailbox into a connection resource on success and returns false on failure
+         * @return turns self::$mailbox into a connection resource on success and returns an array with $response['connected']=true|false
          * @since 1.1.0
+         * @TODO If this connection fails and $isTest === false, find a way to inform the user ( i.e. for non-test traffic)
          */
         public function check_connection( $mail_settings = array(), $isTest = true ){
-
-
+            
             //Connection details setup
             $the_mailbox="";
             //Append the ssl Flag if the user chose to always use SSL
@@ -583,22 +583,24 @@ class KSD_Mail_Admin {
             }
             
             $attachments_dir = KSD_MAIL_DIR . '/assets/attachments';
-            
-            self::$mailbox = new ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
+            //First thing: Make sure the IMAP extension is enabled
+            if( ! extension_loaded( 'imap' ) ){
+                return array ( 'connected' => false, 'response' => sprintf( __( 'Sorry, your host has not enabled the PHP IMAP extension. Please contact them or <a href="%s" target="_blank" >visit our documentation.</a> Thank you.', 'kanzu-support-desk' ), 'http://kanzucode.com/documentation' ) );
+            }
+            self::$mailbox = new KSD_Mail_ImapMailbox( $the_mailbox, $mail_settings['ksd_mail_account'], 
             $mail_settings['ksd_mail_password'], $attachments_dir , 'utf-8');
 
             try{
                 self::$mailbox->getImapStream( true );
                 if( $isTest ){ //If we were merely testing the connection settings, end the party here. The connection is closed in self::$mailbox's destructor
-                    return true;
+                    return array ( 'connected' => true, 'response' => __( "Woohoo! Your connection succeeded! Let's roll","kanzu-support-desk" ) );
                 }
             }catch( Exception $e ) {
                 //Suppress imap fatal errors
                // imap_alerts();
                // imap_errors();
-                return false;
+               return array ( 'connected' => false, 'response' => __( "Sorry, your connection failed. Please change your settings and try again.","kanzu-support-desk" ) );
             }
-            
         }
         
         /*
@@ -608,13 +610,9 @@ class KSD_Mail_Admin {
         public function  test_mail_connection ( ) {
             if ( ! wp_verify_nonce( $_POST['ksd_mail_connection_nonce'], 'ksd-admin-nonce' ) ){
                 die ( __('Busted!','kanzu-support-desk') );
-            }   
-            if ( false === $this->check_connection( $_POST ) ) {
-			$response = __( "Sorry, your connection failed. Please change your settings and try again.","kanzu-support-desk" );
-		    } else {
-			$response = __( "Woohoo! Your connection succeeded! Let's roll","kanzu-support-desk" );
-		    }
-            echo json_encode( $response );
+            }
+            $connection_response = $this->check_connection( $_POST );
+            echo json_encode( $connection_response['response'] );
             die();//important otherwise output will have a 0 at the end         
         }
                     
