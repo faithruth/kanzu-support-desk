@@ -61,7 +61,11 @@ class KSD_Mail_Admin {
                 //Log errors as notices
                 add_action( 'admin_notices', array ( $this,'show_errors') );
                 
-                 //Catch all email deamon errors.
+                 //Catch all email deamon errors. First define PHP constants to cater to lower PHP < 5.3
+                if ( !defined( 'E_STRICT' ) )   define( 'E_STRICT', 2048 );
+                if ( !defined( 'E_RECOVERABLE_ERROR' ) )    define( 'E_RECOVERABLE_ERROR', 4096 );
+                if ( !defined( 'E_DEPRECATED' ) )   define( 'E_DEPRECATED', 8192 );
+                if ( !defined( 'E_USER_DEPRECATED' ) )  define( 'E_USER_DEPRECATED', 16384 );
                set_error_handler( array( $this, "error_handler" ), 
                         E_ERROR ^ E_CORE_ERROR ^ E_COMPILE_ERROR ^ E_USER_ERROR ^
                         E_RECOVERABLE_ERROR ^  E_WARNING ^  E_CORE_WARNING ^ 
@@ -590,8 +594,8 @@ class KSD_Mail_Admin {
                 }
             }catch( Exception $e ) {
                 //Suppress imap fatal errors
-                imap_alerts();
-                imap_errors();
+               // imap_alerts();
+               // imap_errors();
                 return false;
             }
             
