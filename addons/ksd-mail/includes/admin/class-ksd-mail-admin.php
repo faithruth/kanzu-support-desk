@@ -343,7 +343,7 @@ class KSD_Mail_Admin {
             $interval = $now - $last_run ;
             
             if ( $interval  < ( $run_freq * 60 ) ){              
-                _e( ' Run interval has not passed.' ); //@TODO: Add run log instead.
+                _e( ' Run interval has not passed.','kanzu-support-desk' ); //@TODO: Add run log instead.
                 return;
             }
             
@@ -511,7 +511,7 @@ class KSD_Mail_Admin {
             
             $schedules[ 'KSDMailCheckInt' ] = array(
               'interval' => $minutes * 60, 
-              'display' => __( 'KSD Mail Check Interval')
+              'display' => __( 'KSD Mail Check Interval','kanzu-support-desk' )
             );
             
 

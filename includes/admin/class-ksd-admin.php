@@ -191,7 +191,7 @@ class KSD_Admin {
 
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'admin.php?page=ksd-settings' ) . '">' . __( 'Settings', KSD_SLUG ) . '</a>'
+				'settings' => '<a href="' . admin_url( 'admin.php?page=ksd-settings' ) . '">' . __( 'Settings', 'kanzu-support-desk' ) . '</a>'
 			),
 			$links
 		);

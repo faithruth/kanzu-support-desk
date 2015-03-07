@@ -300,7 +300,7 @@ class KSD_Mail_Updater {
         }
 
         if( ! current_user_can( 'update_plugins' ) ) {
-            wp_die( __( 'You do not have permission to install plugin updates' ) );
+            wp_die( __( 'You do not have permission to install plugin updates','kanzu-support-desk' ) );
         }
 
         $response = $this->api_request( 'plugin_latest_version', array( 'slug' => $_REQUEST['slug'] ) );

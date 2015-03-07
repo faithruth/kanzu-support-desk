@@ -381,16 +381,16 @@ class KSD_Install {
                 $tickets = array(    
                     array(
                         'subject'       => __( "Welcome to Kanzu Support Desk.","kanzu-support-desk" ),
-                        'message'       => __( "Hi {$display_name},<br />"
+                        'message'       => sprintf( __( "Hi %s,<br />"
                                         ."Welcome to the Kanzu Support Desk (KSD) community *cue Happy Music and energetic dancers!*. Thanks for choosing us. We are all about making it simple for you to provide amazing customer support."
                                         ."We can't wait for you to get started!<br /><br />"
-                                        . "The KSD Team.","kanzu-support-desk" ),
+                                        . "The KSD Team.","kanzu-support-desk" ), $display_name ),
                         'channel'       => "STAFF",
                         'status'        => "NEW",
                         'severity'      => 'HIGH',
                         'email'         => $email,
                         'fullname'      => $fullname,
-                        'time_logged'   =>  date_format($date, 'Y-m-d h:i:s')
+                        'time_logged'   =>  date_format($date, 'Y-m-d h:i:s')                               
                     ),
                     array(
                         'subject'       => __( "Quick Intro to Kanzu Support Desk Features","kanzu-support-desk" ),
@@ -430,10 +430,10 @@ class KSD_Install {
                     ),
                     array(
                         'subject'       => __( "Get in touch. Seriously","kanzu-support-desk" ),
-                        'message'       => __( "{$display_name}, this cannot work without you *sob sob*. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>"
+                        'message'       => sprintf( __( "%s, this cannot work without you *sob sob*. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>"
                                             . "What's your experience with Kanzu Support Desk? What do you like? What do you love? What don't you like? What do you want us to fix or improve?<br />"
                                             . "We'd love to hear from you. <a href='mailto:feedback@kanzucode.com'>Click to send us an email</a><br /><br />"
-                                            . "The KSD Team","kanzu-support-desk"),
+                                            . "The KSD Team","kanzu-support-desk"), $display_name ),
                         'channel'       => 'STAFF',
                         'status'        => 'PENDING',
                         'severity'      => 'LOW',

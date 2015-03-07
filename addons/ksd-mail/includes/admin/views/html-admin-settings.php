@@ -1,7 +1,7 @@
 <?php 
 $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
 ?>
-<h3><?php _e("Mail","ksd-mail"); ?> </h3>
+<h3><?php _e("Mail","kanzu-support-desk"); ?> </h3>
                 <div>
                    <div class="setting">
                        <label for="ksd_mail_server"><?php _e("Mail Server","kanzu-support-desk"); ?></label>
@@ -33,9 +33,9 @@ $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('The mailbox to query. You almost never need to change this','kanzu-support-desk')  ;?>"/>
                    </div>
                   <div class="setting">
-                       <label for="ksd_mail_check_freq"><?php _e("Mailbox Check Frequency ( In minutes ) ","kanzu-support-desk"); ?></label>                       
+                       <label for="ksd_mail_check_freq"><?php _e("Mailbox Check Frequency ( In minutes )","kanzu-support-desk"); ?></label>                       
                        <input name="ksd_mail_check_freq"  type="text" size="30" value="<?php echo $mail_settings['ksd_mail_check_freq']; ?>"  />
-                       <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('How often your mailbox should be checked','ksd-mail') ;?>"/>
+                       <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e('How often your mailbox should be checked','kanzu-support-desk') ;?>"/>
                    </div> 
                    <div class="setting">
                        <label for="ksd_mail_validate_certificate"><?php _e("Validate Certificate","kanzu-support-desk"); ?></label>                       
@@ -49,7 +49,7 @@ $mail_settings = $current_settings[KSD_MAIL_OPTIONS_KEY];
                        <input name="ksd_mail_settings_changed" type="hidden" value="no" /> 
                    </div>  
                    <div class="setting">
-                       <input class="button-small button button-primary ksd-button" type="button" name="test_mail_connection" value="<?php _e("Test Connection"); ?>" />
+                       <input class="button-small button button-primary ksd-button" type="button" name="test_mail_connection" value="<?php _e("Test Connection","kanzu-support-desk"); ?>" />
                        <span id="test_mail_connection"></span>
                    </div> 
                 </div>
