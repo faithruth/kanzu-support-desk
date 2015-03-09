@@ -154,7 +154,7 @@ final class Kanzu_Support_Desk {
 	
 		$locale = apply_filters( 'plugin_locale', get_locale(), KSD_SLUG );
 
-		load_textdomain( 'kanzu-support-desk', trailingslashit( WP_LANG_DIR ) . KSD_SLUG . '/' . KSD_SLUG . '-' . $locale . '.mo' );
+                load_textdomain( 'kanzu-support-desk', trailingslashit( WP_LANG_DIR ) . KSD_SLUG . '/' . KSD_SLUG . '-' . $locale . '.mo' );
 		load_plugin_textdomain( 'kanzu-support-desk', FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
 
 	}

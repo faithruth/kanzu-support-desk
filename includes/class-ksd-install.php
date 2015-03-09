@@ -344,14 +344,14 @@ class KSD_Install {
                         'ticket_mail_from_email'            => $user_info->user_email,//Defaults to the admin email
                         'ticket_mail_subject'               => __("Your support ticket has been received","kanzu-support-desk"),
                         'ticket_mail_message'               => __("Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.","kanzu-support-desk"),
-                        'recency_definition'                => __("1","kanzu-support-desk"),
+                        'recency_definition'                => "1",
                         'show_support_tab'                  => "yes",
                         'tab_message_on_submit'             => __("Thank you. Your support request has been opened. Please allow at least 24 hours for a reply.","kanzu-support-desk"),
                         'tour_mode'                         => "yes", //@since 1.1.0
                         'enable_recaptcha'                  => "no",//@since 1.3.1 Not on by default since user needs to create & provide reCAPTCHA site & secret keys
                         'recaptcha_site_key'                => "",
                         'recaptcha_secret_key'              => "",
-                        'recaptcha_error_message'           => "Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on {$user_info->user_email}",
+                        'recaptcha_error_message'           => sprintf ( __("Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on %s","kanzu-support-desk"), $user_info->user_email ),
                         'enable_anonymous_tracking'         => "no", //@since 1.3.2,
                         'auto_assign_user'                  => '',   //@since 1.5.0. Used to auto-assign new tickets when set 
                         'ticket_management_roles'           => 'administrator' //@since 1.5.0. Who can manage your tickets
@@ -394,9 +394,9 @@ class KSD_Install {
                     ),
                     array(
                         'subject'       => __( "Quick Intro to Kanzu Support Desk Features","kanzu-support-desk" ),
-                        'message'       => __( "We arranged a simple walk-through to get you started. From the on-screen instructions, click 'Next' to proceed with the "
-                        . "introductory tour. If you'd like to get a much deeper appreciation of how everything works, check out our <a href='http://www.kanzucode.com/documentation' target='_blank'>documentation</a>.<br /><br />"
-                        . "The KSD Team","kanzu-support-desk" ),
+                        'message'       => sprintf( __( 'We arranged a simple walk-through to get you started. From the on-screen instructions, click "Next" to proceed with the '
+                        . 'introductory tour. If you would like to get a much deeper appreciation of how everything works, check out our <a href="%s" target="_blank">documentation</a>.<br /><br />'
+                        . 'The KSD Team','kanzu-support-desk' ), 'http://www.kanzucode.com/documentation' ),
                         'channel'       => 'STAFF',
                         'status'        => 'OPEN',
                         'severity'      => 'URGENT',
@@ -406,9 +406,9 @@ class KSD_Install {
                     ),
                     array(
                         'subject'       => __( "KSD Documentation","kanzu-support-desk" ),
-                        'message'       => __( "We made every effort to make KSD simple but powerful.<br />"
-                                            . "Learn how to get even more out of KSD from our rich resources <a href='http://www.kanzucode.com/documentation' target='_blank'>here</a>.<br /><br />"
-                                            . 'The KSD Team.',"kanzu-support-desk" ),
+                        'message'       => sprintf( __( 'We made every effort to make KSD simple but powerful.<br />'
+                                            . 'Learn how to get even more out of KSD from our rich resources <a href="%s" target="_blank">here</a>.<br /><br />'
+                                            . 'The KSD Team.','kanzu-support-desk' ), 'http://www.kanzucode.com/documentation' ),
                         'channel'       => 'STAFF',
                         'status'        => 'OPEN',
                         'severity'      => 'LOW',
@@ -430,10 +430,10 @@ class KSD_Install {
                     ),
                     array(
                         'subject'       => __( "Get in touch. Seriously","kanzu-support-desk" ),
-                        'message'       => sprintf( __( "%s, this cannot work without you *sob sob*. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>"
-                                            . "What's your experience with Kanzu Support Desk? What do you like? What do you love? What don't you like? What do you want us to fix or improve?<br />"
-                                            . "We'd love to hear from you. <a href='mailto:feedback@kanzucode.com'>Click to send us an email</a><br /><br />"
-                                            . "The KSD Team","kanzu-support-desk"), $display_name ),
+                        'message'       => sprintf( __( '%1$s, this cannot work without you *sob sob*. We sit by our KSD installation hitting refresh constantly (and sipping coffee). Get in touch. <br/>'
+                                            . 'What is your experience with Kanzu Support Desk? What do you like? What do you love? What do you want us to fix or improve?<br />'
+                                            . 'We would love to hear from you. <a href="%2$s">Click to send us an email</a><br /><br />'
+                                            . 'The KSD Team','kanzu-support-desk'), $display_name, 'mailto:feedback@kanzucode.com' ),
                         'channel'       => 'STAFF',
                         'status'        => 'PENDING',
                         'severity'      => 'LOW',
