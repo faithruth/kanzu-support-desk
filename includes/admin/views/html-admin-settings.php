@@ -34,9 +34,9 @@
                 <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("In the ticket view, the 'Recently Updated' & 'Recently resolved' tabs, show tickets updated in last X hours",'kanzu-support-desk')  ;?>"/>
             </div>
             <div class="setting">
-                <label for="show_support_tab"><?php _e( "Show front-end support tab","kanzu-support-desk" ); ?></label>
+                <label for="show_support_tab"><?php _e( "Show support button","kanzu-support-desk" ); ?></label>
                 <input name="show_support_tab"  type="checkbox" <?php checked( $settings['show_support_tab'], "yes" ) ?> value="yes"  />
-                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("Displays a form on the front-end of your site through which your customers can log new tickets",'kanzu-support-desk')  ;?>"/>
+                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("When enabled, shows a support button in the bottom left of your site which your customers can use to log new tickets",'kanzu-support-desk')  ;?>"/>
              </div>
              <div class="setting show_support_tab">
                    <label for="tab_message_on_submit"><?php _e( "Tab message on ticket submission","kanzu-support-desk" ); ?></label>
