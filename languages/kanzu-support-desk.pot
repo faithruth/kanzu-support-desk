@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Kanzu Support Desk 1.5.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-09 22:52+0300\n"
+"POT-Creation-Date: 2015-03-21 12:50+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,38 +202,38 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/class-ksd-install.php:278
+#: includes/class-ksd-install.php:262
 msgid "KSD Customer"
 msgstr ""
 
-#: includes/class-ksd-install.php:345
+#: includes/class-ksd-install.php:329
 msgid "Your support ticket has been received"
 msgstr ""
 
-#: includes/class-ksd-install.php:346
+#: includes/class-ksd-install.php:330
 msgid ""
 "Thank you for getting in touch with us. Your support request has been "
 "opened. Please allow at least 24 hours for a reply."
 msgstr ""
 
-#: includes/class-ksd-install.php:349
+#: includes/class-ksd-install.php:333
 msgid ""
 "Thank you. Your support request has been opened. Please allow at least 24 "
 "hours for a reply."
 msgstr ""
 
-#: includes/class-ksd-install.php:354
+#: includes/class-ksd-install.php:338
 #, php-format
 msgid ""
 "Sorry, an error occurred. If this persists, kindly get in touch with the "
 "site administrator on %s"
 msgstr ""
 
-#: includes/class-ksd-install.php:383
+#: includes/class-ksd-install.php:367
 msgid "Welcome to Kanzu Support Desk."
 msgstr ""
 
-#: includes/class-ksd-install.php:384
+#: includes/class-ksd-install.php:368
 #, php-format
 msgid ""
 "Hi %s,<br />Welcome to the Kanzu Support Desk (KSD) community *cue Happy "
@@ -242,11 +242,11 @@ msgid ""
 "for you to get started!<br /><br />The KSD Team."
 msgstr ""
 
-#: includes/class-ksd-install.php:396
+#: includes/class-ksd-install.php:380
 msgid "Quick Intro to Kanzu Support Desk Features"
 msgstr ""
 
-#: includes/class-ksd-install.php:397
+#: includes/class-ksd-install.php:381
 #, php-format
 msgid ""
 "We arranged a simple walk-through to get you started. From the on-screen "
@@ -256,11 +256,11 @@ msgid ""
 "KSD Team"
 msgstr ""
 
-#: includes/class-ksd-install.php:408
+#: includes/class-ksd-install.php:392
 msgid "KSD Documentation"
 msgstr ""
 
-#: includes/class-ksd-install.php:409
+#: includes/class-ksd-install.php:393
 #, php-format
 msgid ""
 "We made every effort to make KSD simple but powerful.<br />Learn how to get "
@@ -268,22 +268,22 @@ msgid ""
 "\">here</a>.<br /><br />The KSD Team."
 msgstr ""
 
-#: includes/class-ksd-install.php:420
+#: includes/class-ksd-install.php:404
 msgid "KSD Add-ons and other goodies."
 msgstr ""
 
-#: includes/class-ksd-install.php:421
+#: includes/class-ksd-install.php:405
 msgid ""
 "Kanzu Support Desk can go even a notch higher; we have a neat set of add-ons "
 "that power-up your experience. Check out the add-ons tab to get a load of "
 "them!<br /><br />The KSD Team"
 msgstr ""
 
-#: includes/class-ksd-install.php:432
+#: includes/class-ksd-install.php:416
 msgid "Get in touch. Seriously"
 msgstr ""
 
-#: includes/class-ksd-install.php:433
+#: includes/class-ksd-install.php:417
 #, php-format
 msgid ""
 "%1$s, this cannot work without you *sob sob*. We sit by our KSD installation "

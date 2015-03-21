@@ -200,25 +200,9 @@ class KSD_Install {
         private static function create_tables() {
             global $wpdb;        
 		$wpdb->hide_errors();		            
-             
+                //@since 1.5.3 customers table removed
                 require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
                 $kanzusupport_tables = "
-                    		CREATE TABLE `{$wpdb->prefix}kanzusupport_customers` (  
-				`cust_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-				`cust_user_id` BIGINT(20),
-                                `cust_email` VARCHAR(100) NOT NULL,
-				`cust_firstname` VARCHAR(100) ,
-				`cust_lastname` VARCHAR(100),
-				`cust_company_name` VARCHAR(128),
-				`cust_phone_number` VARCHAR(100),
-				`cust_about` TEXT,
-				`cust_account_status` ENUM('ENABLED','DISABLED') DEFAULT 'ENABLED',/*Whether account is enabled or disabled*/
-				`cust_creation_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-				`cust_created_by` BIGINT(20), 
-				`cust_lastmodification_date` TIMESTAMP NULL,
-				`cust_modified_by` BIGINT(20),
-                                UNIQUE ( `cust_email` )
-				);
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
 				`tkt_subject` VARCHAR(512) NOT NULL,                                 
