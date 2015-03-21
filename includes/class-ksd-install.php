@@ -324,6 +324,7 @@ class KSD_Install {
                         /** Tickets **************************************************************/
                     
                         'enable_new_tkt_notifxns'           => "yes",
+                        'enable_notify_on_new_ticket'       => "yes",//@since 1.5.4. Email sent to primary admin on new ticket creation
                         'ticket_mail_from_name'             => $user_info->display_name,//Defaults to the admin display name 
                         'ticket_mail_from_email'            => $user_info->user_email,//Defaults to the admin email
                         'ticket_mail_subject'               => __("Your support ticket has been received","kanzu-support-desk"),

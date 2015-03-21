@@ -748,7 +748,7 @@ class KSD_Admin {
                 //Return a different message based on the channel the request came on
                 $output_messages_by_channel = array();
                 $output_messages_by_channel[ 'STAFF' ] = __("Ticket Logged", "kanzu-support-desk");
-                $output_messages_by_channel[ 'SUPPORT_TAB' ] = $output_messages_by_channel[ 'EMAIL' ] = $settings['tab_message_on_submit'];
+                $output_messages_by_channel[ 'SUPPORT_TAB' ] = $output_messages_by_channel[ 'EMAIL' ] = $settings['ticket_mail_message'];
       
                 //Get the provided email address and use it to check whether the customer's already in the Db
                 $cust_email           = sanitize_email( $_POST[ 'ksd_cust_email' ] );
@@ -761,7 +761,7 @@ class KSD_Admin {
                 if ( $customer_details ){//If the customer's already in the Db, proceed. Get their customer ID
                         $new_ticket->tkt_cust_id = $customer_details->ID;
                 }
-                else{//The customer isn't in the Db. We add them
+                else{//The customer isn't in the Db. Let's add them
                     $new_customer = new stdClass();
                     $new_customer->user_email           = $cust_email;
                     //Check whether one or more than one customer name was provided
@@ -789,6 +789,18 @@ class KSD_Admin {
                 $TC = new KSD_Tickets_Controller();
                 $new_ticket_id = $TC->log_ticket( $new_ticket );
                 $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
+                
+                //If new ticket notifications have been set, inform the primary administrator that a new ticket has been logged @TODO THIS CODE IS SLOW. PROFILE AND IMPROVE IT BEFORE DEPLOYMENT           
+                if ( "yes" == $settings['enable_notify_on_new_ticket'] ){     
+                    // The blogname option is escaped with esc_html on the way into the database in sanitize_option
+                    // we want to reverse this for the plain text arena of emails.
+                    $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
+                    $notify_new_tkt_message  = sprintf(__('New customer support ticket on your site %s:','kanzu-support-desk'), $blog_name) . "\r\n\r\n";
+                    $notify_new_tkt_message .= sprintf(__('Customer E-mail: %s','kanzu-support-desk'), $cust_email) . "\r\n\r\n";
+                    $notify_new_tkt_message .= sprintf(__('%s','kanzu-support-desk'), 'Kanzu Support Desk') . "\r\n";
+                    $notify_new_tkt_subject = sprintf(__('[%s] New Support Ticket'), $blog_name);
+                    $this->send_email( get_option('admin_email'), $notify_new_tkt_message, $notify_new_tkt_subject );  
+                }                    
                 
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && isset($_POST['ksd_send_email'])) ){
                     $this->send_email( $cust_email );
@@ -943,7 +955,7 @@ class KSD_Admin {
                     $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                 }
                 //For a checkbox, if it is unchecked then it won't be set in $_POST
-                $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha");
+                $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket");
                 //Iterate through the checkboxes and set the value to "no" for all that aren't set
                 foreach ( $checkbox_names as $checkbox_name ){
                      $updated_settings[$checkbox_name] = ( !isset ( $_POST[$checkbox_name] ) ? "no" : $updated_settings[$checkbox_name] );
@@ -1259,7 +1271,7 @@ class KSD_Admin {
          public function send_email( $to, $message="new_ticket", $subject=null ){
              $settings = Kanzu_Support_Desk::get_settings();             
              switch ( $message ):
-                 case 'new_ticket'://For new tickets
+                 case 'new_ticket'://For new ticket auto-replies
                      $subject   = $settings['ticket_mail_subject'];
                      $message   = $settings['ticket_mail_message'];                     
              endswitch;

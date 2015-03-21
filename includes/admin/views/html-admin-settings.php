@@ -4,9 +4,9 @@
     <h3><?php _e("General","kanzu-support-desk"); ?> </h3>
         <div>
              <div class="setting">
-                <label for="enable_new_tkt_notifxns"><?php _e( "Enable new ticket notifications","kanzu-support-desk" ); ?></label>
+                <label for="enable_new_tkt_notifxns"><?php _e( "Enable auto-reply","kanzu-support-desk" ); ?></label>
                 <input name="enable_new_tkt_notifxns"  type="checkbox" <?php checked( $settings['enable_new_tkt_notifxns'], "yes" ) ?> value="yes"  />
-                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("If this is enabled, an email is sent to the customer's email address for all new tickets logged from the front-end",'kanzu-support-desk')  ;?>"/>
+                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("If enabled, a reply is sent to the customer's email address when he/she logs a new ticket on your site",'kanzu-support-desk')  ;?>"/>
              </div>
              <div class="enable_new_tkt_notifxns">
                 <div class="setting">
@@ -28,6 +28,11 @@
                    <textarea cols="60" rows="4" name="ticket_mail_message"><?php echo $settings['ticket_mail_message']; ?></textarea>
                </div>
              </div><!--.enable_new_tkt_notifxns-->
+             <div class="setting">
+                <label for="enable_notify_on_new_ticket"><?php _e( "Enable new ticket notifications","kanzu-support-desk" ); ?></label>
+                <input name="enable_notify_on_new_ticket"  type="checkbox" <?php checked( $settings['enable_notify_on_new_ticket'], "yes" ) ?> value="yes"  />
+                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("If enabled, an email is sent to the primary administrator's email address whenever a new ticket is logged",'kanzu-support-desk')  ;?>"/>
+             </div>
             <div class="setting">
                 <label for="recency_definition"><?php _e( "Recency Definition ( In Hours )","kanzu-support-desk" ); ?></label>
                 <input type="text" value="<?php echo $settings['recency_definition']; ?>" size="15" name="recency_definition" />
@@ -38,10 +43,12 @@
                 <input name="show_support_tab"  type="checkbox" <?php checked( $settings['show_support_tab'], "yes" ) ?> value="yes"  />
                 <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("When enabled, shows a support button in the bottom left of your site which your customers can use to log new tickets",'kanzu-support-desk')  ;?>"/>
              </div>
+             <!--@since 1.5.4 Setting removed
              <div class="setting show_support_tab">
                    <label for="tab_message_on_submit"><?php _e( "Tab message on ticket submission","kanzu-support-desk" ); ?></label>
                    <textarea cols="60" rows="4" name="tab_message_on_submit"><?php echo $settings['tab_message_on_submit']; ?></textarea>
              </div>
+             -->
                 <div class="setting">
                     <label for="auto_assign_user"><?php _e("Auto-assign new tickets to","kanzu-support-desk"); ?></label>
                     <select name="auto_assign_user">
@@ -63,7 +70,7 @@
             <div class="setting">
                 <label for="enable_recaptcha"><?php _e( "Enable Google reCAPTCHA","kanzu-support-desk" ); ?></label>                
                 <input name="enable_recaptcha"  type="checkbox" <?php checked( $settings['enable_recaptcha'], "yes" ) ?> value="yes"  />
-                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("Add Google reCAPTCHA to front-end forms to prevent spam",'kanzu-support-desk')  ;?>"/>
+                <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL."/assets/images/help.png";?>" class="help_tip" title="<?php _e("Add Google reCAPTCHA to your site's forms to prevent spam",'kanzu-support-desk')  ;?>"/>
              </div>
              <div class="setting enable_recaptcha">
                 <label for="recaptcha_site_key"><?php _e( "Google reCAPTCHA Site Key","kanzu-support-desk" ); ?></label>                
