@@ -1596,3 +1596,11 @@ span.feedback_note{
     height:16px;
     width:3%;
 }
+/*KSD Tickets importer*/
+.ksd-importer-fields {
+  background-color: #ccc;
+  font-size: 0.9em;
+  list-style-position: inside;
+  margin: 0;
+  padding: 1em;
+}

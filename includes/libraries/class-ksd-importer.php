@@ -1,13 +1,13 @@
  <?php
  /**
-  * Imports tickets. 
+  * Imports tickets into KSD
   *
   * @package   Kanzu_Support_Desk
   * @author    Kanzu Code <feedback@kanzucode.com>
   * @license   GPL-2.0+
   * @link      http://kanzucode.com
   * @copyright 2014 Kanzu Code
-  * @since     1.5.2
+  * @since     1.5.4
   */
   
   class KSD_Importer{  
@@ -15,104 +15,38 @@
       public function __construct(){
 
       }
-
+      
+      /**
+       * Handle the importation
+       */
       public function dispatch ( ) {
-         $this->header();
 
          $this->handle_import();
 
          $this->showform();   
-
-         $this->footer();
       }
 
-      
-
-      /**
-       * Prints import page header/title.
-       * 
-       * @since 1.4.0
-       */
-      public function header ( ) {
-
-             echo '<div class="wrap">';
-             screen_icon();
-             echo '<h2>' . __( 'KSD Tickets Importer', 'ksd-importer' ) . '</h2>';
-
-      }
-
-         /**
-          * Footer
-          * 
-          * @since 1.4.0 
-          */
-         public function footer ( ) {
-              echo '</div>';
-         } 
+ 
 
          /**
           * Display the upload form.
-          * @since 1.4.0
+          * @since 1.5.4
           */
          public  function showform ( ) {
-             echo '
-                  At the moment only csv files are supported. The file  should have the fields below in the same order as they are listed.
-                 <br /> 
-                 <ol>
-                     <li>subject</li>
-                     <li>message</li>
-                     <li>channel=STAFF|FACEBOOK|TWITTER|SUPPORT_TAB|EMAIL|CONTACT_FORM</li>
-                     <li>status=NEW|OPEN|ASSIGNED|PENDING|RESOLVED</li>
-                     <li>severity=URGENT|HIGH|MEDIUM|LOW</li>
-                     <li>time_logged=DD-MM-YYYY HH24:MI:SS</li>
-                     <li>customer_email</li>
-                     <li>assigned_by=email</li>
-                     <li>assigned_to=email</li>
-                     <li>time_last_updated=DD-MM-YYYY HH24:MI:SS</li>
-                     <li>private_note</li>
-                 </ol>
-
-                 <br />
-                 Sample import
-                 <div>
-                 <pre>
- Ticket subject, Ticket Message,STAFF,NEW,HIGH,21-02-2015 14:00 09:00:00,customer@email.com,admin@yourcompany.com,21-02-2015 14:00 09:00:00,Please update the client on progress every 1hr.
-
- Ticket subject, Ticket Message,STAFF,NEW,HIGH,21-02-2015 14:00 09:00:00,customer@email.com,admin@yourcompany.com,21-02-2015 14:00 09:00:00,Please update the client on progress every 1hr.
-
- Ticket subject, Ticket Message,STAFF,NEW,HIGH,21-02-2015 14:00 09:00:00,customer@email.com,admin@yourcompany.com,21-02-2015 14:00 09:00:00,Please update the client on progress every 1hr.
-                     </pre>
-                 </div>
-
-                 <form action="?import=ksdimporter" method="post"enctype="multipart/form-data" >
-                 <div>
-                    <div class="">
-                        <label for="ksd_mail_server">Select file to import </label>
-                        <input type="file" size="30" name="ksdimport" />
-                    </div>
-
-                    <div class="">
-                        <input class="button-small button button-primary ksd-button" type="submit" name="submit" value="Import" />
-                    </div> 
-
-                 </div>   
-                 </form>
-                  ';
+            include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-tickets-importer.php');      
          }
 
-         
 
-         
 
          /**
           * Parses cvs file and imports the tickets in the appropriate table.
           *
-          * @since 1.4.0 
+          * @since 1.5.4 
           */
 
-         function handle_import ( ) {
+         public function handle_import ( ) {
 
-             if ( ! isset($_POST['submit']) ) return;
+             if ( ! isset($_POST['ksd-import-submit']) ) return;
 
              if ( empty( $_FILES ) ) return; //@TODO: Add notice on error             
 
@@ -152,10 +86,3 @@
          }
 
   }
-
-  
-
-  
-
-  ?>
-

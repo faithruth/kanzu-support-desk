@@ -1353,20 +1353,21 @@ class KSD_Admin {
         }
         
         /**
+         * Initialize the KSD importer; it enables users to import
+         * tickets into KSD
          * ksd_importer_init
-         * @since   1.5.2
+         * @since   1.5.4
          */
-        public static function ksd_importer_init () {
+        public function ksd_importer_init () {
                 
-            $id     = 'ksdimporter';
-            $name   = 'KSD Importer';
-            $description = 'Import support tickets into Kanzu Support Desk plugin.';
+            $id             = 'ksdimporter';
+            $name           = __( 'KSD Importer', 'kanzu-support-desk' );
+            $description    = __( 'Import support tickets into Kanzu Support Desk plugin.', 'kanzu-support-desk' );
             
             include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-importer.php" );  
             $importer = new KSD_Importer ( ) ;
             $callback    = array( $importer, 'dispatch' );
-            register_importer ( $id, $name, $description, $callback ) ;
- 
+            register_importer ( $id, $name, $description, $callback ) ; 
         }
         
   
