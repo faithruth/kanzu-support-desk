@@ -65,6 +65,13 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_send_feedback', array( $this, 'send_feedback' ));  
                 add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ));              
                 add_action( 'wp_ajax_ksd_get_notifications', array( $this, 'get_notifications' ));  
+
+                //Register KSD tickets importer
+                add_action( 'admin_init', array( $this, 'ksd_importer_init' ) );
+                
+                //Add KSD Importer to tool box
+                add_action( 'tool_box',  array( $this, 'add_importer_to_toolbox' ) );
+
 	}
 	
 
@@ -1328,6 +1335,40 @@ class KSD_Admin {
             $active_addons['ksd-mail'] =  'ksd-mail/ksd-mail.php'; 
             return $active_addons;
         }
+        
+        
+        /**
+         * Add KSD tickets import to the wordpress tools toolbox
+         * @since   1.5.2
+         */
+        public static function add_importer_to_toolbox () { 
+            echo '
+                <div class="tool-box">
+                    <h3 class="title"> ' . __('KSD Importer') . '</h3>
+                     <p>
+                     Import tickets into Kanzu Support Desk. Use the  <a href="?import=ksdimporter">KSD Importer </a>
+                     </p>
+                </div>
+            ';
+        }
+        
+        /**
+         * ksd_importer_init
+         * @since   1.5.2
+         */
+        public static function ksd_importer_init () {
+                
+            $id     = 'ksdimporter';
+            $name   = 'KSD Importer';
+            $description = 'Import support tickets into Kanzu Support Desk plugin.';
+            
+            include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-importer.php" );  
+            $importer = new KSD_Importer ( ) ;
+            $callback    = array( $importer, 'dispatch' );
+            register_importer ( $id, $name, $description, $callback ) ;
+ 
+        }
+        
   
 }
 endif;
