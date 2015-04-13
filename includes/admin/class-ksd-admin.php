@@ -808,15 +808,21 @@ class KSD_Admin {
                     $notify_new_tkt_subject = sprintf(__('[%s] New Support Ticket'), $blog_name);
                     $this->send_email( get_option('admin_email'), $notify_new_tkt_message, $notify_new_tkt_subject );  
                 }                    
+
+                //Add this event to the assignments table
+                if ( isset( $new_ticket->tkt_assigned_to ) ) {
+                    $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by ); 
+                }  
+                //If the ticket was logged by using the import feature, end the party here
+                if( isset( $_POST['ksd_tkt_imported'] ) ){
+                   do_action( 'ksd_new_ticket_imported', $_POST['ksd_tkt_imported_id'], $new_ticket_status );
+                   return;
+                }
                 
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && isset($_POST['ksd_send_email'])) ){
                     $this->send_email( $cust_email );
                 }
-                //Add this event to the assignments table
-                if ( isset( $new_ticket->tkt_assigned_to ) ) {
-                    $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by ); 
-                }   
-
+                
                 //For add-ons to do something after new ticket is added. We share the ID and the final status
                 if ( isset( $_POST['ksd_addon_tkt_id'] ) ) {                    
                     do_action( 'ksd_new_ticket_logged', $_POST['ksd_addon_tkt_id'], $new_ticket_status );
@@ -1362,7 +1368,7 @@ class KSD_Admin {
                 
             $id             = 'ksdimporter';
             $name           = __( 'KSD Importer', 'kanzu-support-desk' );
-            $description    = __( 'Import support tickets into Kanzu Support Desk plugin.', 'kanzu-support-desk' );
+            $description    = __( 'Import support tickets into the Kanzu Support Desk plugin.', 'kanzu-support-desk' );
             
             include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-importer.php" );  
             $importer = new KSD_Importer ( ) ;
