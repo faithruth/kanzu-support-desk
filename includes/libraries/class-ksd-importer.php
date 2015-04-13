@@ -46,9 +46,13 @@
 
          public function handle_import ( ) {
 
-             if ( ! isset($_POST['ksd-import-submit']) ) return;
+             if ( ! isset( $_POST['ksd-import-submit']) ) return;
 
-             if ( empty( $_FILES ) ) return; //@TODO: Add notice on error             
+             if ( empty( $_FILES ) ) return; //@TODO: Add notice on error      
+             
+            if ( ! wp_verify_nonce( $_POST['ksd-ticket-import-nonce'], 'ksd-ticket-importer' ) ){
+                die ( __('Busted!','kanzu-support-desk') );
+            }
 
              $file = $_FILES['ksdimport']['tmp_name'];
 
