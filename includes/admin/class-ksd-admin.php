@@ -71,7 +71,9 @@ class KSD_Admin {
                 
                 //Add KSD Importer to tool box
                 add_action( 'tool_box',  array( $this, 'add_importer_to_toolbox' ) );
-
+                
+                //Get final status for ticket logged by importation
+                add_action( 'ksd_new_ticket_imported', array( $this, 'new_ticket_imported', 10, 2 ) );
 	}
 	
 
@@ -792,6 +794,10 @@ class KSD_Admin {
                    $new_ticket->tkt_time_logged = sanitize_text_field( $_POST[ 'ksd_tkt_time_logged' ] );
                }
                
+               //Log private note if it exists
+                if (isset( $_POST[ 'ksd_tkt_private_note' ] ) ){
+                   $new_ticket->tkt_private_note = sanitize_text_field( $_POST[ 'ksd_tkt_private_note' ] );
+               }
                
                 $TC = new KSD_Tickets_Controller();
                 $new_ticket_id = $TC->log_ticket( $new_ticket );
@@ -1347,7 +1353,7 @@ class KSD_Admin {
          * Add KSD tickets import to the wordpress tools toolbox
          * @since   1.5.2
          */
-        public static function add_importer_to_toolbox () { 
+        public  function add_importer_to_toolbox () { 
             echo '
                 <div class="tool-box">
                     <h3 class="title"> ' . __('KSD Importer') . '</h3>
@@ -1356,6 +1362,16 @@ class KSD_Admin {
                      </p>
                 </div>
             ';
+        }
+       
+        /**
+         * Hand this over to the function in the Import class
+         * @param int $imported_ticket_id
+         * @param int $logged_ticket_id
+         */
+        public function new_ticket_imported( $imported_ticket_id, $logged_ticket_id ){
+            $importer = new KSD_Importer () ;   
+            $importer->new_ticket_imported( $imported_ticket_id, $logged_ticket_id );
         }
         
         /**

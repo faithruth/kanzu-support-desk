@@ -19,8 +19,7 @@
       private $import_response;
 
       public function __construct(){
-        //Get final status for ticket logged by importation
-        add_action( 'ksd_new_ticket_imported', array( $this, 'new_ticket_imported', 10, 2 ) );
+          add_action( 'ksd_new_ticket_imported', array( $this, 'new_ticket_imported', 10, 2 ) );
       }
       
       /**
@@ -98,7 +97,7 @@
                  $new_ticket->tkt_message       = $row[1];
                  $new_ticket->cust_fullname     = $row[2];
                  $new_ticket->cust_email        = $row[3]; 
-                 if( !is_email( $row[3] ) ){
+                 if( !is_email( trim( $row[3] ) ) ){
                     $this->import_response[$line_number] = __( "Invalid Email address {$row[3]}", "kanzu-support-desk" );   
                     continue;
                  }
@@ -106,21 +105,21 @@
                  if ( isset( $row[4] ) ){
                     $new_ticket->tkt_channel    = $row[4];
                  }
-                 if( isset( $row[4] ) && ! preg_match('/STAFF|FACEBOOK|TWITTER|SUPPORT_TAB|EMAIL|CONTACT_FORM/',$row[4]) ){
+                 if( isset( $row[4] ) && !empty ( $row[4] ) && ! preg_match('/STAFF|FACEBOOK|TWITTER|SUPPORT_TAB|EMAIL|CONTACT_FORM/',$row[4]) ){
                      $this->import_response[$line_number] = __( "Invalid channel {$row[4]}", "kanzu-support-desk" );   
                      continue;
                  }
                  if ( isset( $row[5] ) ){
                     $new_ticket->tkt_status    = $row[5];
                  }
-                 if( isset( $row[5] ) && ! preg_match('/NEW|OPEN|ASSIGNED|PENDING|RESOLVED/',$row[5]) ){
+                 if( isset( $row[5] ) && !empty ( $row[5] ) && ! preg_match('/NEW|OPEN|ASSIGNED|PENDING|RESOLVED/',$row[5]) ){
                      $this->import_response[$line_number] = __( "Invalid status {$row[5]}", "kanzu-support-desk" );   
                      continue;
                  }
                  if ( isset( $row[6] ) ){
                     $new_ticket->tkt_severity    = $row[6];
                  }
-                 if( isset( $row[6] ) && ! preg_match('/URGENT|HIGH|MEDIUM|LOW/',$row[6]) ){
+                 if( isset( $row[6] ) && !empty ( $row[6] ) && ! preg_match('/URGENT|HIGH|MEDIUM|LOW/',$row[6]) ){
                      $this->import_response[$line_number] = __( "Invalid severity {$row[6]}", "kanzu-support-desk" );   
                      continue;
                  }
@@ -145,7 +144,7 @@
             if ( $line_number == 0 ){
                 $this->import_response[0]   =   __( "The specified file is empty", "kanzu-support-desk" );
             }
-            fclose($file_handle);
+            fclose( $file_handle );
             //All done. Let's display all the responses
             $this->display_import_response();
          }

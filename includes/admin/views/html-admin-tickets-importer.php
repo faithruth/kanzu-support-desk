@@ -25,7 +25,7 @@
       $ksd_importer_fields['severity']['values'] = "URGENT,HIGH,MEDIUM,LOW";                                              
       $ksd_importer_fields['severity']['default'] =   "LOW";                                                
       $ksd_importer_fields['severity']['mandatory'] =  "No";        
-      $ksd_importer_fields['time_logged']['values'] = "DD-MM-YYYY HH24:MI:SS";                                              
+      $ksd_importer_fields['time_logged']['values'] = "DD-MM-YYYY HH:MI:SS";                                              
       $ksd_importer_fields['time_logged']['default'] =   "Current time";                                                
       $ksd_importer_fields['time_logged']['mandatory'] =  "No";
       $ksd_importer_fields['private_note']['values'] = "Ticket private note";                                              
@@ -60,10 +60,10 @@
     <p>
      Sample file input:
         <pre>
-    Ticket subject, This is the ticket message, John Doe, customer@email.com, STAFF, NEW, HIGH,21-02-2015 14:00 09:00:00,Please update the client on progress every 1hr.
+    Ticket subject, This is the ticket message, John Doe, customer@email.com, STAFF, NEW, HIGH,21-02-2015 09:00:00,Please update the client on progress every 1hr.
     Ticket subject, Ticket message, Jonathan Doe, customer@email.com
     Ticket subject, Ticket message, Jonathan Doe, customer@email.com,,,MEDIUM
-    Ticket subject, Ticket message, Jane Doe, the.customer@email.com, EMAIL, OPEN, URGENT,21-02-2015 14:00 09:00:00,Please update the client on progress every 1hr.
+    Ticket subject, Ticket message, Jane Doe, the.customer@email.com, EMAIL, OPEN, URGENT,21-02-2015 09:00:00,Please update the client on progress every 1hr.
         </pre>
     </p>
     <p>NB: Non-mandatory fields can be left blank like in lines 2 and 3 in the sample above</p>
