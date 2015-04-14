@@ -19,7 +19,8 @@
       private $import_response;
 
       public function __construct(){
-          add_action( 'ksd_new_ticket_imported', array( $this, 'new_ticket_imported', 10, 2 ) );
+          //After a ticket is successfully imported, this action is called
+          add_action( 'ksd_new_ticket_imported', array( $this, 'new_ticket_imported' ) );
       }
       
       /**
@@ -152,15 +153,16 @@
          /**
           * Called when an imported ticket is logged. Receives the ticket ID used to identify
           * the ticket in the importer and then the new ticket ID assigned to it in the db
-          * @param type $imported_ticket_id Ticket ID in the importer
-          * @param type $logged_ticket_id New ticket ID assigned in the Db
+          * @param Array $imported_ticket_array Array with two items. The first item is the line number
+          *                                     of the ticket in the uploaded file, the second is the ID assigned to
+          *                                     the new ticket in the Db e.g. $imported_ticket_array = array( 1 , 56 )
           */
-         public function new_ticket_imported( $imported_ticket_id, $logged_ticket_id ){
-            if( $logged_ticket_id > 0 ){ //Ticket logged successfully  
-                $this->import_response['success'][$imported_ticket_id] = __( "Ticket logged successfully", "kanzu-support-desk" );
+         public function new_ticket_imported( $imported_ticket_array ){
+            if( $imported_ticket_array[1] > 0 ){ //Ticket logged successfully  
+                $this->import_response['success'][$imported_ticket_array[0]] = __( "Ticket logged successfully", "kanzu-support-desk" );
             }
             else{
-                $this->import_response[$imported_ticket_id] = __( "An unexpected error occurred. Ticket not logged", "kanzu-support-desk" );  
+                $this->import_response[$imported_ticket_array[0]] = __( "An unexpected error occurred. Ticket not logged", "kanzu-support-desk" );  
             }
          }
          
@@ -171,11 +173,12 @@
           */
          private function display_import_response(){
             foreach( $this->import_response as $line_number => $response ){
-                if ( isset( $response['success']) ){
-                    echo "<div class='updated'>Line {$line_number} {$response['success']}</div>";//@TODO Internalize this
+                if ( is_array( $response ) ){
+                    $total_successful = count($response);
+                    echo "<div class='updated'>{$total_successful} ticket(s) logged successfully</div>";//@TODO Internalize this
                 }
                 else{
-                    echo "<div class='error'>{$response} on line {$line_number}</div>";//@TODO Internalize this
+                    echo "<div class='error'>{$response} on line {$line_number}. Ticket not logged</div>";//@TODO Internalize this
                 }
             } 
          }

@@ -821,7 +821,7 @@ class KSD_Admin {
                 }  
                 //If the ticket was logged by using the import feature, end the party here
                 if( isset( $_POST['ksd_tkt_imported'] ) ){
-                   do_action( 'ksd_new_ticket_imported', $_POST['ksd_tkt_imported_id'], $new_ticket_status );
+                   do_action( 'ksd_new_ticket_imported', array( $_POST['ksd_tkt_imported_id'], $new_ticket_id ) );
                    return;
                 }
                 
@@ -831,7 +831,7 @@ class KSD_Admin {
                 
                 //For add-ons to do something after new ticket is added. We share the ID and the final status
                 if ( isset( $_POST['ksd_addon_tkt_id'] ) ) {                    
-                    do_action( 'ksd_new_ticket_logged', $_POST['ksd_addon_tkt_id'], $new_ticket_status );
+                    do_action( 'ksd_new_ticket_logged', $_POST['ksd_addon_tkt_id'], $new_ticket_id );
                 }
                 //If this was initiated by the email add-on, end the party here
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "EMAIL") ){
