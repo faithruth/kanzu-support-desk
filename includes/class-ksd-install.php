@@ -170,7 +170,7 @@ class KSD_Install {
             $wpdb->hide_errors();
             $dbChanges = array();//Holds all DB change queries
             $sanitized_version =  str_replace('.', '', $previous_version) ;
-            if( (int) $sanitized_version < 150 ){//If the previous version is less than 1.5.0, make some changes. 1.5.0 marked a change in a no. of things
+            if( (int) $sanitized_version < 150 ){//@since 1.5.4 If the previous version is less than 1.5.0, make some changes. 1.5.0 marked a change in a no. of things
                 //Add 'NEW' to tkt_status ENUM, change the default tkt_status from 'OPEN' to 'NEW'
                 $dbChanges[]="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_status` `tkt_status` ENUM('NEW','OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'NEW';";
 
