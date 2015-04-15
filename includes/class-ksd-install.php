@@ -162,24 +162,29 @@ class KSD_Install {
          * Note that any changes to the DB are reflected by an increment in the Db number
          * @param {string} $previous_version The previous version
          * @since 1.2.0
+         * @TODO Update this to be even more version conscious
+         * NOTE: ALWAYS UPDATE THE DB VERSION IF YOU ALTER ANY OF THE TABLES
          */
         public function upgrade_plugin( $previous_version ){
             global $wpdb;  
-            $wpdb->hide_errors();	
-            //@since 1.5.0 Switch case based on target version removed. @TODO Update this to be version conscious
+            $wpdb->hide_errors();
             $dbChanges = array();//Holds all DB change queries
-            //Add 'NEW' to tkt_status ENUM, change the default tkt_status from 'OPEN' to 'NEW'
-            $dbChanges[]="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_status` `tkt_status` ENUM('NEW','OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'NEW';";
-            
-            //Drop the foreign key constraint. With it, the KSD user won't be able to delete WP users
-            $dbChanges[]="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` DROP FOREIGN KEY `tkts_custid_fk`;";            
-            
-            //Change tkt_cust_id's attributes to match those of WP_users.ID
-            $dbChanges[]="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_cust_id` `tkt_cust_id` BIGINT(20) UNSIGNED NOT NULL;";
-            
-            //Create new roles
-            self::create_roles();            
-       
+            $sanitized_version =  str_replace('.', '', $previous_version) ;
+            if( (int) $sanitized_version < 150 ){//If the previous version is less than 1.5.0, make some changes. 1.5.0 marked a change in a no. of things
+                //Add 'NEW' to tkt_status ENUM, change the default tkt_status from 'OPEN' to 'NEW'
+                $dbChanges[]="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_status` `tkt_status` ENUM('NEW','OPEN','ASSIGNED','PENDING','RESOLVED') DEFAULT 'NEW';";
+
+                //Drop the foreign key constraint. With it, the KSD user won't be able to delete WP users
+                $dbChanges[]="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` DROP FOREIGN KEY `tkts_custid_fk`;";            
+
+                //Change tkt_cust_id's attributes to match those of WP_users.ID
+                $dbChanges[]="ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_cust_id` `tkt_cust_id` BIGINT(20) UNSIGNED NOT NULL;";
+
+                //Create new roles
+                self::create_roles();    
+                //Migrate customers from our customers table to WP_users. We do this  after deleting the foreign key
+                $this->move_customers_to_wp_users(); 
+            }            
             if( count( $dbChanges ) > 0 ){  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
                                             //how strict and verbose the dbDelta alternative is. We'd
                                             //need to rewrite CREATE table statements for dbDelta.
@@ -187,9 +192,6 @@ class KSD_Install {
                         $wpdb->query( $query );     
                   }
             }
-            //Migrate customers from our customers table to WP_users. We do this  after deleting the foreign key
-            $this->move_customers_to_wp_users();     
-
         }
  
        /**
