@@ -65,6 +65,7 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_send_feedback', array( $this, 'send_feedback' ));  
                 add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ));              
                 add_action( 'wp_ajax_ksd_get_notifications', array( $this, 'get_notifications' ));  
+                add_action( 'wp_ajax_ksd_notify_new_ticket', array( $this, 'notify_new_ticket' ));  
 
                 //Register KSD tickets importer
                 add_action( 'admin_init', array( $this, 'ksd_importer_init' ) );
@@ -73,7 +74,8 @@ class KSD_Admin {
                 add_action( 'tool_box',  array( $this, 'add_importer_to_toolbox' ) );
                 
                 //Get final status for ticket logged by importation
-                add_action( 'ksd_new_ticket_imported', array( $this, 'new_ticket_imported', 10, 2 ) );
+                add_action( 'ksd_new_ticket_imported', array( $this, 'new_ticket_imported', 10, 2 ) );       
+                
 	}
 	
 
@@ -802,19 +804,7 @@ class KSD_Admin {
                 $TC = new KSD_Tickets_Controller();
                 $new_ticket_id = $TC->log_ticket( $new_ticket );
                 $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
-                
-                //If new ticket notifications have been set, inform the primary administrator that a new ticket has been logged @TODO THIS CODE IS SLOW. PROFILE AND IMPROVE IT BEFORE DEPLOYMENT           
-                if ( "yes" == $settings['enable_notify_on_new_ticket'] ){     
-                    // The blogname option is escaped with esc_html on the way into the database in sanitize_option
-                    // we want to reverse this for the plain text arena of emails.
-                    $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
-                    $notify_new_tkt_message  = sprintf(__('New customer support ticket on your site %s:','kanzu-support-desk'), $blog_name) . "\r\n\r\n";
-                    $notify_new_tkt_message .= sprintf(__('Customer E-mail: %s','kanzu-support-desk'), $cust_email) . "\r\n\r\n";
-                    $notify_new_tkt_message .= sprintf(__('%s','kanzu-support-desk'), 'Kanzu Support Desk') . "\r\n";
-                    $notify_new_tkt_subject = sprintf(__('[%s] New Support Ticket'), $blog_name);
-                    $this->send_email( get_option('admin_email'), $notify_new_tkt_message, $notify_new_tkt_subject );  
-                }                    
-
+            
                 //Add this event to the assignments table
                 if ( isset( $new_ticket->tkt_assigned_to ) ) {
                     $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by ); 
@@ -825,6 +815,7 @@ class KSD_Admin {
                    return;
                 }
                 
+               //Notify the customer that their ticket has been logged 
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "SUPPORT_TAB") || ( $tkt_channel  ==  "STAFF" && isset($_POST['ksd_send_email'])) ){
                     $this->send_email( $cust_email );
                 }
@@ -835,7 +826,8 @@ class KSD_Admin {
                 }
                 //If this was initiated by the email add-on, end the party here
                 if ( ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "EMAIL") ){
-                     $this->send_email( $cust_email );
+                     $this->send_email( $cust_email );//Send an auto-reply to the customer
+                     $this->notify_new_ticket( $cust_email, $new_ticket->tkt_subject );//Notify the primary administrator that a new ticket exists
                      return;
                 }
                 
@@ -1261,6 +1253,38 @@ class KSD_Admin {
             Kanzu_Support_Desk::update_settings( $ksd_settings );
             echo json_encode( 1 );
             die();            
+         }
+         
+         /**
+          * Notify the primary administrator that a new ticket has been logged  
+          * The wp_mail call in send_mail takes a while (about 5s in our tests)
+          * so for tickets logged in the admin side, we call this using AJAX     
+          * @param string $customer_email The email of the customer for whom the new ticket has been created
+          * @param string $ticket_subject The new ticket's subject   
+          * @since 1.5.5
+          */
+         public function notify_new_ticket( $customer_email = null, $ticket_subject = null ){
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                  die ( __('Busted!','kanzu-support-desk') );                         
+            }
+            $ksd_settings = Kanzu_Support_Desk::get_settings(); 
+            //If new ticket notifications have been set, inform the primary administrator that a new ticket has been logged          
+            if ( "yes" == $ksd_settings['enable_notify_on_new_ticket'] ){     
+                // The blogname option is escaped with esc_html on the way into the database in sanitize_option
+                // we want to reverse this for the plain text arena of emails.
+                $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
+                $notify_new_tkt_message  = sprintf(__('New customer support ticket on your site %s:','kanzu-support-desk'), $blog_name) . "\r\n\r\n";
+                if( !is_null( $customer_email ) ){
+                    $notify_new_tkt_message .= sprintf(__('Customer E-mail: %s','kanzu-support-desk'), $customer_email ) . "\r\n\r\n";   
+                }
+                if( !is_null( $ticket_subject ) ){
+                    $notify_new_tkt_message .= sprintf(__('Ticket Subject: %s','kanzu-support-desk'), $ticket_subject ) . "\r\n\r\n";   
+                }
+                $notify_new_tkt_message .= sprintf(__('%s','kanzu-support-desk'), 'Kanzu Support Desk') . "\r\n";
+                $notify_new_tkt_subject = sprintf(__('[%s] New Support Ticket'), $blog_name);
+                $this->send_email( get_option('admin_email'), $notify_new_tkt_message, $notify_new_tkt_subject );  
+                }
+            die();//IMPORTANT. Shouldn't be left out
          }
          
          /**

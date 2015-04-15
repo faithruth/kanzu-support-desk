@@ -180,7 +180,7 @@
                     echo "<div class='updated'>{$success_message}</div>"; 
                 }
                 else{
-                    $error_string = sprintf( __( '%1$d on line %2$d. Ticket not logged','kanzu-support-desk' ),$response, $line_number );
+                    $error_string = sprintf( __( '%1$s on line %2$d. Ticket not logged','kanzu-support-desk' ),$response, $line_number );
                     echo "<div class='error'>{$error_string}</div>"; 
                 }
             } 

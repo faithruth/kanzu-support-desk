@@ -63,7 +63,7 @@
           <?php _e( 'Ticket subject, This is the ticket message, John Doe, customer@email.com, STAFF, NEW, HIGH,21-02-2015 09:00:00,Please update the client on progress every 1hr.', 'kanzu-support-desk');?>            
           <?php  _e( 'Ticket subject, Ticket message, Jonathan Doe, customer@email.com', 'kanzu-support-desk'); ?>            
           <?php  _e( 'Ticket subject, Ticket message, Jonathan Doe, customer@email.com,,,MEDIUM', 'kanzu-support-desk');?>            
-          <?php  _e( 'Ticket subject, Ticket message, Jane Doe, the.customer@email.com, EMAIL, OPEN, URGENT,21-02-2015 09:00:00,Please update the client on progress every 1hr.', 'kanzu-support-desk');?>
+          <?php  _e( 'Ticket subject, Ticket message, Jane Doe, the.customer@email.com, EMAIL, OPEN, URGENT,21-02-2015 09:00:00,Checked his profile and it is fine', 'kanzu-support-desk');?>
         </pre>
     </p>
     <p><?php _e( 'NB: Non-mandatory fields can be left blank like in lines 2 and 3 in the sample above', 'kanzu-support-desk');?></p>
