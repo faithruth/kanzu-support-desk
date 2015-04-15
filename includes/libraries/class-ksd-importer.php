@@ -56,12 +56,14 @@
              if ( ! isset( $_POST['ksd-import-submit']) ) return;
              $file_name = $_FILES['ksdimport']['name'];
              if ( empty( $file_name ) ) {
-                 _e( "<div class='error'>No file uploaded! Please upload a file below</div>","kanzu-support-desk");//@TODO Show this as a WP admin notice
+                 $error_string = __( "No file uploaded! Please upload a file below","kanzu-support-desk");
+                 echo "<div class='error'>{$error_string}</div>"; 
                  return;
              } 
              $file_ext = strtolower( end( explode(".", $file_name)));
              if(  !preg_match( '/txt|csv/',$file_ext ) ){
-                _e( "<div class='error'>Invalid file type! Allowed file types are txt and csv</div>","kanzu-support-desk");//@TODO Show this as a WP admin notice
+                 $error_string = __( "Invalid file type! Allowed file types are txt and csv","kanzu-support-desk");
+                 echo "<div class='error'>{$error_string}</div>"; 
                 return;  
              }
              
@@ -99,7 +101,7 @@
                  $new_ticket->cust_fullname     = $row[2];
                  $new_ticket->cust_email        = $row[3]; 
                  if( !is_email( trim( $row[3] ) ) ){
-                    $this->import_response[$line_number] = __( "Invalid Email address {$row[3]}", "kanzu-support-desk" );   
+                    $this->import_response[$line_number] = sprintf( __( "Invalid Email address %s", "kanzu-support-desk" ), $row[3] );   
                     continue;
                  }
                  
@@ -107,28 +109,28 @@
                     $new_ticket->tkt_channel    = $row[4];
                  }
                  if( isset( $row[4] ) && !empty ( $row[4] ) && ! preg_match('/STAFF|FACEBOOK|TWITTER|SUPPORT_TAB|EMAIL|CONTACT_FORM/',$row[4]) ){
-                     $this->import_response[$line_number] = __( "Invalid channel {$row[4]}", "kanzu-support-desk" );   
+                     $this->import_response[$line_number] = sprintf( __( "Invalid channel %s", "kanzu-support-desk" ), $row[4] );   
                      continue;
                  }
                  if ( isset( $row[5] ) ){
                     $new_ticket->tkt_status    = $row[5];
                  }
                  if( isset( $row[5] ) && !empty ( $row[5] ) && ! preg_match('/NEW|OPEN|ASSIGNED|PENDING|RESOLVED/',$row[5]) ){
-                     $this->import_response[$line_number] = __( "Invalid status {$row[5]}", "kanzu-support-desk" );   
+                     $this->import_response[$line_number] = sprintf( __( "Invalid status %s", "kanzu-support-desk" ), $row[5] );   
                      continue;
                  }
                  if ( isset( $row[6] ) ){
                     $new_ticket->tkt_severity    = $row[6];
                  }
                  if( isset( $row[6] ) && !empty ( $row[6] ) && ! preg_match('/URGENT|HIGH|MEDIUM|LOW/',$row[6]) ){
-                     $this->import_response[$line_number] = __( "Invalid severity {$row[6]}", "kanzu-support-desk" );   
+                     $this->import_response[$line_number] = sprintf( __( "Invalid severity %s", "kanzu-support-desk" ), $row[6] );   
                      continue;
                  }
                  if ( isset( $row[7] ) ){
                     try {
                         $new_ticket->tkt_time_logged    = date_format( new DateTime($row[7]), 'Y-m-d h:i:s'); 
                     } catch (Exception $e) {
-                        $this->import_response[$line_number] = __( "Invalid Time logged {$row[7]}. ERROR {$e->getMessage()}", "kanzu-support-desk" ); //@TODO Move variables out of internalization string  
+                        $this->import_response[$line_number] = sprintf( __( "Invalid Time logged %s. ERROR {$e->getMessage()}", "kanzu-support-desk" ), $row[7] );  
                         continue;
                     }                     
                  }
@@ -140,7 +142,7 @@
                  $new_ticket->tkt_imported          = true;//IMPORTANT: Used by the plugin to distinguish this as a ticket created by importing
                  $new_ticket->tkt_imported_id       = $line_number;
                  //Log the ticket
-                 do_action( 'ksd_log_new_ticket', $new_ticket );//After this logging, new_ticket_imported() is called via actions
+                 do_action( 'ksd_log_new_ticket', $new_ticket );//After this logging, $this->new_ticket_imported() is called via actions
             }
             if ( $line_number == 0 ){
                 $this->import_response[0]   =   __( "The specified file is empty", "kanzu-support-desk" );
@@ -158,7 +160,7 @@
           *                                     the new ticket in the Db e.g. $imported_ticket_array = array( 1 , 56 )
           */
          public function new_ticket_imported( $imported_ticket_array ){
-            if( $imported_ticket_array[1] > 0 ){ //Ticket logged successfully  
+            if( $imported_ticket_array[1] > 0 ){ //Ticket logged successfully, populate  $this->import_response['success'] array   
                 $this->import_response['success'][$imported_ticket_array[0]] = __( "Ticket logged successfully", "kanzu-support-desk" );
             }
             else{
@@ -168,17 +170,18 @@
          
          /**
           * Display all responses after completing the import process
-          * //@TODO Add tag to mark errors in $this->import_response so we can display them in red
           * //@TODO Consider putting all the errors in one error response
           */
          private function display_import_response(){
             foreach( $this->import_response as $line_number => $response ){
                 if ( is_array( $response ) ){
-                    $total_successful = count($response);
-                    echo "<div class='updated'>{$total_successful} ticket(s) logged successfully</div>";//@TODO Internalize this
+                    $total_count_successful = count($response);
+                    $success_message  = sprintf( _n( 'One ticket logged successfully', '%d tickets logged successfully', $total_count_successful, 'kanzu-support-desk' ), $total_count_successful );
+                    echo "<div class='updated'>{$success_message}</div>"; 
                 }
                 else{
-                    echo "<div class='error'>{$response} on line {$line_number}. Ticket not logged</div>";//@TODO Internalize this
+                    $error_string = sprintf( __( '%1$d on line %2$d. Ticket not logged','kanzu-support-desk' ),$response, $line_number );
+                    echo "<div class='error'>{$error_string}</div>"; 
                 }
             } 
          }
