@@ -213,7 +213,7 @@ class KSD_Mail_Admin {
         //Display notice if no license is set or if the license is invalid
         if ( ( empty ( $license_key ) || 'invalid' == $mail_settings['ksd_mail_license_status'] ) && KSD_Mail::is_KSD_active() ){
             KSD_Mail::$ksd_mail_admin_notices = array(
-                "error"=> __( "Kanzu Support Desk Mail | You need to provide a valid license key before this plugin can function","kanzu-support-desk" )
+                "error"=> __( 'Kanzu Support Desk Mail | You need to provide a valid license key before this plugin can function', 'kanzu-support-desk')
                 );
         }else{
             //Set-up actions
@@ -318,7 +318,7 @@ class KSD_Mail_Admin {
             ob_start();?>
             <div class="error">
               <p>
-                <?php printf( __( "Kanzu Support Desk Mail | %s", "kanzu-support-desk" ), $errstr ); ?>
+                <?php printf( __( 'Kanzu Support Desk Mail | %s', 'kanzu-support-desk'), $errstr ); ?>
               <p/>
             </div>
             <?php
@@ -593,13 +593,13 @@ class KSD_Mail_Admin {
             try{
                 self::$mailbox->getImapStream( true );
                 if( $isTest ){ //If we were merely testing the connection settings, end the party here. The connection is closed in self::$mailbox's destructor
-                    return array ( 'connected' => true, 'response' => __( "Woohoo! Your connection succeeded! Let's roll","kanzu-support-desk" ) );
+                    return array ( 'connected' => true, 'response' => __( "Woohoo! Your connection succeeded! Let's roll", "kanzu-support-desk") );
                 }
             }catch( Exception $e ) {
                 //Suppress imap fatal errors
                // imap_alerts();
                // imap_errors();
-               return array ( 'connected' => false, 'response' => __( "Sorry, your connection failed. Please change your settings and try again.","kanzu-support-desk" ) );
+               return array ( 'connected' => false, 'response' => __( 'Sorry, your connection failed. Please change your settings and try again.', 'kanzu-support-desk') );
             }
         }
         

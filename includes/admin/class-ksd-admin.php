@@ -355,7 +355,7 @@ class KSD_Admin {
                     $raw_tickets = $this->filter_ticket_view( $filter,$value_parameters );
                     
                     if( empty( $raw_tickets ) ){
-                        $response = __( "Nothing to see here. Great work!","kanzu-support-desk" );
+                        $response = __( 'Nothing to see here. Great work!', 'kanzu-support-desk');
                     }    else{
                         
                         $response = array(
@@ -459,9 +459,9 @@ class KSD_Admin {
                     $tickets = new KSD_Tickets_Controller();		
                     
                     if( $tickets->delete_ticket( $_POST['tkt_id']) ){
-                        echo json_encode(__("Deleted","kanzu-support-desk"));
+                        echo json_encode(__( 'Deleted', 'kanzu-support-desk'));
                     }else{
-                        throw new Exception( __("Failed","kanzu-support-desk") , -1);
+                        throw new Exception( __( 'Failed', 'kanzu-support-desk') , -1);
                     }
                     die();// IMPORTANT: don't leave this out
             }catch( Exception $e){
@@ -490,9 +490,9 @@ class KSD_Admin {
 		$tickets = new KSD_Tickets_Controller();	
                 
                 if( $tickets->update_ticket( $updated_ticket ) ){
-                    echo json_encode( __("Updated","kanzu-support-desk"));
+                    echo json_encode( __( 'Updated', 'kanzu-support-desk'));
                 }else {
-                    throw new Exception( __("Failed","kanzu-support-desk") , -1);
+                    throw new Exception( __( 'Failed', 'kanzu-support-desk') , -1);
                 }
 		die();// IMPORTANT: don't leave this out
             }catch( Exception $e){ 
@@ -521,9 +521,9 @@ class KSD_Admin {
 		$tickets = new KSD_Tickets_Controller();	
                 
                 if( $tickets->update_ticket( $updated_ticket ) ){
-                    echo json_encode( __("Updated","kanzu-support-desk"));
+                    echo json_encode( __( 'Updated', 'kanzu-support-desk'));
                 }else {
-                    throw new Exception( __("Failed","kanzu-support-desk") , -1);
+                    throw new Exception( __( 'Failed', 'kanzu-support-desk') , -1);
                 }
 		die();// IMPORTANT: don't leave this out
             }catch( Exception $e){ 
@@ -553,9 +553,9 @@ class KSD_Admin {
                if( $assign_ticket->update_ticket( $updated_ticket ) ){
                    //Add the event to the assignments table
                    $this->do_ticket_assignment ( $updated_ticket->tkt_id,$updated_ticket->new_tkt_assigned_to, $updated_ticket->new_tkt_assigned_by );
-                   echo json_encode( __("Re-assigned","kanzu-support-desk"));
+                   echo json_encode( __( 'Re-assigned', 'kanzu-support-desk'));
                }else{
-                   throw new Exception( __("Failed","kanzu-support-desk") , -1);
+                   throw new Exception( __( 'Failed', 'kanzu-support-desk') , -1);
                }
                die();// IMPORTANT: don't leave this out
            }catch( Exception $e){
@@ -756,7 +756,7 @@ class KSD_Admin {
 
                 //Return a different message based on the channel the request came on
                 $output_messages_by_channel = array();
-                $output_messages_by_channel[ 'STAFF' ] = __("Ticket Logged", "kanzu-support-desk");
+                $output_messages_by_channel[ 'STAFF' ] = __( 'Ticket Logged', 'kanzu-support-desk');
                 $output_messages_by_channel[ 'SUPPORT_TAB' ] = $output_messages_by_channel[ 'EMAIL' ] = $settings['ticket_mail_message'];
       
                 //Get the provided email address and use it to check whether the customer's already in the Db
@@ -897,15 +897,15 @@ class KSD_Admin {
                         if ( count( $tickets_raw ) < 1 ) {
                             $response = array(
                                 'error'=> array( 
-                                        'message' => __("No logged tickets. Graphing isn't possible","kanzu-support-desk") , 
+                                        'message' => __( "No logged tickets. Graphing isn't possible", "kanzu-support-desk") , 
                                         'code'=> -1 )
                             );
                             echo json_encode($response);	
                             die();// IMPORTANT: don't leave this out
                         }
                         
-                        $y_axis_label = __("Day", "kanzu-support-desk" );
-                        $x_axis_label = __("Ticket Volume", "kanzu-support-desk" );
+                        $y_axis_label = __( 'Day', 'kanzu-support-desk');
+                        $x_axis_label = __( 'Ticket Volume', 'kanzu-support-desk');
                         
 			$output_array = array();
                         $output_array[] = array( $y_axis_label,$x_axis_label );
@@ -989,9 +989,9 @@ class KSD_Admin {
                 
                 if( true === $status){
                     do_action( 'ksd_settings_saved' );
-                   echo json_encode(  __("Settings Updated","kanzu-support-desk"));
+                   echo json_encode(  __( 'Settings Updated', 'kanzu-support-desk'));
                 }else{
-                    throw new Exception(__("Update failed. Please retry.","kanzu-support-desk"  ), -1);
+                    throw new Exception(__( 'Update failed. Please retry.', 'kanzu-support-desk'), -1);
                 }
                 die();
             }catch( Exception $e){
@@ -1016,9 +1016,9 @@ class KSD_Admin {
                 $base_settings = apply_filters( 'ksd_settings', $base_settings );
                 $status = update_option( KSD_OPTIONS_KEY, $base_settings );
                 if( $status){
-                    echo json_encode( __("Settings Reset","kanzu-support-desk") );
+                    echo json_encode( __( 'Settings Reset', 'kanzu-support-desk') );
                 }else{
-                    throw new Exception( __("Reset failed. Please retry","kanzu-support-desk"), -1);
+                    throw new Exception( __( 'Reset failed. Please retry', 'kanzu-support-desk'), -1);
                 }                    
                 die();
             }catch( Exception $e){
@@ -1064,11 +1064,11 @@ class KSD_Admin {
                     $updated_ticket->tkt_id = $_POST['tkt_id'];
                     $updated_ticket->new_tkt_private_note = sanitize_text_field ( stripslashes ( $_POST['tkt_private_note']) );
                     $tickets = new KSD_Tickets_Controller();		
-                    //$status = ( $tickets->update_ticket( $updated_ticket  ) ? __("Noted","kanzu-support-desk") : __("Failed","kanzu-support-desk") );
+                    //$status = ( $tickets->update_ticket( $updated_ticket  ) ? __( 'Noted","kanzu-support-desk") : __("Failed', 'kanzu-support-desk') );
                     if ( $tickets->update_ticket( $updated_ticket  ) ){
-                        echo json_encode( __("Noted","kanzu-support-desk") );
+                        echo json_encode( __( 'Noted', 'kanzu-support-desk') );
                     }else {
-                        throw new Exception(__("Failed","kanzu-support-desk"), -1);
+                        throw new Exception(__( 'Failed', 'kanzu-support-desk'), -1);
                     }
                     //echo json_encode( $status );
                     die();// IMPORTANT: don't leave this out             
@@ -1122,11 +1122,11 @@ class KSD_Admin {
                 "tab"  => 0, //Which tab (Dashboard, tickets, new ticket, etc) to show the pointer on
                 "options" => array(
                     "content" => sprintf( "<span><h3> %s </h3> <p> %s </p><p> %s </p></span>",
-                    __( "Kanzu Support Desk Dashboard" ,"kanzu-support-desk"),
-                    __( "Welcome to Kanzu Support Desk! Thanks for choosing us. Let's see where everything is. First off...","kanzu-support-desk"),
-                    __( "Your dashboard displays your performance statistics","kanzu-support-desk")
+                    __( 'Kanzu Support Desk Dashboard', 'kanzu-support-desk'),
+                    __( "Welcome to Kanzu Support Desk! Thanks for choosing us. Let's see where everything is. First off...", "kanzu-support-desk"),
+                    __( 'Your dashboard displays your performance statistics', 'kanzu-support-desk')
                     ),
-                    "button2"  => __( "Next", "kanzu-support-desk" ),
+                    "button2"  => __( 'Next', 'kanzu-support-desk'),
                     "function" => 'window.location="' . admin_url( 'admin.php?page=wpseo_titles' ) . '";',
                     "position" => array( 'edge' => 'right', 'align' => 'top' )
                     )                
@@ -1209,7 +1209,7 @@ class KSD_Admin {
                     'content' => sprintf( '<span><h3> %s </h3> <p> %s </p><p> %s </p></span>',
                     __( 'Help' ,'kanzu-support-desk'),
                     __( 'Resource center to help you make the most of your Kanzu Support Desk experience','kanzu-support-desk'),                   
-                    __( "That's it! Dive right in. To take this tour again, click 'Enable Tour Mode' in your settings tab, update your settings then refresh your page","kanzu-support-desk")
+                    __( "That's it! Dive right in. To take this tour again, click 'Enable Tour Mode' in your settings tab, update your settings then refresh your page", "kanzu-support-desk")
                     ),
                     'position' => array( 'edge' => 'left', 'align' => 'top','nudgehorizontal' => 1 )
                 )
@@ -1272,10 +1272,10 @@ class KSD_Admin {
 			 die ( __('Busted!','kanzu-support-desk') );
                }
              if (strlen( $_POST['ksd_user_feedback'] )<= 2 ){
-                $response = __( "Error | The feedback field's empty. Please type something then send","kanzu-support-desk" ); 
+                $response = __( "Error | The feedback field's empty. Please type something then send", "kanzu-support-desk"); 
              }  
              else{
-                $response =  ( $this->send_email( "feedback@kanzucode.com", sanitize_text_field( $_POST['ksd_user_feedback'] ),"KSD Feedback" ) ? __( "Sent successfully. Thank you!", "kanzu-support-desk" ) : __( "Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com","kanzu-support-desk" ) );
+                $response =  ( $this->send_email( "feedback@kanzucode.com", sanitize_text_field( $_POST['ksd_user_feedback'] ),"KSD Feedback" ) ? __( 'Sent successfully. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );
              }
              echo json_encode( $response );	
              die();// IMPORTANT: don't leave this out
@@ -1313,7 +1313,7 @@ class KSD_Admin {
 				set_transient( 'ksd_notifications_feed', $cache, 86400 );//Check everyday
 			}
 		} else {
-                    $cache["error"] =  __( "Sorry, an error occurred while retrieving the latest notifications. A re-attempt will be made later. Thank you.","kanzu-support-desk" );
+                    $cache["error"] =  __( 'Sorry, an error occurred while retrieving the latest notifications. A re-attempt will be made later. Thank you.', 'kanzu-support-desk');
 		}
             }
             echo json_encode( $cache );
