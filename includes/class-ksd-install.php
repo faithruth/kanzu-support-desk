@@ -312,10 +312,6 @@ class KSD_Install {
                     }
                }
             }
-<<<<<<< HEAD
-
-=======
->>>>>>> 165e6af137319d117111e009717725b2c4b68d84
             
             /**
              * Get default settings
