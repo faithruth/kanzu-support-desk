@@ -516,6 +516,12 @@ ul.add-ons li {
   padding: 15px;
   text-align: center;
   width: 230px;
+  float: left;
+  margin-left: 10px;
+}
+ul.add-ons li img{
+    width: 64px;
+    height: 64px;
 }
 ul.add-ons li a{
     text-decoration: none;
