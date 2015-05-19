@@ -259,7 +259,8 @@ class KSD_Install {
                  global $wpdb;   
                 $sql="CREATE TABLE	`{$wpdb->prefix}kanzusupport_attachments` (
                         `attach_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                        `attach_tkt_id` BIGINT(20) NOT NULL ,
+                        `attach_tkt_id` BIGINT(20) NULL ,
+                        `attach_rep_id` BIGINT(20) NULL ,
                         `attach_url` VARCHAR(100) NOT NULL,
                         `attach_size` VARCHAR(10) NULL,
                         `attach_filename` TEXT NOT NULL,

@@ -1254,6 +1254,13 @@ jQuery( document ).ready(function() {
                              jQuery("#ksd-single-ticket span.date").html(the_ticket.tkt_time_logged);//@TODO Format this
                              jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message).text();
                              jQuery("#ksd-single-ticket textarea[name=tkt_private_note]").val(the_ticket.tkt_private_note);
+                             //The Attachments
+                             if ( ! jQuery.isEmptyObject( the_ticket.attachments ) ){
+                                 jQuery("#ksd-single-ticket .description").append( '<ul id="ksd-attachments"></ul>');
+                              jQuery.each( the_ticket.attachments, function( key, attachment ) {
+                                  jQuery('ul#ksd-attachments').append('<li><a href="'+attachment.attach_url+'">'+attachment.attach_filename+' ( '+attachment.attach_size+' )</a>');
+                              });
+                            }
                              jQuery("#ticket-replies p.loading").html(ksd_admin.ksd_labels.msg_still_loading) ;                          
                              //Make the 'Back' button visible
                              jQuery(".top-nav li.back").removeClass("hidden");

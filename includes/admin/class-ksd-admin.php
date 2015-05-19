@@ -421,17 +421,23 @@ class KSD_Admin {
          */
         public function get_single_ticket(){
 
-            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
-               die ( __('Busted!','kanzu-support-desk') );                         
+            if (!wp_verify_nonce($_POST['ksd_admin_nonce'], 'ksd-admin-nonce')) {
+                die(__('Busted!', 'kanzu-support-desk'));
             }
-            $this->do_admin_includes();	
-            try{
-               $tickets = new KSD_Tickets_Controller();	
-               $ticket = $tickets->get_ticket($_POST['tkt_id']);
-               $this->format_ticket_for_viewing( $ticket );
-               echo json_encode($ticket);
-               die();
-                   
+            $this->do_admin_includes();
+            try {
+                $tickets = new KSD_Tickets_Controller();
+                $ticket = $tickets->get_ticket( $_POST['tkt_id'] );
+                $this->format_ticket_for_viewing($ticket);
+                
+                //Get the ticket's attachments
+                $attachments = new KSD_Attachments_Controller();
+                $query = " attach_tkt_id = %d";
+                $value_parameters[] = $_POST['tkt_id'];                
+                $ticket->attachments = $attachments->get_attachments( $query, $value_parameters );
+
+                echo json_encode($ticket);
+                die();
             }catch( Exception $e){
                 $response = array(
                    'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode())
@@ -893,8 +899,8 @@ class KSD_Admin {
          */
         private function add_ticket_attachments( $ticket_id, $assignments_array ) {
             for ( $i = 0; $i < count( $_POST['ksd-attachments']['url'] ); $i++ ) {
-                $AC = new KSD_Attachments_Controller();
-                $AC->add_attachment( $ticket_id, esc_url($_POST['ksd-attachments']['url'][$i]), sanitize_text_field($_POST['ksd-attachments']['size'][$i]), sanitize_title($_POST['ksd-attachments']['filename'][$i]) );
+                $AC = new KSD_Attachments_Controller();//We don't sanitize these values because they aren't supplied by the user. The system generates them
+                $AC->add_attachment( $ticket_id, $_POST['ksd-attachments']['url'][$i], $_POST['ksd-attachments']['size'][$i], $_POST['ksd-attachments']['filename'][$i] );
             }
         }
 
@@ -915,6 +921,14 @@ class KSD_Admin {
             $ticket->tkt_time_logged = date('M d',strtotime($ticket->tkt_time_logged));
             
             return $ticket;
+        }
+        
+        /**
+         * Replace escaped URLs in the attachment and remove null fields
+         * @param Object $attachment
+         */
+        private function format_attachment_for_viewing( $attachment ){
+            
         }
 		
 		/**

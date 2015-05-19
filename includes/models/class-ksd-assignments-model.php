@@ -21,6 +21,7 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-model.php");
 			
 		$this->_formats = array(
 		'assign_tkt_id'             => '%d', 
+                'attach_rep_id'             => '%d',     
 		'assign_assigned_to'        => '%d',
 		'assign_date_assigned'      => '%s' , 
 		'assign_assigned_by'        => '%d'

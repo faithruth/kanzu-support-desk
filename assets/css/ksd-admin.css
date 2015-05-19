@@ -419,6 +419,10 @@ h1.ksd-single-ticket-subject {
   margin: 0;
   padding: 20px 15px;
 }
+ul#ksd-attachments{
+    float: none;
+    margin-top: 40px;
+}
 #ksd-single-ticket .ksd-submit{
     float: left;
     clear: both;
