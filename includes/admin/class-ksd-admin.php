@@ -40,6 +40,9 @@ class KSD_Admin {
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
                 
+                //Add the attachments button
+                add_action('media_buttons', array( $this, 'add_attachments_button' ));
+                
                 //Load add-ons
                 add_action( 'ksd_load_addons', array( $this, 'load_ksd_addons' ) );
                 
@@ -120,7 +123,7 @@ class KSD_Admin {
                 wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'/assets/js/ksd-admin.js', array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION ); 
 		                
                 //Variables to send to the admin JS script
-                $ksd_admin_tab = ( isset( $_GET['page'] ) ? $_GET['page'] : "" );//This determines which tab to show as active
+                $ksd_admin_tab = ( isset( $_GET['page'] ) ?  $_GET['page']  : "" );//This determines which tab to show as active
                
                 
                 //Get intro tour messages if we are in tour mode @since 1.1.0
@@ -245,6 +248,18 @@ class KSD_Admin {
                 }
                 
 	}
+        
+        /**
+         * Add the button used to add attachments to a ticket
+         */
+        public function add_attachments_button(){
+            if( !isset( $_GET['page'] ) ){
+                return;
+            }
+            if ( strpos ( esc_url( $_GET['page'] ), 'ksd-' ) !== false ){//Check that we are on a KSD page. Don't modify wp_editor for posts, pages, etc 
+                echo '<a href="#" id="ksd-add-attachment" class="button">'.__( 'Add Attachment','kanzu-support-desk' ).'</a>';
+            }
+        }
                         
 	
 	/**

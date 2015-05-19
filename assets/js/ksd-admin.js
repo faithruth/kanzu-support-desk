@@ -986,6 +986,29 @@ jQuery( document ).ready(function() {
                 ksdLogNewTicketAdmin(form);
                 }
             });	
+            //Add Attachments
+            jQuery('#ksd-add-attachment').click(function () {
+                if (this.window === undefined) {
+                    this.window = wp.media({
+                        title: 'Attach File',
+                        library: {type: 'image'},
+                        multiple: false,
+                        button: {text: 'Attach'}
+                    });
+                    var self = this; // Needed to retrieve our variable in the anonymous function below
+                    this.window.on('select', function () {
+                        var first = self.window.state().get('selection').first().toJSON();
+                        jQuery('ul#ksd-attachments').append('<li><a href="'+first.url+'">'+first.title+'</a><span class="ksd-close-dialog"></span></li>');
+                    });
+                }
+
+                this.window.open();
+                return false;
+            });
+            //On clicking close, delete the attachment
+            jQuery('#admin-kanzu-support-desk').on( 'click', '.ksd-close-dialog' , function(){
+                jQuery(this).parent().remove();
+            });
 	}//eof:newTicket()
         
         

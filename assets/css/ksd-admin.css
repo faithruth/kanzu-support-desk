@@ -335,6 +335,24 @@ a.new-ticket:hover {
     width: 30%;
     border: 1px solid #d3d3d3;
 }
+ul#ksd-attachments{
+    width: 100%;
+    float: left;
+    margin: 5px auto;
+}
+ul#ksd-attachments li {
+    background-image: url("../images/icons/attachment.png");
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding-left: 20px;
+}
+.ksd-close-dialog{
+    background-image: url("../images/icons/close_dialog.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 22px;
+    height: 22px;
+}
 .ksd-subject,.ksd-message,.ksd-tags{
     width: 100%;
 }
