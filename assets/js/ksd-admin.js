@@ -990,18 +990,24 @@ jQuery( document ).ready(function() {
             jQuery('#ksd-add-attachment').click(function () {
                 if (this.window === undefined) {
                     this.window = wp.media({
-                        title: 'Attach File',
-                        library: {type: 'image'},
-                        multiple: false,
-                        button: {text: 'Attach'}
+                        title: ksd_admin.ksd_labels.tkt_attach_file,
+                        multiple: true,
+                        button: {text: ksd_admin.ksd_labels.tkt_attach}
                     });
-                    var self = this; // Needed to retrieve our variable in the anonymous function below
+                    var self = this; // Needed to retrieve our variable in the anonymous function below                    
                     this.window.on('select', function () {
-                        var first = self.window.state().get('selection').first().toJSON();
-                        jQuery('ul#ksd-attachments').append('<li><a href="'+first.url+'">'+first.title+'</a><span class="ksd-close-dialog"></span></li>');
+                        var files = self.window.state().get('selection').toArray();
+                        jQuery.each( files, function ( key, attachmentRaw ) {
+                            attachment                  = attachmentRaw.toJSON();
+                            attachmentLink              = '<a href="' + attachment.url + '">' + attachment.filename + ' <span="ksd-attach-filesize"> ( '+attachment.filesizeHumanReadable+' )</span></a>';
+                            attachmentFormInputUrl      = '<input type="hidden" name="ksd-attachments[url][]" value="'+attachment.url+'" />';
+                            attachmentFormInputTitle    = '<input type="hidden" name="ksd-attachments[size][]" value="'+attachment.filesizeHumanReadable+'" />';
+                            attachmentFormInputSize     = '<input type="hidden" name="ksd-attachments[filename][]" value="'+attachment.filename+'" />';
+                            attachmentFormInput         = attachmentFormInputUrl+attachmentFormInputTitle+attachmentFormInputSize;
+                            jQuery('ul#ksd-attachments').append('<li>'+attachmentLink+'<span class="ksd-close-dialog"></span></li>'+attachmentFormInput);                           
+                        });
                     });
                 }
-
                 this.window.open();
                 return false;
             });

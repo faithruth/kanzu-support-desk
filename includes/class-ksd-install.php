@@ -184,7 +184,10 @@ class KSD_Install {
                 self::create_roles();    
                 //Migrate customers from our customers table to WP_users. We do this  after deleting the foreign key
                 $this->move_customers_to_wp_users(); 
-            }            
+            }
+            if ( $sanitized_version < 160 ){//In 1.6.0, we added attachments. Consider changing these ifs to a switch case
+                $dbChanges[]= $this->create_attachments_table();
+            }
             if( count( $dbChanges ) > 0 ){  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
                                             //how strict and verbose the dbDelta alternative is. We'd
                                             //need to rewrite CREATE table statements for dbDelta.
@@ -247,8 +250,25 @@ class KSD_Install {
                                 ON DELETE CASCADE 
 				);
                                 ";
-      dbDelta($kanzusupport_tables);                     
+        //Add the attachments table. The SQL is in a separate function since it is also used in $this->upgrade_plugin()  
+        $kanzusupport_tables.=$this->create_attachments_table(); 
+        
+        dbDelta($kanzusupport_tables);                     
  }
+            private function create_attachments_table(){
+                 global $wpdb;   
+                $sql="CREATE TABLE	`{$wpdb->prefix}kanzusupport_attachments` (
+                        `attach_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                        `attach_tkt_id` BIGINT(20) NOT NULL ,
+                        `attach_url` VARCHAR(100) NOT NULL,
+                        `attach_size` VARCHAR(10) NULL,
+                        `attach_filename` TEXT NOT NULL,
+                        CONSTRAINT `attach_tktid_fk`
+                                FOREIGN KEY (`attach_tkt_id`) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
+                                ON DELETE CASCADE 
+                        );";
+                return $sql;
+            }
  
              private static function set_default_options() {                    
                 

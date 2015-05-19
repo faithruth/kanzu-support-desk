@@ -341,17 +341,23 @@ ul#ksd-attachments{
     margin: 5px auto;
 }
 ul#ksd-attachments li {
+    background-color: #fafafa;
     background-image: url("../images/icons/attachment.png");
-    background-position: left center;
+    background-position: 10px center;
     background-repeat: no-repeat;
-    padding-left: 20px;
+    border: 1px solid #dcdcdc;
+    line-height: 30px;
+    padding-left: 30px;
 }
-.ksd-close-dialog{
+.ksd-close-dialog {
     background-image: url("../images/icons/close_dialog.png");
+    background-position: center center;
     background-repeat: no-repeat;
-    background-position: center;
-    width: 22px;
-    height: 22px;
+    cursor: pointer;
+    float: right;
+    height: 30px;
+    margin-left: 30px;
+    width: 32px;
 }
 .ksd-subject,.ksd-message,.ksd-tags{
     width: 100%;

@@ -41,7 +41,7 @@ class KSD_Admin {
 		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
                 
                 //Add the attachments button
-                add_action('media_buttons', array( $this, 'add_attachments_button' ));
+                add_action('media_buttons', array( $this, 'add_attachments_button' ), 15 );
                 
                 //Load add-ons
                 add_action( 'ksd_load_addons', array( $this, 'load_ksd_addons' ) );
@@ -144,6 +144,8 @@ class KSD_Admin {
                 $admin_labels_array['tkt_reply']                    = __('Reply','kanzu-support-desk');
                 $admin_labels_array['tkt_forward']                  = __('Forward','kanzu-support-desk');
                 $admin_labels_array['tkt_update_note']              = __('Update Note','kanzu-support-desk');
+                $admin_labels_array['tkt_attach_file']              = __('Attach File','kanzu-support-desk');
+                $admin_labels_array['tkt_attach']                   = __('Attach','kanzu-support-desk');
                 $admin_labels_array['msg_still_loading']            = __('Loading Replies...','kanzu-support-desk');
                 $admin_labels_array['msg_loading']                  = __('Loading...','kanzu-support-desk');
                 $admin_labels_array['msg_sending']                  = __('Sending...','kanzu-support-desk');
@@ -278,6 +280,7 @@ class KSD_Admin {
 		include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-tickets-controller.php");
 		include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-users-controller.php");
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-assignments-controller.php");  
+                include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-attachments-controller.php");  
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-replies-controller.php");  
                 include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-customers-controller.php");  
 	}
@@ -830,6 +833,12 @@ class KSD_Admin {
                 if ( isset( $new_ticket->tkt_assigned_to ) ) {
                     $this->do_ticket_assignment ( $new_ticket_id,$new_ticket->tkt_assigned_to,$new_ticket->tkt_assigned_by ); 
                 }  
+                
+                //Save the attachments
+                if( isset( $_POST['ksd-attachments'] ) ){
+                    $this->add_ticket_attachments( $new_ticket_id, $_POST['ksd-attachments'] );
+                }
+                
                 //If the ticket was logged by using the import feature, end the party here
                 if( isset( $_POST['ksd_tkt_imported'] ) ){
                    do_action( 'ksd_new_ticket_imported', array( $_POST['ksd_tkt_imported_id'], $new_ticket_id ) );
@@ -871,11 +880,24 @@ class KSD_Admin {
          * Assign the ticket 
          */
         private function do_ticket_assignment( $ticket_id,$assign_to,$assign_by ){
-            $this->do_admin_includes();
+           $this->do_admin_includes();
            $assignment = new KSD_Assignments_Controller();
            $assignment->assign_ticket( $ticket_id, $assign_to, $assign_by );  
         }
         
+        /**
+         * Add attachment(s) to a ticket
+         * Call this after $this->do_admin_includes() is called
+         * @param int $ticket_id The ticket's ID
+         * @param Array $assignments_array Array containing the assignments
+         */
+        private function add_ticket_attachments( $ticket_id, $assignments_array ) {
+            for ( $i = 0; $i < count( $_POST['ksd-attachments']['url'] ); $i++ ) {
+                $AC = new KSD_Attachments_Controller();
+                $AC->add_attachment( $ticket_id, esc_url($_POST['ksd-attachments']['url'][$i]), sanitize_text_field($_POST['ksd-attachments']['size'][$i]), sanitize_title($_POST['ksd-attachments']['filename'][$i]) );
+            }
+        }
+
         /**
          * Replace a ticket's logged_by field with the nicename of the user who logged it
          * Replace the tkt_time_logged with a date better-suited for viewing

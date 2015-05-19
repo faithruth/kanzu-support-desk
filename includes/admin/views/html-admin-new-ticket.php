@@ -8,7 +8,10 @@
         <div class="ksd-message">
             <?php wp_editor(  '' , 'ksd_tkt_message', array( "media_buttons" => true, "textarea_rows" => 5 ) ); ?> 
         </div>
-        <div class="ksd-severity-and-assign">
+        <ul id="ksd-attachments">
+        </ul>
+        <div class="ksd-below-ticket-wrapper">
+            <div class="ksd-severity-and-assign">
             <div class="ksd-severity">
                 <label for="ksd_tkt_severity"><?php _e('Severity','kanzu-support-desk'); ?></label>
                 <select name="ksd_tkt_severity">
@@ -29,17 +32,16 @@
                 ?>
                 </select>
             </div>
-        </div>    
-        <div class="ksd-send-email">
-            <label for="ksd_send_email"><?php _e('Send Email','kanzu-support-desk'); ?></label>
-            <input name="ksd_send_email"  type="checkbox" value="yes" checked/>
+            </div>
+            <div class="ksd-send-email">
+                <label for="ksd_send_email"><?php _e('Send Email','kanzu-support-desk'); ?></label>
+                <input name="ksd_send_email"  type="checkbox" value="yes" checked/>
+            </div>
         </div>
         <input name="ksd_tkt_assigned_by" type="hidden" value="<?php echo get_current_user_id(); ?>" />
         <input name="action" type="hidden" value="ksd_log_new_ticket" />
         <input name="ksd_tkt_channel" type="hidden" value="staff" />
          <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
-        <ul id="ksd-attachments">
-        </ul>
         <input type="submit" value="<?php _e( 'Send', 'kanzu-support-desk'); ?>" name="ksd-submit-admin-new-ticket" class="ksd-submit"/>
     </form>
 </div>
