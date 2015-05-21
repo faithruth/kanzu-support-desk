@@ -43,7 +43,7 @@
                 <li><a href="#update_private_note"><?php _e('Private Note','kanzu-support-desk'); ?></a></li>
             </ul>        
             <div class="edit-ticket-description" id="reply_ticket">
-                <textarea name="ksd_ticket_reply" rows="5" cols="100"></textarea> 
+                <?php wp_editor(  '' , 'ksd_ticket_reply', array( "media_buttons" => true, "textarea_rows" => 5 ) ); ?> 
             </div>
            <div id="update_private_note" class="single-ticket-textarea">
                 <textarea name="tkt_private_note" rows="5" cols="100"></textarea> 

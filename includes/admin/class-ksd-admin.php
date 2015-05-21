@@ -149,6 +149,7 @@ class KSD_Admin {
                 $admin_labels_array['msg_still_loading']            = __('Loading Replies...','kanzu-support-desk');
                 $admin_labels_array['msg_loading']                  = __('Loading...','kanzu-support-desk');
                 $admin_labels_array['msg_sending']                  = __('Sending...','kanzu-support-desk');
+                $admin_labels_array['msg_reply_sent']               = __('Reply Sent!','kanzu-support-desk');
                 $admin_labels_array['msg_error']                    = __('Sorry, an unexpected error occurred. Kindly retry. Thank you.','kanzu-support-desk');
                 $admin_labels_array['pointer_next']                 = __('Next','kanzu-support-desk');
                 $admin_labels_array['lbl_toggle_trimmed_content']   = __('Toggle Trimmed Content','kanzu-support-desk');

@@ -834,6 +834,7 @@ jQuery( document ).ready(function() {
         replyTicketAndUpdateNote    = function( form ){   
                 var action = jQuery("input[name=action]").attr("value");               
                 KSDUtils.showDialog("loading");//Show a dialog message
+                tinyMCE.triggerSave();//Very important. Without this, the reply's text won't be 'seen' by the serialize below
                 jQuery.post(	ksd_admin.ajax_url, 
                                 jQuery( form ).serialize(), //The action, nonce and TicketID are hidden fields in the form
                     function(response) {
@@ -858,9 +859,12 @@ jQuery( document ).ready(function() {
                                KSDUtils.showDialog("success",respObj );
                             break;
                             default:
-                                jQuery("#ticket-replies").append("<div class='ticket-reply'>"+respObj+"</div>");	
-                                 //Clear the reply field
-                                 jQuery("textarea[name=ksd_ticket_reply]").val(" ");      
+                                KSDUtils.showDialog( "success",ksd_admin.ksd_labels.msg_reply_sent );
+                                repliesData = jQuery("#ticket-replies").html();
+                                repliesData += "<div class='ticket-reply'>"+respObj+"</div>";	
+                                jQuery("#ticket-replies").html(repliesData);
+                                //Clear the reply field
+                                tinyMCE.activeEditor.setContent(''); 
                         }
                 });
         };
