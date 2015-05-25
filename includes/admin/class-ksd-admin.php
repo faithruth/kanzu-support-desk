@@ -69,6 +69,8 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ));              
                 add_action( 'wp_ajax_ksd_get_notifications', array( $this, 'get_notifications' ));  
                 add_action( 'wp_ajax_ksd_notify_new_ticket', array( $this, 'notify_new_ticket' ));  
+                add_action( 'wp_ajax_ksd_bulk_change_status', array( $this, 'bulk_change_status' ));  
+                
 
                 //Register KSD tickets importer
                 add_action( 'admin_init', array( $this, 'ksd_importer_init' ) );
@@ -513,16 +515,26 @@ class KSD_Admin {
             
             try{
                 $this->do_admin_includes();	
-                $updated_ticket = new stdClass();
-		$updated_ticket->tkt_id = $_POST['tkt_id'];
-		$updated_ticket->new_tkt_status = $_POST['tkt_status'];
+                $tickets = new KSD_Tickets_Controller();	
                 
-		$tickets = new KSD_Tickets_Controller();	
-                
-                if( $tickets->update_ticket( $updated_ticket ) ){
-                    echo json_encode( __( 'Updated', 'kanzu-support-desk'));
-                }else {
-                    throw new Exception( __( 'Failed', 'kanzu-support-desk') , -1);
+                if( !is_array( $_POST['tkt_id'] ) ){//Single ticket update
+                    $updated_ticket = new stdClass();
+                    $updated_ticket->tkt_id = $_POST['tkt_id'];
+                    $updated_ticket->new_tkt_status = $_POST['tkt_status'];
+                    
+                    if( $tickets->update_ticket( $updated_ticket ) ){
+                        echo json_encode( __( 'Updated', 'kanzu-support-desk'));
+                    }else {
+                        throw new Exception( __( 'Failed', 'kanzu-support-desk') , -1);
+                    }
+                }
+                else{//Update tickets in bulk
+                    $updateArray = array( "tkt_status" => $_POST['tkt_status'] );
+                    if( is_array( $tickets->bulk_update_ticket(  $_POST['tkt_id'], $updateArray ) )  ){
+                        echo json_encode( __( 'Tickets Updated', 'kanzu-support-desk'));
+                    }else {
+                        throw new Exception( __( 'Updates Failed', 'kanzu-support-desk') , -1);
+                    }
                 }
 		die();// IMPORTANT: don't leave this out
             }catch( Exception $e){ 
@@ -533,6 +545,8 @@ class KSD_Admin {
                 die();// IMPORTANT: don't leave this out
             }  
 	}
+   
+
         /**
          * Change ticket's severity
          * @throws Exception
