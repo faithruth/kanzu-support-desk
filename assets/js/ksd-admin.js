@@ -706,6 +706,7 @@ jQuery( document ).ready(function() {
                 jQuery(this).addClass('hidden');
              });
             //AJAX: Bulk actions
+            //Bulk Change status
             jQuery('div.ticket-actions-top-menu ul.status li').click(function(){
                 var tkt_IDs = [];
                 jQuery('#ticket-tabs    input[name="ticket_ids[]"]:checkbox:checked').each(function () {
@@ -719,7 +720,20 @@ jQuery( document ).ready(function() {
                 _this.changeTicketStatus( tkt_IDs, tktStatus  );
                 jQuery('div.ticket-actions-top-menu').addClass('hidden');
             });
-            
+            //Bulk assign to
+             jQuery('div.ticket-actions-top-menu ul.ksd_agent_list li').click(function(){
+                var tkt_IDs = [];
+                jQuery('#ticket-tabs    input[name="ticket_ids[]"]:checkbox:checked').each(function () {
+                    tkt_ID = jQuery(this).parent().parent().attr("id").replace("ksd_tkt_id_", "");
+                    if ('undefined' !== typeof ( tkt_ID )) {
+                        tkt_IDs.push(tkt_ID);
+                    }
+              
+                });
+                assignTo   = jQuery ( this ).attr("id");//The new assignee
+                _this.reassignTicket( tkt_IDs, assignTo  );
+                jQuery('div.ticket-actions-top-menu').addClass('hidden');
+            });           
 		//---------------------------------------------------------------------------------
 		/*All check box.
 		* control_id: tkt_chkbx_all
@@ -787,6 +801,7 @@ jQuery( document ).ready(function() {
                                         return ;
                                     }
                                     KSDUtils.showDialog("success",respObj);
+                                     _this.ksdRefreshTicketsPage();//Refresh the page
     				});	
             
         };

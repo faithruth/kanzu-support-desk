@@ -100,7 +100,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
                $set.=$field."= '".$new_value."' ";
                continue;
             }
-            $set.=$field+"= '".$new_value."', ";
+            $set.=$field."= '".$new_value."', ";
         }
         //NB: We can't use $wpdb->update since it uses AND, not OR to join the WHERE clause
         $query = 'UPDATE '.$this->_tablename.' SET '.$set.' '.$where.';';

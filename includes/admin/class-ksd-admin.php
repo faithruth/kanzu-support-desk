@@ -587,21 +587,36 @@ class KSD_Admin {
                     die ( __('Busted!','kanzu-support-desk') );
             }
            try{
-               $this->do_admin_includes();	
-               $updated_ticket = new stdClass();
-               $updated_ticket->tkt_id = $_POST['tkt_id'];
-               $updated_ticket->new_tkt_assigned_to = $_POST['tkt_assign_assigned_to'];
-               $updated_ticket->new_tkt_assigned_by = $_POST['ksd_current_user_id'];
-               $assign_ticket = new KSD_Tickets_Controller();                       
-               
-               if( $assign_ticket->update_ticket( $updated_ticket ) ){
-                   //Add the event to the assignments table
-                   $this->do_ticket_assignment ( $updated_ticket->tkt_id,$updated_ticket->new_tkt_assigned_to, $updated_ticket->new_tkt_assigned_by );
-                   echo json_encode( __( 'Re-assigned', 'kanzu-support-desk'));
-               }else{
-                   throw new Exception( __( 'Failed', 'kanzu-support-desk') , -1);
-               }
-               die();// IMPORTANT: don't leave this out
+               $this->do_admin_includes();
+                $assign_ticket = new KSD_Tickets_Controller();
+                if (!is_array($_POST['tkt_id'])) {//Single ticket re-assignment
+                    $updated_ticket = new stdClass();
+                    $updated_ticket->tkt_id = $_POST['tkt_id'];
+                    $updated_ticket->new_tkt_assigned_to = $_POST['tkt_assign_assigned_to'];
+                    $updated_ticket->new_tkt_assigned_by = $_POST['ksd_current_user_id'];
+                    if ($assign_ticket->update_ticket($updated_ticket)) {
+                        //Add the event to the assignments table
+                        $this->do_ticket_assignment($updated_ticket->tkt_id, $updated_ticket->new_tkt_assigned_to, $updated_ticket->new_tkt_assigned_by);
+                        echo json_encode(__('Re-assigned', 'kanzu-support-desk'));
+                    } else {
+                        throw new Exception(__('Failed', 'kanzu-support-desk'), -1);
+                    }
+                } else {//Bulk re-assignment
+                    $update_array = array ( 
+                        'tkt_assigned_to' => $_POST['tkt_assign_assigned_to'],
+                        'tkt_assigned_by' => $_POST['ksd_current_user_id']
+                            );
+                   if( is_array( $assign_ticket->bulk_update_ticket($_POST['tkt_id'], $update_array ) ) ){
+                       //Add event to assignments table
+                       foreach ( $_POST['tkt_id'] as $tktID ){
+                        $this->do_ticket_assignment( $tktID, $update_array['tkt_assigned_to'], $update_array['tkt_assigned_by'] );
+                       }
+                       echo json_encode(__('Tickets Re-assigned', 'kanzu-support-desk'));
+                    } else {
+                        throw new Exception(__('Ticket Re-assignment Failed', 'kanzu-support-desk'), -1);
+                    }                    
+                }
+                die();// IMPORTANT: don't leave this out
            }catch( Exception $e){
                $response = array(
                    'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode())
