@@ -60,8 +60,17 @@ class KSD_Tickets_Controller extends KSD_Controller {
         public function bulk_update_ticket( $tkt_IDs, $update ){
                 return $this->_model->bulk_update_tickets( $tkt_IDs, $update );
         }
+        
+        /**
+         * Delete tickets in bulk
+         * @param Array $tkt_IDs Array of ticket IDs to delete
+         * @return Array  
+         */
+        public function bulk_delete_tickets($tkt_IDs) {
+        return $this->_model->bulk_delete_tickets( $tkt_IDs );
+        }
 
-	/*
+    /*
 	*Returns ticket object with specified id.
 	*
 	*@param  int $ticket_id	ticket id

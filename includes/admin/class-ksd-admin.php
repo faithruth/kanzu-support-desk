@@ -487,15 +487,23 @@ class KSD_Admin {
                 if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
                              die ( __('Busted!','kanzu-support-desk') );
                 }
-                    $this->do_admin_includes();	
-                    $tickets = new KSD_Tickets_Controller();		
-                    
-                    if( $tickets->delete_ticket( $_POST['tkt_id']) ){
-                        echo json_encode(__( 'Deleted', 'kanzu-support-desk'));
-                    }else{
-                        throw new Exception( __( 'Failed', 'kanzu-support-desk') , -1);
+                    $this->do_admin_includes();
+                $tickets = new KSD_Tickets_Controller();
+
+                if (!is_array($_POST['tkt_id'])) {
+                    if ( $tickets->delete_ticket($_POST['tkt_id']) ) {
+                        echo json_encode(__('Deleted', 'kanzu-support-desk'));
+                    } else {
+                        throw new Exception(__('Failed', 'kanzu-support-desk'), -1);
                     }
-                    die();// IMPORTANT: don't leave this out
+                } else {
+                if ( is_array( $tickets->bulk_delete_tickets( $_POST['tkt_id'] ) )) {
+                        echo json_encode(__('Tickets Deleted', 'kanzu-support-desk'));
+                    } else {
+                        throw new Exception(__('Ticket Deletion Failed', 'kanzu-support-desk'), -1);
+                    }
+                }
+                die();// IMPORTANT: don't leave this out
             }catch( Exception $e){
                 $response = array(
                     'error'=> array( 'message' => $e->getMessage() , 'code'=>$e->getCode())

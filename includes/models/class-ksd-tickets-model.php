@@ -107,6 +107,12 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
             return parent::exec_query( $query );
         }       
         
+        public function bulk_delete_tickets( $ticket_IDs ){
+            $where = " WHERE tkt_id IN (".implode(",", $ticket_IDs).")";
+            $query = 'DELETE FROM '.$this->_tablename.' '.$where.';';
+            return parent::exec_query( $query );    
+        }
+        
         
         public function exec_query( $query ){
 		return parent::exec_query( $query );
