@@ -1265,9 +1265,12 @@ jQuery( document ).ready(function() {
                         event.preventDefault();//Important otherwise the page skips around
                         jQuery("ul.status").toggleClass("hidden");
                 });
+            jQuery(".ksd-top-nav ul.status").bind("mouseleave", function () {
+                jQuery(this).addClass('hidden');
+            });
                 jQuery(".ksd-top-nav").on('click','ul.status li',function() {
                     var tkt_id = jQuery.urlParam('ticket');
-                    var tkt_status = jQuery(this).text();                   
+                    var tkt_status = jQuery(this).attr("class");                   
                     _this.changeTicketStatus( tkt_id, tkt_status );
                     
                 });
@@ -1296,6 +1299,9 @@ jQuery( document ).ready(function() {
                         event.preventDefault();//Important otherwise the page skips around
                         jQuery("ul.ksd_agent_list").toggleClass("hidden");
                 });
+            jQuery(".ksd-top-nav ul.ksd_agent_list").bind("mouseleave", function () {
+                jQuery(this).addClass('hidden');
+                });
                 jQuery(".ksd-top-nav").on('click','ul.ksd_agent_list li',function() {
                     var tkt_id = jQuery.urlParam('ticket');
                     var assign_assigned_to = jQuery(this).attr("id");              
@@ -1314,9 +1320,12 @@ jQuery( document ).ready(function() {
                         event.preventDefault();//Important otherwise the page skips around
                         jQuery("ul.severity").toggleClass("hidden");
                 });
+                jQuery(".ksd-top-nav ul.severity").bind("mouseleave", function () {
+                    jQuery(this).addClass('hidden');
+                });
                 jQuery(".ksd-top-nav").on('click','ul.severity li',function() {
                     var tkt_id = jQuery.urlParam('ticket');
-                    var tkt_severity = jQuery(this).text();            
+                    var tkt_severity = jQuery(this).attr( "class");            
                     _this.changeTicketSeverity( tkt_id,tkt_severity );                    
                 });
             };

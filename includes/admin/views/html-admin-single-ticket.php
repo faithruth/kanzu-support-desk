@@ -8,18 +8,18 @@
     <li>
         <a href="#" class="add-new-h2 change_status"><?php _e('Change Status','kanzu-support-desk'); ?></a>
         <ul class="status hidden">
-            <li>OPEN</li><!--@TODO Internationalize this. CAN only be done after changing receiving logic to map item position to these corresponding values for correct storage in the Db -->
-            <li>PENDING</li>
-            <li>RESOLVED</li>
+            <li class="OPEN"><?php  _e('OPEN','kanzu-support-desk');?></li> 
+            <li class="PENDING"><?php  _e('PENDING','kanzu-support-desk');?></li>
+            <li class="RESOLVED"><?php  _e('RESOLVED','kanzu-support-desk');?></li>
         </ul>
     </li>
     <li>
         <a href="#" class="add-new-h2 change_severity"><?php _e('Change Severity','kanzu-support-desk'); ?></a>
         <ul class="severity hidden">
-            <li>LOW</li>
-            <li>MEDIUM</li>
-            <li>HIGH</li>
-            <li>URGENT</li>
+            <li class="LOW"><?php  _e('LOW','kanzu-support-desk');?></li>
+            <li class="MEDIUM"><?php  _e('MEDIUM','kanzu-support-desk');?></li>
+            <li class="HIGH"><?php  _e('HIGH','kanzu-support-desk');?></li>
+            <li class="URGENT"><?php  _e('URGENT','kanzu-support-desk');?></li>
         </ul>
     </li>
 </ul>
