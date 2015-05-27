@@ -948,9 +948,14 @@ jQuery( document ).ready(function() {
                             break;
                             default:
                                 KSDUtils.showDialog( "success",ksd_admin.ksd_labels.msg_reply_sent );
-                                repliesData = jQuery("#ticket-replies").html();
-                                repliesData += "<div class='ticket-reply'>"+respObj+"</div>";	
-                                jQuery("#ticket-replies").html(repliesData);
+                                 var d = new Date();
+                                replyData = "<div class='ticket-reply'>";
+                                replyData+="<span class='reply_author'></span>";
+                                replyData+='<span class="reply_date">'+d.toLocaleString()+'</span>';
+                                replyData+="<div class='reply_message'>";
+                                replyData+=tinyMCE.activeEditor.getContent();
+                                replyData+="</div></div>";
+                                jQuery("#ticket-replies").append( replyData );
                                 //Clear the reply field
                                 tinyMCE.activeEditor.setContent(''); 
                         }
@@ -989,7 +994,7 @@ jQuery( document ).ready(function() {
             this.editTicketForm = function(){            
                 jQuery("form#edit-ticket").validate({
                    submitHandler: function( form ) {
-                   replyTicketAndUpdateNote( form );
+                   _this.replyTicketAndUpdateNote( form );
                    }
             });	
 
@@ -1079,7 +1084,11 @@ jQuery( document ).ready(function() {
                 }
             });	
             //Add Attachments
-            jQuery('#ksd-add-attachment').click(function () {
+            jQuery('[id^="ksd-add-attachment-"]').click(function () {
+                var targetUL = 'ksd-attachments';
+                if (jQuery(this).hasClass('ksd_ticket_reply')) {//This is an attachment in single ticket view
+                    targetUL = 'ksd-attachments-single-ticket';
+                }
                 if (this.window === undefined) {
                     this.window = wp.media({
                         title: ksd_admin.ksd_labels.tkt_attach_file,
@@ -1096,7 +1105,7 @@ jQuery( document ).ready(function() {
                             attachmentFormInputTitle    = '<input type="hidden" name="ksd-attachments[size][]" value="'+attachment.filesizeHumanReadable+'" />';
                             attachmentFormInputSize     = '<input type="hidden" name="ksd-attachments[filename][]" value="'+attachment.filename+'" />';
                             attachmentFormInput         = attachmentFormInputUrl+attachmentFormInputTitle+attachmentFormInputSize;
-                            jQuery('ul#ksd-attachments').append('<li>'+attachmentLink+'<span class="ksd-close-dialog"></span></li>'+attachmentFormInput);                           
+                            jQuery('ul#'+targetUL).append('<li>'+attachmentLink+'<span class="ksd-close-dialog"></span>'+attachmentFormInput+'</li>');                           
                         });
                     });
                 }
@@ -1384,6 +1393,14 @@ jQuery( document ).ready(function() {
                                          repliesData += "<span class='reply_author'>"+value.rep_created_by+"</span>";
                                          repliesData += "<span class='reply_date'>"+value.rep_date_created+"</span>";
                                          repliesData += "<div class='reply_message'>"+value.rep_message+"</div>";
+                                        //The Reply's Attachments
+                                        if ( !jQuery.isEmptyObject(value.attachments) ) {
+                                            repliesData += '<ul id="ksd-attachments">';
+                                            jQuery.each(value.attachments, function (key, attachment) {
+                                                repliesData +='<li><a href="' + attachment.attach_url + '">' + attachment.attach_filename + ' ( ' + attachment.attach_size + ' )</a></li>';
+                                            });
+                                            repliesData += '</ul>';
+                                        }
                                          repliesData += "</div>";                             
                                      });
                                      jQuery("#ticket-replies").html(repliesData) ; 

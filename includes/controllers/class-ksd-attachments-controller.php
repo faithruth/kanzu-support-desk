@@ -28,7 +28,7 @@ class KSD_Attachments_Controller extends KSD_Controller
 	* @param $filename Filename
 	*/
 	public function add_attachment( $ticket_id, $url,  $size, $filename, $is_reply = false ){
-		$aO                                 = $this->_model->get_obj();
+		$aO                             = $this->_model->get_obj();
 		$aO->attach_url                 = $url;
 		$aO->attach_size                = $size;
                 $aO->attach_filename            = $filename;
@@ -50,6 +50,15 @@ class KSD_Attachments_Controller extends KSD_Controller
          */
         public function get_attachments( $query = null, $value_parameters=array() ){
             return $this->_model->get_all( $query, $value_parameters );           
+        }
+        
+       /*
+	* Returns a reply's attachments  
+	*
+        * @param int $reply_id The reply's ID
+         */
+        public function get_reply_attachments( $reply_id ){           
+            return $this->_model->get_reply_attachments( $reply_id ) ;        
         }
 
 

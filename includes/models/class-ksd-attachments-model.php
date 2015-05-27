@@ -21,6 +21,7 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-model.php");
 			
 		$this->_formats = array(
 		'attach_tkt_id'             => '%d', 
+                'attach_rep_id'             => '%d', 
 		'attach_url'                => '%s',
 		'attach_size'               => '%s', 
 		'attach_filename'           => '%s'
@@ -35,6 +36,22 @@ include_once( KSD_PLUGIN_DIR. "includes/libraries/class-ksd-model.php");
 	public function get_attachment( $id ){
 		return parent::get_row($id);
 	}
+        
+                
+       /*
+	* Get a reply's attachments  
+	*
+        * @param int $reply_id The reply's ID
+	* @return Array Array of objects
+         */
+        public function get_reply_attachments( $reply_id ){
+            global $wpdb;
+            $query = " attach_rep_id = %d";
+            $value_parameters[] = $reply_id;
+            $attachments    =  parent::get_all( $query, $value_parameters ); 
+            $wpdb->flush(); //This is important otherwise all replies will have the same attachments displayed
+            return $attachments ;        
+        }
 	
  
 	/*

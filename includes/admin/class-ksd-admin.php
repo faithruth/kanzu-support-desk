@@ -256,13 +256,14 @@ class KSD_Admin {
         
         /**
          * Add the button used to add attachments to a ticket
+         * @param string $editor_id The editor ID
          */
-        public function add_attachments_button(){
+        public function add_attachments_button( $editor_id ){            
             if( !isset( $_GET['page'] ) ){
                 return;
             }
-            if ( strpos ( esc_url( $_GET['page'] ), 'ksd-' ) !== false ){//Check that we are on a KSD page. Don't modify wp_editor for posts, pages, etc 
-                echo '<a href="#" id="ksd-add-attachment" class="button">'.__( 'Add Attachment','kanzu-support-desk' ).'</a>';
+            if ( strpos ( $editor_id , 'ksd_' ) !== false ){//Check that we are modifying a KSD wp_editor. Don't modify wp_editor for posts, pages, etc 
+                echo "<a href='#' id='ksd-add-attachment-{$editor_id}' class='button {$editor_id}'>".__( 'Add Attachment','kanzu-support-desk' )."</a>";
             }
         }
                         
@@ -464,10 +465,14 @@ class KSD_Admin {
                 $query = " rep_tkt_id = %d";
                 $value_parameters[] = $_POST['tkt_id'];
                 $replies = $RC->get_replies( $query,$value_parameters );
-                //Replace the rep_created_by ID with the name of the reply creator
+                //Replace the rep_created_by ID with the name of the reply creator and get the reply's attachments
                 foreach ( $replies as $reply ){
-                    $reply->rep_created_by = get_userdata( $reply->rep_created_by )->display_name;
+                    $reply->rep_created_by = get_userdata($reply->rep_created_by)->display_name;
+                    //Get the reply's attachments
+                    $attachments = new KSD_Attachments_Controller();
+                    $reply->attachments = $attachments->get_reply_attachments( $reply->rep_id );
                 }
+
                 echo json_encode( $replies );
                 die();
             }catch( Exception $e){
@@ -667,9 +672,14 @@ class KSD_Admin {
                     }
                    //Add the reply to the replies table
                    $RC = new KSD_Replies_Controller(); 
-                   $response = $RC->add_reply( $new_reply );
-                   
-                   if( $add_on_mode ){
+                   $new_reply_id = $RC->add_reply( $new_reply );                   
+                                   
+                    //Save the attachments
+                    if ( isset( $_POST['ksd-attachments'] ) ) {
+                        $this->add_ticket_attachments( $new_reply_id, $_POST['ksd-attachments'], true );
+                    }
+
+                    if( $add_on_mode ){//@TODO Change this action. Should be new_reply_loggeed
                        do_action( 'ksd_new_ticket_logged', $_POST['addon_tkt_id'], $response );
                        return;//End the party if this came from an add-on. All an add-on needs if for the reply to be logged
                    }
@@ -680,8 +690,8 @@ class KSD_Admin {
                     $user = get_userdata( $ticket_details->tkt_cust_id );
                     $this->send_email( $user->user_email, $new_reply->rep_message, 'Re: '.$ticket_details->tkt_subject );//NOTE: Prefix the reply subject with Re:    
                    
-                   if ( $response > 0 ){
-                      echo json_encode(  esc_html( $new_reply->rep_message )  );
+                   if ( $new_reply_id > 0 ){
+                      echo json_encode(  $new_reply  );
                    }else{
                        throw new Exception( __("Error", 'kanzu-support-desk'), -1 );
                    }
@@ -932,13 +942,14 @@ class KSD_Admin {
         /**
          * Add attachment(s) to a ticket
          * Call this after $this->do_admin_includes() is called
-         * @param int $ticket_id The ticket's ID
+         * @param int $ticket_id The ticket or reply's ID
          * @param Array $assignments_array Array containing the assignments
+         * @param Boolean $is_reply Whether this is a reply or a ticket
          */
-        private function add_ticket_attachments( $ticket_id, $assignments_array ) {
+        private function add_ticket_attachments( $ticket_id, $assignments_array, $is_reply=false ) {
             for ( $i = 0; $i < count( $_POST['ksd-attachments']['url'] ); $i++ ) {
                 $AC = new KSD_Attachments_Controller();//We don't sanitize these values because they aren't supplied by the user. The system generates them
-                $AC->add_attachment( $ticket_id, $_POST['ksd-attachments']['url'][$i], $_POST['ksd-attachments']['size'][$i], $_POST['ksd-attachments']['filename'][$i] );
+                $AC->add_attachment( $ticket_id, $_POST['ksd-attachments']['url'][$i], $_POST['ksd-attachments']['size'][$i], $_POST['ksd-attachments']['filename'][$i], $is_reply );
             }
         }
 

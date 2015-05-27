@@ -8,7 +8,7 @@
     <li>
         <a href="#" class="add-new-h2 change_status"><?php _e('Change Status','kanzu-support-desk'); ?></a>
         <ul class="status hidden">
-            <li>OPEN</li><!--@TODO Internalize this. CAN only be done after changing receiving logic to map item position to these corresponding values for correct storage in the Db -->
+            <li>OPEN</li><!--@TODO Internationalize this. CAN only be done after changing receiving logic to map item position to these corresponding values for correct storage in the Db -->
             <li>PENDING</li>
             <li>RESOLVED</li>
         </ul>
@@ -51,7 +51,9 @@
        </div>
         <input name="action" type="hidden" value="ksd_reply_ticket" />
         <input name="tkt_id" type="hidden" value="<?php echo $_GET['ticket'];?>" />  
-        <input name="ksd_rep_created_by" type="hidden" value="<?php echo get_current_user_id();?>" />           
+        <input name="ksd_rep_created_by" type="hidden" value="<?php echo get_current_user_id();?>" />  
+        <ul id="ksd-attachments-single-ticket" class="ksd-single-ticket">
+        </ul>
         <?php wp_nonce_field( 'ksd-edit-ticket', 'edit-ticket-nonce' ); ?>
         <input type="submit" value="<?php  _e('Reply','kanzu-support-desk');?>" name="edit-ticket" id="edit-ticket-submit" class="button button-primary button-large ksd-submit"/>        
     </form>

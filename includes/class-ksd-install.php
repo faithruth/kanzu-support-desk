@@ -266,7 +266,10 @@ class KSD_Install {
                         `attach_filename` TEXT NOT NULL,
                         CONSTRAINT `attach_tktid_fk`
                                 FOREIGN KEY (`attach_tkt_id`) REFERENCES {$wpdb->prefix}kanzusupport_tickets(`tkt_id`)
-                                ON DELETE CASCADE 
+                                ON DELETE CASCADE,
+                        CONSTRAINT `attach_repid_fk`
+                                FOREIGN KEY (`attach_rep_id`) REFERENCES {$wpdb->prefix}kanzusupport_replies(`rep_id`)
+                                ON DELETE CASCADE
                         );";
                 return $sql;
             }
