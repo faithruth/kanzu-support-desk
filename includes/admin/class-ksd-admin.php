@@ -377,7 +377,7 @@ class KSD_Admin {
                     }
 
                     //order
-                    $filter .= " ORDER BY tkt_time_logged DESC ";
+                    $filter .= " ORDER BY tkt_time_updated DESC ";//@since 1.6.2 sort by tkt_time_updated
 
                     //limit
                     $count_filter = $filter; //Query without limit to get the total number of rows
@@ -678,7 +678,10 @@ class KSD_Admin {
                     }
                     $new_reply = new stdClass(); 
                     $new_reply->rep_tkt_id    	 = sanitize_text_field( $_POST['tkt_id'] );    
-                    $new_reply->rep_created_by   = sanitize_text_field( $_POST['ksd_rep_created_by'] );
+                    $new_reply->rep_created_by   = sanitize_text_field( $_POST['ksd_rep_created_by'] );                    
+                    if( isset( $_POST['ksd_rep_date_created'])){//Set by add-ons
+                        $new_reply->rep_date_created =  sanitize_text_field( $_POST['ksd_rep_date_created'] );  
+                    }
                     $new_reply->rep_message 	 = wp_kses_post( stripslashes( $_POST['ksd_ticket_reply'] )  );
                     if ( strlen( $new_reply->rep_message ) < 2 && ! $add_on_mode ){//If the response sent it too short
                        throw new Exception( __("Error | Reply too short", 'kanzu-support-desk'), -1 );
@@ -691,7 +694,13 @@ class KSD_Admin {
                     if ( isset( $_POST['ksd-attachments'] ) ) {
                         $this->add_ticket_attachments( $new_reply_id, $_POST['ksd-attachments'], true );
                     }
-
+                    //Update the main ticket's 	tkt_time_updated field
+                    $ksd_TC = new KSD_Tickets_Controller();
+                    $update_main_ticket = new stdClass();
+                    $update_main_ticket->tkt_id = $new_reply->rep_tkt_id;
+                    $update_main_ticket->new_tkt_time_updated = $new_reply->rep_date_created;                    
+                    $ksd_TC->update_ticket( $update_main_ticket ) ;
+                     
                     if( $add_on_mode ){//@TODO Change this action. Should be new_reply_loggeed
                        do_action( 'ksd_new_ticket_logged', $_POST['addon_tkt_id'], $response );
                        return;//End the party if this came from an add-on. All an add-on needs if for the reply to be logged
@@ -745,6 +754,7 @@ class KSD_Admin {
                     $_POST['tkt_id']                = $the_ticket[0]->tkt_id;//The ticket ID
                     $_POST['ksd_ticket_reply']      = $new_ticket->tkt_message;//Get the reply
                     $_POST['ksd_rep_created_by']    = $new_ticket->tkt_cust_id;//The customer's ID
+                    $_POST['ksd_rep_date_created']  = $new_ticket->tkt_time_logged;//@since 1.6.2
                     $_POST['addon_tkt_id']          = $new_ticket->addon_tkt_id;//The add-on's ID for this ticket
                     $this->reply_ticket( $_POST ); 
                     return; //die removed because it was triggering a fatal error in add-ons
@@ -820,7 +830,13 @@ class KSD_Admin {
                 $new_ticket->tkt_message_excerpt    = wp_trim_words( $sanitized_message, $ksd_excerpt_length );
                 $new_ticket->tkt_message            = $sanitized_message;
                 $new_ticket->tkt_channel            = $tkt_channel;
-                $new_ticket->tkt_status             = $tkt_status;             
+                $new_ticket->tkt_status             = $tkt_status; 
+                if( isset( $_POST[ 'ksd_tkt_time_logged' ] )){//Set by add-ons
+                    $new_ticket->tkt_time_updated   = $_POST[ 'ksd_tkt_time_logged' ];
+                }
+                else{
+                    $new_ticket->tkt_time_updated   = current_time( 'mysql' );
+                }
                 
                 //Server side validation for the inputs. Only holds if we aren't in add-on mode
                 if ( ( ! $add_on_mode && strlen( $new_ticket->tkt_subject ) < 2 || strlen( $new_ticket->tkt_message ) < 2 ) ) {
