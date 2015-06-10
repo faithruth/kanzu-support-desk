@@ -189,6 +189,8 @@ class KSD_Install {
                 //@since $this->ksd_db_version 110. Added attachments table
                 $dbChanges[]= KSD_Install::create_attachments_table();
             }
+            //@1.6.2
+            //@TODO ALTER TABLE `wp_kanzusupport_tickets` ADD `tkt_is_read` BOOLEAN NOT NULL DEFAULT FALSE ;
             if( count( $dbChanges ) > 0 ){  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
                                             //how strict and verbose the dbDelta alternative is. We'd
                                             //need to rewrite CREATE table statements for dbDelta.

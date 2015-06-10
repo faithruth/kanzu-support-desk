@@ -69,8 +69,8 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ));              
                 add_action( 'wp_ajax_ksd_get_notifications', array( $this, 'get_notifications' ));  
                 add_action( 'wp_ajax_ksd_notify_new_ticket', array( $this, 'notify_new_ticket' ));  
-                add_action( 'wp_ajax_ksd_bulk_change_status', array( $this, 'bulk_change_status' ));  
-                
+                add_action( 'wp_ajax_ksd_bulk_change_status', array( $this, 'bulk_change_status' )); 
+                add_action( 'wp_ajax_ksd_change_read_status', array( $this, 'change_read_status' ));                
 
                 //Register KSD tickets importer
                 add_action( 'admin_init', array( $this, 'ksd_importer_init' ) );
@@ -140,6 +140,9 @@ class KSD_Admin {
                 $admin_labels_array['tkt_trash']                    = __('Trash','kanzu-support-desk');
                 $admin_labels_array['tkt_assign_to']                = __('Assign To','kanzu-support-desk');
                 $admin_labels_array['tkt_change_status']            = __('Change Status','kanzu-support-desk');
+                $admin_labels_array['tkt_change_severity']          = __('Change Severity','kanzu-support-desk');
+                $admin_labels_array['tkt_mark_read']                = __('Mark as Read','kanzu-support-desk');
+                $admin_labels_array['tkt_mark_unread']              = __('Mark as Unread','kanzu-support-desk');
                 $admin_labels_array['tkt_subject']                  = __('Subject','kanzu-support-desk');
                 $admin_labels_array['tkt_cust_fullname']            = __('Customer Name','kanzu-support-desk');
                 $admin_labels_array['tkt_cust_email']               = __('Customer Email','kanzu-support-desk');
@@ -147,7 +150,14 @@ class KSD_Admin {
                 $admin_labels_array['tkt_forward']                  = __('Forward','kanzu-support-desk');
                 $admin_labels_array['tkt_update_note']              = __('Update Note','kanzu-support-desk');
                 $admin_labels_array['tkt_attach_file']              = __('Attach File','kanzu-support-desk');
-                $admin_labels_array['tkt_attach']                   = __('Attach','kanzu-support-desk');
+                $admin_labels_array['tkt_attach']                   = __('Attach','kanzu-support-desk');                
+                $admin_labels_array['tkt_status_open']              = __('OPEN','kanzu-support-desk');
+                $admin_labels_array['tkt_status_pending']           = __('PENDING','kanzu-support-desk');
+                $admin_labels_array['tkt_status_resolved']          = __('RESOLVED','kanzu-support-desk');                
+                $admin_labels_array['tkt_severity_low']             = __('LOW','kanzu-support-desk');
+                $admin_labels_array['tkt_severity_medium']          = __('MEDIUM','kanzu-support-desk');
+                $admin_labels_array['tkt_severity_high']            = __('HIGH','kanzu-support-desk');
+                $admin_labels_array['tkt_severity_urgent']          = __('URGENT','kanzu-support-desk');              
                 $admin_labels_array['msg_still_loading']            = __('Loading Replies...','kanzu-support-desk');
                 $admin_labels_array['msg_loading']                  = __('Loading...','kanzu-support-desk');
                 $admin_labels_array['msg_sending']                  = __('Sending...','kanzu-support-desk');
@@ -439,6 +449,9 @@ class KSD_Admin {
                 $query = " attach_tkt_id = %d";
                 $value_parameters[] = $_POST['tkt_id'];                
                 $ticket->attachments = $attachments->get_attachments( $query, $value_parameters );
+                
+                //Mark the ticket as read
+                $this->do_change_read_status( $_POST['tkt_id'] );
 
                 echo json_encode($ticket);
                 die();
@@ -1316,6 +1329,48 @@ class KSD_Admin {
          }
          
          /**
+          * Mark a ticket as read or unread
+          * @param int $ticket_ID The ticket ID
+          * @param boolean $mark_as_read Whether to mark the ticket as read or not
+          */
+         private function do_change_read_status( $ticket_ID, $mark_as_read = true ) {
+            $ticket_read_status = ( $mark_as_read ? 1 : 0 );
+            $updated_ticket                  = new stdClass();
+            $updated_ticket->tkt_id          = $ticket_ID;
+            $updated_ticket->new_tkt_is_read = $ticket_read_status;
+            $TC = new KSD_Tickets_Controller();	                
+            return $TC->update_ticket( $updated_ticket );
+        }
+        
+        
+        /**
+         * Change ticket's read status
+         * @throws Exception
+         */
+        public function change_read_status(){
+            if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                    die ( __('Busted!','kanzu-support-desk') );
+            }
+            
+            try{
+                $this->do_admin_includes();	    
+                if( $this->do_change_read_status( $_POST['tkt_id'], $_POST['tkt_is_read'] ) ){
+                    echo json_encode( __( 'Ticket updated', 'kanzu-support-desk'));
+                }else {
+                    throw new Exception( __( 'Update Failed. Please retry', 'kanzu-support-desk') , -1);
+                }
+		die();// IMPORTANT: don't leave this out
+            }catch( Exception $e){ 
+                $response = array( 
+                    'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode())
+                );
+                echo json_encode($response);	
+                die();// IMPORTANT: don't leave this out
+            }  
+	}
+
+
+        /**
           * Create a new customer in wp_users
           * @param Object $customer The customer object
           */
