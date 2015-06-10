@@ -442,7 +442,7 @@ class KSD_Admin {
             try {
                 $tickets = new KSD_Tickets_Controller();
                 $ticket = $tickets->get_ticket( $_POST['tkt_id'] );
-                $this->format_ticket_for_viewing($ticket);
+                $this->format_ticket_for_viewing( $ticket, true );
                 
                 //Get the ticket's attachments
                 $attachments = new KSD_Attachments_Controller();
@@ -987,12 +987,17 @@ class KSD_Admin {
          * Replace the tkt_time_logged with a date better-suited for viewing
          * NB: Because we use {@link KSD_Users_Controller}, call this function after {@link do_admin_includes} has been called.   
          * @param Object $ticket The ticket to modify
+         * @param boolean $single_ticket_view Whether we are in single ticket view or not
          */
-        private function format_ticket_for_viewing( $ticket ){
+        private function format_ticket_for_viewing( $ticket, $single_ticket_view = false ){
             //If the ticket was logged by staff from the admin end, then the username is available in wp_users. Otherwise, we retrive the name
             //from the KSD customers table
            // $tmp_tkt_assigned_by = ( 'STAFF' === $ticket->tkt_channel ? $users->get_user($ticket->tkt_assigned_by)->display_name : $CC->get_customer($ticket->tkt_assigned_by)->cust_firstname );
-            $tmp_tkt_cust_id = get_userdata( $ticket->tkt_cust_id )->display_name;
+            $tkt_user_data      =  get_userdata( $ticket->tkt_cust_id );
+            $tmp_tkt_cust_id    =  $tkt_user_data->display_name;
+            if( $single_ticket_view ){
+                $tmp_tkt_cust_id.=  ' <'.$tkt_user_data->user_email.'>';
+            }
             //Replace the tkt_assigned_by name with a prettier one
             $ticket->tkt_cust_id = str_replace($ticket->tkt_cust_id,$tmp_tkt_cust_id,$ticket->tkt_cust_id);
             //Replace the date 

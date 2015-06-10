@@ -1469,7 +1469,7 @@ jQuery(document).ready(function () {
                     }
                     the_ticket = respObj;
                     jQuery("#ksd-single-ticket h1.ksd-single-ticket-subject").html(the_ticket.tkt_subject);
-                    jQuery("#ksd-single-ticket span.author").html(the_ticket.tkt_cust_id);
+                    jQuery("#ksd-single-ticket span.author").text(the_ticket.tkt_cust_id);//We use text, not HTML because the <> in the email would be misinterpreted
                     jQuery("#ksd-single-ticket span.date").html(the_ticket.tkt_time_logged);//@TODO Format this
                     jQuery("#ksd-single-ticket .description").removeClass("pending").html(the_ticket.tkt_message).text();
                     jQuery("#ksd-single-ticket textarea[name=tkt_private_note]").val(the_ticket.tkt_private_note);
