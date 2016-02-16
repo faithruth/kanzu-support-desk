@@ -1521,10 +1521,15 @@ class KSD_Admin {
                 
                 //Add KSD ticket defaults       
                 $new_ticket['post_type']      = 'ksd_ticket';
-                $new_ticket['comment_status'] = 'closed ';
+                $new_ticket['comment_status'] = 'closed';
                 
                 //Log the ticket
                 $new_ticket_id = wp_insert_post( $new_ticket );
+                
+                //Add product category
+                if( isset( $new_ticket['ksd_tkt_pdt_category']) && intval($new_ticket['ksd_tkt_pdt_category']) > 0 ){
+                    wp_set_object_terms( $new_ticket_id, $new_ticket['ksd_tkt_pdt_category'] );
+                }
                 
                 //Add category to ticket
                 if( isset( $new_ticket_raw['ksd_tkt_cat_id'] ) ){
@@ -1536,7 +1541,7 @@ class KSD_Admin {
                 $meta_array                             = array();
                 $meta_array['_ksd_tkt_info_channel']    = $tkt_channel;
                 if( isset( $new_ticket_raw['ksd_tkt_cc'] ) && $new_ticket_raw['ksd_tkt_cc'] != __( 'CC','kanzu-support-desk' ) ){
-                    $meta_array['_ksd_tkt_info_cc']     = sanitize_text_field( $new_ticket_raw[ 'ksd_tkt_cc' ] );
+                    $meta_array['_ksd_tkt_info_cc']     = sanitize_text_field( $new_ticket_raw[ 'ksd_tkt_cc' ] ); 
                 }
                                 
                 //These other fields are only available if a ticket is logged from the admin side so we need to 
@@ -1860,7 +1865,9 @@ class KSD_Admin {
                     $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                 }
                 //For a checkbox, if it is unchecked then it won't be set in $_POST
-                $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup");
+                $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
+                        "supportform_show_categories","supportform_show_severity"
+                );
                 //Iterate through the checkboxes and set the value to "no" for all that aren't set
                 foreach ( $checkbox_names as $checkbox_name ){
                      $updated_settings[$checkbox_name] = ( !isset ( $_POST[$checkbox_name] ) ? "no" : $updated_settings[$checkbox_name] );

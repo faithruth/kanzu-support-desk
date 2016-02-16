@@ -351,7 +351,6 @@ class KSD_Install {
                         'kanzu_support_db_version'          => self::$ksd_db_version,
                     
                         /** Tickets **************************************************************/
-                    
                         'enable_new_tkt_notifxns'           => "yes",
                         'enable_notify_on_new_ticket'       => "yes",//@since 1.5.4. Email sent to primary admin on new ticket creation
                         'notify_email'                      => $user_info->user_email,//@since 1.7.0 The default email to send notifications to
@@ -373,7 +372,11 @@ class KSD_Install {
                         'ticket_management_roles'           => 'administrator', //@since 1.5.0. Who can manage your tickets
                         'enable_customer_signup'            => "yes",//@since 2.0.0
                         'page_submit_ticket'                => 0,//@since 2.0.0 ID of the 'Submit ticket' page
-                        'page_my_tickets'                   => 0//@since 2.0.0 //ID of the 'My tickets page'
+                        'page_my_tickets'                   => 0,//@since 2.0.0 //ID of the 'My tickets page'
+
+                        /**Support form settings**/
+                        'supportform_show_categories'       => 'no',
+                        'supportform_show_severity'         => 'no'
                     );
             }
             

@@ -20,6 +20,48 @@
         <li class="ksd-subject">       
           <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
         </li>
+        
+        <?php
+        $show_categories = $settings['supportform_show_categories'];
+        $show_severity   = $settings['supportform_show_severity'];            
+
+        if( 'yes' === $show_severity ):
+        ?>
+            <li class="ksd-pdt-severity">  
+            <select class="ksd-severity" name="ksd_tkt_severity" >
+                <option selected="selected" disabled="disabled"><?php _e( 'Severity' ); ?></option>
+                <option value="low"><?php echo _e( 'Low', 'kanzu-sipport-desk' ); ?></option>
+                <option value="medium"><?php echo _e( 'Medium', 'kanzu-sipport-desk' ); ?></option>
+                <option value="high"><?php echo _e( 'high', 'kanzu-sipport-desk' ); ?></option>
+                <option value="urgent"><?php echo _e( 'urgent', 'kanzu-sipport-desk' ); ?></option>
+            </select>
+        </li>  
+        <?php endif; ?>
+        
+
+        <?php
+        if( 'yes' === $show_categories ):
+            $cats = get_categories( array('taxonomy' => 'product', 'hide_empty' => FALSE ) );
+        
+        if( count($cats) > 0  ):
+        ?>
+        <li class="ksd-pdt-category" >
+            <select  name="ksd_tkt_pdt_category" >
+            <option selected="selected" disabled="disabled"><?php _e( 'Categories' ); ?></option>    
+            <?php
+                
+                foreach( $cats  as $cat ){
+                    echo "<option value='{$cat->term_id}'>{$cat->name}</option>";
+                }
+            ?>
+            </select>    
+        </li>
+        <?php 
+        endif;
+        
+        endif;
+        ?>
+        
           <li class="ksd-message">     
               <textarea value="<?php _e('Message','kanzu-support-desk'); ?>" rows="7" class="ksd-message" name="ksd_tkt_message" required></textarea>
           </li>
