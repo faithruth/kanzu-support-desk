@@ -1,5 +1,6 @@
 <?php
-$settings              = Kanzu_Support_Desk::get_settings ( );
+
+$settings              = Kanzu_Support_Desk::get_settings ( ) ;
 $settings_and_licenses = apply_filters ( 'ksd_display_licenses', $settings );
 $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $settings_and_licenses['licenses'] : array ( ) );
 
@@ -9,67 +10,67 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
 <form method="POST" id="update-settings" class="ksd-settings pending"> 
     <div id="ksd-tabs">
         <ul>
-            <li><a href="#ksd-general-opt-tab"><?php _e ( 'General', 'kanzu-support-desk' ); ?></a></li>
-            <li><a href="#ksd-support-form-settings">Support Form</a></li>
+            <li><a href="#ksd-general-opt-tab"><?php _e( 'General', 'kanzu-support-desk' ); ?></a></li>
+            <li><a href="#ksd-support-form-settings"><?php _e( 'Support Form', 'kanzu-support-desk' ); ?></a></li>
 
-            <?php if ( count ( $licenses ) > 0 ): ?><li><a href="#ksd-licences-opt-tab">Licences</a></li> <?php endif; ?>
+            <?php if ( count ( $licenses ) > 0 ): ?><li><a href="#ksd-licences-opt-tab"><?php _e( 'Licences', 'kanzu-support-desk' ); ?></a></li> <?php endif; ?>
             <?php foreach ( $addon_settings as $addon_setting ): ?>
-                <li><a href="#<?php echo $addon_setting['id']; ?>"><?php _e ( $addon_setting['title'], 'kanzu-support-desk' ); ?></a></li>
+                <li><a href="#<?php echo $addon_setting['id']; ?>"><?php _e( $addon_setting['title'], 'kanzu-support-desk' ); ?></a></li>
             <?php endforeach; ?>
         </ul>
 
-        <!-- fragment-1 -->
+        <!-- ksd-general-opt-tab -->
         <div id="ksd-general-opt-tab">
             <div>
-                <h3><?php _e ( 'General Options', 'kanzu-support-desk' ); ?> </h3>
+                <h3><?php _e( 'General Options', 'kanzu-support-desk' ); ?> </h3>
                 <div class="setting">
-                    <label for="enable_new_tkt_notifxns"><?php _e ( 'Enable auto-reply', 'kanzu-support-desk' ); ?></label>
+                    <label for="enable_new_tkt_notifxns"><?php _e( 'Enable auto-reply', 'kanzu-support-desk' ); ?></label>
                     <input name="enable_new_tkt_notifxns"  type="checkbox" <?php checked ( $settings['enable_new_tkt_notifxns'], "yes") ?> value="yes"  />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "If enabled, a reply is sent to the customer's email address when he/she logs a new ticket on your site", 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "If enabled, a reply is sent to the customer's email address when he/she logs a new ticket on your site", 'kanzu-support-desk' ); ?>"/>
                 </div>
                 <div class="enable_new_tkt_notifxns">
                     <div class="setting">
-                        <label for="ticket_mail_from_name"><?php _e ( 'From ( Name )', 'kanzu-support-desk' ); ?></label>                   
+                        <label for="ticket_mail_from_name"><?php _e( 'From ( Name )', 'kanzu-support-desk' ); ?></label>                   
                         <input type="text" value="<?php echo $settings['ticket_mail_from_name']; ?>" size="30" name="ticket_mail_from_name" />
-                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Defaults to the primary administrator's display name", 'kanzu-support-desk' ); ?>"/>
+                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "Defaults to the primary administrator's display name", 'kanzu-support-desk' ); ?>"/>
                     </div>
                     <div class="setting">
-                        <label for="ticket_mail_from_email"><?php _e ( 'From ( Email Address )', 'kanzu-support-desk' ); ?></label>
+                        <label for="ticket_mail_from_email"><?php _e( 'From ( Email Address )', 'kanzu-support-desk' ); ?></label>
                         <input type="text" value="<?php echo $settings['ticket_mail_from_email']; ?>" size="30" name="ticket_mail_from_email" />
-                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Defaults to the primary administrator's email address", 'kanzu-support-desk' ); ?>"/>
+                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "Defaults to the primary administrator's email address", 'kanzu-support-desk' ); ?>"/>
                     </div>
                     <div class="setting">
-                        <label for="ticket_mail_subject"><?php _e ( 'Subject', 'kanzu-support-desk' ); ?></label>
+                        <label for="ticket_mail_subject"><?php _e( 'Subject', 'kanzu-support-desk' ); ?></label>
                         <input type="text" value="<?php echo $settings['ticket_mail_subject']; ?>" size="60" name="ticket_mail_subject" />
                     </div>
                     <div class="setting">
-                        <label for="ticket_mail_message"><?php _e ( 'Message', 'kanzu-support-desk' ); ?></label>
+                        <label for="ticket_mail_message"><?php _e( 'Message', 'kanzu-support-desk' ); ?></label>
                         <textarea cols="60" rows="4" name="ticket_mail_message"><?php echo $settings['ticket_mail_message']; ?></textarea>
                     </div>
                 </div><!--.enable_new_tkt_notifxns-->
                 <div class="setting">
-                    <label for="enable_notify_on_new_ticket"><?php _e ( 'Enable new ticket notifications', 'kanzu-support-desk' ); ?></label>
+                    <label for="enable_notify_on_new_ticket"><?php _e( 'Enable new ticket notifications', 'kanzu-support-desk' ); ?></label>
                     <input name="enable_notify_on_new_ticket"  type="checkbox" <?php checked ( $settings['enable_notify_on_new_ticket'], "yes") ?> value="yes"  />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "If enabled, an email is sent to the ticket assignee whenever a new ticket is logged. If there's no assignee, the notification is sent to the primary administrator", 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "If enabled, an email is sent to the ticket assignee whenever a new ticket is logged. If there's no assignee, the notification is sent to the primary administrator", 'kanzu-support-desk' ); ?>"/>
                 </div>
                 <!--<div class="setting enable_notify_on_new_ticket">
-                      <label for="notify_email"><?php _e ( 'Send notifications to', 'kanzu-support-desk' ); ?></label>
+                      <label for="notify_email"><?php _e( 'Send notifications to', 'kanzu-support-desk' ); ?></label>
                       <input type="text" value="<?php echo $settings['notify_email']; ?>" size="30" name="notify_email" />
-                      <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "We send a notification to this email address when a new ticket is created", 'kanzu-support-desk' ); ?>"/>
+                      <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "We send a notification to this email address when a new ticket is created", 'kanzu-support-desk' ); ?>"/>
                 </div>-->
                 <div class="setting">
-                    <label for="recency_definition"><?php _e ( 'Recency Definition ( In Hours )', 'kanzu-support-desk' ); ?></label>
+                    <label for="recency_definition"><?php _e( 'Recency Definition ( In Hours )', 'kanzu-support-desk' ); ?></label>
                     <input type="text" value="<?php echo $settings['recency_definition']; ?>" size="15" name="recency_definition" />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "In the ticket view, the 'Recently Updated' & 'Recently resolved' tabs, show tickets updated in last X hours", 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "In the ticket view, the 'Recently Updated' & 'Recently resolved' tabs, show tickets updated in last X hours", 'kanzu-support-desk' ); ?>"/>
                 </div>
 
                 <div class="setting">
-                    <label for="enable_customer_signup"><?php _e ( 'Enable customer registration', 'kanzu-support-desk' ); ?></label>
+                    <label for="enable_customer_signup"><?php _e( 'Enable customer registration', 'kanzu-support-desk' ); ?></label>
                     <input name="enable_customer_signup"  type="checkbox" <?php checked ( $settings['enable_customer_signup'], "yes") ?> value="yes"  />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "If enabled, customers can register and submit tickets", 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "If enabled, customers can register and submit tickets", 'kanzu-support-desk' ); ?>"/>
                 </div>
                 <div class="setting enable_customer_signup">
-                    <label for="page_submit_ticket"><?php _e ( 'Submit Ticket Page', 'kanzu-support-desk' ); ?></label>
+                    <label for="page_submit_ticket"><?php _e( 'Submit Ticket Page', 'kanzu-support-desk' ); ?></label>
                     <select name="page_submit_ticket">
                         <option value="0">--</option>
                         <?php foreach ( get_pages ( ) as $page ) { ?>
@@ -79,10 +80,10 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                             </option>
                         <?php } ?>                         
                     </select>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'This is the page on which customers will submit tickets. The [ksd_support_form] short code must be on this page.', 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( 'This is the page on which customers will submit tickets. The [ksd_support_form] short code must be on this page.', 'kanzu-support-desk' ); ?>"/>
                 </div> 
                 <div class="setting enable_customer_signup">
-                    <label for="page_my_tickets"><?php _e ( 'My Tickets Page', 'kanzu-support-desk' ); ?></label>
+                    <label for="page_my_tickets"><?php _e( 'My Tickets Page', 'kanzu-support-desk' ); ?></label>
                     <select name="page_my_tickets">
                         <option value="0">--</option>
                         <?php foreach ( get_pages ( ) as $page ) { ?>
@@ -92,10 +93,10 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                             </option>
                         <?php } ?>                         
                     </select>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'This is the page on which customers will view all their tickets. The [ksd_my_tickets] short code must be on this page.', 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( 'This is the page on which customers will view all their tickets. The [ksd_my_tickets] short code must be on this page.', 'kanzu-support-desk' ); ?>"/>
                 </div>              
                 <div class="setting">
-                    <label for="auto_assign_user"><?php _e ( 'Auto-assign new tickets to', 'kanzu-support-desk' ); ?></label>
+                    <label for="auto_assign_user"><?php _e( 'Auto-assign new tickets to', 'kanzu-support-desk' ); ?></label>
                     <select name="auto_assign_user">
                         <?php foreach ( get_users ( ) as $agent ) { ?>
                             <option value="<?php echo $agent->ID; ?>" 
@@ -103,42 +104,42 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                                         <?php echo $agent->display_name; ?>  
                             </option>
                         <?php } ?>
-                        <option value=""><?php _e ( 'No One', 'kanzu-support-desk' ); ?></option>
+                        <option value=""><?php _e( 'No One', 'kanzu-support-desk' ); ?></option>
                     </select>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If set, new tickets are automatically assigned to this user.', 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( 'If set, new tickets are automatically assigned to this user.', 'kanzu-support-desk' ); ?>"/>
                 </div> 
                 <!--    <div class="setting">
-                       <label for="tour_mode"><?php _e ( 'Enable tour mode', 'kanzu-support-desk' ); ?></label>                
+                       <label for="tour_mode"><?php _e( 'Enable tour mode', 'kanzu-support-desk' ); ?></label>                
                        <input name="tour_mode"  type="checkbox" <?php checked ( $settings['tour_mode'], "yes") ?> value="yes"  />
-                       <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Refresh your page after enabling this and tour mode will start automatically", 'kanzu-support-desk' ); ?>"/>
+                       <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "Refresh your page after enabling this and tour mode will start automatically", 'kanzu-support-desk' ); ?>"/>
                     </div>-->
                 <div class="setting">
-                    <label for="enable_recaptcha"><?php _e ( 'Enable Google reCAPTCHA', 'kanzu-support-desk' ); ?></label>                
+                    <label for="enable_recaptcha"><?php _e( 'Enable Google reCAPTCHA', 'kanzu-support-desk' ); ?></label>                
                     <input name="enable_recaptcha"  type="checkbox" <?php checked ( $settings['enable_recaptcha'], "yes") ?> value="yes"  />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Add Google reCAPTCHA to your site's forms to prevent spam", 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "Add Google reCAPTCHA to your site's forms to prevent spam", 'kanzu-support-desk' ); ?>"/>
                 </div>
                 <div class="setting enable_recaptcha">
-                    <label for="recaptcha_site_key"><?php _e ( 'Google reCAPTCHA Site Key', 'kanzu-support-desk' ); ?></label>                
+                    <label for="recaptcha_site_key"><?php _e( 'Google reCAPTCHA Site Key', 'kanzu-support-desk' ); ?></label>                
                     <input type="text" value="<?php echo $settings['recaptcha_site_key']; ?>" size="30" name="recaptcha_site_key" />
                     <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your Google reCAPTCHA Site Key. Get one at %s', 'kanzu-support-desk' ), 'https://www.google.com/recaptcha/admin' ); ?>"/>
                 </div>
                 <div class="setting enable_recaptcha">
-                    <label for="recaptcha_secret_key"><?php _e ( 'Google reCAPTCHA Secret Key', 'kanzu-support-desk' ); ?></label>                
+                    <label for="recaptcha_secret_key"><?php _e( 'Google reCAPTCHA Secret Key', 'kanzu-support-desk' ); ?></label>                
                     <input type="text" value="<?php echo $settings['recaptcha_secret_key']; ?>" size="30" name="recaptcha_secret_key" />
                     <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your Google reCAPTCHA Secret Key. Get one at %s', 'kanzu-support-desk' ), 'https://www.google.com/recaptcha/admin' ); ?>"/>
                 </div>
                 <div class="setting enable_recaptcha">
-                    <label for="recaptcha_error_message"><?php _e ( 'Message on reCAPTCHA failure', 'kanzu-support-desk' ); ?></label>
+                    <label for="recaptcha_error_message"><?php _e( 'Message on reCAPTCHA failure', 'kanzu-support-desk' ); ?></label>
                     <textarea cols="60" rows="4" name="recaptcha_error_message"><?php echo $settings['recaptcha_error_message']; ?></textarea>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Message to display in case Google reCAPTCHA continuously fails. This is very unlikely but just in case.", 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "Message to display in case Google reCAPTCHA continuously fails. This is very unlikely but just in case.", 'kanzu-support-desk' ); ?>"/>
                 </div>
                 <div class="setting">
-                    <label for="enable_anonymous_tracking"><?php _e ( 'Enable usage & error statistics', 'kanzu-support-desk' ); ?></label>                
+                    <label for="enable_anonymous_tracking"><?php _e( 'Enable usage & error statistics', 'kanzu-support-desk' ); ?></label>                
                     <input name="enable_anonymous_tracking"  type="checkbox" <?php checked ( $settings['enable_anonymous_tracking'], "yes") ?> value="yes"  />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Shares performance, usage and customization data about your KSD to help Kanzu Code make the plugin more useful, secure and stable", 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "Shares performance, usage and customization data about your KSD to help Kanzu Code make the plugin more useful, secure and stable", 'kanzu-support-desk' ); ?>"/>
                 </div>
                 <div class="setting">
-                    <label for="ticket_management_roles"><?php _e ( 'Roles that manage tickets', 'kanzu-support-desk' ); ?></label>                
+                    <label for="ticket_management_roles"><?php _e( 'Roles that manage tickets', 'kanzu-support-desk' ); ?></label>                
                     <ul class="ksd-multiple-checkboxes"><?php
                         global $wp_roles;
                         foreach ( $wp_roles->roles as $role => $role_info ) {
@@ -146,36 +147,36 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                             <li><input name="ticket_management_roles[]"  type="checkbox" <?php echo false !== strpos ( $settings['ticket_management_roles'], $role ) ? 'checked' : ''; ?> value="<?php echo $role; ?>"  /><label><?php echo $role_info['name']; ?></label></li>  
                         <?php } ?>
                     </ul>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Only users with these roles can manage tickets. All other users won't have access to your support desk. Note that the Administrator role always has access.", 'kanzu-support-desk' ); ?>"/>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( "Only users with these roles can manage tickets. All other users won't have access to your support desk. Note that the Administrator role always has access.", 'kanzu-support-desk' ); ?>"/>
                 </div>
             </div> 
             <div id="ksd-below-settings">
                 <div class="ksd-section">
                     <div class="ksd-customer-header">
-                        <h3><?php _e ( 'Your Customers', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your customers are stored as WordPress users with role %s' ), 'KSD Customer' ); ?>"/>
+                        <h3><?php _e( 'Your Customers', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your customers are stored as WordPress users with role %s' ), 'KSD Customer' ); ?>"/>
                     </div>
-                    <a href="user-new.php" target="_blank" class="button button-primary button-large"> <?php _e ( 'Add New Customer' ); ?></a>
-                    <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e ( 'View Customers' ); ?></a>
+                    <a href="user-new.php" target="_blank" class="button button-primary button-large"> <?php _e( 'Add New Customer' ); ?></a>
+                    <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e( 'View Customers' ); ?></a>
                 </div>
                 <div class="ksd-section ksd-debug">
-                    <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
+                    <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e( "Generate Debug File"); ?> </a>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
                 </div>
             </div>
-        </div><!--//fragment-1 -->
+        </div><!--//ksd-general-opt-tab -->
 
 
 
         <!-- Support Form -->
         <div id="ksd-support-form-settings">
             <?php
-            include (  KSD_PLUGIN_DIR . '/includes/admin/views/html-admin-settings-supportform.php' );
+            include(  KSD_PLUGIN_DIR . '/includes/admin/views/html-admin-settings-supportform.php' );
             ?>
         </div>
 
         <?php if ( count ( $licenses ) > 0 ): ?>
             <div id="ksd-licences-opt-tab"><!--fragment-2 -->
-                <h3><?php _e ( 'Licence Management', 'ksd-replies' ); ?> </h3>
+                <h3><?php _e( 'Licence Management', 'kanzu-support-desk' ); ?> </h3>
                 <div>                    
                     <?php
                     //Iterate through the licenses and display them
@@ -185,11 +186,11 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                             <label for="<?php echo $license_details['license_db_key']; ?>"><?php echo $license_details['addon_name']; ?></label>
                             <input type="text" value="<?php echo $license_details['license']; ?>" size="30" name="<?php echo $license_details['license_db_key']; ?>" />
                             <?php if ( $license_details['license_status'] == 'valid' ) { ?>
-                                <span class="license_status valid"><?php _e ( 'active', 'kanzu-support-desk' ); ?></span>
-                                <input type="submit" class="button-secondary ksd-license ksd-deactivate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php _e ( 'Deactivate License', 'kanzu-support-desk' ); ?>"/>
+                                <span class="license_status valid"><?php _e( 'active', 'kanzu-support-desk' ); ?></span>
+                                <input type="submit" class="button-secondary ksd-license ksd-deactivate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php _e( 'Deactivate License', 'kanzu-support-desk' ); ?>"/>
                             <?php } else { ?>
                                 <span class="license_status <?php echo $license_details['license_status']; ?>"><?php echo (  empty ( $license_details['license']) ? __ ( 'not set', 'kanzu-support-desk' ) : __ ( 'invalid', 'kanzu-support-desk' ) ); ?></span>
-                                <input type="submit" class="button-secondary ksd-license ksd-activate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php _e ( 'Activate License', 'kanzu-support-desk' ); ?>"/>
+                                <input type="submit" class="button-secondary ksd-license ksd-activate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php _e( 'Activate License', 'kanzu-support-desk' ); ?>"/>
                             <?php } ?>
                             <span class="plugin_name hidden"><?php echo $license_details['plugin_name'] ?></span>
                             <span class="plugin_author_uri hidden"><?php echo $license_details['plugin_author_uri'] ?></span>
@@ -207,8 +208,8 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                 ?>
                 <div id="<?php echo $addon_setting['id']; ?>"><!--fragment-3 -->
                     <?php
-                    if ( file_exists ( $addon_setting['output'])) {
-                        include ( $addon_setting['output'] );
+                    if ( file_exists ( $addon_setting['output'] ) ) {
+                        include( $addon_setting['output'] ) ;
                     } else {
                         echo $addon_setting['output'];
                     }
@@ -220,10 +221,11 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
 
     <input name="action" type="hidden" value="ksd_update_settings" />    
 <?php wp_nonce_field ( 'ksd-update-settings', 'update-settings-nonce' ); ?>
-    <input type="submit" value="<?php _e ( 'Update', 'kanzu-support-desk' ); ?>" name="ksd-settings-submit" class="ksd-submit button button-primary button-large"/>
-    <input type="submit" value="<?php _e ( 'Reset to Defaults', 'kanzu-support-desk' ); ?>" name="ksd-settings-reset" class="ksd-submit ksd-reset button action button-large"/>
+    <input type="submit" value="<?php _e( 'Update', 'kanzu-support-desk' ); ?>" name="ksd-settings-submit" class="ksd-submit button button-primary button-large"/>
+    <input type="submit" value="<?php _e( 'Reset to Defaults', 'kanzu-support-desk' ); ?>" name="ksd-settings-reset" class="ksd-submit ksd-reset button action button-large"/>
 
     <script type="text/javascript">
-        jQuery ( '#ksd-tabs' ).tabs ( );
+        //TODO: Should this be be moved to the js file!
+        jQuery( '#ksd-tabs' ).tabs();
     </script>
 </form>

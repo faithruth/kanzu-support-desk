@@ -9,10 +9,10 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
-if (!defined('ABSPATH'))
+if ( !defined( 'ABSPATH' ) )
     exit; // Exit if accessed directly
 
-if (!class_exists('KSD_Debug')) :
+if (!class_exists('KSD_Debug') ) :
 
     class KSD_Debug {
     	
@@ -52,18 +52,18 @@ if (!class_exists('KSD_Debug')) :
          * @return      string $return A string containing the info to output
          * This code is largely from EDD 2.3.9 with several adjustments specific to KSD's implementation
          */
-        public function retrieve_debug_info(){
+        public function retrieve_debug_info() {
 	
             global $wpdb;
 
-            if( !class_exists( 'Browser' ) ){
+            if ( !class_exists( 'Browser' ) ) {
                     require_once KSD_PLUGIN_DIR.  'includes/libraries/browser.php';
             }
 
             $browser = new Browser();
 
             // Get theme info
-            if( get_bloginfo( 'version' ) < '3.4' ) {
+            if ( get_bloginfo( 'version' ) < '3.4' ) {
                     $theme_data = get_theme_data( get_stylesheet_directory() . '/style.css' );
                     $theme      = $theme_data['Name'] . ' ' . $theme_data['Version'];
             } else {
@@ -83,7 +83,7 @@ if (!class_exists('KSD_Debug')) :
             $return .= 'Multisite:                ' . ( is_multisite() ? 'Yes' : 'No' ) . "\n";
 
             // Can we determine the site's host?
-            if( $host ) {
+            if ( $host ) {
                     $return .= "\n" . '-- Hosting Provider' . "\n\n";
                     $return .= 'Host:                     ' . $host . "\n";
             }
@@ -102,7 +102,7 @@ if (!class_exists('KSD_Debug')) :
             $return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
 
             // Only show page specs if frontpage is set to 'page'
-            if( get_option( 'show_on_front' ) == 'page' ) {
+            if ( get_option( 'show_on_front' ) == 'page' ) {
                     $front_page_id = get_option( 'page_on_front' );
                     $blog_page_id = get_option( 'page_for_posts' );
 
@@ -122,7 +122,7 @@ if (!class_exists('KSD_Debug')) :
 
             $response = wp_remote_post( 'https://www.paypal.com/cgi-bin/webscr', $params );
 
-            if( !is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 ) {
+            if ( !is_wp_error( $response ) && $response['response']['code'] >= 200 && $response['response']['code'] < 300 ) {
                     $WP_REMOTE_POST = 'wp_remote_post() works';
             } else {
                     $WP_REMOTE_POST = 'wp_remote_post() does not work';
@@ -161,10 +161,10 @@ if (!class_exists('KSD_Debug')) :
                     require_once ABSPATH . 'wp-admin/includes/plugin.php';
             }
             $muplugins = get_mu_plugins();
-            if( count( $muplugins > 0 ) ) {
+            if ( count( $muplugins > 0 ) ) {
                 $return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
-                foreach( $muplugins as $plugin => $plugin_data ) {
+                foreach ( $muplugins as $plugin => $plugin_data ) {
                     $return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
                 }
             }
@@ -175,8 +175,8 @@ if (!class_exists('KSD_Debug')) :
             $plugins = get_plugins();
             $active_plugins = get_option( 'active_plugins', array() );
 
-            foreach( $plugins as $plugin_path => $plugin ) {
-                    if( !in_array( $plugin_path, $active_plugins ) )
+            foreach ( $plugins as $plugin_path => $plugin ) {
+                    if ( !in_array( $plugin_path, $active_plugins ) )
                             continue;
 
                     $return .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
@@ -185,24 +185,24 @@ if (!class_exists('KSD_Debug')) :
             // WordPress inactive plugins
             $return .= "\n" . '-- WordPress Inactive Plugins' . "\n\n";
 
-            foreach( $plugins as $plugin_path => $plugin ) {
-                    if( in_array( $plugin_path, $active_plugins ) )
+            foreach ( $plugins as $plugin_path => $plugin ) {
+                    if ( in_array( $plugin_path, $active_plugins ) )
                             continue;
 
                     $return .= $plugin['Name'] . ': ' . $plugin['Version'] . "\n";
             }
 
-            if( is_multisite() ) {
+            if ( is_multisite() ) {
                     // WordPress Multisite active plugins
                     $return .= "\n" . '-- Network Active Plugins' . "\n\n";
 
                     $plugins = wp_get_active_network_plugins();
                     $active_plugins = get_site_option( 'active_sitewide_plugins', array() );
 
-                    foreach( $plugins as $plugin_path ) {
+                    foreach ( $plugins as $plugin_path ) {
                             $plugin_base = plugin_basename( $plugin_path );
 
-                            if( !array_key_exists( $plugin_base, $active_plugins ) )
+                            if ( !array_key_exists( $plugin_base, $active_plugins ) )
                                     continue;
 
                             $plugin  = get_plugin_data( $plugin_path );
@@ -235,13 +235,13 @@ if (!class_exists('KSD_Debug')) :
             $return .= 'Suhosin:                  ' . ( extension_loaded( 'suhosin' ) ? 'Installed' : 'Not Installed' ) . "\n";
 
             // Session stuff
-            if ( class_exists( 'EDD' ) ){
+            if ( class_exists( 'EDD' ) ) {
                 $return .= "\n" . '-- Session Configuration' . "\n\n";
                 $return .= 'EDD Use Sessions:         ' . ( defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS ? 'Enforced' : ( EDD()->session->use_php_sessions() ? 'Enabled' : 'Disabled' ) ) . "\n";
                 $return .= 'Session:                  ' . ( isset( $_SESSION ) ? 'Enabled' : 'Disabled' ) . "\n";
 
                 // The rest of this is only relevant is session is enabled
-                if( isset( $_SESSION ) ) {
+                if ( isset( $_SESSION ) ) {
                         $return .= 'Session Name:             ' . esc_html( ini_get( 'session.name' ) ) . "\n";
                         $return .= 'Cookie Path:              ' . esc_html( ini_get( 'session.cookie_path' ) ) . "\n";
                         $return .= 'Save Path:                ' . esc_html( ini_get( 'session.save_path' ) ) . "\n";
@@ -268,27 +268,27 @@ if (!class_exists('KSD_Debug')) :
         private function get_host() {
             $host = false;
 
-            if (defined('WPE_APIKEY')) {
+            if (defined( 'WPE_APIKEY') ) {
                 $host = 'WP Engine';
-            } elseif (defined('PAGELYBIN')) {
+            } elseif ( defined( 'PAGELYBIN') ) {
                 $host = 'Pagely';
-            } elseif (DB_HOST == 'localhost:/tmp/mysql5.sock') {
+            } elseif ( DB_HOST == 'localhost:/tmp/mysql5.sock') {
                 $host = 'ICDSoft';
-            } elseif (DB_HOST == 'mysqlv5') {
+            } elseif ( DB_HOST == 'mysqlv5') {
                 $host = 'NetworkSolutions';
-            } elseif (strpos(DB_HOST, 'ipagemysql.com') !== false) {
+            } elseif ( strpos( DB_HOST, 'ipagemysql.com') !== false ) {
                 $host = 'iPage';
-            } elseif (strpos(DB_HOST, 'ipowermysql.com') !== false) {
+            } elseif ( strpos( DB_HOST, 'ipowermysql.com') !== false ) {
                 $host = 'IPower';
-            } elseif (strpos(DB_HOST, '.gridserver.com') !== false) {
+            } elseif ( strpos( DB_HOST, '.gridserver.com') !== false ) {
                 $host = 'MediaTemple Grid';
-            } elseif (strpos(DB_HOST, '.pair.com') !== false) {
+            } elseif ( strpos( DB_HOST, '.pair.com') !== false ) {
                 $host = 'pair Networks';
-            } elseif (strpos(DB_HOST, '.stabletransit.com') !== false) {
+            } elseif ( strpos( DB_HOST, '.stabletransit.com') !== false ) {
                 $host = 'Rackspace Cloud';
-            } elseif (strpos(DB_HOST, '.sysfix.eu') !== false) {
+            } elseif ( strpos( DB_HOST, '.sysfix.eu') !== false ) {
                 $host = 'SysFix.eu Power Hosting';
-            } elseif (strpos($_SERVER['SERVER_NAME'], 'Flywheel') !== false) {
+            } elseif ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel') !== false ) {
                 $host = 'Flywheel';
             } else {
                 // Adding a general fallback for data gathering
@@ -308,13 +308,13 @@ if (!class_exists('KSD_Debug')) :
         private function test_ajax_works() {
 
             // Check if the Airplane Mode plugin is installed
-            if ( class_exists('Airplane_Mode_Core') ) {
+            if ( class_exists( 'Airplane_Mode_Core') ) {
 
                 $airplane = Airplane_Mode_Core::getInstance();
 
-                if ( method_exists($airplane, 'enabled') ) {
+                if ( method_exists( $airplane, 'enabled') ) {
 
-                    if ($airplane->enabled()) {
+                    if ( $airplane->enabled() ) {
                         return true;
                     }
                 } else {
@@ -327,7 +327,7 @@ if (!class_exists('KSD_Debug')) :
 
             add_filter( 'block_local_requests', '__return_false' );
 
-            if ( get_transient('_ksd_ajax_works') ) {
+            if ( get_transient( '_ksd_ajax_works') ) {
                 return true;
             }
 
@@ -342,7 +342,7 @@ if (!class_exists('KSD_Debug')) :
             $ajax = wp_remote_post( admin_url( 'admin-ajax.php' ), $params );
             $works = true;
 
-            if ( is_wp_error($ajax) ) {
+            if ( is_wp_error( $ajax ) ) {
 
                 $works = false;
             } else {
@@ -351,7 +351,7 @@ if (!class_exists('KSD_Debug')) :
                     $works = false;
                 }
 
-                if ( empty( $ajax['response']['code']) || 200 !== (int) $ajax['response']['code'] ) {
+                if ( empty( $ajax['response']['code']) || 200 !== ( int ) $ajax['response']['code'] ) {
                     $works = false;
                 }
 
@@ -359,13 +359,13 @@ if (!class_exists('KSD_Debug')) :
                     $works = false;
                 }
 
-                if ( !isset( $ajax['body'] ) || 0 !== (int) $ajax['body'] ) {
+                if ( !isset( $ajax['body'] ) || 0 !== ( int ) $ajax['body'] ) {
                     $works = false;
                 }
             }
 
             if ( $works ) {
-                set_transient('_ksd_ajax_works', '1', DAY_IN_SECONDS);
+                set_transient( '_ksd_ajax_works', '1', DAY_IN_SECONDS );
             }
 
             return $works;
@@ -375,22 +375,22 @@ if (!class_exists('KSD_Debug')) :
          * Get ticket-related information
          * @since 1.7.0
          */
-        private function get_ticket_info(){
-            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );            
+        private function get_ticket_info() {
+            require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );            
             $ksd_admin =  KSD_Admin::get_instance();
             $ksd_admin->do_admin_includes();
             $tickets = new KSD_Tickets_Controller();	
             $ticket_stats = $tickets->get_ticket_count_by_status();
             $total_tickets = 0;
             $ticket_status_info = "";
-            foreach  ( $ticket_stats as $stat ){
+            foreach  ( $ticket_stats as $stat ) {
                 $total_tickets+=$stat->count;
                 $ticket_status_info.= "{$stat->count} are {$stat->post_status}, ";//Not internationalized because this info is for sending to Kanzu Code
             }
             return "{$total_tickets} total tickets, {$ticket_status_info}";
         }
         
-        private function get_user_information(){
+        private function get_user_information() {
             $result = count_users();
             $user_info = "{$result['total_users']} total users";
             
