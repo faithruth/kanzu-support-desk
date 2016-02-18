@@ -639,22 +639,6 @@ class KSD_Admin {
              return $agents_list;
         }
         
-        /*
-         * Get categories options
-         */
-        public static function get_categories_options(){
-            $args = array(
-                'taxonomy'      => 'ticket_category',
-                'hide_empty'    => 0,
-            );
-            $categories = get_categories( $args );
-            $options = '';
-            foreach( $categories as $category){
-                $options .= "<option value=" . $category->cat_ID . ">" . esc_html( $category->name ). "</option>";
-            }
-            return $options;
-        }
-        
         /**
          * Get the KSD severity list
          * @since 2.0.0
@@ -1526,12 +1510,6 @@ class KSD_Admin {
                 //Log the ticket
                 $new_ticket_id = wp_insert_post( $new_ticket );
                 
-                //Add category to ticket
-                if( isset( $new_ticket_raw['ksd_tkt_cat_id'] ) ){
-                    $cat_id = intval( $new_ticket_raw['ksd_tkt_cat_id'] );
-                    wp_set_object_terms( $new_ticket_id, $cat_id, 'ticket_category');
-                }
-                
                 //Add meta fields
                 $meta_array                             = array();
                 $meta_array['_ksd_tkt_info_channel']    = $tkt_channel;
@@ -1860,7 +1838,9 @@ class KSD_Admin {
                     $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                 }
                 //For a checkbox, if it is unchecked then it won't be set in $_POST
-                $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup");
+                $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
+                        "supportform_show_categories","supportform_show_severity"
+                );
                 //Iterate through the checkboxes and set the value to "no" for all that aren't set
                 foreach ( $checkbox_names as $checkbox_name ){
                      $updated_settings[$checkbox_name] = ( !isset ( $_POST[$checkbox_name] ) ? "no" : $updated_settings[$checkbox_name] );
@@ -1872,7 +1852,7 @@ class KSD_Admin {
                 $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
                 
                 $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
-                
+
                 if( true === $status){
                     do_action( 'ksd_settings_saved' );
                    echo json_encode(  __( 'Settings Updated', 'kanzu-support-desk'));

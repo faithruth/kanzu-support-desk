@@ -126,7 +126,9 @@ class KSD_Public {
      */
     public function generate_new_ticket_form(){
         $settings = Kanzu_Support_Desk::get_settings();
-        if( "yes" == $settings['show_support_tab'] ) {?>
+        if( "yes" == $settings['show_support_tab'] ) {    
+        ?>
+
                 <button id="ksd-new-ticket-public"><?php echo $settings['support_button_text']; ?></button><?php
                 if( is_user_logged_in() ){//For logged in users                    
                     include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-new-ticket.php' ); //Note that this isn't an include_once since you can have multiple forms on the same page (In the content using a shortcode and as a hidden slide-in,slide-out element)
