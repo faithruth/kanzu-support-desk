@@ -48,7 +48,7 @@
             <h4>Thoughts on KSD so far</h4>
                 <?php echo KSD_Admin::output_feeback_form( 'oneweek','Reply' ); ?>
             <br />
-            <a class="button-primary ksd-so-far" href="<?php echo admin_url( 'edit.php?post_type=ksd_ticket' ); ?>">Back to KSD</a>
+            <a class="button-primary ksd-so-far" href="<?php echo admin_url( 'admin.php?page='.KSD_SLUG ); ?>">Back to KSD</a>
         </div>
     <?php endif; ?>
 </div>

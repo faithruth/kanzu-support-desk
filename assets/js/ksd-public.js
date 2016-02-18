@@ -3,16 +3,13 @@ jQuery( document ).ready(function() {
    if( jQuery("button#ksd-new-ticket-public").length ){//Check if the button exists.        
         jQuery( "button#ksd-new-ticket-public" ).click(function(e) {//Toggle on button click
             e.preventDefault();            
-            jQuery( ".ksd-form-hidden-tab" ).toggle( "slide" ).removeClass( 'hidden' );
+            jQuery( ".ksd-form-hidden-tab" ).toggle( "slide" );
     });
    };
    //Unhide registration forms added by shortcodes
    if( jQuery("div.ksd-form-short-code").length ){//Check if the button exists.      
        jQuery("div.ksd-form-short-code").removeClass( 'hidden' );//Unhide the form
        jQuery('div.ksd-form-short-code div.ksd-close-form-wrapper').remove();
-       //Hide the loading image and response field by default
-       jQuery('div.ksd-form-short-code-form-response').hide();
-       jQuery('img.ksd_loading_dialog').hide();
    }
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function(form){
@@ -136,20 +133,12 @@ jQuery( document ).ready(function() {
     if( jQuery( '#wp-ksd-public-new-reply-wrap' ).length ){
         jQuery( '#ksd-public-reply-submit' ).click(function(){           
             jQuery('.ksd-public-spinner').addClass('is-active').removeClass('hidden');
-            var ticketReply;
-            if ( 'undefined' !== typeof(tinyMCE) ){
-                tinyMCE.triggerSave(); //Required for the tinyMCE.activeEditor.getContent() below to work
-                ticketReply = tinyMCE.activeEditor.getContent();
-            }
-            else{//In case, for one reason or another, tinyMCE doesn't load
-                ticketReply = jQuery('textarea[name=ksd-public-new-reply]').val();                
-            }
-            
+            tinyMCE.triggerSave(); //Required for the tinyMCE.activeEditor.getContent() below to work
             jQuery.post(    
                     ksd_public.ajax_url,
                     {   action: 'ksd_reply_ticket',
                         ksd_new_reply_nonce: jQuery('input[name=ksd_new_reply_nonce]').val(), 
-                        ksd_ticket_reply: ticketReply,
+                        ksd_ticket_reply: tinyMCE.activeEditor.getContent(),
                         ksd_reply_title: jQuery('h1.entry-title').text(),
                         tkt_id: jQuery('ul#ksd-ticket-replies').attr("class").replace("ticket-","")
                     },
@@ -178,17 +167,9 @@ jQuery( document ).ready(function() {
                         replyData += "<div class='reply_message'>";
 
                         jQuery( '#ksd-public-reply-success' ).removeClass('hidden').html( ksd_public.ksd_public_labels.msg_reply_sent ).delay(3000).fadeOut();
-                        
-                        //Append the reply
-                        replyData += ticketReply;
-                        
-                        //Clear the reply field
-                        if ( 'undefined' !== typeof(tinyMCE) ){
-                            tinyMCE.activeEditor.setContent(''); 
-                        }else{
-                            jQuery('textarea[name=ksd-public-new-reply]').val('');
-                        }
-                        
+                        replyData += tinyMCE.activeEditor.getContent();//Get the content                                 
+                        tinyMCE.activeEditor.setContent(''); //Clear the reply field
+
                         replyData += "</div>";
                         replyData += "</li>";
                         jQuery("ul#ksd-ticket-replies").append( replyData );

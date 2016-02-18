@@ -4,11 +4,11 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.3
-Stable tag: 2.0.9
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kanzu Support Desk (KSD) is a simple but powerful customer service (support ticket) solution that takes your support to the next level.
+Kanzu Support Desk (KSD) is a WordPress customer service ( support ticket ) solution that allows you to respond effectively to every customer query in under 5 minutes.
 
 == Description ==
 
@@ -103,43 +103,9 @@ Yes; KSD will work with any theme
 7. Private note support
 
 == Changelog ==
-= 2.0.9, January 27, 2016 =
- * BUG FIX | Failure to send front-end replies due to tinyMCE not loading
- * Re-order ticket replies in ascending order
- * BUG FIX | 404 error on single ticket pages
-
-= 2.0.8, January 26, 2016 =
- * BUG FIX | 'Enable customer registration' saves correctly
- * BUG FIX | Support form not showing in bootstrap themes
-
-= 2.0.7, January 20, 2016 =
- * Add support form widget
-
-= 2.0.6, December 09, 2015 =
- * BUG FIX | New ticket notifications going to primary admin instead of auto-assign user
-
-- 2.0.6, October 05, 2015 =
- * BUG FIX | Large images in replies extending before the reply area 
-
-- 2.0.5, September 30, 2015 =
- * BUG FIX | Updating settings not working in Safari
- * BUG FIX | "- Draft" declaration removed from all post types when plugin is installed
-
-= 2.0.4, September 19, 2015 =
- * Support CCs in tickets
- * BUG FIX | Do add-on updates seamlessly
-
-= 2.0.3, September 05, 2015 =
- * BUG FIX | Generate debug file correctly
-
-= 2.0.2, September 05, 2015 =
- * BUG FIX | Agent could not send a reply
- * Add reply count to ticket grid
-
 = 2.0.1, September 03, 2015 =
  * Correct 'Settings' link in plugins screen
  * Remove logic for KSD < 1.5.0
- * Fix access permissions: Unauthenticated user shouldn't see ticket(s)
 
 = 2.0.0, August 29, 2015 =
  * Overhaul: Switched from custom tables to custom post types for all ticket info
@@ -280,34 +246,6 @@ Yes; KSD will work with any theme
 * Launched.
 
 == Upgrade Notice ==
-= 2.0.9, January 27, 2016 =
- * BUG FIX | Failure to send front-end replies due to tinyMCE not loading
- * Re-order ticket replies in ascending order
- * BUG FIX | Fix 404 error on single ticket pages
-
-= 2.0.8 =
- * BUG FIX | 'Enable customer registration' saves correctly
- * BUG FIX | Support form not showing in bootstrap themes
-
-= 2.0.7 =
- * Added support form widget
-
-= 2.0.6 =
- * BUG FIX | New ticket notifications going to primary admin instead of auto-assign user
-
-= 2.0.5 =
- * BUG FIX | Update button fix for Safari browser
-
-= 2.0.4 =
- * Support for cc's in tickets
-
-= 2.0.3 =
- * BUG FIX | Generate debug file correctly
-
-= 2.0.2 =
- * BUG FIX | Agent could not send a reply
- * Add reply count to ticket grid
-
 = 2.0.1 =
  * Correct 'Settings' link in plugins screen
  * Remove logic for KSD < 1.5.0

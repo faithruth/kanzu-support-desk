@@ -19,7 +19,7 @@
                 </li>
             <?php endif; ?>
               <li class="ksd-public-submit">
-                <img src="<?php echo KSD_PLUGIN_URL.'assets/images/loading_dialog.gif'; ?>" class="ksd_loading_dialog" width="45" height="35" />
+                <img src="<?php echo KSD_PLUGIN_URL.'assets/images/loading_dialog.gif'; ?>" class="hidden ksd_loading_dialog" width="45" height="35" />
                 <input type="submit" value="<?php _e( 'Send Message', 'kanzu-support-desk'); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
               </li>
             </ul>
@@ -27,5 +27,5 @@
             <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
             <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
         </form>
-        <div class="ksd-form-short-code-form-response ksd-public-form-response"></div>
+        <div class="ksd-form-short-code-form-response ksd-public-form-response hidden"></div>
     </div>

@@ -235,20 +235,19 @@ if (!class_exists('KSD_Debug')) :
             $return .= 'Suhosin:                  ' . ( extension_loaded( 'suhosin' ) ? 'Installed' : 'Not Installed' ) . "\n";
 
             // Session stuff
-            if ( class_exists( 'EDD' ) ){
-                $return .= "\n" . '-- Session Configuration' . "\n\n";
-                $return .= 'EDD Use Sessions:         ' . ( defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS ? 'Enforced' : ( EDD()->session->use_php_sessions() ? 'Enabled' : 'Disabled' ) ) . "\n";
-                $return .= 'Session:                  ' . ( isset( $_SESSION ) ? 'Enabled' : 'Disabled' ) . "\n";
+            $return .= "\n" . '-- Session Configuration' . "\n\n";
+            $return .= 'EDD Use Sessions:         ' . ( defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS ? 'Enforced' : ( EDD()->session->use_php_sessions() ? 'Enabled' : 'Disabled' ) ) . "\n";
+            $return .= 'Session:                  ' . ( isset( $_SESSION ) ? 'Enabled' : 'Disabled' ) . "\n";
 
-                // The rest of this is only relevant is session is enabled
-                if( isset( $_SESSION ) ) {
-                        $return .= 'Session Name:             ' . esc_html( ini_get( 'session.name' ) ) . "\n";
-                        $return .= 'Cookie Path:              ' . esc_html( ini_get( 'session.cookie_path' ) ) . "\n";
-                        $return .= 'Save Path:                ' . esc_html( ini_get( 'session.save_path' ) ) . "\n";
-                        $return .= 'Use Cookies:              ' . ( ini_get( 'session.use_cookies' ) ? 'On' : 'Off' ) . "\n";
-                        $return .= 'Use Only Cookies:         ' . ( ini_get( 'session.use_only_cookies' ) ? 'On' : 'Off' ) . "\n";
-                }
+            // The rest of this is only relevant is session is enabled
+            if( isset( $_SESSION ) ) {
+                    $return .= 'Session Name:             ' . esc_html( ini_get( 'session.name' ) ) . "\n";
+                    $return .= 'Cookie Path:              ' . esc_html( ini_get( 'session.cookie_path' ) ) . "\n";
+                    $return .= 'Save Path:                ' . esc_html( ini_get( 'session.save_path' ) ) . "\n";
+                    $return .= 'Use Cookies:              ' . ( ini_get( 'session.use_cookies' ) ? 'On' : 'Off' ) . "\n";
+                    $return .= 'Use Only Cookies:         ' . ( ini_get( 'session.use_only_cookies' ) ? 'On' : 'Off' ) . "\n";
             }
+
             $return  = apply_filters( 'ksd_debug_info', $return );
 
             $return .= "\n" . '### End System Info ###';
@@ -333,9 +332,9 @@ if (!class_exists('KSD_Debug')) :
 
             $params = array(
                 'sslverify' => false,
-                'timeout'   => 30,
-                'body'      => array(
-                'action'    => 'ksd_test_ajax'
+                'timeout' => 30,
+                'body' => array(
+                    'action' => 'ksd_test_ajax'
                 )
             );
 
@@ -381,13 +380,11 @@ if (!class_exists('KSD_Debug')) :
             $ksd_admin->do_admin_includes();
             $tickets = new KSD_Tickets_Controller();	
             $ticket_stats = $tickets->get_ticket_count_by_status();
-            $total_tickets = 0;
-            $ticket_status_info = "";
+            $ticket_info = "";
             foreach  ( $ticket_stats as $stat ){
-                $total_tickets+=$stat->count;
-                $ticket_status_info.= "{$stat->count} are {$stat->post_status}, ";//Not internationalized because this info is for sending to Kanzu Code
+                $ticket_info.= "{$stat->count} {$stat->tkt_status} tickets ";
             }
-            return "{$total_tickets} total tickets, {$ticket_status_info}";
+            return $ticket_info; 
         }
         
         private function get_user_information(){

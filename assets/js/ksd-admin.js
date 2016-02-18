@@ -3,6 +3,7 @@ if ( 'undefined' !== typeof (google) ) {
     google.load("visualization", "1", {packages: ["corechart"]});
 }
 
+var findMPosts;
 jQuery(document).ready(function () {
 
     //Added to remove/hide distortion of UI that shows up during initial load of the plugin.
@@ -12,6 +13,170 @@ jQuery(document).ready(function () {
     jQuery("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
     jQuery("#tabs > ul > li").removeClass("ui-corner-top").addClass("ui-corner-left");
 
+    //Find post div for merging 
+    //findPosts
+    
+    ( function( $ ){
+            findMPosts = {
+                    /**
+                     * 
+                     * @param {type} af_name
+                     * @param {type} af_val
+                     * @param string exclude_posts Posts to exclude from results
+                     * @returns {undefined}
+                     */
+                    launch: function( af_name, af_val, exclude_posts ) {
+                            $('#find-posts-search-merge').attr('exclude_posts', exclude_posts);
+                            findMPosts.open(af_name, af_val);
+                            findMPosts.send(exclude_posts); // Pull some results up by default
+                    },  
+                    
+                    open: function( af_name, af_val ) {
+                            var overlay = $( '.ui-find-overlay' );
+
+                            if ( overlay.length === 0 ) {
+                                    $( 'body' ).append( '<div class="ui-find-overlay"></div>' );
+                                    findMPosts.overlay();
+                            }
+
+                            overlay.show();
+
+                            if ( af_name && af_val ) {
+                                    $( '#affected' ).attr( 'name', af_name ).val( af_val );
+                            }
+
+                            $( '#find-posts' ).show();
+
+                            $('#find-posts-input').focus().keyup( function( event ){
+                                    if ( event.which == 27 ) {
+                                            findMPosts.close();
+                                    } // close on Escape
+                            });
+
+                            return false;
+                    },
+
+                    close: function() {
+                            $('#find-posts-response').empty();
+                            $('#find-posts').hide();
+                            $( '.ui-find-overlay' ).hide();
+                    },
+
+                    overlay: function() {
+                            $( '.ui-find-overlay' ).on( 'click', function () {
+                                    findMPosts.close();
+                            });
+                    },
+
+                    send: function( exclude_posts ) {
+                            var post = {
+                                        ps: $( '#find-posts-input' ).val(),
+                                        action: 'ksd_find_posts',
+                                        ksd_admin_nonce : $('#ksd_admin_nonce').val(),//@TODO: Add proper nonce
+                                        post_type: 'ksd_ticket' ,
+                                        exclude_posts: exclude_posts
+                                    };
+                                    spinner = $( '.find-box-search .spinner' );
+
+                            spinner.addClass( 'is-active' );
+
+                            $.ajax( ajaxurl, {
+                                    type: 'POST',
+                                    data: post,
+                                    dataType: 'json'
+                            }).always( function() {
+                                    spinner.removeClass( 'is-active' );
+                            }).done( function( x ) {
+                                    if ( ! x.success ) {
+                                            $( '#find-posts-response' ).text( attachMediaBoxL10n.error );
+                                    }
+
+                                    $( '#find-posts-response' ).html( x.data );
+                            }).fail( function() {
+                                    $( '#find-posts-response' ).text( attachMediaBoxL10n.error );
+                            });
+                    }
+            };
+
+            $( document ).ready( function() {
+                    var settings, $mediaGridWrap = $( '#wp-media-grid' );
+
+                    // Open up a manage media frame into the grid.
+                    if ( $mediaGridWrap.length && window.wp && window.wp.media ) {
+                            settings = _wpMediaGridSettings;
+
+                            window.wp.media({
+                                    frame: 'manage',
+                                    container: $mediaGridWrap,
+                                    library: settings.queryVars
+                            }).open();
+                    }
+
+                    $( '#find-posts-submit-merge' ).click( function( event ) {
+                        if ( ! $( '#find-posts-response input[type="radio"]:checked' ).length ){
+                            event.preventDefault();
+                            return false;
+                        }
+
+                        try{
+                            var post = {
+                                action: 'ksd_merge_tickets',
+                                ksd_admin_nonce : $('#ksd_admin_nonce').val(),//@TODO: Add proper nonce
+                                post_type: 'ksd_ticket' ,
+                                post_parent: $('#find-posts-response input[type="radio"]:checked').val(),
+                                tickets_to_merge: $('#find-posts-search-merge').attr('exclude_posts') ,
+                            };
+
+                            $.ajax( ajaxurl, {
+                                type: 'POST',
+                                data: post,
+                                dataType: 'json'
+                            }).always( function() {
+                                //spinner.removeClass( 'is-active' );
+                            }).done( function( x ) {
+                                if ( ! x.success ) {
+                                    $( '#find-posts-response' ).text( attachMediaBoxL10n.error );
+                                }
+
+                                $( '#find-posts-response' ).html( x.data );
+                                $(location).attr("href","edit.php?post_type=ksd_ticket");
+                                
+                            }).fail( function() {
+                                $( '#find-posts-response' ).text( attachMediaBoxL10n.error );
+                            });
+
+                        }catch(ex){
+                        }
+
+                        return false;
+
+                    });
+                    
+                    $( '#find-posts .find-box-search :input' ).keypress( function( event ) {
+                            if ( 13 == event.which ) {
+                                    findMPosts.send(function(){ findMPosts.send($(this).attr("exclude_posts")); });
+                                    return false;
+                            }
+                    });
+                    $( '#find-posts-search-merge' ).click( function(){ findMPosts.send($(this).attr("exclude_posts")); });
+                    $( '#find-posts-close' ).click( findMPosts.close );
+                    $( '#doaction, #doaction2' ).click( function( event ) {
+                            $( 'select[name^="action"]' ).each( function() {
+                                    if ( $(this).val() === 'attach' ) {
+                                            event.preventDefault();
+                                            findMPosts.open();
+                                    }
+                            });
+                    });
+
+                    // Enable whole row to be clicked
+                    $( '.find-box-inside' ).on( 'click', 'tr', function() {
+                            $( this ).find( '.found-radio input' ).prop( 'checked', true );
+                    });
+            });
+    })( jQuery );
+    //eof:findMPosts
+    
     /*Get URL parameters*/
     jQuery.urlParam = function (name) {
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
@@ -286,10 +451,16 @@ jQuery(document).ready(function () {
             /**AJAX: Update settings**/
             jQuery('form#update-settings').submit(function (e) {
                 e.preventDefault();
-            });
-
-            jQuery('input[name=ksd-settings-reset]').click(function(e){ 
-                var data = {action: 'ksd_reset_settings', ksd_admin_nonce: ksd_admin.ksd_admin_nonce}
+                var data;
+                if (jQuery(this).find("input[type=submit]:focus").hasClass("ksd-reset")) {//The  reset button has been clicked
+                    data = {action: 'ksd_reset_settings', ksd_admin_nonce: ksd_admin.ksd_admin_nonce}
+                }
+                else if (jQuery(this).find("input[type=submit]:focus").hasClass("ksd-submit")) {//The update button has been clicked
+                    data = jQuery(this).serialize();//The action and nonce are hidden fields in the form
+                }
+                else {//Another button has been clicked. Like 'Activate License' and 'De-activate License'
+                    return false;
+                }
                 KSDUtils.showDialog("loading");
                 jQuery.post(ksd_admin.ajax_url,
                         data,
@@ -298,23 +469,7 @@ jQuery(document).ready(function () {
                                 return;
                             }
                             KSDUtils.showDialog("success", JSON.parse(response));
-                });
-
-            });
-            
-            jQuery('input[name=ksd-settings-submit]').click(function(e){     
-                var data = jQuery('form#update-settings').serialize();//The action and nonce are hidden fields in the form
-                
-                KSDUtils.showDialog("loading");
-                jQuery.post(ksd_admin.ajax_url,
-                        data,
-                        function (response) {
-                            if (KSDUtils.ajaxResponseErrorCheck(response)) {
-                                return;
-                            }
-                            KSDUtils.showDialog("success", JSON.parse(response));
-                });
-
+                        });
             });
 
             //Add Tooltips for the settings panel
@@ -739,7 +894,9 @@ jQuery(document).ready(function () {
 
             //Page Refresh
             this.attachRefreshTicketsPage();
+
         };
+        
         
         /*
          * Total ticket indicator in ticket filters
@@ -921,7 +1078,6 @@ jQuery(document).ready(function () {
                     var tab_id = current_tab.replace("#tickets-tab-", "");
                     var total_rows = respObj[1];
                     var currentpage = offset + 1;
-                    _loadTicketPagination(tab_id, currentpage, total_rows, limit);
 
                     //Refresh Totals
                     _totalTicketsPerFilter();
@@ -1272,31 +1428,13 @@ jQuery(document).ready(function () {
             if ( 'undefined' === typeof ( post_title ) ){
                 post_title = jQuery( '#titlewrap h2.post_title' ).text();//This is the title we expect to get always
             }
-            
-            //Validate CC when action is ksd_reply_ticket and indicate that there is validation error
-            jQuery('#ksd-cc-field').attr('title','');
-            jQuery('#ksd-cc-field').removeClass('ksd-cc-field-error');
-            if( jQuery('#ksd-cc-field').val().length && 'none' !== jQuery('#ksd-cc-field').css("display") ){
-                var ccArr = jQuery('#ksd-cc-field').val().split(',');
-                var ccLen = ccArr.length;
-                for( i=0; i < ccLen; i++ ){
-                    if( ! ccArr[i].match(/@/) ){
-                        jQuery('#ksd-cc-field').attr('title', ksd_admin.ksd_labels.validator_cc ); 
-                        jQuery('#ksd-cc-field').addClass('ksd-cc-field-error');
-                        jQuery('.ksd-reply-spinner').removeClass('is-active').addClass('hidden');
-                        return false;
-                    }
-                }
-            }
-            
             jQuery.post(    ksd_admin.ajax_url,
                     {   action: action,
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                         ksd_ticket_reply: tinyMCE.activeEditor.getContent(),
                         ksd_reply_title: post_title,
                         tkt_private_note: jQuery('textarea[name=tkt_private_note]').val(),
-                        tkt_id: jQuery.urlParam('post'),
-                        ksd_tkt_cc: jQuery("#ksd-cc-field").val()
+                        tkt_id: jQuery.urlParam('post')
                     },
                     function (response) {
                         var respObj = {};
@@ -1322,10 +1460,6 @@ jQuery(document).ready(function () {
                         replyData += '<span class="reply_date">' + d.toLocaleString() + '</span>';
                         replyData += "<div class='reply_message'>";
 
-                        if( respObj.rep_cc != null && respObj.rep_cc.match(/@/)){
-                            replyData += "<div class='ksd-tkt-cc-wrapper'><span class='ksd_cc'>" + ksd_admin.ksd_labels.lbl_CC + ": "+ respObj.rep_cc + "</span></div>";
-                        }
-							
                         switch ( action ) {
                             case "ksd_update_private_note":
                                 KSDUtils.showDialog("success", respObj);
@@ -1785,8 +1919,12 @@ jQuery(document).ready(function () {
                             repliesData += "<span class='reply_author'>" + value.post_author + "</span>";
                             repliesData += "<span class='reply_date'>" + value.post_date + "</span>";
                             
-                            if( value.ksd_cc !== null && value.ksd_cc.match(/@/)){
-                                repliesData += "<div class='ksd-reply-cc'>" + ksd_admin.ksd_labels.lbl_CC + ": <span class='ksd-cc-emails'>"+ value.ksd_cc + "</span></div>";
+                            //cc //@TODO Update this
+                            if( value.rep_cc != null && value.rep_cc.match(/@/)){
+                                repliesData += "<div><span class='ksd_cc'>" + ksd_admin.ksd_labels.lbl_CC + ": "+ value.rep_cc + "</span></div>";
+                                jQuery("#edit-ticket #reply_toall_button").attr("data", value.rep_cc);
+                                jQuery("#edit-ticket #reply_toall_button").attr("hascc", "1");
+                                jQuery("#edit-ticket #reply_toall_button").css({"display":"inline-block"});
                             }
                             
                             repliesData += "<div class='reply_message'>" + _this.formatSingleReplyMessage(value.post_content) + "</div>";                            
@@ -2124,66 +2262,6 @@ jQuery(document).ready(function () {
          * @param {type} limit
          * @returns {undefined}
          */
-        _loadTicketPagination = function (tab_id, current_page, total_results, limit) {
-
-            //@TODO: Why is this coming as o instead of 0.
-            if (total_results === "o" || total_results === "0")
-                return;
-            var pages = (total_results / limit);
-            jQuery("#ksd_pagination_" + tab_id + " ul li").remove();
-            jQuery("#ksd_pagination_" + tab_id + " ul").append('\
-                        <li><a rel="external" href="#"><<</a></li>  \
-                        <li><a rel="external" href="#"><</a></li>');
-
-            for (i = 0; i < pages; i++) {
-                currentclass = (i === current_page - 1) ? "current-nav" : "";
-                ii = i + 1;
-                jQuery("#ksd_pagination_" + tab_id + " ul").append(' \
-                            <li><a rel="external" href="#" class="' + currentclass + '">' + ii + '</a></li> \
-                        ');
-            }
-
-            jQuery("#ksd_pagination_" + tab_id + " ul").append('\
-                        <li><a rel="external" href="#">></a></li>  \
-                        <li><a rel="external" href="#">>></a></li>');
-
-
-            //Attach click events
-            jQuery("#ksd_pagination_" + tab_id + " ul li a").click(function () {
-                var cpage = jQuery(this).html();
-                var current_page = _getCurrentPage(tab_id);
-                var limit = _getPagLimt(tab_id);
-                var pages = Math.ceil(total_results / limit);
-
-                //Prev, Next
-                if (cpage === ">" || cpage === "&gt;") {
-                    cpage = current_page + 1;
-                }
-                if (cpage === ">>" || cpage === '&gt;&gt;') {
-                    cpage = Math.ceil(total_results / limit);
-                }
-                if (cpage === "<" || cpage === '&lt;') {
-                    cpage = current_page - 1;
-                }
-                if (cpage === "<<" || cpage === '&lt;&lt;') {
-                    cpage = 1;
-                }
-
-                if (cpage < 1 || cpage > pages || cpage === current_page) {
-                    return;
-                }
-
-                //get pagination
-                var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
-
-                //search
-                var search_text = jQuery("input[name=ksd_tkt_search_input_" + tab_id + "]").val();
-
-                jQuery(_getTabId(tab_id)).addClass("pending");
-                _this.getTickets(_getTabId(tab_id), search_text, limit, cpage - 1);
-
-            });
-        };
 
     };
 
