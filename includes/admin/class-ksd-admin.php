@@ -33,12 +33,12 @@ class KSD_Admin {
 	 */
 	public function __construct() {
 
-		// Load admin style sheet and JavaScript.
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
+            // Load admin style sheet and JavaScript.
+            add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
+            add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
-		// Add the options page and menu item.
-		add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
+            // Add the options page and menu item.
+            add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
                 
                 //Add the attachments button
                 add_action('media_buttons', array( $this, 'add_attachments_button' ), 15 );
@@ -77,9 +77,6 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_get_ticket_activity', array( $this, 'get_ticket_activity' ));           
                 add_action( 'wp_ajax_ksd_migrate_to_v2', array($this, 'migrate_to_v2'));
                 add_action( 'wp_ajax_ksd_deletetables_v2', array($this, 'deletetables_v2'));
-                add_action( 'wp_ajax_ksd_find_posts', array( $this, 'find_posts'));
-                add_action( 'wp_ajax_ksd_merge_tickets', array( $this, 'merge_tickets'));
-
                 
                 
                 //Generate a debug file
@@ -140,12 +137,6 @@ class KSD_Admin {
                 add_filter( 'parse_query', array( $this, 'ticket_table_apply_filters' ) );
                 //Display ticket status next to the ticket title
                 add_filter( 'display_post_states', array( $this, 'display_ticket_statuses_next_to_title' ) );
-                
-                //Add merge action link below ticket title in grid
-                add_filter( 'post_row_actions', array( $this, 'add_merge_link' ), 10, 2 );
-                
-                //Add merge ticket find post div
-                add_action( 'admin_footer-edit.php', array( $this, 'add_merge_findpostdiv' ) );
 	}
 	
 
@@ -189,13 +180,6 @@ class KSD_Admin {
                 wp_enqueue_script( KSD_SLUG . '-admin-gcharts', '//www.google.com/jsapi', array(), KSD_VERSION ); 
                 wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'/assets/js/ksd-admin.js', array( 'jquery','jquery-ui-core','jquery-ui-tabs','json2','jquery-ui-dialog','jquery-ui-tooltip','jquery-ui-accordion' ), KSD_VERSION ); 
 		
-                //Scripts needed for rendering the merge findpostdiv
-                if( 'ksd_ticket' === filter_input(INPUT_GET, "post_type" )  ){
-                    wp_enqueue_script('thickbox'); // needed for find posts div
-                    wp_enqueue_script('media');
-                    wp_enqueue_script('wp-ajax-response');
-                }
-                
                 //Variables to send to the admin JS script
                 $ksd_admin_tab = ( isset( $_GET['page'] ) ?  $_GET['page']  : "" );//This determines which tab to show as active
                 
@@ -241,7 +225,8 @@ class KSD_Admin {
                 $admin_labels_array['lbl_toggle_trimmed_content']   = __('Toggle Trimmed Content','kanzu-support-desk');
                 $admin_labels_array['lbl_tickets']                  = __( 'Tickets','kanzu-support-desk' );
                 $admin_labels_array['lbl_CC']                       = __( 'CC','kanzu-support-desk' );
-                $admin_labels_array['lbl_replytoall']               = __( 'Reply to all','kanzu-support-desk' );
+                $admin_labels_array['lbl_reply_to_all']             = __( 'Reply to all','kanzu-support-desk' );
+                $admin_labels_array['lbl_populate_cc']              = __( 'Populate CC field','kanzu-support-desk' );
                 $admin_labels_array['lbl_save']                     = __( 'Save','kanzu-support-desk' );
                 $admin_labels_array['lbl_update']                   = __( 'Update','kanzu-support-desk' );
                 $admin_labels_array['lbl_created_on']               = __( 'Created on','kanzu-support-desk' );
@@ -969,12 +954,15 @@ class KSD_Admin {
                 $reply->post_author = get_userdata( $reply->post_author )->display_name;
                 //@TODO Get the reply's attachments
                 
-                //Change the time to somoething more human-readable
+                //Change the time to something more human-readable
                 $reply->post_date = date_i18n( __( 'M j, Y @ H:i' ), strtotime( $reply->post_date ) ); 
                 
                 //Format the message for viewing
                 $reply->post_content = $this->format_message_content_for_viewing( $reply->post_content );
-            }    
+                
+                //Add reply's CC
+                $reply->ksd_cc = get_post_meta( $reply->ID, '_ksd_tkt_info_cc', true );
+            } 
             return $replies;
         }
         
@@ -1177,16 +1165,21 @@ class KSD_Admin {
             //In add-on mode, this function was called by an add-on
             $add_on_mode = ( is_array( $ticket_reply_array ) ? true : false );
             
-            //Front end reply nonce check
-            if( isset( $_POST['ksd_new_reply_nonce'] ) ){
-                $_POST['ksd_admin_nonce'] = $_POST['ksd_new_reply_nonce'];
-            }
-            
-            if ( ! $add_on_mode ){//Check for NONCE if not in add-on mode     
-                if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
-	 		 die ( __('Busted!','kanzu-support-desk') );
+
+            if ( ! $add_on_mode ){//Check for NONCE if not in add-on mode    
+                if( isset( $_POST['ksd_admin_nonce'] ) || isset( $_POST['ksd_new_reply_nonce'] ) ){
+                    if ( isset( $_POST['ksd_admin_nonce'] ) &&  ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ){
+                        die ( __('Busted!','kanzu-support-desk') );  
+                    }
+                    //Front end reply nonce check
+                    if ( isset( $_POST['ksd_new_reply_nonce'] ) &&  ! wp_verify_nonce( $_POST['ksd_new_reply_nonce'], 'ksd-add-new-reply' ) ){
+                        die ( __('Busted!','kanzu-support-desk') ); 
+                    } 
+                }else{
+                    die ( __('Busted!','kanzu-support-desk') );
                 }
             }
+            
             $this->do_admin_includes();
                 
                 try{
@@ -1199,7 +1192,7 @@ class KSD_Admin {
                     else{
                          $new_reply['post_author'] = get_current_user_id();
                     }
-                    $parent_ticket_ID             = sanitize_text_field( $_POST['tkt_id'] );                    
+                    $parent_ticket_ID = sanitize_text_field( $_POST['tkt_id'] );                    
                     $new_reply['post_title']      = wp_strip_all_tags( $_POST['ksd_reply_title'] );               
                     $new_reply['post_parent']     = $parent_ticket_ID;    
                     //Add KSD reply defaults
@@ -1223,6 +1216,11 @@ class KSD_Admin {
                     }
                    //Add the reply to the replies table                         
                    $new_reply_id = wp_insert_post( $new_reply );
+                   
+                    if( null !== $cc ){
+                        add_post_meta( $new_reply_id , '_ksd_tkt_info_cc', $cc, true );
+                    }
+                    
                             
                     //Update the main ticket's tkt_time_updated field.  
                     $parent_ticket = get_post( $parent_ticket_ID );
@@ -1325,6 +1323,8 @@ class KSD_Admin {
                 $value_parameters[] = 'resolved' ;
                 $value_parameters[] = $new_ticket['ksd_tkt_cust_id'] ;
                 
+                global $wpdb;
+                $TC->set_tablename( "{$wpdb->prefix}posts" );
                 $the_ticket = $TC->get_tickets( $filter, $value_parameters );
                 if ( count( $the_ticket ) > 0  ){//This is a reply
                     //Create the array the reply function expects
@@ -1464,7 +1464,6 @@ class KSD_Admin {
                 //Get the settings. We need them for tickets logged from the support tab
                 $settings = Kanzu_Support_Desk::get_settings();                
 
-
                 //Return a different message based on the channel the request came on
                 $output_messages_by_channel = array();
                 $output_messages_by_channel[ 'admin-form' ] = __( 'Ticket Logged. Sending notification...', 'kanzu-support-desk');
@@ -1539,9 +1538,9 @@ class KSD_Admin {
                 $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
 
                 //@TODO Save the attachments
-                //if( isset( $new_ticket_raw['ksd_attachments'] ) ){
-                //    $this->add_ticket_attachments( $new_ticket_id, $new_ticket_raw['ksd_attachments'] );
-                //}
+                if( isset( $new_ticket_raw['ksd_attachments'] ) ){
+                    $this->add_ticket_attachments( $new_ticket_id, $new_ticket_raw['ksd_attachments'] );
+                }
                 
                 //If the ticket was logged by using the import feature, end the party here
                 if( isset( $new_ticket_raw['ksd_tkt_imported'] ) ){
@@ -1668,10 +1667,35 @@ class KSD_Admin {
          * @param Boolean $is_reply Whether this is a reply or a ticket
          */
         private function add_ticket_attachments( $ticket_id, $attachments_array, $is_reply=false ) {
+            $attachment_html = ''; 
             for ( $i = 0; $i < count( $attachments_array['url'] ); $i++ ) {
-                $AC = new KSD_Attachments_Controller();//We don't sanitize these values because they aren't supplied by the user. The system generates them
-                $AC->add_attachment( $ticket_id, $attachments_array['url'][$i], $attachments_array['size'][$i], $attachments_array['filename'][$i], $is_reply );
+                $filename = $attachments_array['url'][$i];
+                $filetype = wp_check_filetype( basename( $filename ), null );
+                
+                $attachment = array(
+                        'guid'           => $filename, 
+                        'post_mime_type' => $filetype,
+                        'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $filename ) ),
+                        'post_content'   => '',
+                        'post_status'    => 'inherit'
+                );
+                
+                // Insert the attachment.
+                $attach_id = wp_insert_attachment( $attachment, $filename, $ticket_id );
+                require_once( ABSPATH . 'wp-admin/includes/image.php' );
+                $attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
+                wp_update_attachment_metadata( $attach_id, $attach_data );
+                $attachment_html .= '<li><a href="' . get_attachment_link($attach_id) . '">' . preg_replace( '/\.[^.]+$/', '', basename( $filename ) ) . '</a></li>';
             }
+            
+            if( count($attachments_array) > 0 ){
+                $attachment_html = '<div class="ksd-attachments-addon">Attachments: <ul class="ksd_attachments">' .$attachment_html. '</ul></div>';
+            }
+            
+            //Update tickets message with the attachments in atachments
+            $wp_post = get_post ( (int)$ticket_id );
+            $wp_post->post_content = $wp_post->post_content . $attachment_html ;
+            wp_update_post($wp_post);
         }
         
         /**
@@ -2528,8 +2552,11 @@ class KSD_Admin {
          * @since 1.6.8
          */
         private function add_tinymce_cc_button(){
-            add_filter("mce_external_plugins", array ( $this, "add_tinymce_cc_plugin" ) );
-            add_filter('mce_buttons', array ( $this, 'register_tinymce_cc_button' ), 10, 2 );
+            if( 'edit' !== filter_input ( INPUT_GET, 'action') && 'ksd_ticket' !== filter_input ( INPUT_GET, 'post_type')  ){
+                return;
+            }
+            add_filter( "mce_external_plugins", array ( $this, "add_tinymce_cc_plugin" ) );
+            add_filter( 'mce_buttons', array ( $this, 'register_tinymce_cc_button' ), 10, 2 );
         }
         
         /**
@@ -2542,13 +2569,14 @@ class KSD_Admin {
             return $plugin_array;
         }
         
-		/**
+        /**
          * Register the CC button
          * @param type $buttons
          * @return type
          */
         public function register_tinymce_cc_button( $buttons,  $editor_id ) {
-            if ( strpos ( $editor_id , 'ksd_' ) !== false ){//Add the CC button only if it is a KSD editor (not a post, page, etc editor)
+            global $current_screen;
+            if ( 'ksd_ticket' === $current_screen->post_type ){//Add the CC button only if it is a KSD editor (not a post, page, etc editor)
                 array_push( $buttons, 'ksd_cc_button' );  
             }
             return $buttons;
@@ -2666,10 +2694,8 @@ class KSD_Admin {
         public function ticket_table_apply_filters( $query ){
             if( is_admin() && $query->query['post_type'] == 'ksd_ticket' ) {
                 
-                $qv = &$query->query_vars;
-                $qv['meta_query'] = array();
-                 
-                $qv['post_parent__in'] = array(0);//Don't show merged tickets in ticket grid
+                 $qv = &$query->query_vars;
+                 $qv['meta_query'] = array();
                  
                 if( ! empty( $_GET['ksd_severities_filter'] ) ) {
                     $qv['meta_query'][] = array(
@@ -2727,24 +2753,17 @@ class KSD_Admin {
                 echo  '' == $ticket_assignee || 0 == $ticket_assignee ? __( 'No one', 'kanzu-support-desk' ) : get_userdata( $ticket_assignee )->display_name;
             }   
             if ( $column_name == 'status' ) {
-                global $post,$wpdb;
+                global $post;
                 echo   "<span class='{$post->post_status}'>{$post->post_status}</span>";
-                
-                //If other tickets have been merged with ticket, show merged icon
-                $merged_tickets_count 
-                    = $wpdb->get_var( " SELECT COUNT(*) FROM {$wpdb->prefix}posts t1 WHERE "
-                    . " post_type = 'ksd_ticket' AND post_parent = '${post_id}' " 
-                    ); 
-                echo  ( $merged_tickets_count > 0 ) ? '<span class="ksd-ticket-merged" title="' . __( 'Ticket contains merged tickets', 'kanzu-support-desk') . '">M</span>' : '';
             }   
             if ( $column_name == 'customer' ) {
                 global $post;
                 echo   get_userdata( $post->post_author )->display_name;
             } 
             if ( $column_name == 'replies' ) {
-                global $post,$wpdb;
+                global $wpdb;
                 $reply_count 
-                        = $wpdb->get_var( " SELECT COUNT(*) FROM {$wpdb->prefix}posts t1 WHERE "
+                        = $wpdb->get_var( " SELECT COUNT(ID) FROM {$wpdb->prefix}posts WHERE "
                         . " post_type = 'ksd_reply' AND post_parent = '${post_id}' " 
                         );
                 echo   $reply_count;
@@ -2752,152 +2771,14 @@ class KSD_Admin {
         }
         
         /**
-         * Add merge action link below ticket title in grid
-         * @since 2.0.1
-         * 
-         * @param array string $actions
-         * @param WP_Post $post
-         * @return array string $actions
-         */
-        public function add_merge_link( $actions, $post ){
-            
-            $actions['archive'] = '<a href="#" onclick="findMPosts.launch(\'action\',\'find_posts\', '. $post->ID .');'
-            . 'return false;" title="'
-            . esc_attr( __( 'Merge this ticket', 'kanzu-support-desk' ) ) 
-            . '">' . __( 'Merge', 'kanzu-support-desk'  ) . '</a>';
-                
-            return $actions;
-        }
-        
-        /**
-         * Adds the find post div html to the ksd_ticket grid page so that it 
-         * can be used during the merge action
-         * @since 2.0.1
-         */
-        public function add_merge_findpostdiv(){
-            if( 'ksd_ticket' === filter_input( INPUT_GET, "post_type" ) ){
-                include_once( KSD_PLUGIN_DIR .  "includes/admin/views/html-admin-merge-findpostdiv.php");
-            }
-            
-        }
-        
-        /*
-         * find_post_div implementation for merging tickets
-         * 
-         */
-        public static function find_merge_div(){
-            include_once( KSD_PLUGIN_DIR .  "includes/admin/views/html-admin-merge-findmergediv.php");
-        }
-        
-        /**
-         * Returns filtered post list used by merge ticket dialog.
-         * It's are re-implementation of wp_ajax_find_posts with minor modifications
-         */
-        public function find_posts(){
-
-            $args = array(
-                'post_type'          => filter_input( INPUT_POST, 'post_type' ),
-                'post_status'     => array('open','pending','draft'),
-                'post_parent__in'     => array(0),
-                'posts_per_page'  => 20,
-            );
-            
-            //Get search term
-            $s = wp_unslash( $_POST['ps'] );
-            if ( '' !== $s ){
-                $args['s'] = $s;
-            }
-            
-            //Eliminate the ticket(s) selected from list
-            if( filter_input( INPUT_POST, 'exclude_posts' ) ){
-                $args['post__not_in'] = explode( ",", filter_input(INPUT_POST, 'exclude_posts') );
-            }
-
-            $posts = get_posts( $args );
-            if ( ! $posts ) {
-                wp_send_json_error( __( 'No tickets found.', 'kanzu-support-desk' ) );
-            }
-            
-            $alt = '';
-            $html = '<table class="widefat"><thead><tr><th class="found-radio"><br /></th><th>'.__('Title', 'kanzu-support-desk').'</th><th class="no-break">'.__('Date', 'kanzu-support-desk' ) . '</th><th class="no-break">'.__('Status', 'kanzu-support-desk').'</th></tr></thead><tbody>';            
-            foreach ( $posts as $post ) {
-                $title = trim( $post->post_title ) ? $post->post_title : __( '(no title)' );
-                $alt = ( 'alternate' == $alt ) ? '' : 'alternate';
-                 
-                if ( '0000-00-00 00:00:00' == $post->post_date ) {
-                    $time = '';
-                } else {
-                    $time = mysql2date(__('Y/m/d'), $post->post_date);
-                }
-                
-                $html .= '<tr class="' . trim( 'found-posts ' . $alt ) . '"><td class="found-radio"><input type="radio" id="ksd-found-'.$post->ID.'" name="found_post_id" value="' . esc_attr($post->ID) . '"></td>';
-                $html .= '<td><label for="found-ticket-'.$post->ID.'">' . esc_html( $title ) . '</label></td><td class="no-break">'.esc_html( $time ) . '</td><td class="no-break">' . esc_html( __( $post->post_status , 'kanzu-support-desk' ) ). ' </td></tr>' . "\n\n";
-            }
-            $html .= '</tbody></table>';
-           
-            wp_send_json_success( $html );
-        }
-        
-        /**Merge tickets
-         * 
-         */
-        public function merge_tickets(){
-           //@TODO: Nonce check
-            $post_parent        = filter_input( INPUT_POST, 'post_parent' );
-            $tickets_to_merge   = filter_input( INPUT_POST, 'tickets_to_merge' );
-            
-            foreach( explode( ',', $tickets_to_merge ) as $post_id ){
-                $ticket = get_post( $post_id );
-                $ticket->post_parent = $post_parent;
-                wp_update_post( $ticket );
-                
-                //Handle case where the ticket_to_merge has other tickets merged with it. 
-                //Merge the other tickets with the new parent ticket.
-                $post_args = array( 
-                    'post_parent__in' => array( $post_id ) ,
-                    'post_status'     => array( 'open','resolved','pending','auto-draft','published','resolved')
-                ) ;
-                $posts = get_posts( $post_args );
-                if ( $posts ) {
-                    foreach( $posts as $t ){
-                        $t = get_post( $t->ID );
-                        $t->post_parent = $post_parent;
-                        wp_update_post( $t );
-                    }
-                }
-            }
-            wp_send_json_success( __( 'Tickets have been merged.', 'kanzu-support-desk' ) );
-        }
-        /**
          * Add custom views to the admin post grid
          * @param Array $views The default admin post grid views
          * @since 2.0.0
          */
         public function ticket_views( $views ){
-            global  $wpdb;
             unset( $views['publish'] ); //Remove the publish view          
             $views['mine']              = "<a href='edit.php?post_type=ksd_ticket&amp;ksd_view=mine'>".__( 'Mine', 'kanzu-support-desk' )."</a>";
             $views['unassigned']        = "<a href='edit.php?post_type=ksd_ticket&amp;ksd_view=unassigned'>".__( 'Unassigned', 'kanzu-support-desk' )."</a>";
-             
-            //Modify All and Open views
-            if( isset( $views['all'] ) ){               
-                $current = ( null === filter_input(INPUT_GET, 'post_status' ) ) ? "current" : ""; 
-                $all = $wpdb->get_var( " SELECT COUNT(*) FROM {$wpdb->prefix}posts t1 WHERE t1.post_parent = 0 AND t1.post_type = 'ksd_ticket' " );
-                $views['all'] = '<a href="edit.php?post_type=ksd_ticket" class="'. $current .'">All <span class="count">('. $all .')</span></a>';
-            }
-            
-            //Modify All and Open views
-            if( isset( $views['all'] ) ){               
-                $current = ( null === filter_input(INPUT_GET, 'post_status' ) ) ? "current" : ""; 
-                $all = $wpdb->get_var( " SELECT COUNT(*) FROM {$wpdb->prefix}posts t1 WHERE t1.post_parent = 0 AND t1.post_type = 'ksd_ticket' AND t1.post_status IN ('open','pending','resolved') " ); //@TDOD: Should we count drafts?
-                $views['all'] = '<a href="edit.php?post_type=ksd_ticket" class="'. $current .'">' . __( 'All', 'kanzu-support-desk' ) . ' <span class="count">('. $all .')</span></a>';
-            }
-            if( isset( $views['open'] ) ){               
-                $current = ( 'open' === filter_input(INPUT_GET, 'post_status' ) ) ? "current" : ""; 
-                $open = $wpdb->get_var( " SELECT COUNT(*) FROM {$wpdb->prefix}posts t1 WHERE t1.post_parent = 0 AND t1.post_type = 'ksd_ticket' AND t1.post_status = 'open' " );
-                $views['open'] = '<a href="edit.php?post_type=ksd_ticket&post_status=open" class="'. $current .'">' . __( 'Open', 'kanzu-support-desk' ) . ' <span class="count">('. $open .')</span></a>';
-            }
-            
             return $views;
         }
         
@@ -2913,9 +2794,12 @@ class KSD_Admin {
          */
         public function display_ticket_statuses_next_to_title( $states ) {
             global $post;
-            if( $post->post_status == 'pending' || $post->post_status == 'draft' ){
-                return array ( );
+            if( 'ksd_ticket' === $post->post_type ){
+                if( $post->post_status == 'pending' || $post->post_status == 'draft' ){
+                    return array ( );
+                }
             }
+
             return $states;
         }       
 
@@ -2959,7 +2843,7 @@ class KSD_Admin {
                     $option    = 'ksd_v2migration_status';
                     $new_value =   $t->tkt_id - 1; //Last updated ticket
                     update_option( $option, $new_value );   
-                    _e( 'Error occured. Migration did not completed.', 'kanzu-support-desk');
+                    _e( 'Sorry, an error occured. The migration did not complete. Please re-try. If all fails, please get in touch with our support on support@kanzucode.com', 'kanzu-support-desk');
                     die();
                 }
                 

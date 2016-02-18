@@ -153,10 +153,9 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
                         
             $summary_statistics["response_times"] = parent::exec_query( $response_time_query );
              
-            $open_tickets_args    = array(
-                'post_type' 	  => 'ksd_ticket',
-                'post_status'     => 'open',
-                'post_parent__in' => array(0) //Eliminate merged tickets
+            $open_tickets_args = array(
+                'post_type' 	=> 'ksd_ticket',
+                'post_status' 	=> 'open'
              );
             
              $wp_open_tickets_query = new WP_Query( $open_tickets_args );
@@ -169,8 +168,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
                 'post_status'       => array( 'open','pending','new', 'draft' ),
                 'meta_key'          => '_ksd_tkt_info_assigned_to',
                 'meta_value'        => 0,
-                'meta_compare'      => '<=',//This works yet = doesn't
-                'post_parent__in' => array(0) //Eliminate merged tickets
+                'meta_compare'      => '<='//This works yet = doesn't
                 ); 
                
             $wp_unassigned_tickets_query = new WP_Query( $unassigned_tickets_args );
@@ -186,7 +184,7 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
           */
          public function get_ticket_count_by_status(){     
              global $wpdb;
-             $query = "SELECT count(tkt_id) AS `count`,`tkt_status` FROM `{$wpdb->prefix}kanzusupport_tickets` group by `tkt_status`";
+             $query = "SELECT count(ID) AS `count`,`post_status` FROM `{$wpdb->prefix}posts` where `post_type` = 'ksd_ticket' group by `post_status`";
              return parent::exec_query( $query );
          }
  
@@ -243,12 +241,10 @@ include_once( KSD_PLUGIN_DIR .  'includes/libraries/class-ksd-model.php' );
            global $wpdb;
            $query = "
                     SELECT * FROM ( 
-                        SELECT COUNT(a1.ID) as mine FROM {$wpdb->prefix}posts a1 "
-                        . "INNER JOIN {$wpdb->prefix}postmeta a2 ON ( a1.ID = a2.post_id ) WHERE 1=1 AND ( ( a2.meta_key = '_ksd_tkt_info_assigned_to' AND CAST(a2.meta_value AS SIGNED) = '{$user_id}' ) ) AND a1.post_type = 'ksd_ticket' AND ((a1.post_status = 'draft' OR a1.post_status = 'pending' OR a1.post_status = 'open' OR a1.post_status = 'new') ) AND ( a1.post_parent = 0 ) 
+                        SELECT COUNT({$wpdb->prefix}posts.ID) as mine FROM {$wpdb->prefix}posts INNER JOIN {$wpdb->prefix}postmeta ON ( {$wpdb->prefix}posts.ID = {$wpdb->prefix}postmeta.post_id ) WHERE 1=1 AND ( ( {$wpdb->prefix}postmeta.meta_key = '_ksd_tkt_info_assigned_to' AND CAST({$wpdb->prefix}postmeta.meta_value AS SIGNED) = '{$user_id}' ) ) AND {$wpdb->prefix}posts.post_type = 'ksd_ticket' AND (({$wpdb->prefix}posts.post_status = 'draft' OR {$wpdb->prefix}posts.post_status = 'pending' OR {$wpdb->prefix}posts.post_status = 'open' OR {$wpdb->prefix}posts.post_status = 'new') ) 
                     ) T1,
                     (	
-                    SELECT COUNT(b1.ID) as unassigned  FROM {$wpdb->prefix}posts b1 "
-                    . "INNER JOIN {$wpdb->prefix}postmeta b2 ON ( b1.ID = b2.post_id ) WHERE 1=1 AND ( ( b2.meta_key = '_ksd_tkt_info_assigned_to' AND CAST(b2.meta_value AS SIGNED) = '0' ) ) AND b1.post_type = 'ksd_ticket' AND ((b1.post_status = 'draft' OR b1.post_status = 'pending' OR b1.post_status = 'open' OR b1.post_status = 'new') ) AND ( b1.post_parent = 0 ) 
+                    SELECT COUNT({$wpdb->prefix}posts.ID) as unassigned  FROM {$wpdb->prefix}posts INNER JOIN {$wpdb->prefix}postmeta ON ( {$wpdb->prefix}posts.ID = {$wpdb->prefix}postmeta.post_id ) WHERE 1=1 AND ( ( {$wpdb->prefix}postmeta.meta_key = '_ksd_tkt_info_assigned_to' AND CAST({$wpdb->prefix}postmeta.meta_value AS SIGNED) = '0' ) ) AND {$wpdb->prefix}posts.post_type = 'ksd_ticket' AND (({$wpdb->prefix}posts.post_status = 'draft' OR {$wpdb->prefix}posts.post_status = 'pending' OR {$wpdb->prefix}posts.post_status = 'open' OR {$wpdb->prefix}posts.post_status = 'new') ) 
                     ) T2
                     ";
            
