@@ -13,12 +13,12 @@
 
 <div class="ksd-new-ticket-form-wrap ksd-form-hidden-tab hidden"> 
     <div class="ksd-close-form-wrapper">
-        <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
+        <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />
     </div>
     <form method="POST" class="ksd-new-ticket-public ksd-form-hidden-tab-form">
         <ul>      
         <li class="ksd-subject">       
-          <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
+          <input type="text" value="<?php _e( 'Subject', 'kanzu-support-desk' ); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
         </li>
         <?php
         $show_categories = $settings['supportform_show_categories'];
@@ -56,10 +56,10 @@
         ?>
             
           <li class="ksd-message">     
-              <textarea value="<?php _e('Message','kanzu-support-desk'); ?>" rows="7" class="ksd-message" name="ksd_tkt_message" required></textarea>
+              <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="7" class="ksd-message" name="ksd_tkt_message" required></textarea>
           </li>
         <!--Add Google reCAPTCHA-->
-        <?php if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
+        <?php if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
             <li class="ksd-g-recaptcha">
                 <span class="ksd-g-recaptcha-error"></span>
                 <div class="g-recaptcha" data-sitekey="<?php echo $settings['recaptcha_site_key']; ?>"></div>

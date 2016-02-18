@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.3
-Stable tag: 2.0.9
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ Yes; KSD will work with any theme
 7. Private note support
 
 == Changelog ==
+= 2.1.0, February 18, 2016 =
+ * Change settings UI to tabs
+
 = 2.0.9, January 27, 2016 =
  * BUG FIX | Failure to send front-end replies due to tinyMCE not loading
  * Re-order ticket replies in ascending order

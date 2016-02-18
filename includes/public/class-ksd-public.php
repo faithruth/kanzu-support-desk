@@ -21,10 +21,10 @@ class KSD_Public {
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_public_styles' ) );
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_public_scripts' ) );
         //Add form for new ticket to the footer
-        add_action( 'wp_footer', array( $this , 'generate_new_ticket_form' ));
+        add_action( 'wp_footer', array( $this , 'generate_new_ticket_form' ) );
         //Handle AJAX
-        add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ));
-        add_action( 'wp_ajax_nopriv_ksd_register_user', array( $this, 'register_user' ));        
+        add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
+        add_action( 'wp_ajax_nopriv_ksd_register_user', array( $this, 'register_user' ) );        
         
         //Add a shortcode for the public form
         add_shortcode( 'ksd_support_form', array( $this,'form_short_code' ) );
@@ -39,7 +39,7 @@ class KSD_Public {
         add_action( 'widgets_init', array( $this, 'register_support_form_widget' ) );
         
         //Style public view of tickets
-        add_filter( 'the_content', array( $this, 'apply_templates' ));
+        add_filter( 'the_content', array( $this, 'apply_templates' ) );
         
         //Redirect customers on login                
         add_filter( 'login_redirect', array ( $this, 'do_login_redirect' ), 10, 3 );
@@ -48,7 +48,7 @@ class KSD_Public {
         $this->add_tinymce_cc_button();
         
         //Add ticket cc
-        add_filter('the_content', array( $this, 'add_ticket_cc') );
+        add_filter( 'the_content', array( $this, 'add_ticket_cc') );
         
         //Do public-facing includes
         $this->do_public_includes();
@@ -57,7 +57,7 @@ class KSD_Public {
     /**
      * Include files required by the public-facing logic
      */
-    private function do_public_includes(){
+    private function do_public_includes() {
         require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-widget-support-form.php' );
     }
     
@@ -69,10 +69,10 @@ class KSD_Public {
      * @return string $content
      * @since 2.0.4
      */
-    public function add_ticket_cc( $content ){
+    public function add_ticket_cc( $content ) {
         global $post;
         $cc = get_post_meta( $post->ID, '_ksd_tkt_info_cc', true);
-        if( "" !== trim($cc) ){
+        if ( "" !== trim( $cc) ) {
             $content = '<div class="ksd-ticket-cc"><span class="ksd-cc-emails">' . __( 'CC', 'kanzu-support-desk' ) . $cc . '</span></div>' . $content;   
         }
         return $content;
@@ -82,8 +82,8 @@ class KSD_Public {
      * Add cc button
      * @since 2.0.3
      */
-    private function add_tinymce_cc_button(){
-        if( is_admin() ){
+    private function add_tinymce_cc_button() {
+        if ( is_admin() ) {
             return;
         }
         add_filter( "mce_external_plugins", array ( $this, "add_tinymce_cc_plugin" ) );
@@ -116,7 +116,7 @@ class KSD_Public {
     /**
      * Register the support form widget
      */
-    public function register_support_form_widget(){
+    public function register_support_form_widget() {
         register_widget( 'KSD_Support_Form_Widget' );
     }
 
@@ -124,13 +124,13 @@ class KSD_Public {
      * Generate the ticket form that's displayed in the front-end
      * NB: We only show the form if you enabled the 'show_support_tab' option
      */
-    public function generate_new_ticket_form(){
+    public function generate_new_ticket_form() {
         $settings = Kanzu_Support_Desk::get_settings();
         if( "yes" == $settings['show_support_tab'] ) {    
         ?>
 
                 <button id="ksd-new-ticket-public"><?php echo $settings['support_button_text']; ?></button><?php
-                if( is_user_logged_in() ){//For logged in users                    
+                if ( is_user_logged_in() ) {//For logged in users                    
                     include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-new-ticket.php' ); //Note that this isn't an include_once since you can have multiple forms on the same page (In the content using a shortcode and as a hidden slide-in,slide-out element)
                 }
                 else{
@@ -143,23 +143,23 @@ class KSD_Public {
     /**
      * Display a form wherever shortcode [ksd-form] is used
      */
-   public function form_short_code(){
+   public function form_short_code() {
         self::generate_support_form();
    }    
    
    /**
     * Generate a public-facing support form
     */
-   public static function generate_support_form(){
+   public static function generate_support_form() {
         //Include the templating and admin classes
         include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
-        if( !is_user_logged_in() ) { 
+        if ( !is_user_logged_in() ) { 
             $form_position_class = 'ksd-form-short-code';
             include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' );   
         } else{
             $ksd_template = new KSD_Templates();
-            $ksd_template->get_template_part( 'single','submit-ticket' );
+            $ksd_template->get_template_part( 'single', 'submit-ticket' );
         }       
    }
    
@@ -167,16 +167,16 @@ class KSD_Public {
     * Display a customer's tickets
     * @since 2.0.0
     */
-   public function display_my_tickets(){
+   public function display_my_tickets() {
         //Include the templating and admin classes
         include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
-        if( !is_user_logged_in() ) { 
+        if ( !is_user_logged_in() ) { 
             $form_position_class = 'ksd-form-short-code';
             include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' );   
         } else{
             $ksd_template = new KSD_Templates();
-            $ksd_template->get_template_part( 'list','my-tickets' );
+            $ksd_template->get_template_part( 'list', 'my-tickets' );
         }
    }
     
@@ -195,20 +195,20 @@ class KSD_Public {
          * @since 1.0.0
          */
         public function enqueue_public_scripts() {	
-            wp_enqueue_script( KSD_SLUG . '-public-js', KSD_PLUGIN_URL .  'assets/js/ksd-public.js' , array( 'jquery', 'jquery-ui-core','jquery-ui-tooltip' ), KSD_VERSION );
+            wp_enqueue_script( KSD_SLUG . '-public-js', KSD_PLUGIN_URL .  'assets/js/ksd-public.js' , array( 'jquery', 'jquery-ui-core', 'jquery-ui-tooltip' ), KSD_VERSION );
             $ksd_public_labels =  array();
             $ksd_public_labels['msg_grecaptcha_error']  = sprintf( __( 'Please check the <em>%s</em> checkbox and wait for it to complete loading', 'kanzu-support-desk'), "I'm not a robot" );
-            $ksd_public_labels['msg_error_refresh']     = __('Sorry, but it seems like something went wrong. Please try again or reload the page.','kanzu-support-desk');
-            $ksd_public_labels['msg_reply_sent']        = __('Your reply has been sent successfully. We will get back to you shortly. Thank you.','kanzu-support-desk');
-            $ksd_public_labels['lbl_name']              = __('Name','kanzu-support-desk');
-            $ksd_public_labels['lbl_subject']           = __('Subject','kanzu-support-desk');
-            $ksd_public_labels['lbl_email']             = __('Email','kanzu-support-desk');
-            $ksd_public_labels['lbl_first_name']        = __('First Name','kanzu-support-desk');
-            $ksd_public_labels['lbl_last_name']         = __('Last Name','kanzu-support-desk');
-            $ksd_public_labels['lbl_username']          = __('Username','kanzu-support-desk');
-            $ksd_public_labels['lbl_CC']                = __('CC','kanzu-support-desk');
-            $ksd_public_labels['lbl_reply_to_all']      = __( 'Reply to all','kanzu-support-desk' );
-            $ksd_public_labels['lbl_populate_cc']       = __( 'Populate CC field','kanzu-support-desk' );
+            $ksd_public_labels['msg_error_refresh']     = __( 'Sorry, but it seems like something went wrong. Please try again or reload the page.', 'kanzu-support-desk');
+            $ksd_public_labels['msg_reply_sent']        = __( 'Your reply has been sent successfully. We will get back to you shortly. Thank you.', 'kanzu-support-desk');
+            $ksd_public_labels['lbl_name']              = __( 'Name', 'kanzu-support-desk');
+            $ksd_public_labels['lbl_subject']           = __( 'Subject', 'kanzu-support-desk');
+            $ksd_public_labels['lbl_email']             = __( 'Email', 'kanzu-support-desk');
+            $ksd_public_labels['lbl_first_name']        = __( 'First Name', 'kanzu-support-desk');
+            $ksd_public_labels['lbl_last_name']         = __( 'Last Name', 'kanzu-support-desk');
+            $ksd_public_labels['lbl_username']          = __( 'Username', 'kanzu-support-desk');
+            $ksd_public_labels['lbl_CC']                = __( 'CC', 'kanzu-support-desk');
+            $ksd_public_labels['lbl_reply_to_all']      = __( 'Reply to all', 'kanzu-support-desk' );
+            $ksd_public_labels['lbl_populate_cc']       = __( 'Populate CC field', 'kanzu-support-desk' );
             
             //@TODO Don't retrieve settings again. Use same set of settings
             $settings = Kanzu_Support_Desk::get_settings();
@@ -220,7 +220,7 @@ class KSD_Public {
                     ) 
                     );    
             //Check whether enable_recaptcha is checked. 
-            if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ){
+            if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ) {
                wp_enqueue_script( KSD_SLUG . '-public-grecaptcha', '//www.google.com/recaptcha/api.js', array(), KSD_VERSION );  
             }
         }
@@ -231,17 +231,17 @@ class KSD_Public {
          * to be modified using a filter
          * @since 2.0.0
          */
-        public function apply_templates( $content ){
+        public function apply_templates( $content ) {
             global $post;
             if ( $post && $post->post_type == 'ksd_ticket' && is_singular( 'ksd_ticket' ) && is_main_query() && !post_password_required() ) {
-                if( !is_user_logged_in() ) { //@TODO Send the current URL as the redirect URL for the 'login' and 'Register' action
+                if ( !is_user_logged_in() ) { //@TODO Send the current URL as the redirect URL for the 'login' and 'Register' action
                     include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
                     $form_position_class = 'ksd-form-short-code';
                     include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' ); 
                     return;
                 } 
                         global $current_user;   
-                        if( in_array( 'ksd_customer', $current_user->roles ) && $current_user->ID != $post->post_author ){//This is a customer
+                        if ( in_array( 'ksd_customer', $current_user->roles ) && $current_user->ID != $post->post_author ) {//This is a customer
                            return __( "Sorry, you do not have sufficient priviledges to view another customer's tickets", "kanzu-support-desk" );
                         }
 
@@ -268,32 +268,32 @@ class KSD_Public {
          * Create 'ksd_ticket' Custom post type
          * @since 2.0.0
          */
-        public function create_custom_post_types(){
+        public function create_custom_post_types() {
 
             /*----Tickets -----*/
             $labels = array(
-                'name'              => _x('Tickets', 'post type general name','kanzu-support-desk' ),
-                'singular_name'     => _x('Ticket', 'post type singular name','kanzu-support-desk' ),
-                'add_new'           => _x('Add New', 'singular item','kanzu-support-desk' ),
-                'add_new_item'      => __('Add New Ticket','kanzu-support-desk' ),
-                'edit_item'         => __('Reply Ticket','kanzu-support-desk' ),
-                'new_item'          => __('New Ticket','kanzu-support-desk' ),
-                'all_items'         => __('All Tickets','kanzu-support-desk' ),
-                'view_item'         => __('View Ticket','kanzu-support-desk' ),
-                'search_items'      => __('Search Tickets','kanzu-support-desk' ),
-                'not_found'         => __('No Tickets found','kanzu-support-desk' ),
-                'not_found_in_trash'=> __('No tickets found in the Trash','kanzu-support-desk' ),
+                'name'              => _x( 'Tickets', 'post type general name', 'kanzu-support-desk' ),
+                'singular_name'     => _x( 'Ticket', 'post type singular name', 'kanzu-support-desk' ),
+                'add_new'           => _x( 'Add New', 'singular item', 'kanzu-support-desk' ),
+                'add_new_item'      => __( 'Add New Ticket', 'kanzu-support-desk' ),
+                'edit_item'         => __( 'Reply Ticket', 'kanzu-support-desk' ),
+                'new_item'          => __( 'New Ticket', 'kanzu-support-desk' ),
+                'all_items'         => __( 'All Tickets', 'kanzu-support-desk' ),
+                'view_item'         => __( 'View Ticket', 'kanzu-support-desk' ),
+                'search_items'      => __( 'Search Tickets', 'kanzu-support-desk' ),
+                'not_found'         => __( 'No Tickets found', 'kanzu-support-desk' ),
+                'not_found_in_trash'=> __( 'No tickets found in the Trash', 'kanzu-support-desk' ),
                 'parent_item_colon' => '',
-                'menu_name'         => __('Tickets','kanzu-support-desk' )
+                'menu_name'         => __( 'Tickets', 'kanzu-support-desk' )
             );
             $ticket_supports = array( 'title', 'custom-fields' );
-            if ( !isset( $_GET['post'] ) ){
+            if ( !isset( $_GET['post'] ) ) {
                 $ticket_supports[] = 'editor';
             }
             
             $args = array(
                 'labels'                => $labels,
-                'description'           => __( 'All your customer service tickets','kanzu-support-desk' ),
+                'description'           => __( 'All your customer service tickets', 'kanzu-support-desk' ),
                 'public'                => true,
                 'exclude_from_search'   => true, 
                 'publicly_queryable'    => true,
@@ -346,19 +346,19 @@ class KSD_Public {
                             
             /*----Replies -----*/
             $reply_labels = array(
-                'name'                  => _x('Replies', 'post type general name', 'kanzu-support-desk'),
-                'singular_name'         => _x('Reply', 'post type singular name', 'kanzu-support-desk'),
-                'add_new'               => __('Add New', 'kanzu-support-desk'),
-                'add_new_item'          => __('Add New Reply', 'kanzu-support-desk'),
-                'edit_item'             => __('Edit Reply', 'kanzu-support-desk'),
-                'new_item'              => __('New Reply', 'kanzu-support-desk'),
-                'all_items'             => __('All Replies', 'kanzu-support-desk'),
-                'view_item'             => __('View Reply', 'kanzu-support-desk'),
-                'search_items'          => __('Search Replies', 'kanzu-support-desk'),
-                'not_found'             => __('No Replies found', 'kanzu-support-desk'),
-                'not_found_in_trash'    => __('No Replies found in Trash', 'kanzu-support-desk'),
+                'name'                  => _x( 'Replies', 'post type general name', 'kanzu-support-desk'),
+                'singular_name'         => _x( 'Reply', 'post type singular name', 'kanzu-support-desk'),
+                'add_new'               => __( 'Add New', 'kanzu-support-desk'),
+                'add_new_item'          => __( 'Add New Reply', 'kanzu-support-desk'),
+                'edit_item'             => __( 'Edit Reply', 'kanzu-support-desk'),
+                'new_item'              => __( 'New Reply', 'kanzu-support-desk'),
+                'all_items'             => __( 'All Replies', 'kanzu-support-desk'),
+                'view_item'             => __( 'View Reply', 'kanzu-support-desk'),
+                'search_items'          => __( 'Search Replies', 'kanzu-support-desk'),
+                'not_found'             => __( 'No Replies found', 'kanzu-support-desk'),
+                'not_found_in_trash'    => __( 'No Replies found in Trash', 'kanzu-support-desk'),
                 'parent_item_colon'     => '',
-                'menu_name'             => __('Replies', 'kanzu-support-desk')
+                'menu_name'             => __( 'Replies', 'kanzu-support-desk')
             );
 
             $reply_args = array(
@@ -375,19 +375,19 @@ class KSD_Public {
             
             /*----Private Notes -----*/
             $private_note_labels = array(
-                'name'                  => _x('Private Notes', 'post type general name', 'kanzu-support-desk'),
-                'singular_name'         => _x('Private Note', 'post type singular name', 'kanzu-support-desk'),
-                'add_new'               => __('Add New', 'kanzu-support-desk'),
-                'add_new_item'          => __('Add New Private Note', 'kanzu-support-desk'),
-                'edit_item'             => __('Edit Private Note', 'kanzu-support-desk'),
-                'new_item'              => __('New Private Note', 'kanzu-support-desk'),
-                'all_items'             => __('All Private Notes', 'kanzu-support-desk'),
-                'view_item'             => __('View Private Note', 'kanzu-support-desk'),
-                'search_items'          => __('Search Private Notes', 'kanzu-support-desk'),
-                'not_found'             => __('No Private Notes found', 'kanzu-support-desk'),
-                'not_found_in_trash'    => __('No Private Notes found in Trash', 'kanzu-support-desk'),
+                'name'                  => _x( 'Private Notes', 'post type general name', 'kanzu-support-desk'),
+                'singular_name'         => _x( 'Private Note', 'post type singular name', 'kanzu-support-desk'),
+                'add_new'               => __( 'Add New', 'kanzu-support-desk'),
+                'add_new_item'          => __( 'Add New Private Note', 'kanzu-support-desk'),
+                'edit_item'             => __( 'Edit Private Note', 'kanzu-support-desk'),
+                'new_item'              => __( 'New Private Note', 'kanzu-support-desk'),
+                'all_items'             => __( 'All Private Notes', 'kanzu-support-desk'),
+                'view_item'             => __( 'View Private Note', 'kanzu-support-desk'),
+                'search_items'          => __( 'Search Private Notes', 'kanzu-support-desk'),
+                'not_found'             => __( 'No Private Notes found', 'kanzu-support-desk'),
+                'not_found_in_trash'    => __( 'No Private Notes found in Trash', 'kanzu-support-desk'),
                 'parent_item_colon'     => '',
-                'menu_name'             => __('Private Notes', 'kanzu-support-desk')
+                'menu_name'             => __( 'Private Notes', 'kanzu-support-desk')
             );
 
             $private_note_args = array(
@@ -405,19 +405,19 @@ class KSD_Public {
             /*----Ticket Activity -----*/
             //Holds changes to ticket info as events
             $ticket_activity_labels = array(
-                'name'                  => _x('Ticket Activity', 'post type general name', 'kanzu-support-desk'),
-                'singular_name'         => _x('Ticket Activity', 'post type singular name', 'kanzu-support-desk'),
-                'add_new'               => __('Add New', 'kanzu-support-desk'),
-                'add_new_item'          => __('Add New Ticket Activity', 'kanzu-support-desk'),
-                'edit_item'             => __('Edit Ticket Activity', 'kanzu-support-desk'),
-                'new_item'              => __('New Ticket Activity', 'kanzu-support-desk'),
-                'all_items'             => __('All Ticket Activities', 'kanzu-support-desk'),
-                'view_item'             => __('View Ticket Activity', 'kanzu-support-desk'),
-                'search_items'          => __('Search Ticket Activities', 'kanzu-support-desk'),
-                'not_found'             => __('No Ticket Activity found', 'kanzu-support-desk'),
-                'not_found_in_trash'    => __('No Ticket Activity found in Trash', 'kanzu-support-desk'),
+                'name'                  => _x( 'Ticket Activity', 'post type general name', 'kanzu-support-desk'),
+                'singular_name'         => _x( 'Ticket Activity', 'post type singular name', 'kanzu-support-desk'),
+                'add_new'               => __( 'Add New', 'kanzu-support-desk'),
+                'add_new_item'          => __( 'Add New Ticket Activity', 'kanzu-support-desk'),
+                'edit_item'             => __( 'Edit Ticket Activity', 'kanzu-support-desk'),
+                'new_item'              => __( 'New Ticket Activity', 'kanzu-support-desk'),
+                'all_items'             => __( 'All Ticket Activities', 'kanzu-support-desk'),
+                'view_item'             => __( 'View Ticket Activity', 'kanzu-support-desk'),
+                'search_items'          => __( 'Search Ticket Activities', 'kanzu-support-desk'),
+                'not_found'             => __( 'No Ticket Activity found', 'kanzu-support-desk'),
+                'not_found_in_trash'    => __( 'No Ticket Activity found in Trash', 'kanzu-support-desk'),
                 'parent_item_colon'     => '',
-                'menu_name'             => __('Ticket Activity', 'kanzu-support-desk')
+                'menu_name'             => __( 'Ticket Activity', 'kanzu-support-desk')
             );
 
             $ticket_activity_args = array(
@@ -440,7 +440,7 @@ class KSD_Public {
          * Add custom KSD ticket statuses
          * @since 2.0.0
          */
-        public function custom_ticket_statuses(){
+        public function custom_ticket_statuses() {
             register_post_status( 'open', array(
                 'label'                     => _x( 'Open', 'status of a ticket', 'kanzu-support-desk' ),
                 'public'                    => true,
@@ -478,12 +478,12 @@ class KSD_Public {
         /**
          * Log a new ticket. We use the backend logic
          */
-        public function log_new_ticket(){
+        public function log_new_ticket() {
             //First check the CAPTCHA to prevent spam
              $settings = Kanzu_Support_Desk::get_settings();
-            if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ){
+            if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ) {
                 $recaptcha_response = $this->verify_recaptcha();
-                if( $recaptcha_response['error'] ){
+                if ( $recaptcha_response['error'] ) {
                     echo json_encode( $recaptcha_response['message'] );
                     die();//This is important for WordPress AJAX
                 }
@@ -497,12 +497,12 @@ class KSD_Public {
          * Register a user
          * @since 2.0.0
          */
-        public function register_user(){
+        public function register_user() {
             //Check the nonce
-            if ( ! wp_verify_nonce( $_POST['register-nonce'], 'ksd-register' ) ){
-                  die ( __('Busted!','kanzu-support-desk') );                         
+            if ( ! wp_verify_nonce( $_POST['register-nonce'], 'ksd-register' ) ) {
+                  die ( __( 'Busted!', 'kanzu-support-desk') );                         
             }
-            //@TODO Currently accepts defaults ('Last Name''First Name') Disable this
+            //@TODO Currently accepts defaults ( 'Last Name''First Name') Disable this
             //Perform server-side validation
             $first_name = sanitize_text_field( $_POST['ksd_cust_firstname'] );
             $last_name  = sanitize_text_field( $_POST['ksd_cust_lastname'] );
@@ -515,24 +515,24 @@ class KSD_Public {
             //Check that we have all required fields
             if ( empty ( $first_name ) || empty ( $username ) || empty ( $email ) || empty ( $password ) ) {
                 $response = __( 'Sorry, a required field is missing. Please fill in all fields.', 'kanzu-support-desk' );
-                echo ( json_encode( $response ));
+                echo ( json_encode( $response ) );
                 die();
             }  
             //Check that the fields are valid
             if ( ( strlen ( $first_name ) || strlen( $last_name ) || strlen( $username ) ) < 2  ) {
                 $response = __( 'Sorry, the name provided should be at least 2 characters long.', 'kanzu-support-desk' );
-                echo ( json_encode( $response ));
+                echo ( json_encode( $response ) );
                 die();
             }
             if ( !is_email( $email ) ) {
                 $response = __( 'Sorry, the email you provided is not valid.', 'kanzu-support-desk' );
-                echo ( json_encode( $response ));
+                echo ( json_encode( $response ) );
                 die();           
             }
             //Check if the username is new
-            if ( username_exists( $username ) ){
+            if ( username_exists( $username ) ) {
                 $response = __( 'Sorry, that username is already taken. Please choose another one', 'kanzu-support-desk' );
-                echo ( json_encode( $response ));
+                echo ( json_encode( $response ) );
                 die();       
             }   
             //Yay! Register the user
@@ -544,12 +544,12 @@ class KSD_Public {
                         'first_name'    => $first_name,
                         'role'          => 'ksd_customer'
             );
-            if( !empty( $last_name )){//Add the last name if it was provided
+            if ( !empty( $last_name ) ) {//Add the last name if it was provided
                 $userdata['last_name']  =   $last_name;
             }
             try {
                 $user_id = wp_insert_user( $userdata ) ;                
-                if( ! is_wp_error( $user_id ) ) {//Successfully created the user
+                if ( ! is_wp_error( $user_id ) ) {//Successfully created the user
                     $login_url = sprintf ( '<a href="%1$s" title="%2$s">%3$s</a>', wp_login_url(), __( 'Login', 'kanzu-support-desk' ), __( 'Click here to login', 'kanzu-support-desk' ) ) ;
                     $response = sprintf ( __( 'Your account has been successfully created! Redirecting you shortly...or %s', 'kanzu-support-desk' ), $login_url );
                     
@@ -560,22 +560,22 @@ class KSD_Public {
                     $creds['remember']      = false;
                     wp_signon( $creds, false );//We don't check whether this happens                
         
-                    echo ( json_encode( $response ));
+                    echo ( json_encode( $response ) );
                     die();   
                 }
                 else{//We had an error 
                     $error_message = __( 'Sorry, but something went wrong. Please retry or reload the page.', 'kanzu-support-desk');
-                   if( isset( $user_id->errors['existing_user_email'] ) ){//The email's already in use. Ask the user to reset their password  
+                   if ( isset( $user_id->errors['existing_user_email'] ) ) {//The email's already in use. Ask the user to reset their password  
                        $lost_password_url = sprintf ( '<a href="%1$s" title="%2$s">%3$s</a>', wp_lostpassword_url(), __( 'Lost Password', 'kanzu-support-desk' ), __( 'Click here to reset your password', 'kanzu-support-desk' ) ) ;
                        $error_message = sprintf( __( 'Sorry, that email address is already used! %s', 'kanzu-support-desk' ), $lost_password_url );
                    }
                         throw new Exception( $error_message, -1);
                 }            
-             }catch( Exception $e){
+             }catch( Exception $e) {
                 $response = array(
-                    'error'=> array( 'message' => $e->getMessage() , 'code'=>$e->getCode())
+                    'error'=> array( 'message' => $e->getMessage() , 'code'=>$e->getCode() )
                 );
-                echo json_encode($response);	
+                echo json_encode( $response);	
                 die();// IMPORTANT: don't leave this out
             }  
             
@@ -585,10 +585,10 @@ class KSD_Public {
          * Check, using Google reCAPTCHA, whether the submitted ticket was sent
          * by a human
          */
-        private function verify_recaptcha(){
+        private function verify_recaptcha() {
                 $response = array();   
                 $response['error'] = true;//Pre-assume an error is going to occur
-                if( empty( $_POST['g-recaptcha-response'] )){
+                if ( empty( $_POST['g-recaptcha-response'] ) ) {
                    $response['message'] = __( "ERROR - Sorry, the \"I'm not a robot\" field is required. Please refresh this page & check it.", "kanzu-support-desk");
                    return $response;
                 }
@@ -603,12 +603,12 @@ class KSD_Public {
                      return $response;
                  }
                 $recaptcha_text = json_decode( wp_remote_retrieve_body( $google_recaptcha_response ) );
-                if ( $recaptcha_text->success ){
+                if ( $recaptcha_text->success ) {
                      $response['error'] = false;
                      return $response;
                 }
                 else{
-                    switch( $recaptcha_text->{'error-codes'}[0] ){
+                    switch ( $recaptcha_text->{'error-codes'}[0] ) {
                         case 'missing-input-secret':
                             $response['message'] = __( 'Sorry, an error occurred due to a missing reCAPTCHA secret key. Please refresh the page and retry.', 'kanzu-support-desk');
                             break;

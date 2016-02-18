@@ -9,11 +9,11 @@
  * @copyright 2014 Kanzu Code
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit; //Exit if accessed directly
 
 if ( ! class_exists( 'KSD_Support_Form_Widget' ) ) : 
     
-class KSD_Support_Form_Widget extends WP_Widget  {
+class KSD_Support_Form_Widget extends WP_Widget {
 	
         /**
 	 * Set up the widgets details
