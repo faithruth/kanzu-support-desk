@@ -62,7 +62,7 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                     <input name="enable_customer_signup"  type="checkbox" <?php checked ( $settings['enable_customer_signup'], "yes") ?> value="yes"  />
                     <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "If enabled, customers can register and submit tickets", 'kanzu-support-desk' ); ?>"/>
                 </div>
-                <div class="setting enable_customer_signup">
+                <div class="setting">
                     <label for="page_submit_ticket"><?php _e ( 'Submit Ticket Page', 'kanzu-support-desk' ); ?></label>
                     <select name="page_submit_ticket">
                         <option value="0">--</option>
@@ -75,7 +75,7 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                     </select>
                     <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'This is the page on which customers will submit tickets. The [ksd_support_form] short code must be on this page.', 'kanzu-support-desk' ); ?>"/>
                 </div> 
-                <div class="setting enable_customer_signup">
+                <div class="setting">
                     <label for="page_my_tickets"><?php _e ( 'My Tickets Page', 'kanzu-support-desk' ); ?></label>
                     <select name="page_my_tickets">
                         <option value="0">--</option>
@@ -106,26 +106,6 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                        <input name="tour_mode"  type="checkbox" <?php checked ( $settings['tour_mode'], "yes") ?> value="yes"  />
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Refresh your page after enabling this and tour mode will start automatically", 'kanzu-support-desk' ); ?>"/>
                     </div>-->
-                <div class="setting">
-                    <label for="enable_recaptcha"><?php _e ( 'Enable Google reCAPTCHA', 'kanzu-support-desk' ); ?></label>                
-                    <input name="enable_recaptcha"  type="checkbox" <?php checked ( $settings['enable_recaptcha'], "yes") ?> value="yes"  />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Add Google reCAPTCHA to your site's forms to prevent spam", 'kanzu-support-desk' ); ?>"/>
-                </div>
-                <div class="setting enable_recaptcha">
-                    <label for="recaptcha_site_key"><?php _e ( 'Google reCAPTCHA Site Key', 'kanzu-support-desk' ); ?></label>                
-                    <input type="text" value="<?php echo $settings['recaptcha_site_key']; ?>" size="30" name="recaptcha_site_key" />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your Google reCAPTCHA Site Key. Get one at %s', 'kanzu-support-desk' ), 'https://www.google.com/recaptcha/admin' ); ?>"/>
-                </div>
-                <div class="setting enable_recaptcha">
-                    <label for="recaptcha_secret_key"><?php _e ( 'Google reCAPTCHA Secret Key', 'kanzu-support-desk' ); ?></label>                
-                    <input type="text" value="<?php echo $settings['recaptcha_secret_key']; ?>" size="30" name="recaptcha_secret_key" />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your Google reCAPTCHA Secret Key. Get one at %s', 'kanzu-support-desk' ), 'https://www.google.com/recaptcha/admin' ); ?>"/>
-                </div>
-                <div class="setting enable_recaptcha">
-                    <label for="recaptcha_error_message"><?php _e ( 'Message on reCAPTCHA failure', 'kanzu-support-desk' ); ?></label>
-                    <textarea cols="60" rows="4" name="recaptcha_error_message"><?php echo $settings['recaptcha_error_message']; ?></textarea>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Message to display in case Google reCAPTCHA continuously fails. This is very unlikely but just in case.", 'kanzu-support-desk' ); ?>"/>
-                </div>
                 <div class="setting">
                     <label for="enable_anonymous_tracking"><?php _e ( 'Enable usage & error statistics', 'kanzu-support-desk' ); ?></label>                
                     <input name="enable_anonymous_tracking"  type="checkbox" <?php checked ( $settings['enable_anonymous_tracking'], "yes") ?> value="yes"  />
