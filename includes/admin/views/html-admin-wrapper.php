@@ -8,9 +8,9 @@
             $ksd_page[ 'addons' ]['name']     =   __( 'Add-ons','kanzu-support-desk' );
              
              //Files
-            $ksd_page[ 'dashboard' ]['file']  =   'html-admin-dashboard.php' ;
-            $ksd_page[ 'settings' ]['file']   =   'html-admin-settings.php';
-            $ksd_page[ 'addons' ]['file']     =   'html-admin-addons.php';
+             $ksd_page[ 'dashboard' ]['file']  =   'html-admin-dashboard.php' ;
+             $ksd_page[ 'settings' ]['file']   =   'html-admin-settings.php';
+             $ksd_page[ 'addons' ]['file']     =   'html-admin-addons.php';
              
             $ksd_addon_page = array();
             $ksd_addon_page = apply_filters( 'ksd_admin_menu_page', $ksd_addon_page );
