@@ -124,8 +124,9 @@
 #admin-kanzu-support-desk .admin-ksd-content {
     float: left;
     margin-top: 0;
-    padding-left: 1%;
+    padding-left: 0;
     padding-top: 0;
+    width: 100%;
 }
 #admin-kanzu-support-desk div#tickets {
     padding-left: 0;
@@ -795,18 +796,24 @@ ul.add-ons li:hover {
 }
 /*The dashboard indicators*/
 ul.dashboard-statistics-summary {
-    border: 1px solid #ccc;
+    border-top: 1px solid #2ea2cc;
     height: 70px;
+    margin-top: 39px;
     text-align: center;
-    width: 100%;
 }
 ul.dashboard-statistics-summary li {
+    background-color: #fff;
+    border-bottom: 1px solid #2ea2cc;
+    border-left: 1px solid #2ea2cc;
+    border-right: 1px solid #2ea2cc;
+    color: #2ea2cc;
     float: left;
     font-size: 24px;
     line-height: 1.2;
+    margin-right: 15px;
+    padding-bottom: 20px;
     padding-top: 12px;
     width: 25%;
-    color: #2ea2cc;
 }
 ul.dashboard-statistics-summary li span {
     color: #999;
