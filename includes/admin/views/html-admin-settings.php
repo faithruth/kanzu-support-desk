@@ -58,11 +58,6 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                       <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "We send a notification to this email address when a new ticket is created", 'kanzu-support-desk' ); ?>"/>
                 </div>-->
                 <div class="setting">
-                    <label for="enable_customer_signup"><?php _e ( 'Enable customer registration', 'kanzu-support-desk' ); ?></label>
-                    <input name="enable_customer_signup"  type="checkbox" <?php checked ( $settings['enable_customer_signup'], "yes") ?> value="yes"  />
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "If enabled, customers can register and submit tickets", 'kanzu-support-desk' ); ?>"/>
-                </div>
-                <div class="setting">
                     <label for="page_submit_ticket"><?php _e ( 'Submit Ticket Page', 'kanzu-support-desk' ); ?></label>
                     <select name="page_submit_ticket">
                         <option value="0">--</option>
@@ -122,20 +117,20 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                     </ul>
                     <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Only users with these roles can manage tickets. All other users won't have access to your support desk. Note that the Administrator role always has access.", 'kanzu-support-desk' ); ?>"/>
                 </div>
-            </div> 
-            <div id="ksd-below-settings">
-                <div class="ksd-section">
-                    <div class="ksd-customer-header">
-                        <h3><?php _e ( 'Your Customers', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your customers are stored as WordPress users with role %s' ), 'KSD Customer' ); ?>"/>
+                <div id="ksd-below-settings">
+                    <div class="ksd-section">
+                        <div class="ksd-customer-header">
+                            <h3><?php _e ( 'Your Customers', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your customers are stored as WordPress users with role %s' ), 'KSD Customer' ); ?>"/>
+                        </div>
+                        <a href="user-new.php" target="_blank" class="button button-primary button-large"> <?php _e ( 'Add New Customer' ); ?></a>
+                        <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e ( 'View Customers' ); ?></a>
                     </div>
-                    <a href="user-new.php" target="_blank" class="button button-primary button-large"> <?php _e ( 'Add New Customer' ); ?></a>
-                    <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e ( 'View Customers' ); ?></a>
-                </div>
-                <div class="ksd-section ksd-debug">
-                    <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
-                </div>
-            </div>
+                    <div class="ksd-section ksd-debug">
+                        <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>
+                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
+                    </div>
+                </div>                
+            </div> 
         </div><!--//fragment-1 -->
 
 

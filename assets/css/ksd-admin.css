@@ -45,10 +45,11 @@
 .more_nav {
     height: 38px;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 5px;
+    top: 35px;
     width: 42px;
     cursor: pointer;
+    z-index: 100;
 }
 .more_nav img:hover,.more_nav img.active{
     background-color: #FFF;
@@ -64,7 +65,8 @@
     min-height: 100%;
     padding: 10px 20px 0;
     position: absolute;
-    right: 0;
+    right: 3px;
+    top: 70px;
     width: 228px;
     z-index: 99;
 }
@@ -90,10 +92,6 @@
     width: 100%;
 }
 #admin-kanzu-support-desk div.admin-ksd-container{
-    border-bottom: medium none;
-    border-right: medium none;
-    border-left: medium none;
-    border-top: 1px solid #E5E5E5;
     margin: 10px 0 10px 0;
     padding: 0;
     width: 100%;
@@ -123,13 +121,11 @@
     text-decoration: underline;
 }
 
-
 #admin-kanzu-support-desk .admin-ksd-content {
     float: left;
     margin-top: 0;
     padding-left: 1%;
     padding-top: 0;
-    width: 90%;
 }
 #admin-kanzu-support-desk div#tickets {
     padding-left: 0;
@@ -190,6 +186,15 @@
     text-indent: -99999px;
     height: 16px;
     width: 16px;
+}
+#admin-kanzu-support-desk #ksd-tabs ul.ui-tabs-nav li {
+    background: #e4e4e4 none repeat scroll 0 0;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    margin: -4px 4px -1px 0;
+}
+#admin-kanzu-support-desk #ksd-tabs ul.ui-tabs-nav li.ui-tabs-active {
+    background: #0091cd none repeat scroll 0 0;
 }
 #admin-kanzu-support-desk .ui-state-active .ui-icon,#admin-kanzu-support-desk .ui-state-default .ui-icon  {
     background-image: url("../images/arrows.png");
@@ -1007,6 +1012,10 @@ ul.edit-ticket-options.ui-widget-header{
 }
 #settings-accordion{
     padding-top: 12px;
+}
+#ksd-below-settings {
+    float: left;
+    width: 100%;
 }
 #ksd-migration-status{
     padding:5px 2px 2px 2px;
@@ -1932,6 +1941,7 @@ ul#ksd-tabs{
 
 #ksd-tabs .ui-tabs-nav {
     background: none;
+    border-bottom: 1px solid #ccc;
 }
 
 
