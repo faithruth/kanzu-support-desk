@@ -757,11 +757,14 @@ class KSD_Admin {
                     include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-intro.php');         
                 }
                 else{
+                    include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-settings.php');    
+                    $addon_settings = new KSD_Settings();
+                    $addon_settings_html = $addon_settings->generate_addon_settings_html();
                     include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');   
                 }
 	}
         
- 
+      
 	/**
 	 * Include the files we use in the admin dashboard
 	 */

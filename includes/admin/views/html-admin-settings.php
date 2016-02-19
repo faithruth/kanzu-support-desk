@@ -3,19 +3,14 @@ $settings              = Kanzu_Support_Desk::get_settings ( );
 $settings_and_licenses = apply_filters ( 'ksd_display_licenses', $settings );
 $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $settings_and_licenses['licenses'] : array ( ) );
 
-$addon_settings        = array ( );
-$addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_settings, $settings );
 ?>
 <form method="POST" id="update-settings" class="ksd-settings pending"> 
     <div id="ksd-tabs">
         <ul>
             <li><a href="#ksd-general-opt-tab"><?php _e ( 'General', 'kanzu-support-desk' ); ?></a></li>
-            <li><a href="#ksd-support-form-settings">Support Form</a></li>
-
-            <?php if ( count ( $licenses ) > 0 ): ?><li><a href="#ksd-licences-opt-tab">Licences</a></li> <?php endif; ?>
-            <?php foreach ( $addon_settings as $addon_setting ): ?>
-                <li><a href="#<?php echo $addon_setting['id']; ?>"><?php _e ( $addon_setting['title'], 'kanzu-support-desk' ); ?></a></li>
-            <?php endforeach; ?>
+            <li><a href="#ksd-support-form-settings"><?php _e ( 'Support Form', 'kanzu-support-desk' ); ?></a></li>
+            <?php if ( count ( $licenses ) > 0 ): ?><li><a href="#ksd-licences-opt-tab"><?php _e ( 'Licenses', 'kanzu-support-desk' ); ?></a></li> <?php endif; ?>
+            <?php echo $addon_settings_html['tab_html']; ?>
         </ul>
 
         <!-- fragment-1 -->
@@ -168,7 +163,7 @@ $addon_settings        = apply_filters ( 'ksd_fltr_display_settings', $addon_set
                     ?>
                 </div>
             </div><!--//fragment-2 -->
-
+            <?php echo $addon_settings_html['div_html']; ?>
             <?php
             foreach ( $addon_settings as $addon_setting ):
                 global $ksd_current_settings;

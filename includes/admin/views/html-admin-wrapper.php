@@ -23,7 +23,7 @@
     </div>
     <div class="admin-ksd-container">
         <div id="<?php echo $ksd_current_page;?>" class="admin-ksd-content">
-            <?php include_once(   $ksd_page[ $ksd_current_page]['file'] ); ?>
+            <?php include_once( $ksd_page[ $ksd_current_page]['file'] ); ?>
         </div>  
         <div class="ksd-dialog loading hidden"><?php __( 'Loading...', 'kanzu-support-desk'); ?></div>
         <div class="ksd-dialog error hidden"><?php __( 'Error...', 'kanzu-support-desk'); ?></div>
