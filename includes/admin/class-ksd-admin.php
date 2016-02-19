@@ -1529,7 +1529,7 @@ class KSD_Admin {
                 //Log the ticket
                 $new_ticket_id = wp_insert_post( $new_ticket );
                 
-                //Add product category
+                //Add product category @TODO 2.1.0 Likely don't need this
                 if ( isset( $new_ticket['ksd_tkt_pdt_category']) && intval($new_ticket['ksd_tkt_pdt_category']) > 0 ) {
                     wp_set_object_terms( $new_ticket_id, $new_ticket['ksd_tkt_pdt_category'] );
                 }

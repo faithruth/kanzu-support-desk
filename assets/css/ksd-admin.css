@@ -411,6 +411,9 @@ ul.ksd_attachments li{
 #post-body .ksd-misc-customer::before {
     content: "\f110";
 }
+#post-body .ksd-misc-customer-email::before {
+    content: "\f466";
+}
 #post-body .ksd-misc-assign-to::before{
     content: "\f483";
 }
@@ -420,6 +423,10 @@ ul.ksd_attachments li{
 .ksd-misc-value{
     font-weight: bold;
     text-transform: capitalize;
+}
+.ksd-misc-customer-email .ksd-misc-value{
+    font-weight: normal;
+    text-transform: lowercase;
 }
 .ksd-post-status-display{
    text-transform: capitalize;

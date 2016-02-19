@@ -234,6 +234,9 @@ final class Kanzu_Support_Desk {
             $suffix = '';
             $no_logo_style = ( $append_logo ? '' : 'text-align:right;width:100%;' ); 
             $permalink = '<a href="'  . get_permalink( $tkt_id ) . '">'  . __( 'View this ticket', 'kanzu-support-desk' )."</a>";
+            Kanzu_Support_Desk::kanzu_support_log_me($tkt_id);
+            Kanzu_Support_Desk::kanzu_support_log_me(get_permalink( $tkt_id ));
+            Kanzu_Support_Desk::kanzu_support_log_me($permalink);
             $suffix .='<table style="width:100%;border-collapse:collapse;border-top:1px solid #CCC;">
                         <tbody>
                             <tr>

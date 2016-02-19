@@ -52,6 +52,9 @@ class KSD_Public {
         
         //Do public-facing includes
         $this->do_public_includes();
+        
+        //Allow secret URL for tickets from guests
+        add_action( 'template_redirect', array( $this, 'allow_secret_urls' ) );     
     }
     
     /**
@@ -59,6 +62,12 @@ class KSD_Public {
      */
     private function do_public_includes() {
         require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-widget-support-form.php' );
+        include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-ticket-tokens.php' );
+    }
+    
+    public function allow_secret_urls(){
+        $ticket_tokens = new KSD_Ticket_Tokens();
+        $ticket_tokens->redirect_guest_tickets();
     }
     
     /**
