@@ -35,31 +35,35 @@ class KSD_Settings {
         
         public function generate_addon_settings_html(){
             $tab_list_html = $tab_div_html   = $addon_key = '';
-            $addon_settings = array ();
-            $addon_settings = apply_filters ( 'ksd_addon_settings', $addon_settings );  
+            $all_addon_settings = array ();
+            $all_addon_settings = apply_filters ( 'ksd_addon_settings', $all_addon_settings );  
             
-            foreach ( $addon_settings as $addon_array ): 
-                    foreach ( $addon_array as $addon_setting ): 
+            foreach ( $all_addon_settings as $single_addon_settings ): 
+                    foreach ( $single_addon_settings as $addon_setting ): 
                         if ( 'title' == $addon_setting['type'] ):  
                             $tab_list_html .='<li><a href="#'.$addon_setting['id'].'">'.$addon_setting['label'].'</a></li>';
                             $this->addon_key = $addon_setting['id'];
-                        endif;  
-                        
-                $tab_div_html .= '<div class="setting">';             
-                $tab_div_html .= '<label for="'.$addon_setting['id'].'">'.$addon_setting['label'].'</label>';                       
-		
-                if ( method_exists( $this, 'generate_' . $addon_setting['type'] . '_html' ) ) {
-                    $tab_div_html .= $this->{'generate_' . $addon_setting['type'] . '_html'}( $addon_setting );                    
-                } else {
-                    $tab_div_html .= $this->{'generate_text_html'}( $addon_setting );
-		}
-                $tab_div_html .= $this->add_description_html( $addon_setting );
-                
-                $tab_div_html .= '</div>';             
-                    endforeach;  
-            endforeach;     
-                 
+                            $tab_div_html .= '<div id="'.$this->addon_key.'">'; 
+                            continue;
+                        endif;                          
+                        $tab_div_html .= '<div class="setting">';             
+                        $tab_div_html .= '<label for="'.$addon_setting['id'].'">'.$addon_setting['label'].'</label>';                       
+                        $tab_div_html .= $this->generate_single_setting_html( $addon_setting );
+                        $tab_div_html .= $this->add_description_html( $addon_setting );
+                        $tab_div_html .= '</div>';    
+                    endforeach;                      
+            endforeach;               
+                 $tab_div_html .= '</div>';    
             return  array( 'tab_html' => $tab_list_html, 'div_html' => $tab_div_html )  ;  
+        }
+        
+        private function generate_single_setting_html( $addon_setting ){
+            
+            if ( method_exists( $this, 'generate_' . $addon_setting['type'] . '_html' ) ) {
+                return $this->{'generate_' . $addon_setting['type'] . '_html'}( $addon_setting );
+            }  
+            
+            return $this->{'generate_text_html'}( $addon_setting );            
         }
         
         private function generate_checkbox_html( $addon_setting ){
