@@ -55,6 +55,18 @@
 #ksd-public-reply-error{
     background-color: red;
 }
+.entry-content .ksd-customer-email {
+  margin-bottom: 15px;
+  margin-top: 15px;
+  width: 100%;
+}
+#ksd_cust_email-error{
+    color: red;
+}
+#ksd-public-reply-submit{
+    min-height: 45px;
+    min-width: 150px;
+}
 .ksd-new-ticket-form-wrap .ksd-close-form-wrapper{
     width: 100%;
     height: 36px;    

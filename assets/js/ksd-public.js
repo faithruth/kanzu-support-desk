@@ -134,7 +134,11 @@ jQuery( document ).ready(function() {
     
     //In single ticket view, send a ticket reply
     if( jQuery( '#wp-ksd-public-new-reply-wrap' ).length ){
-        jQuery( '#ksd-public-reply-submit' ).click(function(){           
+        jQuery( '#ksd-public-reply-submit' ).click(function( e ){  
+            e.preventDefault();
+            if ( ! jQuery( 'form#ksd-reply' ).valid() ){
+                return;                
+            }
             jQuery('.ksd-public-spinner').addClass('is-active').removeClass('hidden');
             var ticketReply;
             if ( 'undefined' !== typeof(tinyMCE) ){
@@ -144,12 +148,17 @@ jQuery( document ).ready(function() {
             else{//In case, for one reason or another, tinyMCE doesn't load
                 ticketReply = jQuery('textarea[name=ksd-public-new-reply]').val();                
             }
-            
+            var customerEmail = '';
+            if ( jQuery( 'input[name=ksd_cust_email]' ).length ){
+                customerEmail = jQuery( 'input[name=ksd_cust_email]' ).val();
+            }
             jQuery.post(    
                     ksd_public.ajax_url,
                     {   action: 'ksd_reply_ticket',
                         ksd_new_reply_nonce: jQuery('input[name=ksd_new_reply_nonce]').val(), 
                         ksd_ticket_reply: ticketReply,
+                        ksd_cust_email: customerEmail,
+                        ksd_public_reply_form: jQuery('input[name=ksd_public_reply_form]').val(), 
                         ksd_reply_title: jQuery('h1.entry-title').text(),
                         tkt_id: jQuery('ul#ksd-ticket-replies').attr("class").replace("ticket-","")
                     },

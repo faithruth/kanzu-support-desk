@@ -966,14 +966,15 @@ class KSD_Admin {
          * @since 2.0.0
          */
         public function do_get_ticket_replies_and_notes( $tkt_id, $get_notes = true ) {
-            if ( $get_notes ) {
-                $args = array( 'post_type' => array ( 'ksd_reply', 'ksd_private_note' ), 'post_parent' => $tkt_id, 'post_status' => array ( 'private', 'publish' ), 'order' => 'ASC' );
-            }
-            else{
-                $args = array( 'post_type' => 'ksd_reply', 'post_parent' => $tkt_id, 'order' => 'ASC' );
-            }
-            $replies = get_posts( $args );//@TODO Test this. Might need to change it to new WP_Query
-
+             $args = array( 'post_type' => 'ksd_reply', 'post_parent' => $tkt_id, 'order' => 'ASC', 'posts_per_page' => -1, 'offset' => 0 );
+             
+             if ( $get_notes ) {
+                $args['post_type']      = array ( 'ksd_reply', 'ksd_private_note' );
+                $args['post_status']    = array ( 'private', 'publish' );
+             }
+             
+            $replies = get_posts( $args );//@TODO Re-test this. Might need to change it to new WP_Query
+            Kanzu_Support_Desk::kanzu_support_log_me($replies);
             //Replace the reply author ID with the display name and get the reply's attachments
             foreach ( $replies as $reply ) {
                 $reply->post_author = get_userdata( $reply->post_author )->display_name;
@@ -1206,13 +1207,27 @@ class KSD_Admin {
             }
             
             $this->do_admin_includes();
-                
                 try{
                     $new_reply = array(); 
                     //If this was called by an add-on, populate the $_POST array
                     if ( $add_on_mode ) {
                         $_POST = $ticket_reply_array;
-                        $new_reply['post_author'] = $_POST['ksd_rep_created_by'];
+                        if ( isset( $_POST['ksd_rep_created_by'] ) ){
+                            $new_reply['post_author'] = $_POST['ksd_rep_created_by'];
+                        }
+                        if( isset( $_POST['ksd_cust_email'] ) ){
+                            $customer_email     = sanitize_email( $_POST['ksd_cust_email'] );
+                            $customer_details   = get_user_by ( 'email', $customer_email ); 
+                            if ( $customer_details ){
+                                $new_reply['post_author'] = $customer_details->ID;
+                            }
+                            else{
+                                $new_customer               = new stdClass();
+                                $new_customer->user_email   = $customer_email;
+                                $new_reply['post_author']   = $this->create_new_customer( $new_customer );
+                            }
+                            
+                        }                        
                     }
                     else{
                          $new_reply['post_author'] = get_current_user_id();
@@ -1261,14 +1276,14 @@ class KSD_Admin {
                     }
                     $this->send_email( $notify_user->user_email, $new_reply['post_content']. Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID, false ), 'Re: ' . $parent_ticket->post_title, $cc );//NOTE: Prefix the reply subject with Re:    
                     
-                    if ( $add_on_mode ) {
+                    if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
                        do_action( 'ksd_new_reply_logged', $_POST['ksd_addon_tkt_id'], $new_reply_id );
                        return;//End the party if this came from an add-on. All an add-on needs if for the reply to be logged
                    }
 
                    if ( $new_reply_id > 0 ) {
                       //Add 'post_author' to the response
-                       $new_reply['post_author'] = get_userdata ( get_current_user_id() )->display_name;
+                       $new_reply['post_author'] = get_userdata ( $new_reply['post_author'] )->display_name;
                       echo json_encode(  $new_reply  );
                    }else{
                        throw new Exception( __("Error", 'kanzu-support-desk'), -1 );
@@ -2247,13 +2262,15 @@ class KSD_Admin {
 			$append ++;
                     }
                     $password = wp_generate_password();//Generate a random password                   
-                    
+                    //First name
+                    $first_name = empty( $customer->first_name ) ? $username : $customer->first_name;
+                            
                     $userdata = array(
                         'user_login'    => $username,
                         'user_pass'     => $password,  
                         'user_email'    => $customer->user_email,
-                        'display_name'  => empty( $customer->last_name ) ? $customer->first_name : $customer->first_name.' ' . $customer->last_name,
-                        'first_name'    => $customer->first_name,
+                        'display_name'  => empty( $customer->last_name ) ? $first_name : $first_name.' ' . $customer->last_name,
+                        'first_name'    => $first_name,
                         'role'          => 'ksd_customer'
                     );
                     if ( !empty( $customer->last_name ) ) {//Add the username if it was provided

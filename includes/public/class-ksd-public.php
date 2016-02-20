@@ -25,7 +25,8 @@ class KSD_Public {
         //Handle AJAX
         add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
         add_action( 'wp_ajax_nopriv_ksd_register_user', array( $this, 'register_user' ) );        
-        
+        add_action( 'wp_ajax_nopriv_ksd_reply_ticket', array( $this, 'reply_ticket' ) );
+                        
         //Add a shortcode for the public form
         add_shortcode( 'ksd_support_form', array( $this,'form_short_code' ) );
         add_shortcode( 'ksd_my_tickets', array( $this,'display_my_tickets' ) );
@@ -147,6 +148,7 @@ class KSD_Public {
     public function register_support_form_widget() {
         register_widget( 'KSD_Support_Form_Widget' );
     }
+    
 
     /**
      * Generate the ticket form that's displayed in the front-end
@@ -523,6 +525,14 @@ class KSD_Public {
             $ksd_admin =  KSD_Admin::get_instance();
             $ksd_admin->log_new_ticket( $_POST );
         }
+        
+        /**
+         * Add a reply to a ticket
+         */
+        public function reply_ticket(){
+            $ksd_admin =  KSD_Admin::get_instance();
+            $ksd_admin->reply_ticket( $_POST );        
+        }        
         
         /**
          * Register a user
