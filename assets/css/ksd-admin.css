@@ -411,8 +411,8 @@ ul.ksd_attachments li{
 #post-body .ksd-misc-customer::before {
     content: "\f110";
 }
-#post-body .ksd-misc-customer-email::before {
-  content: "\f348";
+#post-body .ksd-misc-customer-email:before {
+	content: "\f466";
 }
 #post-body .ksd-misc-assign-to::before{
     content: "\f483";
@@ -436,7 +436,7 @@ ul.ksd_attachments li{
     border-radius:3px;
     color: #FFF;   
 }
-#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before {
+#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before {
   display: inline-block;
   font: 400 20px/1 dashicons;
   left: -1px;
@@ -549,9 +549,14 @@ ul#ksd_attachments{
     float: none;
     margin-top: 40px;
 }
-#ksd-single-ticket .ksd-submit{
+#ksd-single-ticket .ksd-submit,.ksd-reply-submit-wrapper .ksd-submit{
     float: left;
     clear: both;
+    min-height: 35px;
+    min-width: 150px;    
+}
+#ksd-messages-metabox {
+    padding-bottom: 55px;
 }
 #edit-ticket-tabs {
   border-color: #eee #fff #fff;
@@ -571,15 +576,19 @@ ul.edit-ticket-options li.selected{
 #ksd-messages-metabox .ui-tabs .ui-tabs-nav li {
     background-color: #f7f7f7;
     border: 1px solid #ccc;
+    border-bottom: 1px solid #ccc !important;
     padding: 0;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    border-radius:0;
 }
 #ksd-messages-metabox .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
     color: #555;
     font-size: 0.9em;
     padding: 2px 10px;
+}
+#ksd-messages-metabox .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
+    font-weight: normal;
 }
 #ksd-messages-metabox .ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active {
     background-color: #555;

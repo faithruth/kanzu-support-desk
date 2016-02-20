@@ -974,7 +974,6 @@ class KSD_Admin {
              }
              
             $replies = get_posts( $args );//@TODO Re-test this. Might need to change it to new WP_Query
-            Kanzu_Support_Desk::kanzu_support_log_me($replies);
             //Replace the reply author ID with the display name and get the reply's attachments
             foreach ( $replies as $reply ) {
                 $reply->post_author = get_userdata( $reply->post_author )->display_name;
