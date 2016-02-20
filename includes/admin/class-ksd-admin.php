@@ -740,7 +740,7 @@ class KSD_Admin {
          * @param string $editor_id The editor ID
          */
         public function add_attachments_button( $editor_id ) {            
-            if ( !isset( $_GET['page'] ) ) {
+            if ( ! isset( $_GET['page'] ) ) {
                 return;
             }
             if ( strpos ( $editor_id , 'ksd_' ) !== false ) {//Check that we are modifying a KSD wp_editor. Don't modify wp_editor for posts, pages, etc 
