@@ -57,17 +57,18 @@ class KSD_Ticket_Tokens {
 	/**
 	 * Build our custom permalink with token
 	 *
-	 * @param object $post
+	 * @param int $post_ID
          * @param bool $force_short
 	 * @return string
 	 */
-	public function create_permalink( $post, $force_short = false) {
-		$permalinks = get_option( 'permalink_structure' );
-
+	public function create_permalink( $post_ID, $force_short = false) {
+		$permalinks     = get_option( 'permalink_structure' );
+                $post           = get_post( $post_ID );
+                
 		if ( $force_short ) {
-                    return wp_get_shortlink( $post->ID ).'&ksd='.$this->generate_token( $post );
+                    return wp_get_shortlink( $post_ID ).'&ksd='.$this->generate_token( $post->post_name, $post->post_password );
 		} 
-		return get_permalink( $post->ID).( '' != $permalinks ? '?ksd=' : '&ksd=').$this->generate_token( $post );
+		return get_permalink( $post_ID ).( '' != $permalinks ? '?ksd=' : '&ksd=').$this->generate_token( $post->post_name, $post->post_password );
 	 
 	}
         
@@ -81,7 +82,7 @@ class KSD_Ticket_Tokens {
 	 * @return bool
 	 */
 	private function do_cookies_match( $post, $token ) {	
-                $tmp_token = $this->generate_token( $post );
+                $tmp_token = $this->generate_token( $post->post_name, $post->post_password );
 		if( !isset( $_COOKIE[ $this->ksd_cookie.COOKIEHASH ] ) || $_COOKIE[ $this->ksd_cookie.COOKIEHASH ] != $tmp_token ) {
 			return $tmp_token == $token;
 		}
@@ -124,10 +125,11 @@ class KSD_Ticket_Tokens {
 	 * Make an access hash
 	 * Currently as simple as md5( $post_name.$post_password )
 	 *
-	 * @param object $post 
+	 * @param string $post_name 
+         * @param string $post_password
 	 * @return string
 	 */
-	private function generate_token( $post ) {
+	private function generate_token( $post_name,$post_password ) {
             global $token;
 
             if ( is_null( $token ) ) {
@@ -138,11 +140,16 @@ class KSD_Ticket_Tokens {
                     update_option( KSD_OPTIONS_KEY, $settings );
                 }
 
-                $token = md5( $settings['salt'].$post->post_name.$post->post_password );
+                $token = md5( $settings['salt'].$post_name.$post_password );
             }
 
             return $token;
 	}        
 	
+        private function get_post_name( $id ){
+            $post = get_post( $id );
+            //$post->post_password 
+            return $post->post_name;
+        }
 }
 endif;

@@ -585,7 +585,13 @@ class KSD_Admin {
             if ( isset( $meta_array['_ksd_tkt_info_customer'] ) ) {
                 $this->update_ticket_activity( '_ksd_tkt_info_customer', $tkt_title, $tkt_id, wp_get_current_user()->ID, $meta_array['_ksd_tkt_info_customer'] );
             }
- 
+            
+            //Save the hash URL   
+            if( isset( $meta_array[ '_ksd_tkt_info_hash_url' ] ) ){  
+                add_post_meta( $tkt_id, '_ksd_tkt_info_hash_url', $meta_array[ '_ksd_tkt_info_hash_url' ], true ); 
+                unset( $meta_array[ '_ksd_tkt_info_hash_url' ] );
+            }
+            
             //Update the other meta information  
             foreach ( $ksd_meta_keys as $tkt_info_meta_key => $tkt_info_default_value ) {
                 if ( !isset( $meta_array[$tkt_info_meta_key] ) ) {
@@ -1525,9 +1531,15 @@ class KSD_Admin {
                 //Add KSD ticket defaults       
                 $new_ticket['post_type']      = 'ksd_ticket';
                 $new_ticket['comment_status'] = 'closed';
+
+                //Add post password 
+                if( "yes" == $settings['enable_customer_signup'] ){
+                    $post_password              = wp_generate_password( 5 );
+                    $new_ticket['post_password']= $post_password;
+                }                
                 
                 //Log the ticket
-                $new_ticket_id = wp_insert_post( $new_ticket );
+                $new_ticket_id = wp_insert_post( $new_ticket ); 
                 
                 //Add product category @TODO 2.1.0 Likely don't need this
                 if ( isset( $new_ticket['ksd_tkt_pdt_category']) && intval($new_ticket['ksd_tkt_pdt_category']) > 0 ) {
@@ -1541,7 +1553,7 @@ class KSD_Admin {
                 }
                 
                 //Add meta fields
-                $meta_array                             = array();
+                $meta_array     = array();
                 $meta_array['_ksd_tkt_info_channel']    = $tkt_channel;
                 if ( isset( $new_ticket_raw['ksd_tkt_cc'] ) && $new_ticket_raw['ksd_tkt_cc'] != __( 'CC', 'kanzu-support-desk' ) ) {
                     $meta_array['_ksd_tkt_info_cc']     = sanitize_text_field( $new_ticket_raw['ksd_tkt_cc'] ); 
@@ -1558,12 +1570,19 @@ class KSD_Admin {
                 //If the ticket wasn't assigned by the user, check whether auto-assignment is set so we auto-assign it
                 if ( empty( $new_ticket_raw['ksd_tkt_assigned_to' ] ) &&  !empty( $settings['auto_assign_user'] ) ) {
                     $meta_array['_ksd_tkt_info_assigned_to']            = $settings['auto_assign_user'];                    
-                }
+                }                
                 
                 //Whom to we notify. Defaults to admin if ticket doesn't have an assignee
                 $notify_user_id = ( isset( $meta_array['_ksd_tkt_info_assigned_to'] )? $meta_array['_ksd_tkt_info_assigned_to'] : 1 );
                 $notify_user    = get_userdata(  $notify_user_id );
-                    
+                
+                //Create a hash URL
+                if( "yes" == $settings['enable_customer_signup'] ){
+                    include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-ticket-tokens.php" );
+                    $ticket_tokens = new KSD_Ticket_Tokens();                    
+                    $meta_array[ '_ksd_tkt_info_hash_url' ] = $ticket_tokens->create_permalink( $new_ticket_id );
+                }   
+                
                 //Save ticket meta info
                 $this->save_ticket_meta_info( $new_ticket_id, $new_ticket['post_title'], $meta_array );
 

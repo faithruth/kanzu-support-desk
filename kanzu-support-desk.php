@@ -233,7 +233,21 @@ final class Kanzu_Support_Desk {
          public static function output_ksd_signature( $tkt_id, $append_logo = true ){
             $suffix = '';
             $no_logo_style = ( $append_logo ? '' : 'text-align:right;width:100%;' ); 
-            $permalink = '<a href="'  . get_permalink( $tkt_id ) . '">'  . __( 'View this ticket', 'kanzu-support-desk' )."</a>";
+            $settings = self::get_settings();
+            
+            if( "yes" == $settings[ 'enable_customer_signup'] ){
+                $url =    get_post_meta( $tkt_id, '_ksd_tkt_info_hash_url', true );                
+                if( empty( $url ) ){
+                    include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-ticket-tokens.php" );
+                    $ticket_tokens = new KSD_Ticket_Tokens();                    
+                    $url = $ticket_tokens->create_permalink( $tkt_id );                    
+                }
+            }else{
+                $url    =   get_permalink( $tkt_id );                
+            }
+            
+            $permalink = '<a href="'  . $url . '">'  . __( 'View this ticket', 'kanzu-support-desk' )."</a>";
+            
             $suffix .='<table style="width:100%;border-collapse:collapse;border-top:1px solid #CCC;">
                         <tbody>
                             <tr>
