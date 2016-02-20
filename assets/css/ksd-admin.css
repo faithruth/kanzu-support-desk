@@ -977,16 +977,27 @@ ul.edit-ticket-options.ui-widget-header{
     cursor: pointer;
     float: left;
     font-weight: bold;
-    width: 200px;
+    width: 20%;
+}
+.ksd-input-wrapper {
+  float: left;
+  width: 80%;
+  margin: 10px 0;
+}
+.ksd-input-wrapper span.description {
+  font-size: 13px;
+  font-style: italic;
 }
 #update-settings h3{
     margin-bottom: 0;  
+    clear: both;
 }
 #update-settings input {
     padding: 10px;
 }
 #update-settings div.setting {
     margin: 10px 0;
+    clear: both;
 }
 #update-settings .ksd-submit {
     bottom: 120px;
