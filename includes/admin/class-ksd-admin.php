@@ -2838,7 +2838,7 @@ class KSD_Admin {
         /**
          * Function name is very descriptive; display ticket
          * states next to the title in the ticket grid
-         * We use this to remove 'draft' and 'pending' ticket states
+         * We use this to remove 'draft','pending' and 'Password protected' ticket states
          * that are automatically added to tickets by WP
          * @global Object $post
          * @param type $states
@@ -2848,7 +2848,7 @@ class KSD_Admin {
         public function display_ticket_statuses_next_to_title( $states ) {
             global $post;
             if ( 'ksd_ticket' === $post->post_type ) {
-                if ( $post->post_status == 'pending' || $post->post_status == 'draft' ) {
+                if ( $post->post_status == 'pending' || $post->post_status == 'draft' || !empty ( $post->post_password )  ) {
                     return array ( );
                 }
             }
