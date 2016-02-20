@@ -2267,7 +2267,7 @@ class KSD_Admin {
         public function notify_new_ticket() {
             // if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
            //       die ( __('Busted!', 'kanzu-support-desk') );                         
-           // } //@TODO Update this NONCE check                   
+           // } //@TODO Update this NONCE check        
               $this->do_notify_new_ticket();                    
               echo json_encode( __('Notification sent.', 'kanzu-support-desk') );
               die();//IMPORTANT. Shouldn't be left out         
@@ -2306,7 +2306,7 @@ class KSD_Admin {
                 
                 //Use two filters, ksd_new_ticket_notifxn_message and ksd_new_ticket_notifxn_subject, to make changes to the
                 //the notification message and subject by add-ons
-                $this->send_email( $notify_email, apply_filters( 'ksd_new_ticket_notifxn_message', $notify_new_tkt_message, $ticket_message , $ksd_settings ), apply_filters( 'ksd_new_ticket_notifxn_subject', $notify_new_tkt_subject, $ticket_subject , $ksd_settings ), null, $attachments );                  
+                $this->send_email( $notify_email, apply_filters( 'ksd_new_ticket_notifxn_message', $notify_new_tkt_message, $ticket_message , $ksd_settings, $tkt_id ), apply_filters( 'ksd_new_ticket_notifxn_subject', $notify_new_tkt_subject, $ticket_subject , $ksd_settings, $tkt_id ), null, $attachments );                  
                 } 
          
          }

@@ -412,7 +412,7 @@ ul.ksd_attachments li{
     content: "\f110";
 }
 #post-body .ksd-misc-customer-email::before {
-    content: "\f466";
+  content: "\f348";
 }
 #post-body .ksd-misc-assign-to::before{
     content: "\f483";

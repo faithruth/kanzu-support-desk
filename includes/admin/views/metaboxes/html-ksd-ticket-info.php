@@ -39,6 +39,10 @@
 </div>
 <input type="hidden" value="<?php echo $post->post_status; ?>" id="hidden_ksd_post_status" name="hidden_ksd_post_status"><!--On change, save the ticket status-->
 <input type="hidden" value="admin-form" id="_ksd_tkt_info_channel" name="_ksd_tkt_info_channel"><!--On change, save the ticket status-->
+<div class="ksd-misc-customer-email misc-pub-section">
+    <span><?php _e( 'Customer Email','kanzu-support-desk' ); ?>:</span>
+    <span class="ksd-misc-value" id="ksd-misc-customer-email"><?php echo get_userdata( $post->post_author )->user_email; ?></span>
+</div>
 <div class="ksd-misc-customer misc-pub-section">
     <span><?php _e('Customer: ','kanzu-support-desk');  ?></span>
     <span class="ksd-misc-value" id="ksd-misc-customer"><?php echo get_userdata( $post->post_author )->display_name; ?></span>
@@ -59,8 +63,4 @@
         <a class="cancel-customer button-cancel" href="#customer"><?php _e( 'Cancel','kanzu-support-desk' ); ?></a>
     </div>
     <?php endif;?>
-</div>
-<div class="ksd-misc-customer-email misc-pub-section">
-    <span><?php _e( 'Customer Email','kanzu-support-desk' ); ?>:</span>
-    <span class="ksd-misc-value" id="ksd-misc-customer-email"><?php echo get_userdata( $post->post_author )->user_email; ?></span>
 </div>
