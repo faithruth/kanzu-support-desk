@@ -235,7 +235,7 @@ final class Kanzu_Support_Desk {
             $no_logo_style = ( $append_logo ? '' : 'text-align:right;width:100%;' ); 
             $settings = self::get_settings();
             
-            if( "yes" == $settings[ 'enable_customer_signup'] ){
+            if( "no" == $settings[ 'enable_customer_signup'] ){
                 $url =    get_post_meta( $tkt_id, '_ksd_tkt_info_hash_url', true );                
                 if( empty( $url ) ){
                     include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-ticket-tokens.php" );

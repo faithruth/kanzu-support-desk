@@ -41,7 +41,7 @@ class KSD_Templates {
                      $templates[] = $slug . '-' . $name . '.php';
              $templates[] = $slug . '.php';
 
-             // Allow template parst to be filtered
+             // Allow template parts to be filtered
              $templates = apply_filters( 'ksd_get_template_part', $templates, $slug, $name );
 
              // Return the part that is found

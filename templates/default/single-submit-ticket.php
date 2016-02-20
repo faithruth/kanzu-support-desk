@@ -3,8 +3,16 @@
         <div class="ksd-close-form-wrapper">
             <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
         </div>
-        <form method="POST" class="ksd-new-ticket-public ksd-form-short-code-form">
+        <form method="POST" class="ksd-new-ticket-public">
             <ul>      
+            <?php if( "no" == $settings['enable_customer_signup'] && ! is_user_logged_in() ): ?>
+                <li class="ksd-cust-fullname">       
+                  <input type="text" value="<?php _e( 'Name', 'kanzu-support-desk' ); ?>" name="ksd_cust_fullname" label="Name" class="ksd-cust-fullname" minlength="2" required/>
+                </li>
+                <li class="ksd-customer-email">       
+                  <input type="email" value="<?php _e( 'Email', 'kanzu-support-desk' ); ?>" name="ksd_cust_email" label="Email" class="ksd-customer-email" minlength="2" required/>
+                </li>    
+            <?php endif; ?>                
             <li class="ksd-subject">       
               <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
             </li>

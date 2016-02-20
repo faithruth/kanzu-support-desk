@@ -1476,6 +1476,10 @@ class KSD_Admin {
                 $new_ticket['post_content']         = $sanitized_message;                
                 $new_ticket['post_status']          = ( isset( $new_ticket_raw['ksd_tkt_status'] ) && in_array( $new_ticket_raw['ksd_tkt_status'], array( 'new', 'open', 'pending', 'draft', 'resolved' ) ) ? sanitize_text_field( $new_ticket_raw['ksd_tkt_status'] ) : 'open' ); 
                 
+                if ( isset( $new_ticket_raw['ksd_cust_email'] ) ) {
+                    $new_ticket['ksd_cust_email']   = sanitize_email( $new_ticket_raw['ksd_cust_email'] );
+                }
+                
                 if ( isset( $new_ticket_raw['ksd_tkt_time_logged'] ) ) {//Set by add-ons
                     $new_ticket['post_date']        = $new_ticket_raw['ksd_tkt_time_logged'];
                 }//No need for an else; if this isn't specified, the current time is automatically used
@@ -1505,6 +1509,11 @@ class KSD_Admin {
                     $new_ticket['post_author']  = $new_ticket_raw['ksd_tkt_cust_id'];
                     $cust_email                 = $new_ticket_raw['ksd_cust_email'];
                 }
+                elseif ( get_user_by ( 'email', $new_ticket['ksd_cust_email'] )  ) {//Customer's already in the Db, get their customer ID  
+                    $customer_details           = get_user_by ( 'email', $new_ticket['ksd_cust_email'] );
+                    $new_ticket['post_author']  = $customer_details->ID;
+                    $cust_email                 = $customer_details->user_email;                    
+                }
                 else{//The customer isn't in the Db. Let's add them. This is from an add-on
                     $cust_email           = sanitize_email( $new_ticket_raw['ksd_cust_email'] );//Get the provided email address
                     //Check that it is a valid email address. Don't do this check in add-on mode
@@ -1520,7 +1529,7 @@ class KSD_Admin {
                     else{
                        preg_match('/(\w+)\s+([\w\s]+)/', sanitize_text_field( $new_ticket_raw['ksd_cust_fullname'] ), $new_customer_fullname );
                         $new_customer->first_name   = $new_customer_fullname[1];
-                        $new_customer->last_name   = $new_customer_fullname[2];//We store everything besides the first name in the last name field
+                        $new_customer->last_name    = $new_customer_fullname[2];//We store everything besides the first name in the last name field
                     }
                     //Add the customer to the user table and get the customer ID
                     $new_ticket['post_author']    =  $this->create_new_customer( $new_customer );
@@ -1533,7 +1542,7 @@ class KSD_Admin {
                 $new_ticket['comment_status'] = 'closed';
 
                 //Add post password 
-                if( "yes" == $settings['enable_customer_signup'] ){
+                if( "no" == $settings['enable_customer_signup'] ){
                     $post_password              = wp_generate_password( 5 );
                     $new_ticket['post_password']= $post_password;
                 }                
@@ -1577,7 +1586,7 @@ class KSD_Admin {
                 $notify_user    = get_userdata(  $notify_user_id );
                 
                 //Create a hash URL
-                if( "yes" == $settings['enable_customer_signup'] ){
+                if( "no" == $settings['enable_customer_signup'] ){
                     include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-ticket-tokens.php" );
                     $ticket_tokens = new KSD_Ticket_Tokens();                    
                     $meta_array[ '_ksd_tkt_info_hash_url' ] = $ticket_tokens->create_permalink( $new_ticket_id );

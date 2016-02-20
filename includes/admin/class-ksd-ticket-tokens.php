@@ -28,7 +28,7 @@ class KSD_Ticket_Tokens {
          * The validity of the secret URL in seconds
          * @var int 
          */
-        private $cookie_lifetime = 864000;
+        private $cookie_lifetime = 864000;//@TODO 2.1.0 change this
         
      
         
