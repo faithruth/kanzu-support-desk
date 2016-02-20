@@ -1333,7 +1333,7 @@ class KSD_Admin {
             $TC = new KSD_Tickets_Controller();
             //Check if this was initiated from our notify_email, in which case it is a reply/new ticket from an agent  
             $ksd_settings = Kanzu_Support_Desk::get_settings();
-            if ( $ksd_settings['notify_email'] == $new_ticket->cust_email ) {
+            if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
                 $agent_initiated_ticket = true;
             }
             //First check if the ticket initiator exists in our users table. 
@@ -1364,7 +1364,7 @@ class KSD_Admin {
 
             }
             if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
-                $new_ticket->tkt_cust_id = 1;
+                $new_ticket['ksd_tkt_cust_id'] = 1;
             }
             //This is a new ticket
             $this->log_new_ticket( $new_ticket, true );                        
