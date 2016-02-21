@@ -57,6 +57,13 @@
         </div>
     </div>
     <div class="setting">
+        <label for="supportform_show_products"><?php _e ( 'Show  Products', 'kanzu-support-desk' ); ?></label>
+        <div class="ksd-input-wrapper">
+            <input name="supportform_show_products"  type="checkbox" <?php checked ( $settings['supportform_show_products'], "yes") ?> value="yes"  />        
+            <span class="description"><?php _e ( 'When enabled, your products are added to the support form.', 'kanzu-support-desk' ); ?></span>
+        </div>
+    </div>    
+    <div class="setting">
         <label for="supportform_show_severity"><?php _e ( 'Show severity options', 'kanzu-support-desk' ); ?></label>        
         <div class="ksd-input-wrapper">
             <input name="supportform_show_severity"  type="checkbox" <?php checked ( $settings['supportform_show_severity'], "yes") ?> value="yes"  />        

@@ -376,6 +376,12 @@ class KSD_Public {
             );
 
             register_taxonomy( 'product', 'ksd_ticket', $product_args );
+            
+            //Ticket Categories
+            $tkt_category_args = array(
+                'hierarchical'  => true,
+            );
+            register_taxonomy( 'ticket_category', 'ksd_ticket', $tkt_category_args );            
                             
             /*----Replies -----*/
             $reply_labels = array(

@@ -87,10 +87,6 @@ class KSD_Admin {
                 
                 //Do actions called in $_POST
                 add_action( 'init', array( $this, 'do_post_and_get_actions' ) );          
-
-                
-                //Add ticket categories
-                add_action( 'init', array( $this,'create_ticket_category' ), 0 );
                 
                 //Add contextual help messages
                 add_action( 'contextual_help', array ( $this, 'add_contextual_help' ), 10, 3 );
@@ -323,17 +319,6 @@ class KSD_Admin {
                     'untrashed' => _n( '%s ticket restored from the Trash.', '%s tickets restored from the Trash.', $bulk_counts['untrashed'] ),
             );    
             return $bulk_messages;
-        }
-        
-        /**
-         * Create categories/labels used for tickets
-         * @return string
-         */
-        public function create_ticket_category() {
-            $args = array(
-                'hierarchical'  => true,
-            );
-            register_taxonomy( 'ticket_category', 'ksd_ticket', $args );
         }
         
                 
@@ -1564,9 +1549,10 @@ class KSD_Admin {
                 //Log the ticket
                 $new_ticket_id = wp_insert_post( $new_ticket ); 
                 
-                //Add product category @TODO 2.1.0 Likely don't need this
-                if ( isset( $new_ticket['ksd_tkt_pdt_category']) && intval($new_ticket['ksd_tkt_pdt_category']) > 0 ) {
-                    wp_set_object_terms( $new_ticket_id, $new_ticket['ksd_tkt_pdt_category'] );
+                //Add product to ticket
+                if ( isset( $new_ticket_raw['ksd_tkt_product_id']) && intval( $new_ticket_raw['ksd_tkt_product_id'] ) > 0 ) {
+                   wp_set_object_terms( $new_ticket_id, intval( $new_ticket_raw['ksd_tkt_product_id'] ), 'product' );
+                   
                 }
                 
                 //Add category to ticket
