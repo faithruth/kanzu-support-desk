@@ -145,6 +145,7 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                 ?>
                 <div id="<?php echo $addon_setting['id']; ?>"><!--fragment-3 -->
                     <?php
+                    //TODO: only keep echo part
                     if ( file_exists ( $addon_setting['output'])) {
                         include ( $addon_setting['output'] );
                     } else {

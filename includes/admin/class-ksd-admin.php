@@ -731,7 +731,7 @@ class KSD_Admin {
          * @param string $editor_id The editor ID
          */
         public function add_attachments_button( $editor_id ) {            
-            if ( !isset( $_GET['page'] ) ) {
+            if ( ! isset( $_GET['page'] ) ) {
                 return;
             }
             if ( strpos ( $editor_id , 'ksd_' ) !== false ) {//Check that we are modifying a KSD wp_editor. Don't modify wp_editor for posts, pages, etc 
@@ -2423,7 +2423,7 @@ class KSD_Admin {
          public function get_notifications() {
             ob_start();  
             if ( false === ( $cache = get_transient( 'ksd_notifications_feed' ) ) ) {
-		$feed = wp_remote_get( 'http://kanzucode.com/work/blog/feed/', array( 'sslverify' => false ) );
+		$feed = wp_remote_get( 'http://kanzucode.com/work/blog/kanzu-support-desk-articles/feed/', array( 'sslverify' => false ) );
 		if ( ! is_wp_error( $feed ) ) {                   
 			if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 				$cache = wp_remote_retrieve_body( $feed );

@@ -691,7 +691,7 @@ class KSD_Public {
                         if ( in_array( 'ksd_customer', $user->roles ) ) {    
                                 //@TODO Check $request and send customer to 'My Tickets' or to 'Create new ticket'
                                 $current_settings = Kanzu_Support_Desk::get_settings();//Get current settings                                
-                                return get_permalink( $current_settings['page_submit_ticket'] ); //redirect customers to the create tickets page
+                                return get_permalink( $current_settings['page_my_tickets'] ); //redirect customers to 'my tickets'
                         } 
                 }  
             return $redirect_to;                        

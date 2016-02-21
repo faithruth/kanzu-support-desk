@@ -139,12 +139,15 @@ button#ksd-new-ticket-public{
     cursor: pointer;
     display: inline-block;
     font-size: 13px;
-    height: 28px;
-    line-height: 26px;
+    min-height: 35px;
+    line-height: 35px;
     margin: 0;
     padding: 0 10px 1px;
     text-decoration: none;
     white-space: nowrap;
+    margin-bottom: 10px;
+    min-width: 150px;
+    text-align: center;
 }
 a.ksd-button {
   height: auto;
