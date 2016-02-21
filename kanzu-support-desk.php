@@ -238,9 +238,9 @@ final class Kanzu_Support_Desk {
             if( "no" == $settings[ 'enable_customer_signup'] ){
                 $url =    get_post_meta( $tkt_id, '_ksd_tkt_info_hash_url', true );                
                 if( empty( $url ) ){
-                    include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-ticket-tokens.php" );
-                    $ticket_tokens = new KSD_Ticket_Tokens();                    
-                    $url = $ticket_tokens->create_permalink( $tkt_id );                    
+                    include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-hash-urls.php" );
+                    $hash_urls = new KSD_Hash_Urls();                    
+                    $url = $hash_urls->create_hash_url( $tkt_id );                    
                 }
             }else{
                 $url    =   get_permalink( $tkt_id );                

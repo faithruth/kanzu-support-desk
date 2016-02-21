@@ -1,7 +1,7 @@
 <?php
 /**
  * Allow guests to create tickets by creating
- * secret URLs for them. 
+ * hash URLs for them. 
  * Based heavily on http://wordpress.org/extend/plugins/post-password-plugin/
  *
  * @package   Kanzu_Support_Desk
@@ -13,9 +13,9 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'KSD_Ticket_Tokens' ) ) :
+if ( ! class_exists( 'KSD_Hash_Urls' ) ) :
     
-class KSD_Ticket_Tokens {
+class KSD_Hash_Urls {
 
         /**  
          * The cookie
@@ -28,7 +28,7 @@ class KSD_Ticket_Tokens {
          * The validity of the secret URL in seconds
          * @var int 
          */
-        private $cookie_lifetime = 864000;//@TODO 2.1.0 change this
+        private $cookie_lifetime = 315360000;//10 years. Be wary of 2038 & 2018 bugs. https://stackoverflow.com/questions/3290424/set-a-cookie-to-never-expire
         
      
         
@@ -55,13 +55,13 @@ class KSD_Ticket_Tokens {
         
 
 	/**
-	 * Build our custom permalink with token
+	 * Build our hash URL (custom permalink with token)
 	 *
 	 * @param int $post_ID
          * @param bool $force_short
 	 * @return string
 	 */
-	public function create_permalink( $post_ID, $force_short = false) {
+	public function create_hash_url( $post_ID, $force_short = false) {
 		$permalinks     = get_option( 'permalink_structure' );
                 $post           = get_post( $post_ID );
                 
@@ -145,11 +145,6 @@ class KSD_Ticket_Tokens {
 
             return $token;
 	}        
-	
-        private function get_post_name( $id ){
-            $post = get_post( $id );
-            //$post->post_password 
-            return $post->post_name;
-        }
+
 }
 endif;

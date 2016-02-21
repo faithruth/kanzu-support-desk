@@ -494,9 +494,9 @@ class KSD_Install {
 				'comment_status' => 'closed'
 			)
 		);   
-            include_once( KSD_PLUGIN_DIR .  "includes/admin/class-ksd-ticket-tokens.php");
-            $tokens = new KSD_Ticket_Tokens();   
-            $salt   = $tokens->create_salt();
+            include_once( KSD_PLUGIN_DIR .  "includes/admin/class-ksd-hash-urls.php");
+            $hash_urls  = new KSD_Hash_Urls();   
+            $salt       = $hash_urls->create_salt();
              //Update the settings
             $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
             $updated_settings['page_submit_ticket'] = $submit_ticket;

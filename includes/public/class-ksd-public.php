@@ -82,12 +82,12 @@ class KSD_Public {
      */
     private function do_public_includes() {
         require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-widget-support-form.php' );
-        include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-ticket-tokens.php' );
+        include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-hash-urls.php' );
     }
     
     public function allow_secret_urls(){
-        $ticket_tokens = new KSD_Ticket_Tokens();
-        $ticket_tokens->redirect_guest_tickets();
+        $hash_urls = new KSD_Hash_Urls();
+        $hash_urls->redirect_guest_tickets();
     }
     
     /**

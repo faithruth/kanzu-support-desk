@@ -1601,9 +1601,9 @@ class KSD_Admin {
                 
                 //Create a hash URL
                 if( "no" == $settings['enable_customer_signup'] ){
-                    include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-ticket-tokens.php" );
-                    $ticket_tokens = new KSD_Ticket_Tokens();                    
-                    $meta_array[ '_ksd_tkt_info_hash_url' ] = $ticket_tokens->create_permalink( $new_ticket_id );
+                    include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-hash-urls.php" );
+                    $hash_urls = new KSD_Hash_Urls();                    
+                    $meta_array[ '_ksd_tkt_info_hash_url' ] = $hash_urls->create_hash_url( $new_ticket_id );
                 }   
                 
                 //Save ticket meta info
