@@ -12,7 +12,7 @@
     text-decoration: none;
 }
 #admin-kanzu-support-desk .ui-widget-content {
-    background-color: #f1f1f1;
+/*    background-color: #f1f1f1;*/
     color: #222;
 }
 
@@ -45,10 +45,11 @@
 .more_nav {
     height: 38px;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 5px;
+    top: 35px;
     width: 42px;
     cursor: pointer;
+    z-index: 100;
 }
 .more_nav img:hover,.more_nav img.active{
     background-color: #FFF;
@@ -64,7 +65,8 @@
     min-height: 100%;
     padding: 10px 20px 0;
     position: absolute;
-    right: 0;
+    right: 3px;
+    top: 70px;
     width: 228px;
     z-index: 99;
 }
@@ -90,10 +92,6 @@
     width: 100%;
 }
 #admin-kanzu-support-desk div.admin-ksd-container{
-    border-bottom: medium none;
-    border-right: medium none;
-    border-left: medium none;
-    border-top: 1px solid #E5E5E5;
     margin: 10px 0 10px 0;
     padding: 0;
     width: 100%;
@@ -102,44 +100,7 @@
     background-position: left top;
     background-color: #F1F1F1;
 }
-#admin-kanzu-support-desk ul.ui-tabs-nav {
-    background-color: #e7e7e7;
-    background-image: none;
-    border: medium none;
-    float: left;
-    width: 6%;
-}
-#ticket-tabs ul.ui-tabs-nav{
-    background-color: #EFEFEF;
-    width: 15em;	
-}
-#admin-kanzu-support-desk ul.ui-tabs-nav li{
-    text-align: center;
-}
-#ticket-tabs ul.ui-tabs-nav {
-    position: absolute;
-    top: -35px;
-    width: 60%;
-}
-#admin-kanzu-support-desk #ticket-tabs ul.ui-tabs-nav li {
-    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-    border: medium none;
-    border-radius: 0;
-    -webkit-border-radius:0;
-    -moz-border-radius:0;
-    margin: 0;
-    padding: 0;
-}
 
-
-#tickets .ui-tabs ul.ui-tabs-nav li a.ui-tabs-anchor{
-    padding: 0 0.2em;
-    color: #0074a2;
-}
-#tickets .ui-tabs ul.ui-tabs-nav li.ui-state-active a.ui-tabs-anchor,#tickets .ui-tabs ul.ui-tabs-nav li.ui-state-active{
-    color: #000;
-    font-weight: bold;
-}
 .ticket-actions-top-menu {
     background-color: #0074a2;
     border-radius: 5px;
@@ -160,13 +121,12 @@
     text-decoration: underline;
 }
 
-
 #admin-kanzu-support-desk .admin-ksd-content {
     float: left;
     margin-top: 0;
-    padding-left: 1%;
+    padding-left: 0;
     padding-top: 0;
-    width: 90%;
+    width: 100%;
 }
 #admin-kanzu-support-desk div#tickets {
     padding-left: 0;
@@ -228,6 +188,15 @@
     height: 16px;
     width: 16px;
 }
+#admin-kanzu-support-desk #ksd-tabs ul.ui-tabs-nav li {
+    background: #e4e4e4 none repeat scroll 0 0;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    margin: -4px 4px -1px 0;
+}
+#admin-kanzu-support-desk #ksd-tabs ul.ui-tabs-nav li.ui-tabs-active {
+    background: #0091cd none repeat scroll 0 0;
+}
 #admin-kanzu-support-desk .ui-state-active .ui-icon,#admin-kanzu-support-desk .ui-state-default .ui-icon  {
     background-image: url("../images/arrows.png");
 } 
@@ -247,9 +216,6 @@
     border-top-left-radius: 4px;
 }
 
-#admin-kanzu-support-desk  .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
-    padding: 0.5em 0;
-}
 #ksd-feedback textarea{
     width: 99%;
 }
@@ -445,6 +411,9 @@ ul.ksd_attachments li{
 #post-body .ksd-misc-customer::before {
     content: "\f110";
 }
+#post-body .ksd-misc-customer-email:before {
+	content: "\f466";
+}
 #post-body .ksd-misc-assign-to::before{
     content: "\f483";
 }
@@ -455,6 +424,10 @@ ul.ksd_attachments li{
     font-weight: bold;
     text-transform: capitalize;
 }
+.ksd-misc-customer-email .ksd-misc-value{
+    font-weight: normal;
+    text-transform: lowercase;
+}
 .ksd-post-status-display{
    text-transform: capitalize;
    padding: 4px;
@@ -463,7 +436,7 @@ ul.ksd_attachments li{
     border-radius:3px;
     color: #FFF;   
 }
-#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before {
+#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before {
   display: inline-block;
   font: 400 20px/1 dashicons;
   left: -1px;
@@ -576,9 +549,14 @@ ul#ksd_attachments{
     float: none;
     margin-top: 40px;
 }
-#ksd-single-ticket .ksd-submit{
+#ksd-single-ticket .ksd-submit,.ksd-reply-submit-wrapper .ksd-submit{
     float: left;
     clear: both;
+    min-height: 35px;
+    min-width: 150px;    
+}
+#ksd-messages-metabox {
+    padding-bottom: 55px;
 }
 #edit-ticket-tabs {
   border-color: #eee #fff #fff;
@@ -598,15 +576,19 @@ ul.edit-ticket-options li.selected{
 #ksd-messages-metabox .ui-tabs .ui-tabs-nav li {
     background-color: #f7f7f7;
     border: 1px solid #ccc;
+    border-bottom: 1px solid #ccc !important;
     padding: 0;
-    -webkit-border-radius:3px;
-    -moz-border-radius:3px;
-    border-radius:3px;
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    border-radius:0;
 }
 #ksd-messages-metabox .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
     color: #555;
     font-size: 0.9em;
     padding: 2px 10px;
+}
+#ksd-messages-metabox .ui-tabs .ui-tabs-nav .ui-tabs-anchor{
+    font-weight: normal;
 }
 #ksd-messages-metabox .ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active {
     background-color: #555;
@@ -830,18 +812,24 @@ ul.add-ons li:hover {
 }
 /*The dashboard indicators*/
 ul.dashboard-statistics-summary {
-    border: 1px solid #ccc;
+    border-top: 1px solid #2ea2cc;
     height: 70px;
+    margin-top: 39px;
     text-align: center;
-    width: 100%;
 }
 ul.dashboard-statistics-summary li {
+    background-color: #fff;
+    border-bottom: 1px solid #2ea2cc;
+    border-left: 1px solid #2ea2cc;
+    border-right: 1px solid #2ea2cc;
+    color: #2ea2cc;
     float: left;
     font-size: 24px;
     line-height: 1.2;
+    margin-right: 15px;
+    padding-bottom: 20px;
     padding-top: 12px;
     width: 25%;
-    color: #2ea2cc;
 }
 ul.dashboard-statistics-summary li span {
     color: #999;
@@ -998,16 +986,27 @@ ul.edit-ticket-options.ui-widget-header{
     cursor: pointer;
     float: left;
     font-weight: bold;
-    width: 200px;
+    width: 20%;
+}
+.ksd-input-wrapper {
+  float: left;
+  width: 80%;
+  margin: 10px 0;
+}
+.ksd-input-wrapper span.description {
+  font-size: 13px;
+  font-style: italic;
 }
 #update-settings h3{
     margin-bottom: 0;  
+    clear: both;
 }
 #update-settings input {
     padding: 10px;
 }
 #update-settings div.setting {
     margin: 10px 0;
+    clear: both;
 }
 #update-settings .ksd-submit {
     bottom: 120px;
@@ -1047,6 +1046,10 @@ ul.edit-ticket-options.ui-widget-header{
 }
 #settings-accordion{
     padding-top: 12px;
+}
+#ksd-below-settings {
+    float: left;
+    width: 100%;
 }
 #ksd-migration-status{
     padding:5px 2px 2px 2px;
@@ -1709,10 +1712,11 @@ span.feedback_note{
     float: left;
     position: relative;
     top: 0;
-    margin: 1px .2em 0 0;
+    margin: 1px 0em 0 0;
     border-bottom-width: 0;
     padding: 0;
     white-space: nowrap;
+    background: none;
 }
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
     float: left;
@@ -1734,7 +1738,8 @@ span.feedback_note{
 .ui-tabs .ui-tabs-panel {
     display: block;
     border-width: 0;
-    padding: 1em 1.4em;
+/*    padding: 1em 1.4em;*/
+    padding : 0px;
     background: none;
 }
 
@@ -1943,4 +1948,48 @@ span.feedback_note{
     border: 1px solid #0074a2;
     margin: 10px 0;
     padding: 25px 10px;
+}
+
+ul#ksd-tabs{
+    width:100% !important;
+}
+
+.ui-tabs .ui-tabs-nav{
+    width:100% !important;    
+    padding: 2px;
+}
+
+.ui-tabs .ui-tabs-nav li {
+    padding:4px !important;
+    border: none;
+}
+
+.ui-tabs .ui-tabs-nav li {
+    margin-left:0px !important;
+}
+
+#ksd-tabs{
+    border: none;
+    background: none;
+}
+
+#ksd-tabs .ui-tabs-nav {
+    background: none;
+    border-bottom: 1px solid #ccc;
+}
+
+
+#admin-kanzu-support-desk .ui-state-default, #admin-kanzu-support-desk .ui-widget-content .ui-state-default, #admin-kanzu-support-desk .ui-widget-header .ui-state-default{
+    border: none ;  
+}
+
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor{
+    font-weight: bold;
+}
+
+#ksd-tabs .ui-tabs .ui-tabs-panel{
+    padding:0px !important;
+}
+#ksd-tabs .help_tip img{
+    
 }

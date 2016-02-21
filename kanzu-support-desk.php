@@ -3,7 +3,7 @@
  * Plugin Name:       Kanzu Support Desk
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
  * Description:       Simple, powerful, personal customer service ( support ticket ) solution for your small business
- * Version:           2.0.9
+ * Version:           2.1.0
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
  * Text Domain:       kanzu-support-desk
@@ -14,9 +14,9 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( !class_exists( 'Kanzu_Support_Desk' ) ) :
+if ( ! class_exists( 'Kanzu_Support_Desk' ) ) :
 
 
 final class Kanzu_Support_Desk {
@@ -24,9 +24,8 @@ final class Kanzu_Support_Desk {
 	/**
 	 * @var string
 	 */
-	public $version = '2.0.9';
-	
-	
+	public $version = '2.1.0';
+
 	/**
 	 * @var string
 	 * Note that it should match the Text Domain file header in this file
@@ -141,7 +140,7 @@ final class Kanzu_Support_Desk {
                 require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );
                 
                //Deliver plugin updates like pizza
-                if ( !class_exists('KSD_Plugin_Updater') ) {
+                if ( ! class_exists( 'KSD_Plugin_Updater' ) ) {
                     include_once( KSD_PLUGIN_DIR . '/includes/libraries/class-ksd-plugin-updater.php' );
                 }
         }
@@ -173,7 +172,7 @@ final class Kanzu_Support_Desk {
 	 */
 	public function enqueue_general_scripts() {		
             //For form validation
-            wp_enqueue_script( KSD_SLUG . '-validate', KSD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' , array("jquery"), "1.13.0" ); 
+            wp_enqueue_script( KSD_SLUG . '-validate', KSD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' , array( "jquery"), "1.13.0" ); 
         }
         
          /**
@@ -207,7 +206,7 @@ final class Kanzu_Support_Desk {
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) ); 
                 
                 //Share the plugin's settings with add-ons
-                add_filter( 'ksd_get_settings', array( $this, 'get_settings') );
+                add_filter( 'ksd_get_settings', array( $this, 'get_settings' ) );
                 
                //Handle logging of new tickets & replies initiated by add-ons.   
                 add_action( 'ksd_log_new_ticket', array( $this, 'do_log_new_ticket' ) );
@@ -220,7 +219,7 @@ final class Kanzu_Support_Desk {
          * @param Object $new_ticket The new ticket or reply object
          */
         public function do_log_new_ticket( $new_ticket ){
-            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
+            require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
             $ksd_admin =  KSD_Admin::get_instance();
             $ksd_admin->do_log_new_ticket( $new_ticket );
         }
@@ -234,11 +233,25 @@ final class Kanzu_Support_Desk {
          public static function output_ksd_signature( $tkt_id, $append_logo = true ){
             $suffix = '';
             $no_logo_style = ( $append_logo ? '' : 'text-align:right;width:100%;' ); 
-            $permalink = '<a href="'.  get_permalink( $tkt_id ).'">'.__( 'View this ticket', 'kanzu-support-desk' )."</a>";
+            $settings = self::get_settings();
+            
+            if( "no" == $settings[ 'enable_customer_signup'] ){
+                $url =    get_post_meta( $tkt_id, '_ksd_tkt_info_hash_url', true );                
+                if( empty( $url ) ){
+                    include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-hash-urls.php" );
+                    $hash_urls = new KSD_Hash_Urls();                    
+                    $url = $hash_urls->create_hash_url( $tkt_id );                    
+                }
+            }else{
+                $url    =   get_permalink( $tkt_id );                
+            }
+            
+            $permalink = '<a href="'  . $url . '">'  . __( 'View this ticket', 'kanzu-support-desk' )."</a>";
+            
             $suffix .='<table style="width:100%;border-collapse:collapse;border-top:1px solid #CCC;">
                         <tbody>
                             <tr>
-                                <td style="padding:0;'.$no_logo_style.'">'.$permalink.'</td>';
+                                <td style="padding:0;'  . $no_logo_style . '">'  . $permalink . '</td>';
             if  ( $append_logo ):  
                     $suffix .=' <td style="text-align:right;width:100px;padding:0;">
                                     <a href="https://kanzucode.com/kanzu-support-desk" style="color:#3572b0;text-decoration:none" target="_blank">
@@ -254,15 +267,15 @@ final class Kanzu_Support_Desk {
         
 
 	/**
-	* Added to write custom debug messages to the debug log (wp-content/debug.log). You
+	* Added to write custom debug messages to the debug log ( wp-content/debug.log). You
 	* need to turn debug on for this to work
 	*/
-	public static function kanzu_support_log_me($message) {
-            if (WP_DEBUG === true) {
-                if (is_array($message) || is_object($message)) {
-                    error_log(print_r($message, true));
+	public static function kanzu_support_log_me( $message ) {
+            if ( WP_DEBUG === true ) {
+                if ( is_array( $message ) || is_object( $message ) ) {
+                    error_log( print_r( $message, true ));
                 } else {
-                    error_log($message);
+                    error_log( $message );
                 }
                             }
         } 

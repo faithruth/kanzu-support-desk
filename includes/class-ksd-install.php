@@ -2,7 +2,7 @@
 /**
  * Holds all installation & deactivation-related functionality.  
  * On activation, activate is called.
- * On de-activation, 
+ * On de-activation, deactivate is called
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
  * @license   GPL-2.0+
@@ -51,7 +51,7 @@ class KSD_Install {
                 //Migration check
                 //@TODO: Reassess why it's best put later.
                                 
-                add_action('admin_notices', array($this, 'data_migration_v2'));
+                add_action('admin_notices', array($this, 'data_migration_v2' ));
 
 	}
  
@@ -87,7 +87,7 @@ class KSD_Install {
             
             //Check for re-activation.  
             $settings   =   Kanzu_Support_Desk::get_settings();
-            if ( isset( $settings['kanzu_support_version'] ) ){//Reactivation or upgrade
+            if ( isset( $settings['kanzu_support_version'] ) ) {//Reactivation or upgrade
                 if ( $settings['kanzu_support_version'] == KSD_VERSION ) {//Bail out if it's a re-activation
                     return;
                 }          
@@ -104,7 +104,7 @@ class KSD_Install {
             else{
                 //This is a new installation. Yippee! 
                 self::set_default_options(); 	
-                self::create_support_pages();
+                self::create_support_pages_and_salt();
                 self::log_initial_tickets();
                 self::create_roles();//@since 1.5.0                        
                 set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
@@ -116,7 +116,7 @@ class KSD_Install {
         /**
          * Do de-activation stuff. Currently, doesn't do a thing
          */
-        public static function deactivate (){
+        public static function deactivate () {
             flush_rewrite_rules();//Because of the custom post types   
         }        
         
@@ -124,26 +124,26 @@ class KSD_Install {
        /**
 	 * Redirect to a welcome page on activation
 	 */
-	public static function redirect_to_dashboard(){
+	public static function redirect_to_dashboard() {
 		// Bail if no activation redirect transient is set
-	    if ( ! get_transient( '_ksd_activation_redirect' ) && ! get_transient( '_ksd_upgrade_redirect' ) ){
+	    if ( ! get_transient( '_ksd_activation_redirect' ) && ! get_transient( '_ksd_upgrade_redirect' ) ) {
 			return;
                 }
 		// Delete the redirect transient
 		delete_transient( '_ksd_activation_redirect' );
  
 		// Bail if activating from network, or bulk, or within an iFrame
-		if ( is_network_admin() || isset( $_GET['activate-multi'] ) || defined( 'IFRAME_REQUEST' ) ){
+		if ( is_network_admin() || isset( $_GET['activate-multi'] ) || defined( 'IFRAME_REQUEST' ) ) {
 			return;
                 }
-		if ( ( isset( $_GET['action'] ) && 'upgrade-plugin' == $_GET['action'] ) && ( isset( $_GET['plugin'] ) && strstr( $_GET['plugin'], 'kanzu-support-desk.php' ) ) ){
+		if ( ( isset( $_GET['action'] ) && 'upgrade-plugin' == $_GET['action'] ) && ( isset( $_GET['plugin'] ) && strstr( $_GET['plugin'], 'kanzu-support-desk.php' ) ) ) {
 			return;
                 }
                
-                if ( get_transient( '_ksd_upgrade_redirect' ) ){//Display version-specific welcome message
+                if ( get_transient( '_ksd_upgrade_redirect' ) ) {//Display version-specific welcome message
                     delete_transient( '_ksd_upgrade_redirect' );
                     $sanitized_version =  str_replace('.', '', KSD_VERSION ) ;
-                    wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard&ksd-intro=v'.$sanitized_version ) );  
+                    wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard&ksd-intro=v' . $sanitized_version ) );  
                     exit;	
                 }
 		wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard&ksd-intro=1' ) );  
@@ -156,12 +156,12 @@ class KSD_Install {
          * @return Array $settings The upgraded settings array
          * @since 1.1.0
          */
-        public function upgrade_settings( $settings ){
+        public function upgrade_settings( $settings ) {
             //Compare the user's current settings array against our new default array and pick-up any settings they don't have 
             //We'd have loved to use array_diff_key for this but it only exists for PHP 5 >= 5.1.0
             //For any setting that doesn't exist, we define it and assign it the default value @since 1.5.0
-            foreach ( self::get_default_options() as $setting_key => $setting_default_value ){
-                if( !isset( $settings[$setting_key] ) ){
+            foreach ( self::get_default_options() as $setting_key => $setting_default_value ) {
+                if ( !isset( $settings[$setting_key] ) ) {
                    $settings[$setting_key] =  $setting_default_value;
                 }
             }
@@ -177,26 +177,26 @@ class KSD_Install {
          * @TODO Update this to be even more version conscious
          * NOTE: ALWAYS UPDATE THE DB VERSION IF YOU ALTER ANY OF THE TABLES
          */
-        public function upgrade_plugin( $previous_version ){
+        public function upgrade_plugin( $previous_version ) {
             global $wpdb;  
             $wpdb->hide_errors();
             $dbChanges = array();//Holds all DB change queries
             $sanitized_version =  str_replace('.', '', $previous_version) ;
  
-            if ( $sanitized_version < 160 ){//In 1.6.0, we added attachments. Consider changing these ifs to a switch case
+            if ( $sanitized_version < 160 ) {//In 1.6.0, we added attachments. Consider changing these ifs to a switch case
                 //@since $this->ksd_db_version 110. Added attachments table
                 $dbChanges[]= KSD_Install::create_attachments_table();
             }
-            if ( $sanitized_version < 162 ){
+            if ( $sanitized_version < 162 ) {
                 //@since $this->ksd_db_version 111 Added tkt_is_read & made tkt_time_updated not null , @1.6.2
                $dbChanges[]= "ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` ADD `tkt_is_read` BOOLEAN NOT NULL DEFAULT FALSE ;";
                $dbChanges[]= "ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_time_updated` `tkt_time_updated` TIMESTAMP NOT NULL;";
             }
  
-            if( count( $dbChanges ) > 0 ){  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
+            if ( count( $dbChanges ) > 0 ) {  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
                                             //how strict and verbose the dbDelta alternative is. We'd
                                             //need to rewrite CREATE table statements for dbDelta.
-                  foreach ( $dbChanges as $query ){
+                  foreach ( $dbChanges as $query ) {
                         $wpdb->query( $query );     
                   }
             }
@@ -211,28 +211,28 @@ class KSD_Install {
          * 
          * @since 2.0.0
          */
-        public function data_migration_v2(){
+        public function data_migration_v2() {
             global $wpdb;
             $ksd_v2migration_status  = get_option( 'ksd_v2migration_status' );
-            if( 'ksd_v2migration_done' == $ksd_v2migration_status ) return ; 
+            if ( 'ksd_v2migration_done' == $ksd_v2migration_status ) return ; 
             
             $result = $wpdb->get_results( "SHOW TABLES LIKE '{$wpdb->prefix}kanzusupport_tickets'" );
             
             //@TODO: Show for migration stage only for now. To be removed in the next version.
-            if( count($result) > 0 && 'ksd_v2migration_deletetables' !== $ksd_v2migration_status ){ 
-                add_action('ksd_display_settings', function(){ 
+            if ( count($result) > 0 && 'ksd_v2migration_deletetables' !== $ksd_v2migration_status ) { 
+                add_action('ksd_display_settings', function() { 
                     include_once KSD_PLUGIN_DIR . 'includes/admin/views/html-admin-settings-migration.php';
                 });
                 
-                if( 'ksd_v2migration_deletetables' == $ksd_v2migration_status ){
+                if ( 'ksd_v2migration_deletetables' == $ksd_v2migration_status ) {
                 ?>
                 <div class="notice">
-                    <p><?php  printf(__( 'We have noticed that you still have tables from a Kanzu Support Desk version prior to %s! Click <a href="' . admin_url() .'/edit.php?post_type=ksd_ticket&page=ksd-settings&active_tab=migration">here</a> to completely delete them.', 'kanzu-support-desk' ), 'v2.0'); ?></p>
+                    <p><?php  printf(__( 'We have noticed that you still have tables from a Kanzu Support Desk version prior to %s! Click <a href="' . admin_url() .'/edit.php?post_type=ksd_ticket&page=ksd-settings&active_tab=migration">here</a> to completely delete them.', 'kanzu-support-desk' ), 'v2.0' ); ?></p>
                 </div>
                 <?php
                 }else{ ?>
                 <div class="notice">
-                    <p><?php printf( __( 'Kanzu Support Desk - We have noticed that you still have data left over from a migration to v2.0! Click <a href="' . admin_url() .'/edit.php?post_type=ksd_ticket&page=ksd-settings&active_tab=migration">here</a> to migrate it into the current version.', 'kanzu-support-desk' ), 'v2.0'); ?></p>
+                    <p><?php printf( __( 'Kanzu Support Desk - We have noticed that you still have data left over from a migration to v2.0! Click <a href="' . admin_url() .'/edit.php?post_type=ksd_ticket&page=ksd-settings&active_tab=migration">here</a> to migrate it into the current version.', 'kanzu-support-desk' ), 'v2.0' ); ?></p>
                 </div>
                 <?php 
                 }
@@ -248,7 +248,7 @@ class KSD_Install {
             global $wpdb;        
 		//$wpdb->hide_errors();		            
                 //@since 1.5.3 customers table removed
-                require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); 
+                require_once(ABSPATH . 'wp-admin/includes/upgrade.php' ); 
                 $kanzusupport_tables = "
 				CREATE TABLE `{$wpdb->prefix}kanzusupport_tickets` (
 				`tkt_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY, 
@@ -294,13 +294,13 @@ class KSD_Install {
 				);
                                 ";
         //Add the attachments table. The SQL is in a separate function since it is also used in $this->upgrade_plugin()  
-        $kanzusupport_tables.=self::create_attachments_table(); 
+        $kanzusupport_tables .= self::create_attachments_table() ; 
         
-        dbDelta($kanzusupport_tables);                     
+        dbDelta( $kanzusupport_tables );                     
         }
-        private static function create_attachments_table(){
+        private static function create_attachments_table() {
             global $wpdb;   
-            $sql="
+            $sql = "
             CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
             `attach_id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `attach_tkt_id` BIGINT(20) NULL ,
@@ -330,7 +330,7 @@ class KSD_Install {
              * Create custom user roles
              * @since 1.5.0
              */
-            private static function create_roles(){
+            private static function create_roles() {
                 add_role(       'ksd_customer', __( 'KSD Customer', 'kanzu-support-desk' ), array(
 				'read' 		=> true,
 				'edit_posts' 	=> false,
@@ -343,7 +343,7 @@ class KSD_Install {
             /**
              * Get default settings
              */
-            public static function get_default_options(){
+            public static function get_default_options() {
                 $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
                 return  array (
                         /** KSD Version info ********************************************************/
@@ -351,7 +351,6 @@ class KSD_Install {
                         'kanzu_support_db_version'          => self::$ksd_db_version,
                     
                         /** Tickets **************************************************************/
-                    
                         'enable_new_tkt_notifxns'           => "yes",
                         'enable_notify_on_new_ticket'       => "yes",//@since 1.5.4. Email sent to primary admin on new ticket creation
                         'notify_email'                      => $user_info->user_email,//@since 1.7.0 The default email to send notifications to
@@ -361,7 +360,7 @@ class KSD_Install {
                         'ticket_mail_message'               => __( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
                         'recency_definition'                => "1",
                         'show_support_tab'                  => "yes",
-                        'support_button_text'               => "Support",
+                        'support_button_text'               => "Click here for help",
                         'tab_message_on_submit'             => __( 'Thank you. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
                         'tour_mode'                         => "no", //@since 1.1.0
                         'enable_recaptcha'                  => "no",//@since 1.3.1 Not on by default since user needs to create & provide reCAPTCHA site & secret keys
@@ -373,7 +372,13 @@ class KSD_Install {
                         'ticket_management_roles'           => 'administrator', //@since 1.5.0. Who can manage your tickets
                         'enable_customer_signup'            => "yes",//@since 2.0.0
                         'page_submit_ticket'                => 0,//@since 2.0.0 ID of the 'Submit ticket' page
-                        'page_my_tickets'                   => 0//@since 2.0.0 //ID of the 'My tickets page'
+                        'page_my_tickets'                   => 0,//@since 2.0.0 //ID of the 'My tickets page'
+                        'salt'                              => '',
+                    
+                        /**Support form settings**/
+                        'supportform_show_categories'       => 'no',
+                        'supportform_show_severity'         => 'no',
+                        'supportform_show_products'         => 'no'
                     );
             }
             
@@ -382,15 +387,15 @@ class KSD_Install {
              * Log initial tickets so that dashboard line graph shows and user
              * gets more details on the product
              */
-            public static function log_initial_tickets (){
+            public static function log_initial_tickets () {
                 
                 global $current_user;
                 get_currentuserinfo();
                 
-                $date                   = date_create( date('Y-m-d') );
-                $date_two_days_later    = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('2 days'));
-                $date_three_days_later  = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('3 days'));
-                $date_four_days_later   = date_sub( date_create( date('Y-m-d h:m:i')), date_interval_create_from_date_string('4 days'));
+                $date                   = date_create( date('Y-m-d' ) );
+                $date_two_days_later    = date_sub( date_create( date('Y-m-d h:m:i' )), date_interval_create_from_date_string('2 days' ));
+                $date_three_days_later  = date_sub( date_create( date('Y-m-d h:m:i' )), date_interval_create_from_date_string('3 days' ));
+                $date_four_days_later   = date_sub( date_create( date('Y-m-d h:m:i' )), date_interval_create_from_date_string('4 days' ));
                 
                 $tickets = array(    
                     array(
@@ -457,7 +462,7 @@ class KSD_Install {
                     ),
                 );
                 
-                foreach ( $tickets as $sample_ticket ){
+                foreach ( $tickets as $sample_ticket ) {
                     do_action( 'ksd_log_new_ticket', $sample_ticket );
                 }
                 
@@ -468,7 +473,7 @@ class KSD_Install {
              * @since 2.0.0
              * @TODO Add this to the upgrade process
              */
-            public static function create_support_pages(){
+            public static function create_support_pages_and_salt() {
                 $submit_ticket = wp_insert_post(
 			array(
 				'post_title'     => __( 'Submit Ticket', 'kanzu-support-desk' ),
@@ -489,11 +494,15 @@ class KSD_Install {
 				'post_type'      => 'page',
 				'comment_status' => 'closed'
 			)
-		);     
+		);   
+            include_once( KSD_PLUGIN_DIR .  "includes/admin/class-ksd-hash-urls.php");
+            $hash_urls  = new KSD_Hash_Urls();   
+            $salt       = $hash_urls->create_salt();
              //Update the settings
             $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
             $updated_settings['page_submit_ticket'] = $submit_ticket;
             $updated_settings['page_my_tickets']    = $my_tickets;
+            $updated_settings['salt']               = $salt;
             update_option( KSD_OPTIONS_KEY, $updated_settings );
             }
 

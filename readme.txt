@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.3
-Stable tag: 2.0.9
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,16 @@ Yes; KSD will work with any theme
 7. Private note support
 
 == Changelog ==
+= 2.1.0, February 21, 2016 =
+ * Change settings UI to horizontal tabs
+ * Allow guests to create tickets. Hash URLs created for this
+ * Products, severity and category added to support form
+ * Support for add-on settings as an array
+ * Re-direct to 'My tickets', not 'Submit Ticket' on KSD customer login
+ * Change support form hidden tab to bottom right
+ * In settings, add descriptions in addition to tooltips
+ * BUG FIX | Multiple support forms supported on the same page
+
 = 2.0.9, January 27, 2016 =
  * BUG FIX | Failure to send front-end replies due to tinyMCE not loading
  * Re-order ticket replies in ascending order
@@ -280,7 +290,12 @@ Yes; KSD will work with any theme
 * Launched.
 
 == Upgrade Notice ==
-= 2.0.9, January 27, 2016 =
+= 2.1.0 =
+ * Change settings UI to horizontal tabs
+ * Allow guests to create tickets. Hash URLs created for this
+ * Products, severity and category added to support form
+
+= 2.0.9 =
  * BUG FIX | Failure to send front-end replies due to tinyMCE not loading
  * Re-order ticket replies in ascending order
  * BUG FIX | Fix 404 error on single ticket pages

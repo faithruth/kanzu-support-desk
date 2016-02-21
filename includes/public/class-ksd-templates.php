@@ -41,7 +41,7 @@ class KSD_Templates {
                      $templates[] = $slug . '-' . $name . '.php';
              $templates[] = $slug . '.php';
 
-             // Allow template parst to be filtered
+             // Allow template parts to be filtered
              $templates = apply_filters( 'ksd_get_template_part', $templates, $slug, $name );
 
              // Return the part that is found
@@ -129,7 +129,7 @@ class KSD_Templates {
          * @return string
          */
         private function get_templates_dir() {
-                return KSD_PLUGIN_DIR . 'templates/'.$this->get_active_theme();
+                return KSD_PLUGIN_DIR . 'templates/' . $this->get_active_theme();
         }
         
         /**
@@ -149,9 +149,9 @@ class KSD_Templates {
          */
         public function append_ticket_replies( $tkt_id ){
             //Retrieve the replies
-            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
-            $this->get_template_part( 'single','replies' );
-            $this->get_template_part( 'form','new-reply' );
+            require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
+            $this->get_template_part( 'single', 'replies' );
+            $this->get_template_part( 'form', 'new-reply' );
         }
 
 }
