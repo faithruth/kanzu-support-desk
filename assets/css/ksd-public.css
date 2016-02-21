@@ -18,12 +18,15 @@
 .ksd-new-ticket-form-wrap ul li label.error,.ksd-register-form-wrap ul li label.error{
     color: red;
 }
-.ksd-new-ticket-form-wrap input,.ksd-new-ticket-form-wrap textarea,.ksd-register-form-wrap input,.ksd-register-form-wrap textarea {
+.ksd-new-ticket-form-wrap input,.ksd-new-ticket-form-wrap select,.ksd-new-ticket-form-wrap textarea,.ksd-register-form-wrap input,.ksd-register-form-wrap textarea {
   margin-bottom: 7px;
 }
 .ksd-g-recaptcha-error{
     font-size: 0.8em;
     color: #F00;
+}
+.ksd-new-ticket-form-wrap select{
+    width: 50%;
 }
 .ksd-form-hidden-tab input,.ksd-form-hidden-tab textarea ,.ksd-form-hidden-tab-form ul li.ksd-g-recaptcha{
   width: 290px;
@@ -74,7 +77,7 @@
     width: 100%;
     height: 36px;    
 }
-.ksd-new-ticket-form-wrap img.ksd_close_button,.ksd-register-form-wrap img.ksd_close_button{
+.ksd-new-ticket-form-wrap span.ksd_close_button,.ksd-register-form-wrap img.ksd_close_button{
     float: right;
     cursor: pointer;
 }
@@ -106,10 +109,10 @@
   background-color: #fff;
   max-width: 30%;
   border: 1px solid #CCC;
-  left: 0;
+  right: 5%;
   padding: 42px 10px 10px;
   position: fixed;
-  bottom: 5%;
+  bottom: 0;
   z-index: 990; /*We need this to make sure this is visible*/   
 }
 .ksd-form-short-code .ksd-close-form-wrapper,.ksd-form-widget .ksd-close-form-wrapper{
@@ -120,7 +123,7 @@ button#ksd-new-ticket-public{
   bottom: 0;
   right: 5%;
   border-radius: 0;
-  z-index: 999; /*We need this to make sure this is visible*/
+  z-index: 990; /*We need this to make sure this is visible*/
 }
 .ksd-button{
     vertical-align: baseline;

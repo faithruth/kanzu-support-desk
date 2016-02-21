@@ -110,7 +110,7 @@ jQuery( document ).ready(function() {
     _togglePublicFormFieldValues();
      
     //Close the support tab if the close button is clicked
-    jQuery ( '.ksd-new-ticket-form-wrap img.ksd_close_button,.ksd-register-form-wrap img.ksd_close_button' ).click(function(){
+    jQuery ( '.ksd-new-ticket-form-wrap span.ksd_close_button,.ksd-register-form-wrap span.ksd_close_button' ).click(function(){
          jQuery( ".ksd-form-hidden-tab" ).toggle( "slide" );
     });
     //Toggle 'Show password'

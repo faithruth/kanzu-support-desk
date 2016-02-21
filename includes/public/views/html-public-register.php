@@ -14,7 +14,10 @@
 <div class="ksd-new-ticket-form-wrap ksd-register-form-wrap <?php echo $form_position_class; ?> hidden">
     <?php $settings = Kanzu_Support_Desk::get_settings();?>
     <div class="ksd-close-form-wrapper">
-        <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />
+        <span class="ksd_close_button">
+            <?php _e( 'Close', 'kanzu-support-desk' ); ?>
+            <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>"  width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />        
+        </span>     
     </div>
     <form method="POST" class="ksd-register-public <?php echo $form_position_class; ?>-form">
         <div class="ksd-register-description">
