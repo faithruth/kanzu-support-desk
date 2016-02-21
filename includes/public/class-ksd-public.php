@@ -25,7 +25,8 @@ class KSD_Public {
         //Handle AJAX
         add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
         add_action( 'wp_ajax_nopriv_ksd_register_user', array( $this, 'register_user' ) );        
-        
+        add_action( 'wp_ajax_nopriv_ksd_reply_ticket', array( $this, 'reply_ticket' ) );
+                        
         //Add a shortcode for the public form
         add_shortcode( 'ksd_support_form', array( $this,'form_short_code' ) );
         add_shortcode( 'ksd_my_tickets', array( $this,'display_my_tickets' ) );
@@ -52,13 +53,41 @@ class KSD_Public {
         
         //Do public-facing includes
         $this->do_public_includes();
+        
+        //Allow secret URL for tickets from guests
+        add_action( 'template_redirect', array( $this, 'allow_secret_urls' ) );    
+        
+        //Remove 'Protected' from ticket titles
+        add_filter( 'protected_title_format', array( $this, 'remove_protected_prefix' ) );
+
     }
+    
+    /**
+     * Tickets that have hash URLs have the word 'Protected' prepended to the title.
+     * We remove that word here
+     * @param string $title
+     * @return string
+     */
+    public function remove_protected_prefix( $title ) {
+        global $post;
+
+        if ( 'ksd_ticket' == $post->post_type ){
+           return '%s';
+        }
+        return $title;
+    }    
     
     /**
      * Include files required by the public-facing logic
      */
     private function do_public_includes() {
         require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-widget-support-form.php' );
+        include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-hash-urls.php' );
+    }
+    
+    public function allow_secret_urls(){
+        $hash_urls = new KSD_Hash_Urls();
+        $hash_urls->redirect_guest_tickets();
     }
     
     /**
@@ -119,6 +148,7 @@ class KSD_Public {
     public function register_support_form_widget() {
         register_widget( 'KSD_Support_Form_Widget' );
     }
+    
 
     /**
      * Generate the ticket form that's displayed in the front-end
@@ -126,9 +156,11 @@ class KSD_Public {
      */
     public function generate_new_ticket_form() {
         $settings = Kanzu_Support_Desk::get_settings();
-        if ( "yes" == $settings['show_support_tab'] ) {?>
+        if( "yes" == $settings['show_support_tab'] ) {    
+        ?>
+
                 <button id="ksd-new-ticket-public"><?php echo $settings['support_button_text']; ?></button><?php
-                if ( is_user_logged_in() ) {//For logged in users                    
+                if ( "no" == $settings['enable_customer_signup'] || is_user_logged_in() ) {//If we don't require registration or the user's logged in              
                     include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-new-ticket.php' ); //Note that this isn't an include_once since you can have multiple forms on the same page (In the content using a shortcode and as a hidden slide-in,slide-out element)
                 }
                 else{
@@ -149,10 +181,11 @@ class KSD_Public {
     * Generate a public-facing support form
     */
    public static function generate_support_form() {
+        $settings = Kanzu_Support_Desk::get_settings();
         //Include the templating and admin classes
         include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
-        if ( !is_user_logged_in() ) { 
+        if ( "yes" == $settings['enable_customer_signup'] && !is_user_logged_in() ) { 
             $form_position_class = 'ksd-form-short-code';
             include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' );   
         } else{
@@ -169,7 +202,8 @@ class KSD_Public {
         //Include the templating and admin classes
         include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
-        if ( !is_user_logged_in() ) { 
+        $settings = Kanzu_Support_Desk::get_settings();
+        if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) { 
             $form_position_class = 'ksd-form-short-code';
             include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' );   
         } else{
@@ -232,7 +266,8 @@ class KSD_Public {
         public function apply_templates( $content ) {
             global $post;
             if ( $post && $post->post_type == 'ksd_ticket' && is_singular( 'ksd_ticket' ) && is_main_query() && !post_password_required() ) {
-                if ( !is_user_logged_in() ) { //@TODO Send the current URL as the redirect URL for the 'login' and 'Register' action
+                $settings = Kanzu_Support_Desk::get_settings();
+                if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) {  //@TODO Send the current URL as the redirect URL for the 'login' and 'Register' action
                     include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
                     $form_position_class = 'ksd-form-short-code';
                     include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' ); 
@@ -341,6 +376,12 @@ class KSD_Public {
             );
 
             register_taxonomy( 'product', 'ksd_ticket', $product_args );
+            
+            //Ticket Categories
+            $tkt_category_args = array(
+                'hierarchical'  => true,
+            );
+            register_taxonomy( 'ticket_category', 'ksd_ticket', $tkt_category_args );            
                             
             /*----Replies -----*/
             $reply_labels = array(
@@ -492,6 +533,14 @@ class KSD_Public {
         }
         
         /**
+         * Add a reply to a ticket
+         */
+        public function reply_ticket(){
+            $ksd_admin =  KSD_Admin::get_instance();
+            $ksd_admin->reply_ticket( $_POST );        
+        }        
+        
+        /**
          * Register a user
          * @since 2.0.0
          */
@@ -549,7 +598,7 @@ class KSD_Public {
                 $user_id = wp_insert_user( $userdata ) ;                
                 if ( ! is_wp_error( $user_id ) ) {//Successfully created the user
                     $login_url = sprintf ( '<a href="%1$s" title="%2$s">%3$s</a>', wp_login_url(), __( 'Login', 'kanzu-support-desk' ), __( 'Click here to login', 'kanzu-support-desk' ) ) ;
-                    $response = sprintf ( __( 'Your account has been successfully created! Redirecting you shortly...or %s', 'kanzu-support-desk' ), $login_url );
+                    $response = sprintf ( __( 'Your account has been successfully created! If you are not automatically redirected in 5 seconds, %s', 'kanzu-support-desk' ), $login_url );
                     
                     //Sign in the user
                     $creds                  = array();
@@ -642,7 +691,7 @@ class KSD_Public {
                         if ( in_array( 'ksd_customer', $user->roles ) ) {    
                                 //@TODO Check $request and send customer to 'My Tickets' or to 'Create new ticket'
                                 $current_settings = Kanzu_Support_Desk::get_settings();//Get current settings                                
-                                return get_permalink( $current_settings['page_submit_ticket'] ); //redirect customers to the create tickets page
+                                return get_permalink( $current_settings['page_my_tickets'] ); //redirect customers to 'my tickets'
                         } 
                 }  
             return $redirect_to;                        

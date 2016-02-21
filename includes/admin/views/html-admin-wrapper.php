@@ -8,9 +8,9 @@
             $ksd_page[ 'addons' ]['name']     =   __( 'Add-ons','kanzu-support-desk' );
              
              //Files
-             $ksd_page[ 'dashboard' ]['file']  =   'html-admin-dashboard.php' ;
-             $ksd_page[ 'settings' ]['file']   =   'html-admin-settings.php';
-             $ksd_page[ 'addons' ]['file']     =   'html-admin-addons.php';
+            $ksd_page[ 'dashboard' ]['file']  =   'html-admin-dashboard.php' ;
+            $ksd_page[ 'settings' ]['file']   =   'html-admin-settings.php';
+            $ksd_page[ 'addons' ]['file']     =   'html-admin-addons.php';
              
             $ksd_addon_page = array();
             $ksd_addon_page = apply_filters( 'ksd_admin_menu_page', $ksd_addon_page );
@@ -23,7 +23,7 @@
     </div>
     <div class="admin-ksd-container">
         <div id="<?php echo $ksd_current_page;?>" class="admin-ksd-content">
-            <?php include_once(   $ksd_page[ $ksd_current_page]['file'] ); ?>
+            <?php include_once( $ksd_page[ $ksd_current_page]['file'] ); ?>
         </div>  
         <div class="ksd-dialog loading hidden"><?php __( 'Loading...', 'kanzu-support-desk'); ?></div>
         <div class="ksd-dialog error hidden"><?php __( 'Error...', 'kanzu-support-desk'); ?></div>

@@ -18,12 +18,15 @@
 .ksd-new-ticket-form-wrap ul li label.error,.ksd-register-form-wrap ul li label.error{
     color: red;
 }
-.ksd-new-ticket-form-wrap input,.ksd-new-ticket-form-wrap textarea,.ksd-register-form-wrap input,.ksd-register-form-wrap textarea {
+.ksd-new-ticket-form-wrap input,.ksd-new-ticket-form-wrap select,.ksd-new-ticket-form-wrap textarea,.ksd-register-form-wrap input,.ksd-register-form-wrap textarea {
   margin-bottom: 7px;
 }
 .ksd-g-recaptcha-error{
     font-size: 0.8em;
     color: #F00;
+}
+.ksd-new-ticket-form-wrap select{
+    width: 50%;
 }
 .ksd-form-hidden-tab input,.ksd-form-hidden-tab textarea ,.ksd-form-hidden-tab-form ul li.ksd-g-recaptcha{
   width: 290px;
@@ -32,7 +35,8 @@
   width: auto;
 }  
 .ksd-form-hidden-tab .ksd-submit{
-   width: 300px;  
+   min-width: 300px;  
+   min-height: 35px;
    margin-top: 10px;
 }
 .ksd-form-short-code input,.ksd-form-short-code textarea {
@@ -41,6 +45,8 @@
 .ksd-form-short-code .ksd-submit,.ksd-form-widget .ksd-submit{
   width: 47%;
   margin-top: 10px;
+  min-width: 150px;
+  min-height: 45px;
 }
 .ksd-public-form-response,
 #ksd-public-reply-error,
@@ -55,11 +61,23 @@
 #ksd-public-reply-error{
     background-color: red;
 }
+.entry-content .ksd-customer-email {
+  margin-bottom: 15px;
+  margin-top: 15px;
+  width: 100%;
+}
+#ksd_cust_email-error{
+    color: red;
+}
+#ksd-public-reply-submit{
+    min-height: 45px;
+    min-width: 150px;
+}
 .ksd-new-ticket-form-wrap .ksd-close-form-wrapper{
     width: 100%;
     height: 36px;    
 }
-.ksd-new-ticket-form-wrap img.ksd_close_button,.ksd-register-form-wrap img.ksd_close_button{
+.ksd-new-ticket-form-wrap span.ksd_close_button,.ksd-register-form-wrap img.ksd_close_button{
     float: right;
     cursor: pointer;
 }
@@ -91,21 +109,21 @@
   background-color: #fff;
   max-width: 30%;
   border: 1px solid #CCC;
-  left: 0;
+  right: 5%;
   padding: 42px 10px 10px;
   position: fixed;
-  top: 10%;
-  z-index: 999; /*We need this to make sure this is visible*/   
+  bottom: 0;
+  z-index: 990; /*We need this to make sure this is visible*/   
 }
 .ksd-form-short-code .ksd-close-form-wrapper,.ksd-form-widget .ksd-close-form-wrapper{
     display: none;
 }
 button#ksd-new-ticket-public{
   position: fixed;
-  top: 90%;
-  left: 0;
+  bottom: 0;
+  right: 5%;
   border-radius: 0;
-  z-index: 999; /*We need this to make sure this is visible*/
+  z-index: 990; /*We need this to make sure this is visible*/
 }
 .ksd-button{
     vertical-align: baseline;
@@ -121,12 +139,15 @@ button#ksd-new-ticket-public{
     cursor: pointer;
     display: inline-block;
     font-size: 13px;
-    height: 28px;
-    line-height: 26px;
+    min-height: 35px;
+    line-height: 35px;
     margin: 0;
     padding: 0 10px 1px;
     text-decoration: none;
     white-space: nowrap;
+    margin-bottom: 10px;
+    min-width: 150px;
+    text-align: center;
 }
 a.ksd-button {
   height: auto;

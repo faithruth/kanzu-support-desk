@@ -60,3 +60,7 @@
     </div>
     <?php endif;?>
 </div>
+<div class="ksd-misc-customer-email misc-pub-section">
+    <span><?php _e( 'Customer Email','kanzu-support-desk' ); ?>:</span>
+    <span class="ksd-misc-value" id="ksd-misc-customer-email"><?php echo get_userdata( $post->post_author )->user_email; ?></span>
+</div>

@@ -3,7 +3,7 @@
  * Plugin Name:       Kanzu Support Desk
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
  * Description:       Simple, powerful, personal customer service ( support ticket ) solution for your small business
- * Version:           2.0.9
+ * Version:           2.1.0
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
  * Text Domain:       kanzu-support-desk
@@ -233,7 +233,21 @@ final class Kanzu_Support_Desk {
          public static function output_ksd_signature( $tkt_id, $append_logo = true ){
             $suffix = '';
             $no_logo_style = ( $append_logo ? '' : 'text-align:right;width:100%;' ); 
-            $permalink = '<a href="'  . get_permalink( $tkt_id ) . '">'  . __( 'View this ticket', 'kanzu-support-desk' )."</a>";
+            $settings = self::get_settings();
+            
+            if( "no" == $settings[ 'enable_customer_signup'] ){
+                $url =    get_post_meta( $tkt_id, '_ksd_tkt_info_hash_url', true );                
+                if( empty( $url ) ){
+                    include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-hash-urls.php" );
+                    $hash_urls = new KSD_Hash_Urls();                    
+                    $url = $hash_urls->create_hash_url( $tkt_id );                    
+                }
+            }else{
+                $url    =   get_permalink( $tkt_id );                
+            }
+            
+            $permalink = '<a href="'  . $url . '">'  . __( 'View this ticket', 'kanzu-support-desk' )."</a>";
+            
             $suffix .='<table style="width:100%;border-collapse:collapse;border-top:1px solid #CCC;">
                         <tbody>
                             <tr>

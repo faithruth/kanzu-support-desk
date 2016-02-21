@@ -95,6 +95,7 @@
                      $this->import_response[$line_number] = __( 'Customer email address not defined', 'kanzu-support-desk');
                      continue;
                  }  
+                 //@TODO Update this to use an array, not an object
                  $new_ticket                    = new stdClass(); 
                  $new_ticket->tkt_subject       = $row[0];
                  $new_ticket->tkt_message       = $row[1];
