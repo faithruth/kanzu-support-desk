@@ -32,7 +32,8 @@
   width: auto;
 }  
 .ksd-form-hidden-tab .ksd-submit{
-   width: 300px;  
+   min-width: 300px;  
+   min-height: 35px;
    margin-top: 10px;
 }
 .ksd-form-short-code input,.ksd-form-short-code textarea {
@@ -41,6 +42,8 @@
 .ksd-form-short-code .ksd-submit,.ksd-form-widget .ksd-submit{
   width: 47%;
   margin-top: 10px;
+  min-width: 150px;
+  min-height: 45px;
 }
 .ksd-public-form-response,
 #ksd-public-reply-error,
@@ -106,16 +109,16 @@
   left: 0;
   padding: 42px 10px 10px;
   position: fixed;
-  top: 10%;
-  z-index: 999; /*We need this to make sure this is visible*/   
+  bottom: 5%;
+  z-index: 990; /*We need this to make sure this is visible*/   
 }
 .ksd-form-short-code .ksd-close-form-wrapper,.ksd-form-widget .ksd-close-form-wrapper{
     display: none;
 }
 button#ksd-new-ticket-public{
   position: fixed;
-  top: 90%;
-  left: 0;
+  bottom: 0;
+  right: 5%;
   border-radius: 0;
   z-index: 999; /*We need this to make sure this is visible*/
 }

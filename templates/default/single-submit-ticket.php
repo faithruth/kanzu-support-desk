@@ -77,5 +77,5 @@
             <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
             <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
         </form>
-        <div class="ksd-form-short-code-form-response ksd-public-form-response"></div>
+        <div class="ksd-form-short-code-form-response ksd-support-form-response"></div>
     </div>

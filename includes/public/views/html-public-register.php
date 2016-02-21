@@ -11,7 +11,7 @@
  * @since 2.0.0
  */
 ?>
-<div class="ksd-register-form-wrap <?php echo $form_position_class; ?> hidden">
+<div class="ksd-new-ticket-form-wrap ksd-register-form-wrap <?php echo $form_position_class; ?> hidden">
     <?php $settings = Kanzu_Support_Desk::get_settings();?>
     <div class="ksd-close-form-wrapper">
         <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />
@@ -55,5 +55,5 @@
         <input name="ksd_tkt_channel" type="hidden" value="support_tab" />
         <?php wp_nonce_field( 'ksd-register', 'register-nonce' );?>
     </form>
-    <div class="<?php echo $form_position_class; ?>-form-response ksd-register-public-response hidden"></div>
+    <div class="<?php echo $form_position_class; ?>-form-response ksd-register-public-response ksd-support-form-response hidden"></div>
 </div>
