@@ -13,66 +13,84 @@
 
 <div class="ksd-new-ticket-form-wrap ksd-form-hidden-tab hidden"> 
     <div class="ksd-close-form-wrapper">
-        <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />
+        <span class="ksd_close_button">
+            <?php _e( 'Close', 'kanzu-support-desk' ); ?>
+            <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>"  width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />        
+        </span>        
     </div>
     <form method="POST" class="ksd-new-ticket-public ksd-form-hidden-tab-form">
-        <ul>      
-        <li class="ksd-subject">       
-          <input type="text" value="<?php _e( 'Subject', 'kanzu-support-desk' ); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
-        </li>
-        <?php
-        $show_categories = $settings['supportform_show_categories'];
-        $show_severity   = $settings['supportform_show_severity'];            
-
-        if( 'yes' === $show_severity ):
-        ?>
-            <li class="ksd-pdt-severity">  
-            <select class="ksd-severity" name="ksd_tkt_severity" >
-                <option selected="selected" disabled="disabled"><?php _e( 'Severity' ); ?></option>
-                <option value="low"><?php echo _e( 'Low', 'kanzu-sipport-desk' ); ?></option>
-                <option value="medium"><?php echo _e( 'Medium', 'kanzu-sipport-desk' ); ?></option>
-                <option value="high"><?php echo _e( 'high', 'kanzu-sipport-desk' ); ?></option>
-                <option value="urgent"><?php echo _e( 'urgent', 'kanzu-sipport-desk' ); ?></option>
-            </select>
-        </li>  
-        <?php endif; ?>
-        
-        <?php 
-        if( 'yes' === $show_categories ):
-        ?>
-        <li class="ksd_pdt-categories" >
-            <select  name="ksd_tkt_pdt_categories" >
-            <option selected="selected" disabled="disabled"><?php _e( 'Categories' ); ?></option>    
-            <?php
-                $cats = get_categories( array('taxonomy' => 'product', 'hide_empty' => FALSE ) );
-                foreach( $cats  as $cat ){
-                    echo "<option value='{$cat->term_id}'>{$cat->name}</option>";
-                }
-            ?>
-            </select>    
-        </li>
-        <?php 
-        endif;
-        ?>
-            
-          <li class="ksd-message">     
-              <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="7" class="ksd-message" name="ksd_tkt_message" required></textarea>
-          </li>
-        <!--Add Google reCAPTCHA-->
-        <?php if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
-            <li class="ksd-g-recaptcha">
-                <span class="ksd-g-recaptcha-error"></span>
-                <div class="g-recaptcha" data-sitekey="<?php echo $settings['recaptcha_site_key']; ?>"></div>
+        <ul>   
+            <?php if( "no" == $settings['enable_customer_signup'] && ! is_user_logged_in() ): ?>
+                <li class="ksd-cust-fullname">       
+                  <input type="text" value="<?php _e( 'Name', 'kanzu-support-desk' ); ?>" name="ksd_cust_fullname" label="Name" class="ksd-cust-fullname" minlength="2" required/>
+                </li>
+                <li class="ksd-customer-email">       
+                  <input type="email" value="<?php _e( 'Email', 'kanzu-support-desk' ); ?>" name="ksd_cust_email" label="Email" class="ksd-customer-email" minlength="2" required/>
+                </li>    
+            <?php endif; ?>
+            <li class="ksd-subject">       
+              <input type="text" value="<?php _e( 'Subject', 'kanzu-support-desk' ); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
             </li>
-        <?php endif; ?>
-          <li class="ksd-public-submit">
-            <img src="<?php echo KSD_PLUGIN_URL.'assets/images/loading_dialog.gif'; ?>" class="hidden ksd_loading_dialog" width="45" height="35" />
-            <input type="submit" value="<?php _e( 'Send Message', 'kanzu-support-desk'); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
-          </li>
-        </ul>
-        <input name="action" type="hidden" value="ksd_log_new_ticket" />
-        <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
-        <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
+            <?php
+            $show_categories    = $settings['supportform_show_categories'];
+            $show_products      = $settings['supportform_show_products'];
+            $show_severity      = $settings['supportform_show_severity'];            
+            if( 'yes' === $show_severity ):
+            ?>
+            <li class="ksd-pdt-severity">  
+                <select class="ksd-severity" name="ksd_tkt_severity" >
+                    <option selected="selected" disabled="disabled"><?php _e( 'Severity' ); ?></option>
+                    <option value="low"><?php echo _e( 'Low', 'kanzu-sipport-desk' ); ?></option>
+                    <option value="medium"><?php echo _e( 'Medium', 'kanzu-sipport-desk' ); ?></option>
+                    <option value="high"><?php echo _e( 'High', 'kanzu-sipport-desk' ); ?></option>
+                    <option value="urgent"><?php echo _e( 'Urgent', 'kanzu-sipport-desk' ); ?></option>
+                </select>
+            </li>  
+            <?php endif; ?>        
+            <?php if( 'yes' === $show_products ): ?>
+            <li class="ksd_pdt-categories" >
+                <select  name="ksd_tkt_product_id" >
+                    <option selected="selected" disabled="disabled"><?php _e( 'Product' ); ?></option>    
+                    <?php
+                        $products = get_categories( array( 'taxonomy' => 'product', 'hide_empty' => 0 ) );
+                        foreach( $products  as $product ){
+                            echo "<option value='{$product->term_id}'>{$product->name}</option>";
+                        }
+                    ?>
+                </select>    
+            </li>
+            <?php endif; ?>     
+            <?php if( 'yes' === $show_categories ): ?>
+            <li class="ksd-tkt-categories" >
+                <select  name="ksd_tkt_cat_id" >
+                    <option selected="selected" disabled="disabled"><?php _e( 'Category' ); ?></option>    
+                    <?php
+                        $cats = get_categories( array(  'taxonomy' => 'ticket_category', 'hide_empty' => 0 ) );
+                        foreach( $cats  as $cat ){
+                            echo "<option value='{$cat->term_id}'>{$cat->name}</option>";
+                        }
+                    ?>
+                </select>    
+            </li>
+            <?php endif; ?>             
+            <li class="ksd-message">     
+                <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="7" class="ksd-message" name="ksd_tkt_message" required></textarea>
+            </li>
+            <!--Add Google reCAPTCHA-->
+            <?php if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
+                <li class="ksd-g-recaptcha">
+                    <span class="ksd-g-recaptcha-error"></span>
+                    <div class="g-recaptcha" data-sitekey="<?php echo $settings['recaptcha_site_key']; ?>"></div>
+                </li>
+            <?php endif; ?>
+              <li class="ksd-public-submit">
+                <img src="<?php echo KSD_PLUGIN_URL.'assets/images/loading_dialog.gif'; ?>" class="ksd_loading_dialog" width="45" height="35" />
+                <input type="submit" value="<?php _e( 'Send Message', 'kanzu-support-desk'); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
+              </li>
+            </ul>
+            <input name="action" type="hidden" value="ksd_log_new_ticket" />
+            <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
+            <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
     </form>
-    <div class="ksd-form-hidden-tab-form-response hidden"></div>
+    <div class="ksd-form-hidden-tab-form-response ksd-support-form-response"></div>
 </div>

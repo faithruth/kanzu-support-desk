@@ -2,7 +2,7 @@
 /**
  * Holds all installation & deactivation-related functionality.  
  * On activation, activate is called.
- * On de-activation, 
+ * On de-activation, deactivate is called
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
  * @license   GPL-2.0+
@@ -104,7 +104,7 @@ class KSD_Install {
             else{
                 //This is a new installation. Yippee! 
                 self::set_default_options(); 	
-                self::create_support_pages();
+                self::create_support_pages_and_salt();
                 self::log_initial_tickets();
                 self::create_roles();//@since 1.5.0                        
                 set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
@@ -360,7 +360,7 @@ class KSD_Install {
                         'ticket_mail_message'               => __( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
                         'recency_definition'                => "1",
                         'show_support_tab'                  => "yes",
-                        'support_button_text'               => "Support",
+                        'support_button_text'               => "Click here for help",
                         'tab_message_on_submit'             => __( 'Thank you. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
                         'tour_mode'                         => "no", //@since 1.1.0
                         'enable_recaptcha'                  => "no",//@since 1.3.1 Not on by default since user needs to create & provide reCAPTCHA site & secret keys
@@ -373,10 +373,12 @@ class KSD_Install {
                         'enable_customer_signup'            => "yes",//@since 2.0.0
                         'page_submit_ticket'                => 0,//@since 2.0.0 ID of the 'Submit ticket' page
                         'page_my_tickets'                   => 0,//@since 2.0.0 //ID of the 'My tickets page'
+                        'salt'                              => '',
                     
                         /**Support form settings**/
                         'supportform_show_categories'       => 'no',
-                        'supportform_show_severity'         => 'no'
+                        'supportform_show_severity'         => 'no',
+                        'supportform_show_products'         => 'no'
                     );
             }
             
@@ -471,7 +473,7 @@ class KSD_Install {
              * @since 2.0.0
              * @TODO Add this to the upgrade process
              */
-            public static function create_support_pages() {
+            public static function create_support_pages_and_salt() {
                 $submit_ticket = wp_insert_post(
 			array(
 				'post_title'     => __( 'Submit Ticket', 'kanzu-support-desk' ),
@@ -492,11 +494,15 @@ class KSD_Install {
 				'post_type'      => 'page',
 				'comment_status' => 'closed'
 			)
-		);     
+		);   
+            include_once( KSD_PLUGIN_DIR .  "includes/admin/class-ksd-hash-urls.php");
+            $hash_urls  = new KSD_Hash_Urls();   
+            $salt       = $hash_urls->create_salt();
              //Update the settings
             $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
             $updated_settings['page_submit_ticket'] = $submit_ticket;
             $updated_settings['page_my_tickets']    = $my_tickets;
+            $updated_settings['salt']               = $salt;
             update_option( KSD_OPTIONS_KEY, $updated_settings );
             }
 
