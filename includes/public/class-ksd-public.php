@@ -160,7 +160,7 @@ class KSD_Public {
         ?>
 
                 <button id="ksd-new-ticket-public"><?php echo $settings['support_button_text']; ?></button><?php
-                if ( "no" == $settings['enable_customer_signup'] ) {//If we don't require registration               
+                if ( "no" == $settings['enable_customer_signup'] || is_user_logged_in() ) {//If we don't require registration or the user's logged in              
                     include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-new-ticket.php' ); //Note that this isn't an include_once since you can have multiple forms on the same page (In the content using a shortcode and as a hidden slide-in,slide-out element)
                 }
                 else{
@@ -185,7 +185,7 @@ class KSD_Public {
         //Include the templating and admin classes
         include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
-        if ( "yes" == $settings['enable_customer_signup'] ) { 
+        if ( "yes" == $settings['enable_customer_signup'] && !is_user_logged_in() ) { 
             $form_position_class = 'ksd-form-short-code';
             include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' );   
         } else{
@@ -203,7 +203,7 @@ class KSD_Public {
         include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
         $settings = Kanzu_Support_Desk::get_settings();
-        if ( "yes" == $settings['enable_customer_signup'] ) { 
+        if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) { 
             $form_position_class = 'ksd-form-short-code';
             include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' );   
         } else{
@@ -267,7 +267,7 @@ class KSD_Public {
             global $post;
             if ( $post && $post->post_type == 'ksd_ticket' && is_singular( 'ksd_ticket' ) && is_main_query() && !post_password_required() ) {
                 $settings = Kanzu_Support_Desk::get_settings();
-                if ( "yes" == $settings['enable_customer_signup'] ) {  //@TODO Send the current URL as the redirect URL for the 'login' and 'Register' action
+                if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) {  //@TODO Send the current URL as the redirect URL for the 'login' and 'Register' action
                     include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
                     $form_position_class = 'ksd-form-short-code';
                     include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' ); 
@@ -598,7 +598,7 @@ class KSD_Public {
                 $user_id = wp_insert_user( $userdata ) ;                
                 if ( ! is_wp_error( $user_id ) ) {//Successfully created the user
                     $login_url = sprintf ( '<a href="%1$s" title="%2$s">%3$s</a>', wp_login_url(), __( 'Login', 'kanzu-support-desk' ), __( 'Click here to login', 'kanzu-support-desk' ) ) ;
-                    $response = sprintf ( __( 'Your account has been successfully created! Redirecting you shortly...or %s', 'kanzu-support-desk' ), $login_url );
+                    $response = sprintf ( __( 'Your account has been successfully created! If you are not automatically redirected in 5 seconds, %s', 'kanzu-support-desk' ), $login_url );
                     
                     //Sign in the user
                     $creds                  = array();

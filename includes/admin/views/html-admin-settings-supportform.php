@@ -19,7 +19,7 @@
         <label for="show_support_tab"><?php _e ( 'Show support button', 'kanzu-support-desk' ); ?></label>
         <div class="ksd-input-wrapper">
             <input name="show_support_tab"  type="checkbox" <?php checked ( $settings['show_support_tab'], "yes") ?> value="yes"  />        
-            <span class="description"><?php _e ( 'When enabled, shows a support button in the bottom left of your site which your customers can use to log new tickets', 'kanzu-support-desk' ); ?></span>
+            <span class="description"><?php _e ( 'When enabled, shows a support button in the bottom right of your site which your customers can use to log new tickets', 'kanzu-support-desk' ); ?></span>
         </div>
     </div>
     <div class="setting show_support_tab">

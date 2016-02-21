@@ -49,7 +49,7 @@
         <?php endif; ?>
             <li class="ksd-show-password"><input type="checkbox" name="ksd_cust_show_password" /><?php _e( 'Show Password', 'kanzu-support-desk' ); ?></li>
             <li class="ksd-public-submit">
-              <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/loading_dialog.gif'; ?>" class="hidden ksd_loading_dialog" width="45" height="35" />
+              <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/loading_dialog.gif'; ?>" class="ksd_loading_dialog" width="45" height="35" />
               <input type="submit" value="<?php _e( 'Register', 'kanzu-support-desk'); ?>" name="ksd-submit-tab-register" class="ksd-submit"/>
             </li>
 
@@ -58,5 +58,5 @@
         <input name="ksd_tkt_channel" type="hidden" value="support_tab" />
         <?php wp_nonce_field( 'ksd-register', 'register-nonce' );?>
     </form>
-    <div class="<?php echo $form_position_class; ?>-form-response ksd-register-public-response ksd-support-form-response hidden"></div>
+    <div class="<?php echo $form_position_class; ?>-form-response ksd-register-public-response ksd-support-form-response"></div>
 </div>

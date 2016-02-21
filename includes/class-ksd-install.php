@@ -360,7 +360,7 @@ class KSD_Install {
                         'ticket_mail_message'               => __( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
                         'recency_definition'                => "1",
                         'show_support_tab'                  => "yes",
-                        'support_button_text'               => "Support",
+                        'support_button_text'               => "Click here for help",
                         'tab_message_on_submit'             => __( 'Thank you. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
                         'tour_mode'                         => "no", //@since 1.1.0
                         'enable_recaptcha'                  => "no",//@since 1.3.1 Not on by default since user needs to create & provide reCAPTCHA site & secret keys
