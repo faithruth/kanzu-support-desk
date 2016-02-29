@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.3
-Stable tag: 2.1.0
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,8 @@ Yes; KSD will work with any theme
 7. Private note support
 
 == Changelog ==
+= 2.1.1, February 29, 2016 =
+ * Added ksd_settings_updated js "action" hook
 = 2.1.0, February 21, 2016 =
  * Change settings UI to horizontal tabs
  * Allow guests to create tickets. Hash URLs created for this
