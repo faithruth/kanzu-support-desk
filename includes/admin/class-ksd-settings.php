@@ -31,7 +31,7 @@ class KSD_Settings {
 
         public function __construct() {            
             //TODO: Throws PHP Strict Standards Warning: 
-            $this->settings = Kanzu_Support_Desk::get_settings();        
+            //$this->settings = Kanzu_Support_Desk::get_settings();        
         }
         
         public function generate_addon_settings_html() {
@@ -72,7 +72,8 @@ class KSD_Settings {
         }
         
         private function generate_checkbox_html( $addon_setting ) {
-            return '<input name="' . $addon_setting['id'] . '"  type="checkbox" ' . checked( $this->settings[ $this->addon_key ][ $addon_setting['id'] ], "yes" ) . ' value="yes"  />';
+            $checked = ( true == $addon_setting['checked'] ) ? "yes" : 'no' ;
+            return '<input name="' . $addon_setting['id'] . '"  type="checkbox" ' . checked( $checked, "yes" ) . ' value="yes"  />';
         }
         
         
@@ -82,23 +83,35 @@ class KSD_Settings {
             }
         }
         
+        /**
+         * Generate HTML for form text field
+         * 
+         * @param array $addon_setting{
+         *      @type string id     Name attribute value
+         *      @type string label  Field's label
+         * }
+         * 
+         * @return type
+         */
         private function generate_text_html( $addon_setting ) {
             $placeholder = ( isset( $addon_setting['placeholder'] ) ) ? "placeholder='{$addon_setting['placeholder']}'" : '' ;
-            return '<input name="' . $addon_setting['id'] . '"  type="text" value="' . $this->settings[$this->addon_key][ $addon_setting['id'] ] . '" size="30" name="' . $addon_setting['id'] . '" ' . $placeholder . ' />';
+            $value = ( isset( $addon_setting['value'] ) ) ? $addon_setting['value'] : '' ;
+            return '<input name="' . $addon_setting['id'] . '"  type="text" value="' . $value . '" size="30" name="' . $addon_setting['id'] . '" ' . $placeholder . ' />';
         }        
         
         /**
          * Generate HTML for form password field.
          * 
          * @param array $addon_setting{
-         *      @type string id     Password
-         *      @type string label  Field label
+         *      @type string id      name attribute value
+         *      @type string label  Field's label
          * } 
          * @return string Password form field HTML
          */
         private function generate_password_html( $addon_setting ) {
             $placeholder = ( isset( $addon_setting['placeholder'] ) ) ? "placeholder='{$addon_setting['placeholder']}'" : '' ;
-            return '<input name="' . $addon_setting['id'] . '"  type="password" value="' . $this->settings[$this->addon_key][ $addon_setting['id'] ] . '" size="30" name="' . $addon_setting['id'] . '" ' . $placeholder . ' />';
+            $value = ( isset( $addon_setting['value'] ) ) ? $addon_setting['value'] : '' ;
+            return '<input name="' . $addon_setting['id'] . '"  type="password" value="' . $value . '" size="30" name="' . $addon_setting['id'] . '" ' . $placeholder . ' />';
         } 
         
         /**
