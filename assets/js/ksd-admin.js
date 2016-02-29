@@ -3,6 +3,12 @@ if ( 'undefined' !== typeof (google) ) {
     google.load("visualization", "1", {packages: ["corechart"]});
 }
 
+var ksd_hooks = {
+    "ksd_settings_updated": []
+}
+var KSDHooks = KSDHooks || {};
+
+
 jQuery(document).ready(function () {
 
     //Added to remove/hide distortion of UI that shows up during initial load of the plugin.
@@ -75,6 +81,8 @@ jQuery(document).ready(function () {
     });
     
     
+    
+    
     /*---------------------------------------------------------------*/
     /***************************UTILITIES: Used by all the rest*******/
     /*---------------------------------------------------------------*/
@@ -123,7 +131,23 @@ jQuery(document).ready(function () {
         });
     };
 
-
+    /*---------------------------------------------------------------*/
+    /***************************JS HOOKS: Callback functions defined by addons *******/
+    /*---------------------------------------------------------------*/
+    KSDHooks.add = function(hookName, callback){
+        ksd_hooks[hookName].push(callback);
+    }
+    
+    KSDHooks.execute = function(hookName, status, data ){
+        for ( f in ksd_hooks[hookName]) {
+            try{
+            ksd_hooks[hookName][f](status,data);
+                }catch(ex){
+                    //Do something
+                    //console.log(ex)
+                }
+        }
+    }
     /*---------------------------------------------------------------*/
     /*************************************ANALYTICS*********************/
     /*---------------------------------------------------------------*/
@@ -310,6 +334,7 @@ jQuery(document).ready(function () {
                         data,
                         function (response) {
                             if (KSDUtils.ajaxResponseErrorCheck(response)) {
+                                KSDHooks.execute('ksd_settings_updated','error',{});
                                 return;
                             }
                             KSDUtils.showDialog("success", JSON.parse(response));
