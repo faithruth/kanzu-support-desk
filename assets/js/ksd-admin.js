@@ -338,6 +338,7 @@ jQuery(document).ready(function () {
                                 return;
                             }
                             KSDUtils.showDialog("success", JSON.parse(response));
+                            KSDHooks.execute('ksd_settings_updated','success',{});
                 });
 
             });
