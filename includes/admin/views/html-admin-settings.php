@@ -138,22 +138,6 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                 </div>
             </div><!--//fragment-2 -->
             <?php echo $addon_settings_html['div_html']; ?>
-            <?php
-            foreach ( $addon_settings as $addon_setting ):
-                global $ksd_current_settings;
-                $ksd_current_settings = $settings;
-                ?>
-                <div id="<?php echo $addon_setting['id']; ?>"><!--fragment-3 -->
-                    <?php
-                    //TODO: only keep echo part
-                    if ( file_exists ( $addon_setting['output'])) {
-                        include ( $addon_setting['output'] );
-                    } else {
-                        echo $addon_setting['output'];
-                    }
-                    ?>    
-                </div><!--//fragment-3 -->
-        <?php endforeach; ?>
         </div>
 <?php endif; ?>
 

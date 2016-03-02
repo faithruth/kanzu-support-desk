@@ -105,6 +105,7 @@ Yes; KSD will work with any theme
 == Changelog ==
 = 2.1.1, February 29, 2016 =
  * Added ksd_settings_updated js "action" hook
+ * BUG FIX | Settings only showing for the first addon when more than one addon is enabled 
 = 2.1.0, February 21, 2016 =
  * Change settings UI to horizontal tabs
  * Allow guests to create tickets. Hash URLs created for this

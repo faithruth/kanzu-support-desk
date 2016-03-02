@@ -57,8 +57,9 @@ class KSD_Settings {
                         $tab_div_html .= $this->add_description_html( $addon_setting );
                         $tab_div_html .= '</div>';    
                     endforeach;                      
+                    $tab_div_html .= '</div>' ;    
             endforeach;               
-                 $tab_div_html .= '</div>' ;    
+                 
             return  array( 'tab_html' => $tab_list_html, 'div_html' => $tab_div_html )  ;  
         }
         
