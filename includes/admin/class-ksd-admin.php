@@ -77,6 +77,7 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_get_ticket_activity', array( $this, 'get_ticket_activity' ) );           
                 add_action( 'wp_ajax_ksd_migrate_to_v2', array($this, 'migrate_to_v2' ) );
                 add_action( 'wp_ajax_ksd_deletetables_v2', array($this, 'deletetables_v2' ) );
+                add_action( 'wp_ajax_ksd_update_onboarding_stage', array($this, 'update_onboarding_stage' ) );
                 
                 
                 //Generate a debug file
@@ -162,6 +163,8 @@ class KSD_Admin {
 	 */
 	public function enqueue_admin_styles() {	
             wp_enqueue_style( KSD_SLUG .'-admin-css', KSD_PLUGIN_URL.'/assets/css/ksd-admin.css', array(), KSD_VERSION );
+            wp_enqueue_style( KSD_SLUG .'-admin-introjs', KSD_PLUGIN_URL.'/assets/introjs/introjs.min.css', array(), KSD_VERSION );
+            wp_enqueue_style( KSD_SLUG .'-admin-introjs-rtl', KSD_PLUGIN_URL.'/assets/introjs/introjs-rtl.min.css', array(), KSD_VERSION );
 	}
 
 	/**
@@ -175,7 +178,9 @@ class KSD_Admin {
 		//Load the script for Google charts. Load this before the next script. 
                 wp_enqueue_script( KSD_SLUG . '-admin-gcharts', '//www.google.com/jsapi', array(), KSD_VERSION ); 
                 wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'/assets/js/ksd-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'json2', 'jquery-ui-dialog', 'jquery-ui-tooltip', 'jquery-ui-accordion' ), KSD_VERSION ); 
-		
+		wp_enqueue_script( KSD_SLUG . '-admin-introjs', KSD_PLUGIN_URL . '/assets/introjs/intro.min.js', array(), KSD_VERSION ); 
+                
+                
                 //Variables to send to the admin JS script
                 $ksd_admin_tab = ( isset( $_GET['page'] ) ?  $_GET['page']  : "" );//This determines which tab to show as active
                 
@@ -242,6 +247,10 @@ class KSD_Admin {
                 //Get current settings
                 $settings = Kanzu_Support_Desk::get_settings();
 
+                $settings = Kanzu_Support_Desk::get_settings();
+                $onboarding_stage = $settings['onboarding_stage'];
+                $onboarding_enabled = $settings['onboarding_enabled'];
+                
                 //Localization allows us to send variables to the JS script
                 wp_localize_script( KSD_SLUG . '-admin-js',
                                     'ksd_admin',
@@ -256,7 +265,9 @@ class KSD_Admin {
                                             'enable_anonymous_tracking' =>  $settings['enable_anonymous_tracking'],
                                             'ksd_ticket_info'           =>  $ticket_info,
                                             'ksd_current_screen'        =>  $this->get_current_ksd_screen(),
-                                            'ksd_version'               =>  KSD_VERSION
+                                            'ksd_version'               =>  KSD_VERSION,
+                                            'ksd_onboarding_stage'      => $onboarding_stage,
+                                            'ksd_onboarding_enabled'    => $onboarding_enabled
                                         )
                                     );
 
@@ -277,7 +288,17 @@ class KSD_Admin {
         }
 
         
-
+        /**
+         * Update the next stage of the onboarding/tour process
+         * 
+         * @since 2.1.2
+         */
+        public function update_onboarding_stage() {
+            $next_stage = $_POST['stage'];
+            $settings = Kanzu_Support_Desk::get_settings();
+            $settings['onboarding_stage'] = $next_stage;
+            die();
+        }
         
         /**
          * Update ticket messages  displayed
@@ -744,6 +765,14 @@ class KSD_Admin {
 	 */
 	public function output_admin_menu_dashboard() {
 		$this->do_admin_includes();             
+                
+                $settings = Kanzu_Support_Desk::get_settings();
+                error_log( print_r( $settings, true) );
+                if( 'yes' === $settings['onboarding_enabled'] && 1 === $settings['onboarding_stage'] ){
+                    include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-onboarding-stage1.php'); 
+                    return ;
+                }
+                
                 if ( isset( $_GET['ksd-intro'] ) ) {
                     include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-intro.php');         
                 }

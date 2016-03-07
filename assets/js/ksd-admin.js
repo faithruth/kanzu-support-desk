@@ -148,6 +148,131 @@ jQuery(document).ready(function () {
                 }
         }
     }
+    
+    
+    /*---------------------------------------------------------------*/
+    /***************************On boarding: s *******/
+    /*---------------------------------------------------------------*/
+    KSDOnBoarding = {};
+    
+    /*Update stage to next stage
+     * 
+     * @param int onboarding stage. Take values from 1-8
+     * */
+    KSDOnBoarding.UpdateStage = function(stage){
+        jQuery.ajax({
+            "url": ksd_admin.ajax_url,
+            "type": "POST",
+//             "async": false,
+            "data": {
+                nonce: ksd_admin.nonce,
+                action: 'ksd_update_onboarding_stage',
+                stage: stage
+            },
+            success: function(){
+                ksd_admin.ksd_onboarding_stage = stage;
+                return true;
+            },
+            error: function(){
+                return false;
+            }
+        });
+        return false;
+    }
+    
+    console.log( 'ksd_onboarding_stage: + ' + ksd_admin.ksd_onboarding_stage );
+    console.log( 'ksd_onboarding_enable: + ' +  ksd_admin.ksd_onboarding_enabled );
+    
+    KSDOnBoarding.StageOne = function(){            
+        //Go to stage 2
+        jQuery('.ksd-onboarding-stage1').click(function(){
+            KSDOnBoarding.UpdateStage('2');
+            window.location.href = 'user-new.php';
+        });
+    }   
+    
+    KSDOnBoarding.StageTwo = function(){
+        
+        if ( jQuery(window.location).attr("href").match(/user-new.php/) ) {
+            jQuery('input[name="user_login"]').attr("data-intro","Add agent username ");
+            jQuery('input[name="user_login"]').data("step","1");
+            
+            jQuery('input[name="email"]').attr("data-intro","Add agent email ");
+            jQuery('input[name="email"]').data("step","2");
+            
+            jQuery('input[name="first_name"]').attr("data-intro","Add agent's first name ");
+            jQuery('input[name="first_name"]').data("step","3");
+            
+            jQuery('input[name="last_name"]').attr("data-intro","Add agent's last name");
+            jQuery('input[name="last_name"]').data("step","4");
+            
+            jQuery('input[name="email"]').attr("data-intro","Add agent email ");
+            jQuery('input[name="email"]').data("step","5");
+            
+            jQuery('select[name="role"]').attr("data-intro","Select KSD Customer as role");
+            jQuery('select[name="role"]').data("step","6");
+            
+            jQuery('input[type="submit"]').attr("data-intro","Click to add agent");
+            jQuery('input[type="submit"]').data("step","7");
+            
+            introJs().start();
+            
+        }
+    }
+    KSDOnBoarding.StageTwo();
+
+    KSDOnBoarding.StageThree = function(){ 
+        
+        if ( jQuery(window.location).attr("href").match(/edit.php\?post_type=ksd_ticket/) ) {
+            jQuery('a[class="page-title-action"]').attr("data-intro","Click to add new ticket");
+            jQuery('a[class="page-title-action"]').attr("step","1");
+            
+            introJs().start();
+        }
+        
+        if( jQuery(window.location).attr("href").match( /post-new.php\?post_type=ksd_ticket/) ){
+            jQuery('input[id="title"]').attr("data-intro","Add ticlet subject");
+            jQuery('input[id="title"]').attr("step","1");
+            
+            jQuery('div[id="wp-content-editor-container"]').attr("data-intro","Add ticket details");
+            jQuery('div[id="wp-content-editor-container"]').attr("step","2");
+            
+            
+            jQuery('div.ksd-misc-assign-to').attr("data-intro","Assign ticket to an agent");
+            jQuery('div.ksd-misc-assign-to').attr("step","3");
+
+            jQuery('input[name="publish"]').attr("data-intro","Submit ticket");
+            jQuery('input[name="publish"]').attr("step","4");
+            
+            introJs().start();
+        }
+
+    }
+    KSDOnBoarding.StageThree();
+    
+    KSDOnBoarding.run = function(stage){
+       
+        
+        if( 'undefined' !== typeof ksd_admin.ksd_onboarding_enabled && 'yes' ===  ksd_admin.ksd_onboarding_enabled  ){
+            
+            stage = ksd_admin.ksd_onboarding_stage;
+            console.log( 'In KSDOnBoarding.run +  stage:' + stage  );
+            switch( stage ){
+                case '1': //stage 1 - intro
+                    KSDOnBoarding.StageOne();
+                break;
+                case '2': //stage 1 - intro
+                    KSDOnBoarding.StageTwo();
+                break;
+                case '3': //stage 1 - intro
+                    KSDOnBoarding.StageThree();
+                break;
+            }
+        }
+    }
+    KSDOnBoarding.run();
+
+    
     /*---------------------------------------------------------------*/
     /*************************************ANALYTICS*********************/
     /*---------------------------------------------------------------*/

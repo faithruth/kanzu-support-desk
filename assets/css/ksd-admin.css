@@ -1993,3 +1993,34 @@ ul#ksd-tabs{
 #ksd-tabs .help_tip img{
     
 }
+
+/**/
+.ksd-onboarding-progress{
+    border: 2px solid #0073aa;
+    width: 99%;
+/*    height: 50px;*/
+}
+
+.ksd-onboarding-circle {
+    vertical-align: central;
+	border-radius: 50%;
+	width: 50px;
+	height: 60px; 
+	/* width and height can be anything, as long as they're equal */
+}
+
+.ksd-onboarding-progress ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none !important;
+}
+
+.ksd-onboarding-progress ul li{
+    display: inline; 
+    padding:5px 20px 5px 5px;
+}
+
+.ksd-onboarding-done {
+    background-color: #0073aa;
+    color: #FFF;
+}

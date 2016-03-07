@@ -52,9 +52,29 @@ class KSD_Install {
                 //@TODO: Reassess why it's best put later.
                                 
                 add_action('admin_notices', array($this, 'data_migration_v2' ));
+                
+                add_action('admin_notices', array($this, 'show_onboarding_progress' ));
 
 	}
  
+        
+        /**
+         * Show progress of onboarding progress
+         */
+        public function show_onboarding_progress(){
+            echo     '<div class="ksd-onboarding-progress"> '
+                    . '<ul>'
+                    . '<li class="ksd-onboarding-done">Start tour</li>'
+                    . '<li>Create agent</li>'
+                    . '<li>Create ticket</li>'
+                    . '<li>Reply ticket</li>'
+                    . '<li>Resolve ticket</li>'
+                    . '<li>Assign ticket</li>'
+                    . '<li>Done</li>'
+                    . '</ul>'
+                    . '</div>';
+        }
+        
 	/**
 	 * Return an instance of this class.
 	 *
@@ -378,7 +398,11 @@ class KSD_Install {
                         /**Support form settings**/
                         'supportform_show_categories'       => 'no',
                         'supportform_show_severity'         => 'no',
-                        'supportform_show_products'         => 'no'
+                        'supportform_show_products'         => 'no',
+                        
+                        /*onboarding settings*/
+                        'onboarding_stage'                  => 1, //1-8
+                        'onboarding_enabled'                => 'yes',
                     );
             }
             
