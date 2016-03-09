@@ -133,6 +133,9 @@ class KSD_Admin {
                 add_filter( 'parse_query', array( $this, 'ticket_table_apply_filters' ) );
                 //Display ticket status next to the ticket title
                 add_filter( 'display_post_states', array( $this, 'display_ticket_statuses_next_to_title' ) );
+                
+                //Add feedback
+                add_action( 'admin_footer', array( $this, 'append_admin_feedback' ), 25 );
 	}
 	
 
@@ -3036,6 +3039,13 @@ class KSD_Admin {
             _e( 'Tables successfully deleted.', 'kanzu-support-desk' );
             die();
             
+        }
+        
+        public function append_admin_feedback(){
+            //@TODO Prequalification criteria. Are you admin? Do you have x tickets?
+            //@TODO Retrieve message & title from ksd_feedback
+            //@TODO If nothing exists, return, well, nothing :-)
+            echo '<div id="ksd-feedback" class="postbox"><h3 class="hndle ui-sortable-handle">Yo man</h3><div class="inside">How is the going? For real? </div></div>';
         }
 }   
         

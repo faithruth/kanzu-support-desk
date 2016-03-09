@@ -375,8 +375,8 @@ class KSD_Public {
                     'rewrite'               => array( 'slug' => 'product' ),
             );
 
-            register_taxonomy( 'product', 'ksd_ticket', $product_args );
-            
+            register_taxonomy( 'product', 'ksd_ticket', $product_args ); 
+                        
             //Ticket Categories
             $tkt_category_args = array(
                 'hierarchical'  => true,

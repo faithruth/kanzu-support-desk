@@ -52,6 +52,8 @@ class KSD_Install {
                 //@TODO: Reassess why it's best put later.
                                 
                 add_action('admin_notices', array($this, 'data_migration_v2' ));
+                
+                add_action( 'ksd_create_products', array( $this, 'create_products' ), 1200 );                
 
 	}
  
@@ -87,7 +89,8 @@ class KSD_Install {
             
             //Check for re-activation.  
             $settings   =   Kanzu_Support_Desk::get_settings();
-            if ( isset( $settings['kanzu_support_version'] ) ) {//Reactivation or upgrade
+            if ( isset( $settings['kanzu_support_version'] ) ) {//Reactivation or upgrade     
+                do_action( 'ksd_create_products' );
                 if ( $settings['kanzu_support_version'] == KSD_VERSION ) {//Bail out if it's a re-activation
                     return;
                 }          
@@ -106,12 +109,13 @@ class KSD_Install {
                 self::set_default_options(); 	
                 self::create_support_pages_and_salt();
                 self::log_initial_tickets();
-                self::create_roles();//@since 1.5.0                        
+                self::create_roles();//@since 1.5.0     
+                do_action( 'ksd_create_products' );
                 set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
             }
             flush_rewrite_rules();//Because of the custom post types    
 	}
-        
+         
         
         /**
          * Do de-activation stuff. Currently, doesn't do a thing
@@ -504,6 +508,39 @@ class KSD_Install {
             $updated_settings['page_my_tickets']    = $my_tickets;
             $updated_settings['salt']               = $salt;
             update_option( KSD_OPTIONS_KEY, $updated_settings );
+            }
+            
+            /**
+             * Create products from WooCommerce products and EDD downloads
+             */
+            public function create_products(){
+                //@TODO Use action register_taxonomy. Use option _ksd_sync_products to check
+                //if a sync has been done before.
+                //Use new_product/new_download action to create new product going forward
+                $woocommerce_products = $this->get_woocommerce_products();
+                $edd_downloads = $this->get_edd_downloads();
+                $all_products = array_merge( $edd_downloads,  $woocommerce_products );
+                
+                foreach( $all_products as $ksd_new_product ){
+                    
+                    $cat_details = array(
+                        'cat_name' => $ksd_new_product->post_title,
+                        'taxonomy' => 'product'
+                        );
+
+                    $rep = wp_insert_term( $ksd_new_product->post_title, 'product' );
+                }
+            }
+            
+            private function get_woocommerce_products(){
+                $args = array( 'post_type' => 'product', 'posts_per_page' => -1,  'post_status' => 'publish' );
+                return get_posts( $args );      
+
+            }
+            
+            private function get_edd_downloads(){
+                $args = array( 'post_type' => 'download', 'posts_per_page' => -1,  'post_status' => 'publish' );
+                return get_posts( $args );           
             }
 
 }

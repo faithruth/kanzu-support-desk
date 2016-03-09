@@ -10,7 +10,9 @@ var KSDHooks = KSDHooks || {};
 
 
 jQuery(document).ready(function () {
-
+    //KSD Feedback
+    jQuery( "#ksd-feedback" ).slideToggle( "slow" );
+    
     //Added to remove/hide distortion of UI that shows up during initial load of the plugin.
     jQuery("#admin-kanzu-support-desk").css({visibility: 'visible'});
 

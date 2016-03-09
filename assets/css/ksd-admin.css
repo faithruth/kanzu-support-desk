@@ -1993,3 +1993,17 @@ ul#ksd-tabs{
 #ksd-tabs .help_tip img{
     
 }
+/*Feedback */
+#ksd-feedback {
+  background-color: #fff;
+  bottom: 0;
+  margin-bottom: 0;
+  position: fixed;
+  right: 0;
+  z-index: 5;
+  display: none;
+}
+#ksd-feedback  h3{
+    padding: 8px 12px;
+    margin-top: 0;
+}
