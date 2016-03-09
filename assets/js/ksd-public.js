@@ -14,6 +14,10 @@ jQuery( document ).ready(function() {
        jQuery('div.ksd-form-short-code-form-response').hide();
        jQuery('img.ksd_loading_dialog').hide();
    }
+   //Hide loading dialog
+    if( jQuery("form.ksd-new-ticket-public").length || jQuery("form.ksd-register-public").length ){
+        jQuery('img.ksd_loading_dialog').hide();
+    }  
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function( form ){
         var targetFormDiv = 'div.ksd-support-form-submitted';//Make sure the following actions are on the correct form
