@@ -187,7 +187,7 @@ jQuery(document).ready(function () {
         //Go to stage 2
         jQuery('.ksd-onboarding-stage1').click(function(){
             KSDOnBoarding.UpdateStage('2');
-            window.location.href = 'user-new.php';
+            window.location.href = 'http://localhost/wordpress/sample-page/';//@TODO Get redirect page from $settings['page_submit_ticket']
         });
     }   
     

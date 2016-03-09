@@ -767,8 +767,8 @@ class KSD_Admin {
 		$this->do_admin_includes();             
                 
                 $settings = Kanzu_Support_Desk::get_settings();
-                error_log( print_r( $settings, true) );
-                if( 'yes' === $settings['onboarding_enabled'] && 1 === $settings['onboarding_stage'] ){
+                Kanzu_Support_Desk::kanzu_support_log_me( $settings );
+                if( 'yes' !== $settings['onboarding_enabled'] && 1 === $settings['onboarding_stage'] ){
                     include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-onboarding-stage1.php'); 
                     return ;
                 }

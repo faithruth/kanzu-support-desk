@@ -75,6 +75,14 @@
             </ul>
             <input name="action" type="hidden" value="ksd_log_new_ticket" />
             <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
+            <?php if( "yes" == $settings['onboarding_enabled'] ):?>
+                <input name="onboarding_enabled" type="hidden" value="onboarding_enabled" /><!--@TODO In log_new_ticket,after logging, if this is present, 
+                                                                                            do_action('after_onboarding_ticket',array($this, method_name),$new_ticket_id); method_name, for now, just redirects
+                                                                                            to the reply ticket screen of the new ticket but when that screen's being created,if( "yes" == $settings['onboarding_enabled'] ):,
+                                                                                            an extra field is added. On that screen, introjs can highlight 'Resolve ticket' and 'Assign ticket' before prompting the user  to reply. After they
+                                                                                            reply, if extra field is present, redirect to settings page & introjs explains 'enable autoreply','autoassign' and 'support forms'. Tour is done. Thanks. Message explains how to re-enable the tour
+                                                                                            and how to send feedback/ask for help-->
+            <?php endif; ?>
             <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
         </form>
         <div class="ksd-form-short-code-form-response ksd-support-form-response"></div>

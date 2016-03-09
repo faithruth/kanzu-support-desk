@@ -5,6 +5,6 @@
 Last year, more than a million entered the EU illegally by boat, travelling mainly from Turkey to Greece.
 Some 13,000 are stranded on Greece's border with Macedonia as European states seek to restrict entry.
 Nato is expanding its naval mission against people-smuggling in the Aegean Sea to cover Turkish and Greek territorial waters, and will also increase its co-operation with the EU's border agency Frontex in the region.
-<br />
-<button class="ksd-onboarding-button ksd-onboarding-stage1">Next</button>
+<br /><!--@TODO Let's skip create agent and go straight to create first ticket-->
+<button class="ksd-onboarding-button ksd-onboarding-stage1">Create first ticket</button><button class="ksd-onboarding-button ksd-onboarding-cancel">Cancel</button>
 </div>
