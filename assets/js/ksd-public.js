@@ -63,7 +63,7 @@ jQuery( document ).ready(function() {
             
         };   
 
-    jQuery( 'input.ksd-submit' ).click( function( e ){
+    jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
         e.preventDefault();
         var supportForm    = jQuery( this ).parents( 'form' );
         jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
