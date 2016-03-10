@@ -64,8 +64,14 @@ class KSD_Public {
         //Add content to WooCommerce/EDD Pages
         add_action( 'woocommerce_after_my_account', array( $this, 'woo_edd_append_ticket_list' ) ); 
         add_action( 'edd_after_purchase_history', array( $this, 'woo_edd_append_ticket_list' ) );   
-        add_action( 'edd_after_download_history', array( $this, 'woo_edd_append_ticket_list' ) );   
-    }
+        add_action( 'edd_after_download_history', array( $this, 'woo_edd_append_ticket_list' ) );
+        add_action( 'edd_customer_after_tables', array( $this, 'woo_edd_append_ticket_list' ) );//@TODO Complete this        
+        
+        //Add 'Create ticket' to Woo Orders page
+        add_filter( 'woocommerce_my_account_my_orders_columns', array ( $this, 'woo_orders_add_table_headers' ) );
+        add_filter( 'woocommerce_my_account_my_orders_actions' , array ( $this, 'woo_orders_add_ticket_button' ), 10, 2 );
+        
+    }   
     
     /**
      * Tickets that have hash URLs have the word 'Protected' prepended to the title.
@@ -499,6 +505,32 @@ class KSD_Public {
             return $redirect_to;                        
         }        
         
+        /**
+         * Add an extra column header to the WooCommerce Orders table
+         * @param array $table_headers
+         * @return string
+         */
+        public function woo_orders_add_table_headers( $table_headers ){
+            $table_headers['order-tickets'] = '&nbsp;';
+            return $table_headers;
+        }
+        
+        /**
+         * Add a 'contact support' button to the WooCommerce orders table
+         * @param Array $actions
+         * @param Object $order
+         * @return Array
+         * @TODO Receive and process woo_order_id
+         */
+        public function woo_orders_add_ticket_button( $actions, $order ){
+            $ksd_settings = Kanzu_Support_Desk::get_settings();            
+            $url = esc_url( add_query_arg( 'woo_order_id', $order->id, get_permalink( $ksd_settings['page_submit_ticket'] ) ) );
+            $actions['ksd-woo-orders-create-ticket'] = array(
+                'url' => $url,
+                'name' => __( 'Contact Support','kanzu-support-desk' )                
+            );
+            return $actions;
+        }
         
 }
 endif;
