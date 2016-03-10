@@ -60,6 +60,9 @@ class KSD_Public {
         
         //Remove 'Protected' from ticket titles
         add_filter( 'protected_title_format', array( $this, 'remove_protected_prefix' ) );
+        
+        //Add content to WooCommerce Page
+        add_action( 'woocommerce_after_my_account', array( $this, 'woo_append_ticket_list' ) );            
 
     }
     
@@ -194,6 +197,16 @@ class KSD_Public {
             $ksd_template = new KSD_Templates();
             $ksd_template->get_template_part( 'single', 'submit-ticket' );
         }       
+   }
+   
+   /**
+    * Append ticket list to WooCommerce 'My Account' page
+    * 
+    * @since 2.1.3
+    */
+   public function woo_append_ticket_list(){
+       printf( '<h2>%s</h2>',__( 'My Tickets','kanzu-support-desk' ) );
+       $this->display_my_tickets();
    }
    
    /**
