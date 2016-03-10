@@ -61,9 +61,10 @@ class KSD_Public {
         //Remove 'Protected' from ticket titles
         add_filter( 'protected_title_format', array( $this, 'remove_protected_prefix' ) );
         
-        //Add content to WooCommerce Page
-        add_action( 'woocommerce_after_my_account', array( $this, 'woo_append_ticket_list' ) );            
-
+        //Add content to WooCommerce/EDD Pages
+        add_action( 'woocommerce_after_my_account', array( $this, 'woo_edd_append_ticket_list' ) ); 
+        add_action( 'edd_after_purchase_history', array( $this, 'woo_edd_append_ticket_list' ) );   
+        add_action( 'edd_after_download_history', array( $this, 'woo_edd_append_ticket_list' ) );   
     }
     
     /**
@@ -204,7 +205,7 @@ class KSD_Public {
     * 
     * @since 2.1.3
     */
-   public function woo_append_ticket_list(){
+   public function woo_edd_append_ticket_list(){
        printf( '<h2>%s</h2>',__( 'My Tickets','kanzu-support-desk' ) );
        $this->display_my_tickets();
    }
