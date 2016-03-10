@@ -136,6 +136,10 @@ class KSD_Admin {
                 
                 //Add feedback
                 add_action( 'admin_footer', array( $this, 'append_admin_feedback' ), 25 );
+                
+                //On EDD download/WooCommerce publish
+                add_action(  'publish_product',  array( $this, 'on_new_product' ), 10, 2 );
+                add_action(  'publish_download',  array( $this, 'on_new_product' ), 10, 2 );
 	}
 	
 
@@ -3047,6 +3051,21 @@ class KSD_Admin {
             //@TODO Retrieve message & title from ksd_feedback
             //@TODO If nothing exists, return, well, nothing :-)
             echo '<div id="ksd-feedback" class="postbox"><h3 class="hndle ui-sortable-handle">Yo man</h3><div class="inside">How is the going? For real? </div></div>';
+        }
+        
+        /**
+         * When a new product/download is published by EDD or WooCommerce,
+         * add it as a ticket product
+         * @since 2.1.3
+         */
+        public function on_new_product( $postID, $new_product ){
+            if( ! term_exists( $new_product->post_title, 'product' ) ){
+                $cat_details = array(
+                    'cat_name' => $new_product->post_title,
+                    'taxonomy' => 'product'
+                );
+                wp_insert_category( $cat_details );  
+            }
         }
 }   
         
