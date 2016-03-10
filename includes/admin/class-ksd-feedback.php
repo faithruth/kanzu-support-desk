@@ -12,9 +12,18 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'KSD_Admin' ) ) :
+if ( ! class_exists( 'KSD_Feedback' ) ) :
 
 class KSD_Feedback {
+    
+	/**
+	 * Instance of this class.
+	 *
+	 * @since    1.0.0
+	 *
+	 * @var      object
+	 */
+	protected static $instance = null;    
     
 	/**
 	 * Return an instance of this class.

@@ -1938,7 +1938,8 @@ class KSD_Admin {
                 die ( __('Busted!', 'kanzu-support-desk') );
              }
              try{
-                $base_settings = KSD_Install::get_default_options();
+                $ksd_install    = KSD_Install::get_instance(); 
+                $base_settings  = $ksd_install->get_default_options();
                 //Add the settings from add-ons
                 $base_settings = apply_filters( 'ksd_settings', $base_settings );
                 $status = update_option( KSD_OPTIONS_KEY, $base_settings );
