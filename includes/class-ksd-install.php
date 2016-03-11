@@ -99,7 +99,7 @@ class KSD_Install {
             if ( strpos( $referer, 'post.php?post=' ) > 0 ) {
                 $_GET['post_type']      = 'ksd_ticket';
                 $_GET['ksd-onboarding'] = '7'; 
-                $notes = __( 'Enjoy the plugin! See full documentation at <a href="http://kanzucode.com">kanzucode.com</a> ' )    
+                $notes = __( 'Enjoy the plugin! See full documentation at <a target="blank" href="http://kanzucode.com">kanzucode.com</a> ' )    
                 ;
                 
                 $settings['onboarding_enabled'] = 'no';
@@ -491,6 +491,7 @@ class KSD_Install {
                         'supportform_show_categories'       => 'no',
                         'supportform_show_severity'         => 'no',
                         'supportform_show_products'         => 'no',
+                        'supportform_show_attachment'       => 'no',
                         
                         /*onboarding settings*/
                         'onboarding_stage'                  => 1, //1-8

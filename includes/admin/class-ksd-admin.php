@@ -53,6 +53,7 @@ class KSD_Admin {
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ) );
                 add_action( 'wp_ajax_ksd_filter_totals', array( $this, 'filter_totals' ) );
                 add_action( 'wp_ajax_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
+                add_action( 'wp_ajax_ksd_log_new_supportform_ticket', array( $this, 'log_new_supportform_ticket' ) );
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ) );
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ) );
                 add_action( 'wp_ajax_ksd_change_severity', array( $this, 'change_severity' ) );                
@@ -1460,6 +1461,31 @@ class KSD_Admin {
                 $assignee_id = 1;
             }
             return get_userdata( $assignee_id );            
+        }
+        
+        /**
+         * Handle ticket logging from front end support form 
+         * 
+         * @param type $new_ticket_raw Ticket fields
+         * @param type $from_addon    Whether ticket is being logged by an addon
+         * 
+         */
+        public function log_new_supportform_ticket( $new_ticket_raw = null, $from_addon = false ) {
+            
+            if( isset( $_FILES["ksd_tkt_attachment"] ) ) { 
+                $upload_overrides = array('test_form' => false);
+                $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
+				
+                $attachments                    = array();
+                $attachments['url'][]           = $upload['url'];
+                $attachments['size'][]          =  filesize( $upload['file'] );
+                $attachments['filename'][]      = basename( $upload['file'] );
+                $_POST['ksd_attachments']       = $attachments;
+            }
+
+            $this->log_new_ticket( $new_ticket_raw, $from_addon );
+            
+            die();
         }
         
         /**

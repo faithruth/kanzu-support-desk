@@ -3,7 +3,7 @@
         <div class="ksd-close-form-wrapper">
             <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
         </div>
-        <form method="POST" class="ksd-new-ticket-public">
+        <form method="POST" class="ksd-new-ticket-public" enctype="multipart/form-data">
             <ul>      
             <?php if( "no" == $settings['enable_customer_signup'] && ! is_user_logged_in() ): ?>
                 <li class="ksd-cust-fullname">       
@@ -19,7 +19,9 @@
        <?php
             $show_categories    = $settings['supportform_show_categories'];
             $show_products      = $settings['supportform_show_products'];
-            $show_severity      = $settings['supportform_show_severity'];            
+            $show_severity      = $settings['supportform_show_severity'];  
+            $show_attachment    = $settings['supportform_show_attachment'];   
+            
             if( 'yes' === $show_severity ):
             ?>
             <li class="ksd-pdt-severity">  
@@ -57,7 +59,14 @@
                     ?>
                 </select>    
             </li>
-            <?php endif; ?>              
+            <?php endif; ?>    
+            
+            <?php if( 'yes' == $show_attachment ): ?>
+            <li class="ksd-tkt-attachment" >
+                <input type="file" name="ksd_tkt_attachment"/>
+            </li>
+            <?php endif; ?> 
+            
               <li class="ksd-message">     
                   <textarea value="<?php _e('Message','kanzu-support-desk'); ?>" rows="7" class="ksd-message" name="ksd_tkt_message" required></textarea>
               </li>
@@ -73,7 +82,7 @@
                 <input type="submit" value="<?php _e( 'Send Message', 'kanzu-support-desk'); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
               </li>
             </ul>
-            <input name="action" type="hidden" value="ksd_log_new_ticket" />
+            <input name="action" type="hidden" value="ksd_log_new_supportform_ticket" />
             <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
             <?php if( "yes" == $settings['onboarding_enabled'] ):?>
                 <input name="onboarding_enabled" type="hidden" value="onboarding_enabled" /><!--@TODO In log_new_ticket,after logging, if this is present, 

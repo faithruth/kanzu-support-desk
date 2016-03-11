@@ -527,6 +527,7 @@ class KSD_Public {
                     die();//This is important for WordPress AJAX
                 }
             }
+                        
             //Use the admin side logic to do the ticket logging
             $ksd_admin =  KSD_Admin::get_instance();
             $ksd_admin->log_new_ticket( $_POST );
