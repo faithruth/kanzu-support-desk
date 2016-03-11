@@ -1,3 +1,10 @@
+<?php if ( '' !== get_post_meta( $post->ID, '_ksd_tkt_info_woo_order_id', true ) ): ?>
+    <div class="ksd-misc-woo-order-id misc-pub-section">
+        <span><?php _e( 'Order','kanzu-support-desk' ); ?>:</span>
+        <?php $order_id = get_post_meta( $post->ID, '_ksd_tkt_info_woo_order_id', true ); ?>
+        <span class="ksd-misc-value" id="ksd-misc-woo-order-id"><a href="<?php admin_url( 'post.php?post=' . absint( $order_id ) . '&action=edit' ) ; ?>"><?php echo '#'.$order_id; ?></a></span>
+    </div>
+<?php endif; ?>
 <div class="ksd-misc-severity misc-pub-section">
     <span><?php _e('Severity: ','kanzu-support-desk'); ?></span>
     <?php   $the_severity = get_post_meta( $post->ID, '_ksd_tkt_info_severity', true );

@@ -571,7 +571,8 @@ class KSD_Admin {
                 '_ksd_tkt_info_severity'    => 'low',
                 '_ksd_tkt_info_assigned_to' => 0,
                 '_ksd_tkt_info_channel'     => 'admin-form',
-                '_ksd_tkt_info_cc'          => ''
+                '_ksd_tkt_info_cc'          => '',
+                '_ksd_tkt_info_woo_order_id'=> ''
             );
             //Save ticket customer meta information in the activity list. This is all we do with the _ksd_tkt_info_customer field
             if ( isset( $meta_array['_ksd_tkt_info_customer'] ) ) {
@@ -1587,6 +1588,9 @@ class KSD_Admin {
                 if ( empty( $new_ticket_raw['ksd_tkt_assigned_to' ] ) &&  !empty( $settings['auto_assign_user'] ) ) {
                     $meta_array['_ksd_tkt_info_assigned_to']            = $settings['auto_assign_user'];                    
                 }                
+                if ( isset( $new_ticket_raw['ksd_woo_order_id'] ) ) {
+                    $meta_array['_ksd_tkt_info_woo_order_id']           = $new_ticket_raw['ksd_woo_order_id'];
+                }
                 
                 //Whom to we notify. Defaults to admin if ticket doesn't have an assignee
                 $notify_user_id = ( isset( $meta_array['_ksd_tkt_info_assigned_to'] )? $meta_array['_ksd_tkt_info_assigned_to'] : 1 );

@@ -19,7 +19,7 @@
                     <td><?php the_title(); ?></td>
                     <td><?php echo get_post_status() ; ?></td>     
                     <td><?php echo get_post_modified_time( 'd M Y, @ H:i' ); ?></td>
-                    <td><a href='<?php the_permalink(); ?>'><?php _e('View Ticket', 'kanzu-support-desk'); ?></a></td><!--@TODO Replace this with admin permalink-->
+                    <td><a href='<?php echo admin_url( 'post.php?post=' . absint( get_the_ID() ) . '&action=edit' ); ?>'><?php _e('View Ticket', 'kanzu-support-desk'); ?></a></td>
                 </tr>
                 <?php
             endwhile;
