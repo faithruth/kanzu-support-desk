@@ -110,5 +110,20 @@
             endforeach;
             echo '</ul>';
         endif;
-    endif; ?>
+    endif; 
+    if ( class_exists( 'Easy_Digital_Downloads' ) ) :
+        $edd_customer   = new EDD_Customer( $ksd_current_customer->ID, true );
+        $payment_ids    = explode( ',', $edd_customer->payment_ids );
+        $edd_payments   = edd_get_payments( array( 'post__in' => $payment_ids ) );
+	$edd_payments   = array_slice( $edd_payments, 0, 10 );
+        if ( ! empty( $edd_payments ) ) :
+            printf( '<h4>%s</h4><ul>',__( 'Other Downloads','kanzu-support-desk' ) );
+            foreach( $edd_payments as $download ): ?>
+                <li>                      
+                    <a href='<?php echo admin_url( 'post.php?post=' . absint( $download->ID ) . '&action=edit' ); ?>'>#<?php echo $download->ID; ?></a><span> <?php echo date_i18n( get_option( 'date_format' ), strtotime( $download->post_date ) ); ?></span>   
+                </li><?php                
+            endforeach;
+            echo '</ul>';
+        endif;
+    endif; ?>                
 </div>
