@@ -420,6 +420,9 @@ ul.ksd_attachments li{
 #post-body .ksd-misc-assign-to::before{
     content: "\f483";
 }
+#post-body .ksd-misc-customer-since::before{
+   content: "\f469";
+}
 #ksd-messages-metabox > div#ksd-ticket-message {
   min-height: 200px;
 }
@@ -439,7 +442,7 @@ ul.ksd_attachments li{
     border-radius:3px;
     color: #FFF;   
 }
-#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before,#post-body .ksd-misc-woo-order-id:before {
+#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before,#post-body .ksd-misc-woo-order-id:before,#post-body .ksd-misc-customer-since:before {
   display: inline-block;
   font: 400 20px/1 dashicons;
   left: -1px;

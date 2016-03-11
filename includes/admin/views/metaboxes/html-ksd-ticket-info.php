@@ -48,13 +48,14 @@
 <input type="hidden" value="admin-form" id="_ksd_tkt_info_channel" name="_ksd_tkt_info_channel"><!--On change, save the ticket status-->
 <div class="ksd-misc-customer misc-pub-section">
     <span><?php _e('Customer: ','kanzu-support-desk');  ?></span>
-    <span class="ksd-misc-value" id="ksd-misc-customer"><?php echo get_userdata( $post->post_author )->display_name; ?></span>
+    <?php $ksd_current_customer = get_userdata( $post->post_author ); ?>
+    <span class="ksd-misc-value" id="ksd-misc-customer"><?php echo $ksd_current_customer->display_name; ?></span>
     <?php if( !isset( $_GET['post'] ) ):?><a href="#customer" class="edit-customer"><?php _e( 'Edit','kanzu-support-desk' ); ?></a>
     <div class="ksd_tkt_info_customer ksd_tkt_info_wrapper hidden">
         <select name="_ksd_tkt_info_customer"> 
             <?php
                 $ksd_customer_list      = get_users( array('role' => 'ksd_customer' ) );
-                $ksd_customer_list[]    = get_userdata( $post->post_author );
+                $ksd_customer_list[]    = $ksd_current_customer;
                 foreach ( $ksd_customer_list  as $ksd_customer ) : ?>
                     <option value="<?php echo $ksd_customer->ID; ?>" 
                     <?php selected( $ksd_customer->ID , $post->post_author ); ?>> 
@@ -69,5 +70,45 @@
 </div>
 <div class="ksd-misc-customer-email misc-pub-section">
     <span><?php _e( 'Customer Email','kanzu-support-desk' ); ?>:</span>
-    <span class="ksd-misc-value" id="ksd-misc-customer-email"><?php echo get_userdata( $post->post_author )->user_email; ?></span>
+    <span class="ksd-misc-value" id="ksd-misc-customer-email"><?php echo $ksd_current_customer->user_email; ?></span>
+</div>
+<div class="ksd-misc-customer-since misc-pub-section">
+    <span><?php _e( 'Customer Since','kanzu-support-desk' ); ?>:</span>
+    <span class="ksd-misc-value" id="ksd-misc-customer-since"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $ksd_current_customer->user_registered ) ); ?></span>
+</div>
+<div class="ksd-misc-extras misc-pub-section"><?php    
+        $ksd_admin = KSD_Admin::get_instance();
+        $customer_other_tickets = $ksd_admin->get_customer_tickets( $ksd_current_customer->ID );     
+
+        if ( $customer_other_tickets->have_posts() ) :
+            printf( '<h4>%s</h4><ul>',__( 'Other Tickets','kanzu-support-desk' ) );  
+            while ( $customer_other_tickets->have_posts() ) : $customer_other_tickets->the_post(); ?>        
+                <li>                      
+                    <a href='<?php echo admin_url( 'post.php?post=' . absint( get_the_ID() ) . '&action=edit' ); ?>'>#<?php echo get_the_ID(); ?></a><span class="ksd-post-status-display <?php echo get_post_status() ; ?>"> <?php echo get_post_status() ; ?></span><span> <?php the_title();?></span>   
+                </li>
+                <?php
+            endwhile;
+            wp_reset_postdata(); //Restore original Post Data   
+            echo '</ul>';
+        endif;
+    ?>
+    <?php 
+    if ( class_exists( 'WooCommerce' ) ) :
+        $customer_orders = get_posts( array(
+            'numberposts' => -1,
+            'meta_key'    => '_customer_user',
+            'meta_value'  => $ksd_current_customer->ID, 
+            'post_type'   => wc_get_order_types(), 
+            'post_status' => array_keys( wc_get_order_statuses() ),
+    ) );
+        if ( count( $customer_orders > 0 ) ):
+            printf( '<h4>%s</h4><ul>',__( 'Other Orders','kanzu-support-desk' ) );
+            foreach( $customer_orders as $order ): ?>
+                <li>                      
+                    <a href='<?php echo admin_url( 'post.php?post=' . absint( $order->ID ) . '&action=edit' ); ?>'>#<?php echo $order->ID; ?></a><span> <?php echo date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ; ?></span>   
+                </li><?php                
+            endforeach;
+            echo '</ul>';
+        endif;
+    endif; ?>
 </div>
