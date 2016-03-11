@@ -1921,7 +1921,7 @@ jQuery(document).ready(function () {
                      createdOn+='<span id="timestamp">';
                      createdOn+=ksd_admin.ksd_labels.lbl_created_on+': <b>'+jQuery('#submitdiv #timestamp b').text()+'</b></span>';	
                      createdOn+='</div>';
-                jQuery('#misc-publishing-actions').append( createdOn );      
+                jQuery( createdOn ).insertAfter( '.ksd-misc-assign-to' );      
             }
         };
 
