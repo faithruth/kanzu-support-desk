@@ -251,33 +251,7 @@ jQuery(document).ready(function () {
         }
 
     }
-    
-    
-    KSDOnBoarding.run = function(stage){
        
-        
-        if( 'undefined' !== typeof ksd_admin.ksd_onboarding_enabled && 'yes' ===  ksd_admin.ksd_onboarding_enabled  ){
-            KSDOnBoarding.StageThree();
-            KSDOnBoarding.StageTwo();
-            
-            stage = ksd_admin.ksd_onboarding_stage;
-            console.log( 'In KSDOnBoarding.run +  stage:' + stage  );
-            switch( stage ){
-                case '1': //stage 1 - intro
-                    KSDOnBoarding.StageOne();
-                break;
-                case '2': //stage 1 - intro
-                    KSDOnBoarding.StageTwo();
-                break;
-                case '3': //stage 1 - intro
-                    KSDOnBoarding.StageThree();
-                break;
-            }
-        }
-    }
-    KSDOnBoarding.run();
-
-    
     /*---------------------------------------------------------------*/
     /*************************************ANALYTICS*********************/
     /*---------------------------------------------------------------*/

@@ -61,7 +61,7 @@ class KSD_Install {
         /**
          * Show progress of onboarding progress
          */
-        public function show_onboarding_progress(){
+        public function show_onboarding_progress() {
             
             $settings = Kanzu_Support_Desk::get_settings();
             if ( 'no' === $settings['onboarding_enabled'] ) return;
@@ -70,33 +70,29 @@ class KSD_Install {
             $request_uri =  $_SERVER['REQUEST_URI'];
             $notes = ''; 
 
-            if ( strpos( $referer, 'user-new.php?post_type=ksd_ticket&ksd-onboarding=2' ) > 0 ) {
+            $stage_3plus = 0;
+            if ( strpos( $referer, '/submit-ticket/' ) > 0 && 
+                    strpos($request_uri, 'edit.php?post_type=ksd_ticket&ksd-onboarding=3' )
+                ) {
                 $_GET['post_type']      = 'ksd_ticket';
-                $_GET['ksd-onboarding'] = '2'; 
-                $notes = __( 'Great! Agent created successfully. Now create a '
-                        . '<a href="'. admin_url( 'post-new.php?post_type=ksd_ticket&ksd-onboarding=3' ) . '">ticket</a>.'
-                    );
+                $_GET['ksd-onboarding'] = '3'; 
+                $notes = __( 'Select ticket to respond to. ' );
                 
             }
             
-            if ( strpos( $referer, 'users.php?id=' ) > 0 
-                    && strpos($request_uri, 'post-new.php?post_type=ksd_ticket&ksd-onboarding=3' ) > 0 ) {
-                $_GET['post_type']      = 'ksd_ticket';
-                $_GET['ksd-onboarding'] = '3'; 
-                $notes = __( 'Create a ticket.' );
-            }
-            
-            if ( strpos( $referer, 'post-new.php?post_type=ksd_ticket&ksd-onboarding=3' ) > 0 
+            if ( strpos( $referer, 'edit.php?post_type=ksd_ticket' ) > 0 
                     && strpos($request_uri, 'post.php?post=' ) > 0 ) {
                 $_GET['post_type']      = 'ksd_ticket';
-                $_GET['ksd-onboarding'] = '4'; 
+                $_GET['ksd-onboarding'] = '3'; 
+                $stage_3plus = 1;
                 $notes = __( 'In this view you can reply a ticket. Use the <b>Send</b> button to post the reply.  <br /><br />
                     Through the ticket information box to the right, the ticket can be 
                 assigned to an agent, the status can be changed, and  the severity set appropriately. ' )   
                 ;
             }
             
-            if ( strpos( $referer, 'post.php?post=' ) > 0 ) {
+            if ( strpos( $referer, 'post.php?post=' ) > 0 
+                    && strpos( $request_uri, 'post.php?post=' ) ) {
                 $_GET['post_type']      = 'ksd_ticket';
                 $_GET['ksd-onboarding'] = '7'; 
                 $notes = __( 'Enjoy the plugin! See full documentation at <a target="blank" href="http://kanzucode.com">kanzucode.com</a> ' )    
@@ -112,7 +108,7 @@ class KSD_Install {
             $last_stage  = 8;
             $stage = intval( $_GET['ksd-onboarding'] );
             $stage = ( $stage < 1 || $stage > 8 ) ? 1 : $stage;
-            $next_url = "user-new.php?post_type=ksd_ticket&ksd-onboarding=2";
+            $next_url = admin_url( "user-new.php?post_type=ksd_ticket&ksd-onboarding=2" );
             
             $stage_class = array_fill( 1, 8, "" ) ;
             
@@ -128,21 +124,20 @@ class KSD_Install {
                     
                     switch( $k ){
                         case '1':
-                            $next_url = "user-new.php?post_type=ksd_ticket&ksd-onboarding=2";
+                            $next_url = site_url( "submit-ticket" ) ; 
                             $notes = '';
                         break;
                         case '2':
-                            $next_url = "post-new.php?post_type=ksd_ticket&ksd-onboarding=3";
+                            $next_url = admin_url( "post-new.php?post_type=ksd_ticket&ksd-onboarding=3" ) ;
                             $notes = ( strlen($notes) < 0 ) ? __( 'Select Role as KSD Customer to create agent' ) : $notes ;
                         break;
                         case '3':
-                            $next_url = "post-new.php?post_type=ksd_ticket&ksd-onboarding=4";
+                            $next_url = admin_url( "post-new.php?post_type=ksd_ticket&ksd-onboarding=4" ) ;
                             $notes = ( strlen($notes) < 0 ) ? __( 'Create ticket' ) : $notes ;
-                        break;
-                        case '4':
+                            if( 1 == $stage_3plus ){
+                            $stage_class['4'] = 'active';
                             $stage_class['5'] = 'active';
-                            $stage_class['6'] = 'active';
-                            $next_url = '';
+                            }
                         break;
                     }
                     
@@ -154,14 +149,13 @@ class KSD_Install {
             echo     ' <div class="ksd-onboarding-progress">
                 <ol class="ksd-onboarding-stages">
                                 <li class="'. $stage_class[1] .'">' . __( 'Start tour', 'kanzu-support-desk' ) . '</li>
-                                <li class="'. $stage_class[2] .'">' . __( 'Create agent', 'kanzu-support-desk' ) . '</li>
-                                <li class="'. $stage_class[3] .'">' . __( 'Create ticket', 'kanzu-support-desk' ) . '</li>
-                                <li class="'. $stage_class[4] .'">' . __( 'Reply ticket', 'kanzu-support-desk' ) . '</li>
-                                <li class="'. $stage_class[5] .'">' . __( 'Resolve ticket', 'kanzu-support-desk' ) . '</li>
-                                <li class="'. $stage_class[6] .'">' . __( 'Assign ticket', 'kanzu-support-desk' ) . '</li>
-                                <li class="'. $stage_class[7] .'">' . __( 'Ready!', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[2] .'">' . __( 'Create ticket', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[3] .'">' . __( 'Reply ticket', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[4] .'">' . __( 'Resolve ticket', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[5] .'">' . __( 'Assign ticket', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[6] .'">' . __( 'Ready!', 'kanzu-support-desk' ) . '</li>
                 </ol> 
-                <a href="'. $next_url .'" class="button-small button button-primary ksd-mail-button">Next</a>
+                <a href="' . $next_url . '" class="button-small button button-primary ksd-mail-button">Next</a>
                     <div class="ksd-onboarding-notes">' . $notes. '</div>
                 </div>
                     ';

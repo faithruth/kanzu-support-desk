@@ -10,7 +10,6 @@
  * @since 2.0.0
  */
 ?>
-
 <div class="ksd-new-ticket-form-wrap ksd-form-hidden-tab hidden"> 
     <div class="ksd-close-form-wrapper">
         <span class="ksd_close_button">
