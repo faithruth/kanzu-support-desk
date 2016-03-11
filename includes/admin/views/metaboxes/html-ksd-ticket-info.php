@@ -1,8 +1,8 @@
 <?php if ( '' !== get_post_meta( $post->ID, '_ksd_tkt_info_woo_order_id', true ) ): ?>
     <div class="ksd-misc-woo-order-id misc-pub-section">
         <span><?php _e( 'Order','kanzu-support-desk' ); ?>:</span>
-        <?php $order_id = get_post_meta( $post->ID, '_ksd_tkt_info_woo_order_id', true ); ?>
-        <span class="ksd-misc-value" id="ksd-misc-woo-order-id"><a href="<?php admin_url( 'post.php?post=' . absint( $order_id ) . '&action=edit' ) ; ?>"><?php echo '#'.$order_id; ?></a></span>
+        <?php $woo_order_id = get_post_meta( $post->ID, '_ksd_tkt_info_woo_order_id', true ); ?>
+        <span class="ksd-misc-value" id="ksd-misc-woo-order-id"><a href="<?php admin_url( 'post.php?post=' . absint( $woo_order_id ) . '&action=edit' ) ; ?>"><?php echo '#'.$woo_order_id; ?></a></span>
     </div>
 <?php endif; ?>
 <div class="ksd-misc-severity misc-pub-section">
@@ -94,13 +94,17 @@
     ?>
     <?php 
     if ( class_exists( 'WooCommerce' ) ) :
-        $customer_orders = get_posts( array(
+        $woo_customer_order_args = array(
             'numberposts' => -1,
             'meta_key'    => '_customer_user',
             'meta_value'  => $ksd_current_customer->ID, 
             'post_type'   => wc_get_order_types(), 
             'post_status' => array_keys( wc_get_order_statuses() ),
-    ) );
+        );
+        if( isset( $woo_order_id ) ) {
+            $woo_customer_order_args['post__not_in'] = array( $woo_order_id );
+        }
+        $customer_orders = get_posts( $woo_customer_order_args );
         if ( count( $customer_orders > 0 ) ):
             printf( '<h4>%s</h4><ul>',__( 'Other Orders','kanzu-support-desk' ) );
             foreach( $customer_orders as $order ): ?>
