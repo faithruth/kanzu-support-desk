@@ -193,7 +193,7 @@ jQuery(document).ready(function () {
     
     KSDOnBoarding.StageTwo = function(){
         
-        if ( jQuery(window.location).attr("href").match(/user-new.php/) ) {
+        if ( jQuery(window.location).attr("href").match(/user-new.php\?post_type=ksd_ticket/) ) {
             jQuery('input[name="user_login"]').attr("data-intro","Add agent username ");
             jQuery('input[name="user_login"]').data("step","1");
             
@@ -215,11 +215,14 @@ jQuery(document).ready(function () {
             jQuery('input[type="submit"]').attr("data-intro","Click to add agent");
             jQuery('input[type="submit"]').data("step","7");
             
+            var referer  = jQuery('input[name="_wp_http_referer"]').val();
+            jQuery('input[name="_wp_http_referer"]').val( referer + '?post_type=ksd_ticket&ksd-onboarding=2'); 
+            
             introJs().start();
             
         }
     }
-    KSDOnBoarding.StageTwo();
+    
 
     KSDOnBoarding.StageThree = function(){ 
         
@@ -248,12 +251,14 @@ jQuery(document).ready(function () {
         }
 
     }
-    KSDOnBoarding.StageThree();
+    
     
     KSDOnBoarding.run = function(stage){
        
         
         if( 'undefined' !== typeof ksd_admin.ksd_onboarding_enabled && 'yes' ===  ksd_admin.ksd_onboarding_enabled  ){
+            KSDOnBoarding.StageThree();
+            KSDOnBoarding.StageTwo();
             
             stage = ksd_admin.ksd_onboarding_stage;
             console.log( 'In KSDOnBoarding.run +  stage:' + stage  );

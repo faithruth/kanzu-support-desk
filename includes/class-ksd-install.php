@@ -62,17 +62,116 @@ class KSD_Install {
          * Show progress of onboarding progress
          */
         public function show_onboarding_progress(){
-            echo     '<div class="ksd-onboarding-progress"> '
-                    . '<ul>'
-                    . '<li class="ksd-onboarding-done">Start tour</li>'
-                    . '<li>Create agent</li>'
-                    . '<li>Create ticket</li>'
-                    . '<li>Reply ticket</li>'
-                    . '<li>Resolve ticket</li>'
-                    . '<li>Assign ticket</li>'
-                    . '<li>Done</li>'
-                    . '</ul>'
-                    . '</div>';
+            
+            $settings = Kanzu_Support_Desk::get_settings();
+            if ( 'no' === $settings['onboarding_enabled'] ) return;
+            
+            $referer     = $_SERVER['HTTP_REFERER'];
+            $request_uri =  $_SERVER['REQUEST_URI'];
+            $notes = ''; 
+
+            if ( strpos( $referer, 'user-new.php?post_type=ksd_ticket&ksd-onboarding=2' ) > 0 ) {
+                $_GET['post_type']      = 'ksd_ticket';
+                $_GET['ksd-onboarding'] = '2'; 
+                $notes = 'Great! Agent created successfully. Now create a '
+                        . '<a href="'. admin_url( 'post-new.php?post_type=ksd_ticket&ksd-onboarding=3' ) . '">ticket</a>.' ;
+                
+            }
+            
+            if ( strpos( $referer, 'users.php?id=' ) > 0 
+                    && strpos($request_uri, 'post-new.php?post_type=ksd_ticket&ksd-onboarding=3' ) > 0 ) {
+                $_GET['post_type']      = 'ksd_ticket';
+                $_GET['ksd-onboarding'] = '3'; 
+                $notes = 'Create a ticket.';
+            }
+            
+            if ( strpos( $referer, 'post-new.php?post_type=ksd_ticket&ksd-onboarding=3' ) > 0 
+                    && strpos($request_uri, 'post.php?post=' ) > 0 ) {
+                $_GET['post_type']      = 'ksd_ticket';
+                $_GET['ksd-onboarding'] = '4'; 
+                $notes = 'In this view you can reply a ticket. Use the <b>Send</b> button to post the reply.  <br /><br />
+                    Through the ticket information box to the right, the ticket can be 
+                assigned to an agent, the status can be changed, and  the severity set appropriately. '     
+                ;
+            }
+            
+            if ( strpos( $referer, 'post.php?post=' ) > 0 ) {
+                $_GET['post_type']      = 'ksd_ticket';
+                $_GET['ksd-onboarding'] = '7'; 
+                $notes = 'Enjoy the plugin! See full documentation at <a href="http://kanzucode.com">kanzucode.com</a> '     
+                ;
+                
+                //TODO: Disable tour
+                //$settings = Kanzu_Support_Desk::get_settings();
+                $settings['onboarding_enabled'] = 'no';
+                Kanzu_Support_Desk::update_settings($settings);
+            }
+            
+            
+            //Complete tour 
+            
+            
+            
+            if( ! isset( $_GET['post_type'] ) ||  $_GET['post_type']  !== 'ksd_ticket' ) return;
+            
+            $first_stage = 1;
+            $last_stage  = 8;
+            $stage = intval( $_GET['ksd-onboarding'] );
+            $stage = ( $stage < 1 || $stage > 8 ) ? 1 : $stage;
+            $next_url = "user-new.php?post_type=ksd_ticket&ksd-onboarding=2";
+            
+            $stage_class = array_fill( 1, 8, "" ) ;
+            
+            foreach( $stage_class as $k => $v ) {
+                if ( intval( $k ) < intval( $stage ) ){
+                    $stage_class[ $k ] = 'done';
+                    continue;
+                }
+                // $stage_class[$k] = "";
+                
+                if ( $k == $stage ){
+                    $stage_class[ $k ] = 'active';
+                    
+                    switch( $k ){
+                        case '1':
+                            $next_url = "user-new.php?post_type=ksd_ticket&ksd-onboarding=2";
+                            $notes = '';
+                        break;
+                        case '2':
+                            $next_url = "post-new.php?post_type=ksd_ticket&ksd-onboarding=3";
+                            $notes = ( strlen($notes) < 0 ) ? 'Select Role as KSD Customer to create agent' : $notes ;
+                        break;
+                        case '3':
+                            $next_url = "post-new.php?post_type=ksd_ticket&ksd-onboarding=4";
+                            $notes = ( strlen($notes) < 0 ) ? 'Create ticket' : $notes ;
+                        break;
+                        case '4':
+                            $stage_class['5'] = 'active';
+                            $stage_class['6'] = 'active';
+                            $next_url = '';
+                        break;
+                    }
+                    
+                    continue;
+                }
+                
+            }
+            
+            error_log( print_r( $stage_class, true ) );
+            echo     ' <div class="ksd-onboarding-progress">
+                <ol class="ksd-onboarding-stages">
+                                <li class="'. $stage_class[1] .'">' . __( 'Start tour', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[2] .'">' . __( 'Create agent', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[3] .'">' . __( 'Create ticket', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[4] .'">' . __( 'Reply ticket', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[5] .'">' . __( 'Resolve ticket', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[6] .'">' . __( 'Assign ticket', 'kanzu-support-desk' ) . '</li>
+                                <li class="'. $stage_class[7] .'">' . __( 'Done', 'kanzu-support-desk' ) . '</li>
+                </ol> 
+                <a href="'. $next_url .'" class="button-small button button-primary ksd-mail-button">Next</a>
+                    <div class="ksd-onboarding-notes">' . $notes. '</div>
+                </div>
+                    ';
         }
         
 	/**
