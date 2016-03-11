@@ -78,7 +78,7 @@
 </div>
 <div class="ksd-misc-extras misc-pub-section"><?php    
         $ksd_admin = KSD_Admin::get_instance();
-        $customer_other_tickets = $ksd_admin->get_customer_tickets( $ksd_current_customer->ID );     
+        $customer_other_tickets = $ksd_admin->get_customer_tickets( $ksd_current_customer->ID, array( 'post__not_in' => array( $post->ID ) ) );     
 
         if ( $customer_other_tickets->have_posts() ) :
             printf( '<h4>%s</h4><ul>',__( 'Other Tickets','kanzu-support-desk' ) );  

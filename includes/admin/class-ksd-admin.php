@@ -944,11 +944,17 @@ class KSD_Admin {
         /**
          * Get a customer's tickets
          * @param int $customer_id
+         * @param array $query_params Extra criteria to use to filter the customer's ticket list
          * @since 2.0.0
          */
-        public function get_customer_tickets( $customer_id ) {
-            $this->do_admin_includes();          
-            $my_ticket_args =  'post_type=ksd_ticket&author=' . $customer_id;//',                            
+        public function get_customer_tickets( $customer_id, $query_params = array() ) {
+            $my_ticket_args=array();
+            $this->do_admin_includes();   
+            $my_ticket_args['post_type'] = 'ksd_ticket';
+            $my_ticket_args['author']    = $customer_id;      
+            if ( ! empty( $query_params ) ){
+                $my_ticket_args = array_merge( $my_ticket_args,$query_params );
+            }
             return new WP_Query( $my_ticket_args ); 
         }
         
