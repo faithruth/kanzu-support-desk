@@ -65,7 +65,7 @@ class KSD_Public {
         add_action( 'woocommerce_after_my_account', array( $this, 'woo_edd_append_ticket_list' ) ); 
         add_action( 'edd_after_purchase_history', array( $this, 'woo_edd_append_ticket_list' ) );   
         add_action( 'edd_after_download_history', array( $this, 'woo_edd_append_ticket_list' ) );
-        add_action( 'edd_customer_after_tables', array( $this, 'woo_edd_append_ticket_list' ) );//@TODO Complete this        
+        add_action( 'edd_customer_after_tables', array( $this, 'edd_customers_admin_append_ticket_table' ) ); 
         
         //Add 'Create ticket' to Woo Orders page
         add_filter( 'woocommerce_my_account_my_orders_columns', array ( $this, 'woo_orders_add_table_headers' ) );
@@ -183,7 +183,7 @@ class KSD_Public {
     }
    
     /**
-     * Display a form wherever shortcode [ksd-form] is used
+     * Display a form wherever shortcode [ksd_support_form] is used
      */
    public function form_short_code() {
         self::generate_support_form();
@@ -191,6 +191,7 @@ class KSD_Public {
    
    /**
     * Generate a public-facing support form
+    * @TODO Use this to generate all support forms. Replace the need for html-public-new-ticket.php
     */
    public static function generate_support_form() {
         $settings = Kanzu_Support_Desk::get_settings();
@@ -216,6 +217,11 @@ class KSD_Public {
        $this->display_my_tickets();
    }
    
+   public function edd_customers_admin_append_ticket_table(){
+       printf( '<h3>%s</h3>',__( 'Tickets','kanzu-support-desk' ) );
+       $this->get_ticket_table();       
+   }
+   
    /**
     * Display a customer's tickets
     * @since 2.0.0
@@ -232,6 +238,17 @@ class KSD_Public {
             $ksd_template = new KSD_Templates();
             $ksd_template->get_template_part( 'list', 'my-tickets' );
         }
+   }
+   
+   /**
+    * Get the current user's tickets displayed in a table. 
+    * Used primarily to append the table to the EDD admin customer page
+    * @since 2.3.1
+    */
+   public function get_ticket_table(){
+        include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
+        $ksd_template = new KSD_Templates();
+        $ksd_template->get_template_part( 'list', 'my-tickets-table' );       
    }
     
     	/**
