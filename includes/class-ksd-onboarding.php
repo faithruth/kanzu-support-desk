@@ -73,7 +73,7 @@ class KSD_Onboarding {
          */
         public function show_onboarding_progress(){
             $this->ksd_settings = Kanzu_Support_Desk::get_settings();
-          //  if ( 'no' === $this->ksd_settings['onboarding_enabled'] ){
+          //  if ( 'no' === $this->ksd_settings['onboarding_enabled'] ){//@TODO 2.1.3 Uncomment this
          //       return;
          //   } 
 
@@ -107,7 +107,6 @@ class KSD_Onboarding {
                         
         
         public function onboarding_complete(){
-            Kanzu_Support_Desk::kanzu_support_log_me("complete");
             //Turn off the onboarding setting
             $settings = Kanzu_Support_Desk::get_settings();
             $settings['onboarding_enabled'] = 'no';
@@ -122,6 +121,7 @@ class KSD_Onboarding {
          * For instances where 'stage_notes' is an array, that stage has multiple
          * levels; in that case, the stage_notes values would have to be exhausted before
          * proceeding to the next stage
+         * @TODO 2.1.3 Clean up the internationalization
          * @return Array
          */
         private function get_stage_details(){
@@ -241,6 +241,16 @@ class KSD_Onboarding {
          */
         private function save_current_stage(){
             update_option( $this->ksd_current_stage_option_key, $this->ksd_current_stage_details );
+        }
+        
+        /**
+         * Mark a stage as complete
+         */
+        public function mark_stage_complete( $completed_stage ){
+            $this->ksd_current_stage_details = get_option( $this->ksd_current_stage_option_key );
+            $this->ksd_current_stage_details['previous_stage'] = $completed_stage;
+            $this->ksd_current_stage_details['is_previous_stage_complete'] = "yes";
+            $this->save_current_stage();
         }
                               
                         

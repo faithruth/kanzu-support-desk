@@ -76,9 +76,9 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_enable_usage_stats', array( $this, 'enable_usage_stats' ) ); 
                 add_action( 'wp_ajax_ksd_update_ticket_info', array( $this, 'update_ticket_info' ) ); 
                 add_action( 'wp_ajax_ksd_get_ticket_activity', array( $this, 'get_ticket_activity' ) );           
-                add_action( 'wp_ajax_ksd_migrate_to_v2', array($this, 'migrate_to_v2' ) );
-                add_action( 'wp_ajax_ksd_deletetables_v2', array($this, 'deletetables_v2' ) );
-                add_action( 'wp_ajax_ksd_update_onboarding_stage', array($this, 'update_onboarding_stage' ) );
+                add_action( 'wp_ajax_ksd_migrate_to_v2', array( $this, 'migrate_to_v2' ) );
+                add_action( 'wp_ajax_ksd_deletetables_v2', array( $this, 'deletetables_v2' ) );
+                add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
                 
                 
                 //Generate a debug file
@@ -247,8 +247,6 @@ class KSD_Admin {
                 
                 //Get current settings
                 $settings = Kanzu_Support_Desk::get_settings();
-
-                $settings = Kanzu_Support_Desk::get_settings();
                 $onboarding_stage = $settings['onboarding_stage'];
                 $onboarding_enabled = $settings['onboarding_enabled'];
                 
@@ -292,12 +290,13 @@ class KSD_Admin {
         /**
          * Update the next stage of the onboarding/tour process
          * 
-         * @since 2.1.2
+         * @since 2.1.3
          */
         public function update_onboarding_stage() {
-            $next_stage = $_POST['stage'];
-            $settings = Kanzu_Support_Desk::get_settings();
-            $settings['onboarding_stage'] = $next_stage;
+            $completed_stage = $_POST['stage'];
+            include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
+            $ksd_onboarding = new KSD_Onboarding();
+            $ksd_onboarding->mark_stage_complete($completed_stage);
             die();
         }
         
