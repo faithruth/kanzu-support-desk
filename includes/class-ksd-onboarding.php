@@ -28,15 +28,14 @@ class KSD_Onboarding {
          * Option key used to store the current onboarding stage
          * @var string
          */
-        private $ksd_current_stage_option_key = 'ksd_onboarding_current_stage';
- 
-        /**
-         * Option key used to store the current onboarding sub-stage.
-         * Sub stages are milestones towards completion of a stage
-         * @var Array
-         */
-        private $ksd_current_sub_stage_option_key = 'ksd_onboarding_current_sub_stage';       
+        private $ksd_current_stage_option_key = 'ksd_onboarding_current_stage';    
         
+        
+        /**
+         * Onboarding stage options. Used to track progress
+         * @var array
+         */
+        private $ksd_current_stage_details = array();        
         
 
         /**
@@ -82,16 +81,25 @@ class KSD_Onboarding {
                 return;
             }
             
+            $this->ksd_current_stage_details = get_option( $this->ksd_current_stage_option_key );
             if( isset( $_GET[ 'ksd-onboarding' ] ) ){
                 $current_stage = sanitize_key( $_GET[ 'ksd-onboarding' ] );
+                $this->ksd_current_stage_details['previous_stage']              = $current_stage;
+                $this->ksd_current_stage_details['is_previous_stage_complete']  = "no";
             }   
             else{
-                $previous_stage = get_option( $this->ksd_current_stage_option_key );
-                $current_stage  = ++$previous_stage;
+                $current_stage  = $this->ksd_current_stage_details['previous_stage'];
+                
+                if( "yes" == $this->ksd_current_stage_details['is_previous_stage_complete'] ){
+                    ++$current_stage;
+                    $this->ksd_current_stage_details['previous_stage'] = $current_stage;
+                }
+
+                
             }   
-            $this->save_current_stage( $current_stage );
             echo $this->generate_onboarding_html( $current_stage );
-            if ( $current_stage == ( count( $this->current_stage ) - 1 ) ){//If we are on the last stage, let's end the party
+            $this->save_current_stage();
+            if ( $current_stage == ( count( $this->get_stage_details() ) - 1 ) ){//If we are on the last stage, let's end the party
                 do_action( 'ksd_onboarding_complete' );
             }
         }
@@ -107,7 +115,6 @@ class KSD_Onboarding {
             
             //Remove the stage options
             delete_option( $this->ksd_current_stage_option_key );
-            delete_option( $this->ksd_current_sub_stage_option_key );
         }
         
         /**
@@ -197,36 +204,33 @@ class KSD_Onboarding {
          * Get the notes for the current stage or sub-stage.
          * Sub-stages are intermediary steps to completing a stage
          * @param Array $the_stages
-         * @param int $current_stage Note that it is passed by reference
+         * @param int $current_stage  
          * @return string
          */
-        private function get_stage_notes( $the_stages, &$current_stage ){
+        private function get_stage_notes( $the_stages, $current_stage ){
             $notes = '';
-            if ( is_array( $the_stages[$current_stage]['stage_notes'] ) ){
-                $sub_stages_array = get_option( $this->ksd_current_sub_stage_option_key );
-                if ( ! $sub_stages_array && ! isset( $sub_stages_array[$current_stage] ) ){//Sub-stage doesn't exist
-                    $next_sub_stage = 1;                 
+            if ( is_array( $the_stages[$current_stage]['stage_notes'] ) ){                    
+                if (   ! isset( $this->ksd_current_stage_details['previous_sub_stage'] ) ){//Sub-stage doesn't exist
+                    $current_sub_stage = 0;                 
                 }
                 else{
-                    $next_sub_stage = $sub_stages_array[$current_stage];
+                    $current_sub_stage = ++$this->ksd_current_stage_details['previous_sub_stage'];
                 }
-                $sub_stages_array[$current_stage] = $next_sub_stage;  
-                $this->save_current_sub_stage( $sub_stages_array );
-                $current_sub_stage      = --$next_sub_stage;
                 if( isset( $the_stages[$current_stage]['stage_notes'][$current_sub_stage] ) ){
+                    $this->ksd_current_stage_details['previous_sub_stage'] = $current_sub_stage;
                     $notes = $the_stages[$current_stage]['stage_notes'][$current_sub_stage];
                 }
                 else{
-                    $notes = $the_stages[$current_stage]['stage_notes'][0];//@TODO Test extensively. This shouldn't happen
+                    $notes = $the_stages[$current_stage]['stage_notes'][0];//@TODO Test extensively. This should never happen
                 }
-                //Important: If we are not yet at the last substage, decrement the current stage so that the 
-                //navigation doesn't progress
-                if( $next_sub_stage < count( $the_stages[$current_stage]['stage_notes'] ) ){
-                    --$current_stage;
+                //Important: The stage is only complete when we get to the last sub-stage
+                if( $current_sub_stage == ( count( $the_stages[$current_stage]['stage_notes'] ) - 1 ) ){
+                    $this->ksd_current_stage_details['is_previous_stage_complete'] = "yes";
                 }
             }
             else{
                 $notes = $the_stages[$current_stage]['stage_notes'];
+                $this->ksd_current_stage_details['is_previous_stage_complete'] = "yes";
             }      
             return $notes;
         }
@@ -235,17 +239,10 @@ class KSD_Onboarding {
          * Save the current onboarding stage
          * @param int $current_stage
          */
-        private function save_current_stage( $current_stage ){
-            update_option( $this->ksd_current_stage_option_key, sanitize_key( $current_stage ) );
+        private function save_current_stage(){
+            update_option( $this->ksd_current_stage_option_key, $this->ksd_current_stage_details );
         }
-        
-        /**
-         * Save the current onboarding sub-stage
-         * @param int $current_sub_stage
-         */
-        private function save_current_sub_stage( $current_sub_stage ){
-            update_option( $this->ksd_current_sub_stage_option_key, sanitize_key( $current_sub_stage ) );
-        }        
+                              
                         
     
         /**
