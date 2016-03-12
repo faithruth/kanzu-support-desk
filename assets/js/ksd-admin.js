@@ -164,14 +164,20 @@ jQuery(document).ready(function () {
             this.resolveTicket();
         };
         
-        KSDUpdateOnboardingStage = function( completedStage ){
+        KSDUpdateOnboardingStage = function( completedStage,reloadPage ){
+            if ( typeof ( reloadPage ) === 'undefined'){
+                reloadPage = false;
+            }
             jQuery.post( ksd_admin.ajax_url,
                     {   action: 'ksd_update_onboarding_stage',
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                         stage: completedStage,
                     },
                     function ( response ) {
-                        //@TODO We currently don't do a thing with the response   
+                        //@TODO We currently don't do a thing with the response
+                        if( reloadPage ){
+                            location.reload();
+                        }
                     });            
         };
 
@@ -186,8 +192,7 @@ jQuery(document).ready(function () {
         };
         this.replyTicket = function () {            
             jQuery( '.ksd-onboarding input[name=ksd_reply_ticket]' ).click( function(){
-                KSDUpdateOnboardingStage( 4 );  
-                location.reload();
+                KSDUpdateOnboardingStage( 4, true );  
             });             
         };
         this.resolveTicket = function () {

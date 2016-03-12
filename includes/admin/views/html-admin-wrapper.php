@@ -1,5 +1,4 @@
 <div id="admin-kanzu-support-desk" >
-    efccrtttcr
     <div class="admin-ksd-title">
         <?php 
             $ksd_current_page = str_ireplace( 'ksd-', '', sanitize_key( $_GET['page'] ) );

@@ -99,7 +99,7 @@ class KSD_Onboarding {
             }   
             echo $this->generate_onboarding_html( $current_stage );
             $this->save_current_stage();
-            if ( $current_stage == ( count( $this->get_stage_details() ) - 1 ) ){//If we are on the last stage, let's end the party
+            if ( $current_stage == count( $this->get_stage_details() ) ){//If we are on the last stage, let's end the party
                 do_action( 'ksd_onboarding_complete' );
             }
         }
@@ -141,7 +141,7 @@ class KSD_Onboarding {
                     'next_url'      => '',
                     'stage_notes'   => array(
                                         __( '<p>You and your agents view all tickets here. Your customer\'s waiting; Go ahead and
-                                            <strong>Select the ticket you\'d like to make changes to</strong></p>' ),
+                                            <strong>select the ticket you\'d like to make changes to</strong></p>' ),
                                         __( '<p>In this view, you or an agent can make changes to a ticket.</p>
                                             <p>From the ticket information box to the right, the ticket can be 
                                             assigned to an agent, the status can be changed and the severity set appropriately.</p>
@@ -171,13 +171,8 @@ class KSD_Onboarding {
 
         private function generate_onboarding_html( $current_stage ){
             $the_stages     = $this->get_stage_details();
-            $next_url_html  = '';
-            //Increment the current stage and add the next as a query argument to the next url
-            if ( ! empty ( $the_stages[$current_stage]['next_url'] ) ){
-                $next_stage     = $current_stage + 1;
-                $next_url       = esc_url( add_query_arg( 'ksd-onboarding', $next_stage , $the_stages[$current_stage]['next_url'] ) );
-                $next_url_html  = '<a href="' . $next_url. '" class="button-small button button-primary">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
-            }
+            $next_url_html  = $this->get_stage_url($the_stages, $current_stage);
+            
             $onboarding_div = '<div class="ksd-onboarding-progress">';
             $onboarding_div .= '<ol class="ksd-onboarding-stages">';
             $notes          = $this->get_stage_notes( $the_stages, $current_stage );
@@ -200,6 +195,21 @@ class KSD_Onboarding {
             return $onboarding_div;
         }
         
+
+        private function get_stage_url( $the_stages, $current_stage ){
+            $next_url_html = '';
+            
+            if ( ! empty ( $the_stages[$current_stage]['next_url'] ) ){
+                $next_stage     = $current_stage + 1;//Increment the current stage and add the next as a query argument to the next url
+                $next_url       = esc_url( add_query_arg( 'ksd-onboarding', $next_stage , $the_stages[$current_stage]['next_url'] ) );
+                $next_url_html  = '<a href="' . $next_url. '" class="button-small button button-primary">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
+            }      
+            //The last URL @TODO 2.1.3 On first access of settings, display link to 'quick-start guide' on our site
+            if ( $current_stage == count( $the_stages ) ){
+                 $next_url_html  = '<a href="' . admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-settings' ). '" class="button-small button button-primary">'.__( 'Customize your KSD', 'kanzu-support-desk' ).'</a>';
+            }
+            return $next_url_html;
+        }        
         /**
          * Get the notes for the current stage or sub-stage.
          * Sub-stages are intermediary steps to completing a stage

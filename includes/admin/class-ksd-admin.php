@@ -297,6 +297,7 @@ class KSD_Admin {
             include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
             $ksd_onboarding = new KSD_Onboarding();
             $ksd_onboarding->mark_stage_complete($completed_stage);
+            echo json_encode( "Ok" );
             die();
         }
         
