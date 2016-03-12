@@ -124,7 +124,7 @@ class KSD_Install {
                     
                     switch( $k ){
                         case '1':
-                            $next_url = site_url( "submit-ticket" ) ; 
+                            $next_url = get_permalink( $settings['page_submit_ticket'] ) ; 
                             $notes = '';
                         break;
                         case '2':
