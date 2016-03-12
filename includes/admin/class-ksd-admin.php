@@ -768,7 +768,6 @@ class KSD_Admin {
 		$this->do_admin_includes();             
                 
                 $settings = Kanzu_Support_Desk::get_settings();
-                Kanzu_Support_Desk::kanzu_support_log_me( $settings );
                 if( 'yes' === $settings['onboarding_enabled'] && isset( $_GET['ksd-onboarding']) && 1 == $_GET['ksd-onboarding'] ){
                     $_GET['ksd-intro'] = 1;
                 }
@@ -1951,7 +1950,7 @@ class KSD_Admin {
                 }
                 //For a checkbox, if it is unchecked then it won't be set in $_POST
                 $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                        "supportform_show_categories","supportform_show_severity"
+                        "supportform_show_categories","supportform_show_severity","onboarding_changes"
                 );
                 //Iterate through the checkboxes and set the value to "no" for all that aren't set
                 foreach ( $checkbox_names as $checkbox_name ) {

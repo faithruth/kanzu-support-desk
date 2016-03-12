@@ -180,9 +180,6 @@ jQuery(document).ready(function () {
         return false;
     }
     
-    console.log( 'ksd_onboarding_stage: + ' + ksd_admin.ksd_onboarding_stage );
-    console.log( 'ksd_onboarding_enable: + ' +  ksd_admin.ksd_onboarding_enabled );
-    
     KSDOnBoarding.StageOne = function(){            
         //Go to stage 2
         jQuery('.ksd-onboarding-stage1').click(function(){

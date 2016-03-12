@@ -1,28 +1,9 @@
 <?php 
-$referer     = $_SERVER['HTTP_REFERER'];
-$request_uri =  $_SERVER['REQUEST_URI'];
-
 $settings = kanzu_support_desk::get_settings();
-$onboarding_enabled = $settings['onboarding_enabled'];
-if ( 'yes' === $onboarding_enabled ):
-?>
-<div class="ksd-onboarding-progress wp-core-ui">
-<ol class="ksd-onboarding-stages">
-				<li class="done"><?php  _e( 'Start tour', 'kanzu-support-desk' ); ?> </li>
-				<li class="active"><?php  _e( 'Create ticket', 'kanzu-support-desk' ); ?> </li>
-				<li class=""><?php  _e( 'Reply ticket', 'kanzu-support-desk' ); ?></li>
-				<li class=""><?php  _e( 'Resolve ticket', 'kanzu-support-desk' ); ?></li>
-				<li class=""><?php  _e( 'Assign ticket', 'kanzu-support-desk' ); ?></li>
-				<li class=""><?php  _e( 'Ready!', 'kanzu-support-desk' ); ?></li>
-</ol> 
-    <a href="<?php echo admin_url('edit.php?post_type=ksd_ticket&ksd-onboarding=3')?>" class="button-small button button-primary ksd-mail-button">Next</a>
-<div class="ksd-onboarding-notes"></div>
-</div>
-<?php
-endif;
-?>
+if ( 'yes' === $settings['onboarding_enabled'] ):
+    do_action( 'ksd_show_onboarding_progress', 2 ); 
+endif;?>
 <div class="ksd-new-ticket-form-wrap ksd-form-short-code">
-    <?php $settings = Kanzu_Support_Desk::get_settings(); ?>
         <div class="ksd-close-form-wrapper">
             <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
         </div>
@@ -107,14 +88,6 @@ endif;
             </ul>
             <input name="action" type="hidden" value="ksd_log_new_supportform_ticket" />
             <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
-            <?php if( "yes" == $settings['onboarding_enabled'] ):?>
-                <input name="onboarding_enabled" type="hidden" value="onboarding_enabled" /><!--@TODO In log_new_ticket,after logging, if this is present, 
-                                                                                            do_action('after_onboarding_ticket',array($this, method_name),$new_ticket_id); method_name, for now, just redirects
-                                                                                            to the reply ticket screen of the new ticket but when that screen's being created,if( "yes" == $settings['onboarding_enabled'] ):,
-                                                                                            an extra field is added. On that screen, introjs can highlight 'Resolve ticket' and 'Assign ticket' before prompting the user  to reply. After they
-                                                                                            reply, if extra field is present, redirect to settings page & introjs explains 'enable autoreply','autoassign' and 'support forms'. Tour is done. Thanks. Message explains how to re-enable the tour
-                                                                                            and how to send feedback/ask for help-->
-            <?php endif; ?>
             <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
         </form>
         <div class="ksd-form-short-code-form-response ksd-support-form-response"></div>

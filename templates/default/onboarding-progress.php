@@ -1,0 +1,13 @@
+<div class="ksd-onboarding-progress wp-core-ui">
+<ol class="ksd-onboarding-stages">
+				<li class="done"><?php  _e( 'Start tour', 'kanzu-support-desk' ); ?> </li>
+				<li class="active"><?php  _e( 'Create ticket', 'kanzu-support-desk' ); ?> </li>
+				<li class=""><?php  _e( 'Reply ticket', 'kanzu-support-desk' ); ?></li>
+				<li class=""><?php  _e( 'Resolve ticket', 'kanzu-support-desk' ); ?></li>
+				<li class=""><?php  _e( 'Assign ticket', 'kanzu-support-desk' ); ?></li>
+				<li class=""><?php  _e( 'Ready!', 'kanzu-support-desk' ); ?></li>
+</ol> 
+    <a href="<?php echo admin_url('edit.php?post_type=ksd_ticket&ksd-onboarding=3')?>" class="button-small button button-primary ksd-mail-button">Next</a>
+<div class="ksd-onboarding-notes"></div>
+</div>
+
