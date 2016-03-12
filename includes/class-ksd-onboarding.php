@@ -99,6 +99,7 @@ class KSD_Onboarding {
                         
         
         public function onboarding_complete(){
+            Kanzu_Support_Desk::kanzu_support_log_me("complete");
             //Turn off the onboarding setting
             $settings = Kanzu_Support_Desk::get_settings();
             $settings['onboarding_enabled'] = 'no';
@@ -112,40 +113,51 @@ class KSD_Onboarding {
             return array(
                 1   => array(
                     'title'         => __( 'Start tour', 'kanzu-support-desk' ),
-                    'next_url'      => esc_url( add_query_arg( 'ksd-onboarding', 2, get_permalink( $this->ksd_settings['page_submit_ticket'] ) ) ),
+                    'next_url'      =>  get_permalink( $this->ksd_settings['page_submit_ticket'] ),
                     'stage_notes'   => ''
                 ),
                 2   => array(
                     'title'         => __( 'Create ticket', 'kanzu-support-desk' ),
-                    'next_url'      => admin_url('edit.php?post_type=ksd_ticket&ksd-onboarding=3'),
+                    'next_url'      => admin_url('edit.php?post_type=ksd_ticket'),
                     'stage_notes'   => ''    
                 ),
                 3   => array(
-                    'title'         => __( 'Reply ticket', 'kanzu-support-desk' ),
-                    'next_url'      => admin_url( "user-new.php?post_type=ksd_ticket&ksd-onboarding=4" ),
-                    'stage_notes'   => __( 'Select ticket to respond to. ' )
-                ),
-                4   => array(
-                    'title'         => __( 'Resolve ticket', 'kanzu-support-desk' ),
-                    'next_url'      => admin_url( "user-new.php?post_type=ksd_ticket&ksd-onboarding=5" ),
-                    'stage_notes'   =>__( 'In this view you can reply a ticket. Use the <b>Send</b> button to post the reply.  <br /><br />
-                    Through the ticket information box to the right, the ticket can be 
-                assigned to an agent, the status can be changed, and  the severity set appropriately. ' )   
-                ),
-                5   => array(
                     'title'         => __( 'Assign ticket', 'kanzu-support-desk' ),
-                    'next_url'      => admin_url( "user-new.php?post_type=ksd_ticket&ksd-onboarding=6" ),
-                    'stage_notes'   => __( 'Enjoy the plugin! See full documentation at <a target="blank" href="http://kanzucode.com">kanzucode.com</a> ' )    
-                ),
+                    'next_url'      => '',
+                    'stage_notes'   => __( '<p>In this view, you or an agent can make changes to a ticket.</p>
+                                            <p>From the ticket information box to the right, the ticket can be 
+                                            assigned to an agent, the status can be changed and the severity set appropriately.</p>
+                                            <p><strong>Assign the ticket to someone else to proceed</strong></p>' )    
+                ),  
+                4   => array(
+                    'title'         => __( 'Reply ticket', 'kanzu-support-desk' ),
+                    'next_url'      => '',
+                    'stage_notes'   => __( '<p>Great! Now you need to respond to the customer. You can send a response or choose to type a private note for another agent; private notes are NOT send to your customer.</p>'
+                            . '             <p><strong>At the bottom of your screen is a textbox; type your response and hit send to proceed.</strong></p> ' )
+                ),                
+                5   => array(
+                    'title'         => __( 'Resolve ticket', 'kanzu-support-desk' ),
+                    'next_url'      => '',
+                    'stage_notes'   =>__( '<p>You are on a roll! One last thing...time to resolve the ticket since you have done such a fabulous job serving your customer.</p>'
+                            . '            <p><strong>In the ticket information box, update ticket status to Resolved and click Update to complete</strong></p>' )   
+                ),               
                 6   => array(
                     'title'         => __( 'Ready!', 'kanzu-support-desk' ) ,
-                    'next_url'      => admin_url( "user-new.php?post_type=ksd_ticket&ksd-onboarding=7" )
+                    'next_url'      => admin_url( 'edit.php?post_type=ksd_ticket' ),
+                    'stage_notes'   => __( '<p>That\'s it! Now that\'s how you handle customer care like a rockstar. To see full documentation & share feedback/feature requests, '
+                            . '         <strong>get in touch at <a target="blank" href="http://kanzucode.com/contact">kanzucode.com</a></strong></p> ' )
                 )                
             );
         }
 
         private function generate_onboarding_html( $current_stage ){
-            $the_stages = $this->get_stage_details();
+            $the_stages     = $this->get_stage_details();
+            $next_url_html  = '';
+            //Increment the current stage and add the next as a query argument to the next url
+            if ( ! empty ( $the_stages[$current_stage]['next_url'] ) ){
+                $next_url       = esc_url( add_query_arg( 'ksd-onboarding', ++$current_stage, $the_stages[$current_stage]['next_url'] ) );
+                $next_url_html  = '<a href="' . $next_url. '" class="button-small button button-primary">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
+            }
             $onboarding_div = '<div class="ksd-onboarding-progress">';
             $onboarding_div .= '<ol class="ksd-onboarding-stages">';
             for ( $i=1; $i <= count( $the_stages ); $i++ ){
@@ -161,7 +173,7 @@ class KSD_Onboarding {
                 $onboarding_div .= "<li {$stage_class}>{$the_stages[$i]['title']}</li>";
             }
             $onboarding_div .= '</ol>';
-            $onboarding_div .= '<a href="' . $the_stages[$current_stage]['next_url']. '" class="button-small button button-primary ksd-mail-button">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
+            $onboarding_div .= $next_url_html;
             $onboarding_div .= '<div class="ksd-onboarding-notes">' . $the_stages[$current_stage]['stage_notes']. '</div>';
             $onboarding_div .= '</div>';
             return $onboarding_div;
