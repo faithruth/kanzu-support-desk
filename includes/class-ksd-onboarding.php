@@ -24,7 +24,11 @@ class KSD_Onboarding {
 	 */
 	protected static $instance = null;   
         
-        private $ksd_settings;
+        /**
+         * Option key used to store the current onboarding stage
+         * @var string
+         */
+        private $ksd_current_stage_option_key = 'ksd_onboarding_current_stage';
         
 
         /**
@@ -48,89 +52,67 @@ class KSD_Onboarding {
             //Displays the onboarding progress navigation. Used for the front-end
             add_action( 'ksd_show_onboarding_progress', array( $this, 'show_onboarding_progress' ) );   
             
-            add_action('admin_notices', array( $this, 'show_onboarding_progress' ) );
+            add_action( 'admin_notices', array( $this, 'show_onboarding_progress' ) );
             
             //Jubilate when we are done
             add_action( 'ksd_onboarding_complete', array( $this, 'onboarding_complete' ) );
         }
+        
         
         /**
          * Show the onboarding progress
          * @param int $current_stage String value of the stage to show. e.g. two
          * @since 2.1.3
          */
-        public function show_onboarding_progress( $current_stage='' ){
+        public function show_onboarding_progress(){
             $this->ksd_settings = Kanzu_Support_Desk::get_settings();
           //  if ( 'no' === $this->ksd_settings['onboarding_enabled'] ){
          //       return;
-         //   }
+         //   } 
 
-            if( ! isset( $_GET[ 'ksd-onboarding' ] ) && empty( $current_stage ) ){
+            if( ! isset( $_GET[ 'ksd-onboarding' ] ) && ! get_option( $this->ksd_current_stage_option_key ) ){
                 return;
             }
-            if ( isset( $_GET[ 'ksd-onboarding' ] ) ){
+            
+            $referer     = esc_url( $_SERVER['HTTP_REFERER'] );
+            $request_uri = esc_url( $_SERVER['REQUEST_URI'] );
+            
+            if( isset( $_GET[ 'ksd-onboarding' ] ) ){
                 $current_stage = sanitize_key( $_GET[ 'ksd-onboarding' ] );
+            }   
+            elseif ( strpos( $referer, 'edit.php?post_type=ksd_ticket' ) && strpos( $request_uri, 'post.php?post=' )  ) {
+                $current_stage = 4;
             }
-
+            elseif ( strpos( $referer, 'post.php?post=' ) && strpos( $request_uri, 'post.php?post=' ) ) {
+                $current_stage = ( 4 == get_option( $this->ksd_current_stage_option_key ) ? 5 : 6 );
+            }
+            else{
+                $current_stage  = 6; 
+            }   
+            $this->save_current_stage( $current_stage );
             echo $this->generate_onboarding_html( $current_stage );
-            if ( $current_stage == ( count( $this->current_stage ) - 1 ) ){//If we are on the last stage
+            if ( $current_stage == ( count( $this->current_stage ) - 1 ) ){//If we are on the last stage, let's end the party
                 do_action( 'ksd_onboarding_complete' );
             }
         }
         
-        /**
-         * What stage are we at? Do the check here
-         * @since 2.1.3
-         */
-        public function get_next_stage(){
-            
-            $settings = Kanzu_Support_Desk::get_settings();
-            if ( 'no' === $settings['onboarding_enabled'] ){
-                return;         
-            }
-            
-            $referer     = $_SERVER['HTTP_REFERER'];
-            $request_uri = $_SERVER['REQUEST_URI'];
-            $notes = ''; 
-            $onboarding_progress = 0;
-
-            $stage_3plus = 0;
                         
-            if ( strpos( $referer, get_permalink( $settings['page_submit_ticket'] ) ) > 0 && 
-                    strpos($request_uri, 'edit.php?post_type=ksd_ticket&ksd-onboarding=3' )
-                ) {
-
-                return 4;
-                
-            }
-            
-            if ( strpos( $referer, 'edit.php?post_type=ksd_ticket' ) > 0 
-                    && strpos($request_uri, 'post.php?post=' ) > 0 ) {
-                return 5;
-            }
-            
-            if ( strpos( $referer, 'post.php?post=' ) > 0 
-                    && strpos( $request_uri, 'post.php?post=' ) ) {
-                return -1;
-            }
-            
-            if( ! isset( $_GET['post_type'] ) ||  $ksd_post_type  !== 'ksd_ticket' ){
-                return;     
-            }
- 
-        }
         
         public function onboarding_complete(){
+            //Turn off the onboarding setting
             $settings = Kanzu_Support_Desk::get_settings();
             $settings['onboarding_enabled'] = 'no';
             Kanzu_Support_Desk::update_settings( $settings );
+            
+            //Remove the current stage option
+            delete_option( $this->ksd_current_stage_option_key );
         }
         
         private function get_stage_details(){
             return array(
                 1   => array(
                     'title'         => __( 'Start tour', 'kanzu-support-desk' ),
-                    'next_url'      => get_permalink( $this->ksd_settings['page_submit_ticket'] ),
+                    'next_url'      => esc_url( add_query_arg( 'ksd-onboarding', 2, get_permalink( $this->ksd_settings['page_submit_ticket'] ) ) ),
                     'stage_notes'   => ''
                 ),
                 2   => array(
@@ -183,6 +165,14 @@ class KSD_Onboarding {
             $onboarding_div .= '<div class="ksd-onboarding-notes">' . $the_stages[$current_stage]['stage_notes']. '</div>';
             $onboarding_div .= '</div>';
             return $onboarding_div;
+        }
+        
+        /**
+         * Save the current onboarding stage
+         * @param int $current_stage
+         */
+        private function save_current_stage( $current_stage ){
+            update_option( $this->ksd_current_stage_option_key, sanitize_key( $current_stage ) );
         }
     
         /**

@@ -1,8 +1,8 @@
 <?php 
 $settings = kanzu_support_desk::get_settings();
-if ( 'yes' === $settings['onboarding_enabled'] ):
-    do_action( 'ksd_show_onboarding_progress', 2 ); 
-endif;?>
+//if ( 'yes' === $settings['onboarding_enabled'] ):
+    do_action( 'ksd_show_onboarding_progress' ); 
+//endif;?>
 <div class="ksd-new-ticket-form-wrap ksd-form-short-code">
         <div class="ksd-close-form-wrapper">
             <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
