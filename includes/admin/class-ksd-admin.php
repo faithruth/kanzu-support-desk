@@ -266,7 +266,8 @@ class KSD_Admin {
                                             'ksd_current_screen'        =>  $this->get_current_ksd_screen(),
                                             'ksd_version'               =>  KSD_VERSION,
                                             'ksd_onboarding_stage'      => $onboarding_stage,
-                                            'ksd_onboarding_enabled'    => $onboarding_enabled
+                                            'ksd_onboarding_enabled'    => $onboarding_enabled,
+                                            'ksd_statuses'              =>  $this->get_status_list_options()
                                         )
                                     );
 
@@ -568,7 +569,7 @@ class KSD_Admin {
             $this->save_ticket_meta_info( $postarr['ID'], $postarr['post_title'], $postarr );
             
             if ( 'publish' == $data['post_status'] ) {//Change published tickets' statuses from 'publish' to KSD native ticket statuses
-                $post_status = ( 'auto-draft' == $postarr['hidden_ksd_post_status'] ? 'open' : $postarr['hidden_ksd_post_status'] );
+                $post_status = ( 'auto-draft' == $postarr['hidden_ksd_post_status'] && isset( $postarr['hidden_ksd_post_status'] ) ? 'open' : $postarr['hidden_ksd_post_status'] );
                 $data['post_status'] = $post_status;
             }   
             return $data;
@@ -691,6 +692,17 @@ class KSD_Admin {
                 'pending'   => __( 'Pending', 'kanzu-support-desk' ), 
                 'resolved'  => __( 'Resolved', 'kanzu-support-desk' )
                 );
+        }
+        
+        /**
+         * Get status list as select options
+         */
+        public function get_status_list_options(){
+            $options = '';
+            foreach( $this->get_status_list() as $value => $status ){
+                $options.= '<option value="'.$value.'">'.$status.'</option>';
+            }
+            return $options;
         }
         
         /***

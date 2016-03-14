@@ -1019,7 +1019,11 @@ jQuery(document).ready(function () {
                 _totalTicketsPerFilter();
                 _addSeverityClassToTicketGrid();
             }
-            
+            //If we are displaying the ticket list view
+            if( jQuery('select[name=_status]').length ){
+                jQuery('option[value=publish],option[value=pending]').remove();
+                jQuery('select[name=_status]').append( ksd_admin.ksd_statuses );
+            }
             //Set current active view for our custom views
             if( jQuery.urlParam('ksd_view') ) {
                 var currentView = jQuery.urlParam('ksd_view');
