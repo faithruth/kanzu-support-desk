@@ -53,7 +53,6 @@ class KSD_Admin {
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ) );
                 add_action( 'wp_ajax_ksd_filter_totals', array( $this, 'filter_totals' ) );
                 add_action( 'wp_ajax_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
-                add_action( 'wp_ajax_ksd_log_new_supportform_ticket', array( $this, 'log_new_supportform_ticket' ) );
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ) );
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ) );
                 add_action( 'wp_ajax_ksd_change_severity', array( $this, 'change_severity' ) );                
@@ -135,6 +134,13 @@ class KSD_Admin {
                 add_filter( 'parse_query', array( $this, 'ticket_table_apply_filters' ) );
                 //Display ticket status next to the ticket title
                 add_filter( 'display_post_states', array( $this, 'display_ticket_statuses_next_to_title' ) );
+                
+                //Add feedback
+                add_action( 'admin_footer', array( $this, 'append_admin_feedback' ), 25 );
+                
+                //On EDD download/WooCommerce publish
+                add_action(  'publish_product',  array( $this, 'on_new_product' ), 10, 2 );
+                add_action(  'publish_download',  array( $this, 'on_new_product' ), 10, 2 );
 	}
 	
 
@@ -585,7 +591,8 @@ class KSD_Admin {
                 '_ksd_tkt_info_severity'    => 'low',
                 '_ksd_tkt_info_assigned_to' => 0,
                 '_ksd_tkt_info_channel'     => 'admin-form',
-                '_ksd_tkt_info_cc'          => ''
+                '_ksd_tkt_info_cc'          => '',
+                '_ksd_tkt_info_woo_order_id'=> ''
             );
             //Save ticket customer meta information in the activity list. This is all we do with the _ksd_tkt_info_customer field
             if ( isset( $meta_array['_ksd_tkt_info_customer'] ) ) {
@@ -974,11 +981,17 @@ class KSD_Admin {
         /**
          * Get a customer's tickets
          * @param int $customer_id
+         * @param array $query_params Extra criteria to use to filter the customer's ticket list
          * @since 2.0.0
          */
-        public function get_customer_tickets( $customer_id ) {
-            $this->do_admin_includes();          
-            $my_ticket_args =  'post_type=ksd_ticket&author=' . $customer_id;//',                            
+        public function get_customer_tickets( $customer_id, $query_params = array() ) {
+            $my_ticket_args=array();
+            $this->do_admin_includes();   
+            $my_ticket_args['post_type'] = 'ksd_ticket';
+            $my_ticket_args['author']    = $customer_id;      
+            if ( ! empty( $query_params ) ){
+                $my_ticket_args = array_merge( $my_ticket_args,$query_params );
+            }
             return new WP_Query( $my_ticket_args ); 
         }
         
@@ -1472,30 +1485,6 @@ class KSD_Admin {
             return get_userdata( $assignee_id );            
         }
         
-        /**
-         * Handle ticket logging from front end support form 
-         * 
-         * @param type $new_ticket_raw Ticket fields
-         * @param type $from_addon    Whether ticket is being logged by an addon
-         * 
-         */
-        public function log_new_supportform_ticket( $new_ticket_raw = null, $from_addon = false ) {
-            
-            if( isset( $_FILES["ksd_tkt_attachment"] ) ) { 
-                $upload_overrides = array('test_form' => false);
-                $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
-				
-                $attachments                    = array();
-                $attachments['url'][]           = $upload['url'];
-                $attachments['size'][]          =  filesize( $upload['file'] );
-                $attachments['filename'][]      = basename( $upload['file'] );
-                $_POST['ksd_attachments']       = $attachments;
-            }
-
-            $this->log_new_ticket( $new_ticket_raw, $from_addon );
-            
-            die();
-        }
         
         /**
          * Log new tickets.  The different channels (admin side, front-end) all 
@@ -1545,7 +1534,17 @@ class KSD_Admin {
                 if ( isset( $new_ticket_raw['ksd_tkt_time_logged'] ) ) {//Set by add-ons
                     $new_ticket['post_date']        = $new_ticket_raw['ksd_tkt_time_logged'];
                 }//No need for an else; if this isn't specified, the current time is automatically used
-                            
+
+                if( isset( $_FILES["ksd_tkt_attachment"] ) ) { 
+                    $upload_overrides = array( 'test_form' => false );
+                    $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
+
+                    $attachments                        = array();
+                    $attachments['url'][]               = $upload['url'];
+                    $attachments['size'][]              =  filesize( $upload['file'] );
+                    $attachments['filename'][]          = basename( $upload['file'] );
+                    $new_ticket_raw['ksd_attachments']  = $attachments;
+                }                
                 
                 //Server side validation for the inputs. Only holds if we aren't in add-on mode
                 if ( ( ! $from_addon && strlen( $new_ticket['post_title'] ) < 2 || strlen( $new_ticket['post_content'] ) < 2 ) ) {
@@ -1643,6 +1642,9 @@ class KSD_Admin {
                 if ( empty( $new_ticket_raw['ksd_tkt_assigned_to' ] ) &&  !empty( $settings['auto_assign_user'] ) ) {
                     $meta_array['_ksd_tkt_info_assigned_to']            = $settings['auto_assign_user'];                    
                 }                
+                if ( isset( $new_ticket_raw['ksd_woo_order_id'] ) ) {
+                    $meta_array['_ksd_tkt_info_woo_order_id']           = $new_ticket_raw['ksd_woo_order_id'];
+                }
                 
                 //Whom to we notify. Defaults to admin if ticket doesn't have an assignee
                 $notify_user_id = ( isset( $meta_array['_ksd_tkt_info_assigned_to'] )? $meta_array['_ksd_tkt_info_assigned_to'] : 1 );
@@ -1998,7 +2000,8 @@ class KSD_Admin {
                 die ( __('Busted!', 'kanzu-support-desk') );
              }
              try{
-                $base_settings = KSD_Install::get_default_options();
+                $ksd_install    = KSD_Install::get_instance(); 
+                $base_settings  = $ksd_install->get_default_options();
                 //Add the settings from add-ons
                 $base_settings = apply_filters( 'ksd_settings', $base_settings );
                 $status = update_option( KSD_OPTIONS_KEY, $base_settings );
@@ -3099,6 +3102,28 @@ class KSD_Admin {
             _e( 'Tables successfully deleted.', 'kanzu-support-desk' );
             die();
             
+        }
+        
+        public function append_admin_feedback(){
+            //@TODO Prequalification criteria. Are you admin? Do you have x tickets?
+            //@TODO Retrieve message & title from ksd_feedback
+            //@TODO If nothing exists, return, well, nothing :-)
+            echo '<div id="ksd-feedback" class="postbox"><h3 class="hndle ui-sortable-handle">Yo man</h3><div class="inside">How is the going? For real? </div></div>';
+        }
+        
+        /**
+         * When a new product/download is published by EDD or WooCommerce,
+         * add it as a ticket product
+         * @since 2.1.3
+         */
+        public function on_new_product( $postID, $new_product ){
+            if( ! term_exists( $new_product->post_title, 'product' ) ){
+                $cat_details = array(
+                    'cat_name' => $new_product->post_title,
+                    'taxonomy' => 'product'
+                );
+                wp_insert_category( $cat_details );  
+            }
         }
 }   
         

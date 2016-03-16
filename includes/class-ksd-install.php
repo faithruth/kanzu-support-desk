@@ -51,7 +51,7 @@ class KSD_Install {
                 //Migration check
                 //@TODO: Reassess why it's best put later.
                                 
-                add_action('admin_notices', array($this, 'data_migration_v2' ));
+                add_action('admin_notices', array($this, 'data_migration_v2' ));              
 
 	}
  
@@ -89,7 +89,7 @@ class KSD_Install {
             
             //Check for re-activation.  
             $settings   =   Kanzu_Support_Desk::get_settings();
-            if ( isset( $settings['kanzu_support_version'] ) ) {//Reactivation or upgrade
+            if ( isset( $settings['kanzu_support_version'] ) ) {//Reactivation or upgrade     
                 if ( $settings['kanzu_support_version'] == KSD_VERSION ) {//Bail out if it's a re-activation
                     return;
                 }          
@@ -105,15 +105,17 @@ class KSD_Install {
             }
             else{
                 //This is a new installation. Yippee! 
-                self::set_default_options(); 	
-                self::create_support_pages_and_salt();
-                self::log_initial_tickets();
-                self::create_roles();//@since 1.5.0                        
+                $ksd_install = self::get_instance();
+                $ksd_install->set_default_options(); 	
+                $ksd_install->create_support_pages_and_salt();
+                $ksd_install->log_initial_tickets();
+                $ksd_install->create_roles();  
+                $ksd_install->create_woo_edd_products();
                 set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
             }
             flush_rewrite_rules();//Because of the custom post types    
 	}
-        
+         
         
         /**
          * Do de-activation stuff. Currently, doesn't do a thing
@@ -126,7 +128,7 @@ class KSD_Install {
        /**
 	 * Redirect to a welcome page on activation
 	 */
-	public static function redirect_to_dashboard() {
+	public function redirect_to_dashboard() {
 		// Bail if no activation redirect transient is set
 	    if ( ! get_transient( '_ksd_activation_redirect' ) && ! get_transient( '_ksd_upgrade_redirect' ) ) {
 			return;
@@ -162,7 +164,7 @@ class KSD_Install {
             //Compare the user's current settings array against our new default array and pick-up any settings they don't have 
             //We'd have loved to use array_diff_key for this but it only exists for PHP 5 >= 5.1.0
             //For any setting that doesn't exist, we define it and assign it the default value @since 1.5.0
-            foreach ( self::get_default_options() as $setting_key => $setting_default_value ) {
+            foreach ( $this->get_default_options() as $setting_key => $setting_default_value ) {
                 if ( !isset( $settings[$setting_key] ) ) {
                    $settings[$setting_key] =  $setting_default_value;
                 }
@@ -187,7 +189,8 @@ class KSD_Install {
  
             if ( $sanitized_version < 160 ) {//In 1.6.0, we added attachments. Consider changing these ifs to a switch case
                 //@since $this->ksd_db_version 110. Added attachments table
-                $dbChanges[]= KSD_Install::create_attachments_table();
+                $ksd_install = self::get_instance();
+                $dbChanges[]= $ksd_install->create_attachments_table();
             }
             if ( $sanitized_version < 162 ) {
                 //@since $this->ksd_db_version 111 Added tkt_is_read & made tkt_time_updated not null , @1.6.2
@@ -246,7 +249,7 @@ class KSD_Install {
 	* Create KSD tables
         * @since 1.0.0
 	*/
-        private static function create_tables() {
+        private function create_tables() {
             global $wpdb;        
 		//$wpdb->hide_errors();		            
                 //@since 1.5.3 customers table removed
@@ -296,11 +299,13 @@ class KSD_Install {
 				);
                                 ";
         //Add the attachments table. The SQL is in a separate function since it is also used in $this->upgrade_plugin()  
-        $kanzusupport_tables .= self::create_attachments_table() ; 
+        $ksd_install = self::get_instance();
+        $kanzusupport_tables .= $ksd_install->create_attachments_table() ; 
         
         dbDelta( $kanzusupport_tables );                     
         }
-        private static function create_attachments_table() {
+        
+        private function create_attachments_table() {
             global $wpdb;   
             $sql = "
             CREATE TABLE `{$wpdb->prefix}kanzusupport_attachments` (
@@ -321,9 +326,9 @@ class KSD_Install {
         }
  
         
-            private static function set_default_options() {                    
+            private function set_default_options() {                    
                 
-                 add_option( KSD_OPTIONS_KEY, self::get_default_options() );
+                 add_option( KSD_OPTIONS_KEY, $this->get_default_options() );
                  add_option( 'ksd_activation_time', date( 'U' ) );//Log activation time
                     
             }
@@ -332,7 +337,7 @@ class KSD_Install {
              * Create custom user roles
              * @since 1.5.0
              */
-            private static function create_roles() {
+            private function create_roles() {
                 add_role(       'ksd_customer', __( 'KSD Customer', 'kanzu-support-desk' ), array(
 				'read' 		=> true,
 				'edit_posts' 	=> false,
@@ -355,7 +360,7 @@ class KSD_Install {
              * @since 2.0.0 page_my_tickets
              * @since 2.1.3 onboarding_enabled
              */
-            public static function get_default_options() {
+            public function get_default_options() {
                 $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
                 return  array (
                         /** KSD Version info ********************************************************/
@@ -402,7 +407,7 @@ class KSD_Install {
              * Log initial tickets so that dashboard line graph shows and user
              * gets more details on the product
              */
-            public static function log_initial_tickets () {
+            private function log_initial_tickets () {
                 
                 global $current_user;
                 get_currentuserinfo();
@@ -488,7 +493,7 @@ class KSD_Install {
              * @since 2.0.0
              * @TODO Add this to the upgrade process
              */
-            public static function create_support_pages_and_salt() {
+            private function create_support_pages_and_salt() {
                 $submit_ticket = wp_insert_post(
 			array(
 				'post_title'     => __( 'Submit Ticket', 'kanzu-support-desk' ),
@@ -519,6 +524,40 @@ class KSD_Install {
             $updated_settings['page_my_tickets']    = $my_tickets;
             $updated_settings['salt']               = $salt;
             update_option( KSD_OPTIONS_KEY, $updated_settings );
+            }
+            
+            /**
+             * Create products from WooCommerce products and EDD downloads
+             * @since 2.1.3
+             */
+            private function create_woo_edd_products(){
+                $woocommerce_products   = $this->get_woocommerce_products();
+                $edd_downloads          = $this->get_edd_downloads();
+                $all_products           = array_merge( $edd_downloads,  $woocommerce_products );
+                
+                if ( ! post_type_exists( 'ksd_ticket' ) ) {
+                    include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-custom-post-types.php' );
+                    $ksd_cpt = KSD_Custom_Post_Types::get_instance();
+                    $ksd_cpt->create_ksd_ticket();
+                }
+                foreach( $all_products as $ksd_new_product ){                    
+                    $cat_details = array(
+                        'cat_name' => $ksd_new_product->post_title,
+                        'taxonomy' => 'product'
+                        );
+                    
+                    wp_insert_category( $cat_details );
+                }
+            }
+            
+            private function get_woocommerce_products(){
+                $args = array( 'post_type' => 'product', 'posts_per_page' => -1,  'post_status' => 'publish' );
+                return get_posts( $args );   
+            }
+            
+            private function get_edd_downloads(){
+                $args = array( 'post_type' => 'download', 'posts_per_page' => -1,  'post_status' => 'publish' );
+                return get_posts( $args );           
             }
 
 }

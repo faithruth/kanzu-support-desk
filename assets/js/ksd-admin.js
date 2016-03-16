@@ -10,7 +10,9 @@ var KSDHooks = KSDHooks || {};
 
 
 jQuery(document).ready(function () {
-
+    //KSD Feedback
+    jQuery( "#ksd-feedback" ).slideToggle( "slow" );
+    
     //Added to remove/hide distortion of UI that shows up during initial load of the plugin.
     jQuery("#admin-kanzu-support-desk").css({visibility: 'visible'});
 
@@ -1986,7 +1988,7 @@ jQuery(document).ready(function () {
                      createdOn+='<span id="timestamp">';
                      createdOn+=ksd_admin.ksd_labels.lbl_created_on+': <b>'+jQuery('#submitdiv #timestamp b').text()+'</b></span>';	
                      createdOn+='</div>';
-                jQuery('#misc-publishing-actions').append( createdOn );      
+                jQuery( createdOn ).insertAfter( '.ksd-misc-assign-to' );      
             }
         };
 

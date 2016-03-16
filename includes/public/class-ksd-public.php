@@ -16,6 +16,9 @@ if ( ! class_exists( 'KSD_Public' ) ) :
 class KSD_Public {
     
     public function __construct() {
+                
+        //Do public-facing includes
+        $this->do_public_includes();
         
         //Enqueue styles
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_public_styles' ) );
@@ -32,9 +35,10 @@ class KSD_Public {
         add_shortcode( 'ksd_my_tickets', array( $this,'display_my_tickets' ) );
         
         //Add custom post types
-        add_action( 'init', array( $this, 'create_custom_post_types' ) );
+        add_action( 'init', array( 'KSD_Custom_Post_Types', 'create_custom_post_types' ) );
+        
         //Add custom ticket statuses
-        add_action( 'init', array( $this, 'custom_ticket_statuses' ) );     
+        add_action( 'init', array( 'KSD_Custom_Post_Types', 'custom_ticket_statuses' ) );     
         
         //Add widget for the support form
         add_action( 'widgets_init', array( $this, 'register_support_form_widget' ) );
@@ -51,16 +55,23 @@ class KSD_Public {
         //Add ticket cc
         add_filter( 'the_content', array( $this, 'add_ticket_cc') );
         
-        //Do public-facing includes
-        $this->do_public_includes();
-        
         //Allow secret URL for tickets from guests
         add_action( 'template_redirect', array( $this, 'allow_secret_urls' ) );    
         
         //Remove 'Protected' from ticket titles
         add_filter( 'protected_title_format', array( $this, 'remove_protected_prefix' ) );
-
-    }
+        
+        //Add content to WooCommerce/EDD Pages
+        add_action( 'woocommerce_after_my_account', array( $this, 'woo_edd_append_ticket_list' ) ); 
+        add_action( 'edd_after_purchase_history', array( $this, 'woo_edd_append_ticket_list' ) );   
+        add_action( 'edd_after_download_history', array( $this, 'woo_edd_append_ticket_list' ) );
+        add_action( 'edd_customer_after_tables', array( $this, 'edd_customers_admin_append_ticket_table' ) ); 
+        
+        //Add 'Create ticket' to Woo Orders page
+        add_filter( 'woocommerce_my_account_my_orders_columns', array ( $this, 'woo_orders_add_table_headers' ) );
+        add_filter( 'woocommerce_my_account_my_orders_actions' , array ( $this, 'woo_orders_add_ticket_button' ), 10, 2 );
+        
+    }   
     
     /**
      * Tickets that have hash URLs have the word 'Protected' prepended to the title.
@@ -83,6 +94,7 @@ class KSD_Public {
     private function do_public_includes() {
         require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-widget-support-form.php' );
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-hash-urls.php' );
+        include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-custom-post-types.php' );
         include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
     }
     
@@ -172,7 +184,7 @@ class KSD_Public {
     }
    
     /**
-     * Display a form wherever shortcode [ksd-form] is used
+     * Display a form wherever shortcode [ksd_support_form] is used
      */
    public function form_short_code() {
         self::generate_support_form();
@@ -180,6 +192,7 @@ class KSD_Public {
    
    /**
     * Generate a public-facing support form
+    * @TODO Use this to generate all support forms. Replace the need for html-public-new-ticket.php
     */
    public static function generate_support_form() {
         $settings = Kanzu_Support_Desk::get_settings();
@@ -193,6 +206,21 @@ class KSD_Public {
             $ksd_template = new KSD_Templates();
             $ksd_template->get_template_part( 'single', 'submit-ticket' );
         }       
+   }
+   
+   /**
+    * Append ticket list to WooCommerce 'My Account' page
+    * 
+    * @since 2.1.3
+    */
+   public function woo_edd_append_ticket_list(){
+       printf( '<h2>%s</h2>',__( 'My Tickets','kanzu-support-desk' ) );
+       $this->display_my_tickets();
+   }
+   
+   public function edd_customers_admin_append_ticket_table(){
+       printf( '<h3>%s</h3>',__( 'Tickets','kanzu-support-desk' ) );
+       $this->get_ticket_table();       
    }
    
    /**
@@ -211,6 +239,17 @@ class KSD_Public {
             $ksd_template = new KSD_Templates();
             $ksd_template->get_template_part( 'list', 'my-tickets' );
         }
+   }
+   
+   /**
+    * Get the current user's tickets displayed in a table. 
+    * Used primarily to append the table to the EDD admin customer page
+    * @since 2.3.1
+    */
+   public function get_ticket_table(){
+        include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
+        $ksd_template = new KSD_Templates();
+        $ksd_template->get_template_part( 'list', 'my-tickets-table' );       
    }
     
     	/**
@@ -298,222 +337,8 @@ class KSD_Public {
             return $content;
         }
         
-        /***
-         * Create 'ksd_ticket' Custom post type
-         * @since 2.0.0
-         */
-        public function create_custom_post_types() {
 
-            /*----Tickets -----*/
-            $labels = array(
-                'name'              => _x( 'Tickets', 'post type general name', 'kanzu-support-desk' ),
-                'singular_name'     => _x( 'Ticket', 'post type singular name', 'kanzu-support-desk' ),
-                'add_new'           => _x( 'Add New', 'singular item', 'kanzu-support-desk' ),
-                'add_new_item'      => __( 'Add New Ticket', 'kanzu-support-desk' ),
-                'edit_item'         => __( 'Reply Ticket', 'kanzu-support-desk' ),
-                'new_item'          => __( 'New Ticket', 'kanzu-support-desk' ),
-                'all_items'         => __( 'All Tickets', 'kanzu-support-desk' ),
-                'view_item'         => __( 'View Ticket', 'kanzu-support-desk' ),
-                'search_items'      => __( 'Search Tickets', 'kanzu-support-desk' ),
-                'not_found'         => __( 'No Tickets found', 'kanzu-support-desk' ),
-                'not_found_in_trash'=> __( 'No tickets found in the Trash', 'kanzu-support-desk' ),
-                'parent_item_colon' => '',
-                'menu_name'         => __( 'Tickets', 'kanzu-support-desk' )
-            );
-            $ticket_supports = array( 'title', 'custom-fields' );
-            if ( !isset( $_GET['post'] ) ) {
-                $ticket_supports[] = 'editor';
-            }
-            
-            $args = array(
-                'labels'                => $labels,
-                'description'           => __( 'All your customer service tickets', 'kanzu-support-desk' ),
-                'public'                => true,
-                'exclude_from_search'   => true, 
-                'publicly_queryable'    => true,
-                'show_ui'               => true,
-                'show_in_menu'          => true,
-                'show_in_nav_menus'     => false, 
-                'query_var'             => true,
-                'rewrite'               => array( 'slug' => 'ksd_ticket', 'with_front' => false ),
-                'menu_position'         => 25,
-                'has_archive'           => true,
-                //'capabilities'        => @TODO Define these
-                'menu_icon'             => 'dashicons-groups',
-                'supports'              => $ticket_supports,
-                'taxonomies'            => array( 'post_tag' )
-            );
-            register_post_type( 'ksd_ticket', $args ); 
-            //@Change type of 'tags' to 'products'. Tags are categories that aren't heirarchical
-            //Add the 'Product' tag to the ticket post type
-           // Add new taxonomy, NOT hierarchical (like tags)
-            $product_labels = array(
-                    'name'                       => _x( 'Products', 'taxonomy general name' , 'kanzu-support-desk' ),
-                    'singular_name'              => _x( 'Product', 'taxonomy singular name' , 'kanzu-support-desk' ),
-                    'search_items'               => __( 'Search Products' , 'kanzu-support-desk' ),
-                    'popular_items'              => __( 'Popular Products' , 'kanzu-support-desk' ),
-                    'all_items'                  => __( 'All Products' , 'kanzu-support-desk' ),
-                    'parent_item'                => null,
-                    'parent_item_colon'          => null,
-                    'edit_item'                  => __( 'Edit Product' , 'kanzu-support-desk' ),
-                    'update_item'                => __( 'Update Product' , 'kanzu-support-desk' ),
-                    'add_new_item'               => __( 'Add New Product' , 'kanzu-support-desk' ),
-                    'new_item_name'              => __( 'New Product Name' , 'kanzu-support-desk' ),
-                    'separate_items_with_commas' => __( 'Separate products with commas' , 'kanzu-support-desk' ),
-                    'add_or_remove_items'        => __( 'Add or remove products' , 'kanzu-support-desk' ),
-                    'choose_from_most_used'      => __( 'Choose from the most used products' , 'kanzu-support-desk' ),
-                    'not_found'                  => __( 'No products found.' , 'kanzu-support-desk' ),
-                    'menu_name'                  => __( 'Products' , 'kanzu-support-desk' )
-            );
 
-            $product_args = array(
-                    'hierarchical'          => false,
-                    'labels'                => $product_labels,
-                    'show_ui'               => true,
-                    'show_admin_column'     => true,
-                    'update_count_callback' => '_update_post_term_count',
-                    'query_var'             => true,
-                    'rewrite'               => array( 'slug' => 'product' ),
-            );
-
-            register_taxonomy( 'product', 'ksd_ticket', $product_args );
-            
-            //Ticket Categories
-            $tkt_category_args = array(
-                'hierarchical'  => true,
-            );
-            register_taxonomy( 'ticket_category', 'ksd_ticket', $tkt_category_args );            
-                            
-            /*----Replies -----*/
-            $reply_labels = array(
-                'name'                  => _x( 'Replies', 'post type general name', 'kanzu-support-desk'),
-                'singular_name'         => _x( 'Reply', 'post type singular name', 'kanzu-support-desk'),
-                'add_new'               => __( 'Add New', 'kanzu-support-desk'),
-                'add_new_item'          => __( 'Add New Reply', 'kanzu-support-desk'),
-                'edit_item'             => __( 'Edit Reply', 'kanzu-support-desk'),
-                'new_item'              => __( 'New Reply', 'kanzu-support-desk'),
-                'all_items'             => __( 'All Replies', 'kanzu-support-desk'),
-                'view_item'             => __( 'View Reply', 'kanzu-support-desk'),
-                'search_items'          => __( 'Search Replies', 'kanzu-support-desk'),
-                'not_found'             => __( 'No Replies found', 'kanzu-support-desk'),
-                'not_found_in_trash'    => __( 'No Replies found in Trash', 'kanzu-support-desk'),
-                'parent_item_colon'     => '',
-                'menu_name'             => __( 'Replies', 'kanzu-support-desk')
-            );
-
-            $reply_args = array(
-                'labels'                => $reply_labels,
-                'public'                => false,                
-                'query_var'             => false,
-                'rewrite'               => false,
-                'show_ui'               => false,
-                'map_meta_cap'          => true,
-                'supports'              => array( 'editor', 'custom-fields' ),
-                'can_export'            => true
-            );
-            register_post_type( 'ksd_reply', $reply_args );
-            
-            /*----Private Notes -----*/
-            $private_note_labels = array(
-                'name'                  => _x( 'Private Notes', 'post type general name', 'kanzu-support-desk'),
-                'singular_name'         => _x( 'Private Note', 'post type singular name', 'kanzu-support-desk'),
-                'add_new'               => __( 'Add New', 'kanzu-support-desk'),
-                'add_new_item'          => __( 'Add New Private Note', 'kanzu-support-desk'),
-                'edit_item'             => __( 'Edit Private Note', 'kanzu-support-desk'),
-                'new_item'              => __( 'New Private Note', 'kanzu-support-desk'),
-                'all_items'             => __( 'All Private Notes', 'kanzu-support-desk'),
-                'view_item'             => __( 'View Private Note', 'kanzu-support-desk'),
-                'search_items'          => __( 'Search Private Notes', 'kanzu-support-desk'),
-                'not_found'             => __( 'No Private Notes found', 'kanzu-support-desk'),
-                'not_found_in_trash'    => __( 'No Private Notes found in Trash', 'kanzu-support-desk'),
-                'parent_item_colon'     => '',
-                'menu_name'             => __( 'Private Notes', 'kanzu-support-desk')
-            );
-
-            $private_note_args = array(
-                'labels'                => $private_note_labels,
-                'public'                => false,                
-                'query_var'             => false,
-                'rewrite'               => false,
-                'show_ui'               => false,
-                'map_meta_cap'          => true,
-                'supports'              => array( 'editor', 'custom-fields' ),//@TODO Change this. None of these are needed
-                'can_export'            => true
-            );
-            register_post_type( 'ksd_private_note', $private_note_args );
-            
-            /*----Ticket Activity -----*/
-            //Holds changes to ticket info as events
-            $ticket_activity_labels = array(
-                'name'                  => _x( 'Ticket Activity', 'post type general name', 'kanzu-support-desk'),
-                'singular_name'         => _x( 'Ticket Activity', 'post type singular name', 'kanzu-support-desk'),
-                'add_new'               => __( 'Add New', 'kanzu-support-desk'),
-                'add_new_item'          => __( 'Add New Ticket Activity', 'kanzu-support-desk'),
-                'edit_item'             => __( 'Edit Ticket Activity', 'kanzu-support-desk'),
-                'new_item'              => __( 'New Ticket Activity', 'kanzu-support-desk'),
-                'all_items'             => __( 'All Ticket Activities', 'kanzu-support-desk'),
-                'view_item'             => __( 'View Ticket Activity', 'kanzu-support-desk'),
-                'search_items'          => __( 'Search Ticket Activities', 'kanzu-support-desk'),
-                'not_found'             => __( 'No Ticket Activity found', 'kanzu-support-desk'),
-                'not_found_in_trash'    => __( 'No Ticket Activity found in Trash', 'kanzu-support-desk'),
-                'parent_item_colon'     => '',
-                'menu_name'             => __( 'Ticket Activity', 'kanzu-support-desk')
-            );
-
-            $ticket_activity_args = array(
-                'labels'                => $ticket_activity_labels,
-                'public'                => false,                
-                'query_var'             => false,
-                'rewrite'               => false,
-                'show_ui'               => false,
-                'map_meta_cap'          => true,
-                'supports'              => array( 'editor', 'custom-fields' ),//@TODO Change this. None of these are needed
-                'can_export'            => true
-            );
-            register_post_type( 'ksd_ticket_activity', $ticket_activity_args );
-            
-            //@TODO Use custom fields for tkt_cc,tkt_is_read and rep_cc
-             flush_rewrite_rules();//Because of the rewrites, this is necessary
-        }
-        
-        /**
-         * Add custom KSD ticket statuses
-         * @since 2.0.0
-         */
-        public function custom_ticket_statuses() {
-            register_post_status( 'open', array(
-                'label'                     => _x( 'Open', 'status of a ticket', 'kanzu-support-desk' ),
-                'public'                    => true,
-                'exclude_from_search'       => true,
-                'show_in_admin_all_list'    => true,
-                'show_in_admin_status_list' => true,
-                'label_count'               => _n_noop( 'Open <span class="count">(%s)</span>', 'Open <span class="count">(%s)</span>' )
-                ) );
-            register_post_status( 'pending', array(
-                'label'                     => _x( 'Pending', 'status of a ticket', 'kanzu-support-desk' ),
-                'public'                    => true,
-                'exclude_from_search'       => true,
-                'show_in_admin_all_list'    => true,
-                'show_in_admin_status_list' => true,
-                'label_count'               => _n_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>' )
-                ) );
-            register_post_status( 'resolved', array(
-                'label'                     => _x( 'Resolved', 'status of a ticket', 'kanzu-support-desk' ),
-                'public'                    => true,
-                'show_in_admin_all_list'    => true,
-                'show_in_admin_status_list' => true,
-                'exclude_from_search'       => true,
-                'label_count'               => _n_noop( 'Resolved <span class="count">(%s)</span>', 'Resolved <span class="count">(%s)</span>' )
-                ) );
-            register_post_status( 'new', array(  
-                'label'                     => _x( 'New', 'status of a ticket', 'kanzu-support-desk' ),
-                'public'                    => true,
-                'show_in_admin_all_list'    => true,
-                'show_in_admin_status_list' => true,
-                'exclude_from_search'       => true,
-                'label_count'               => _n_noop( 'New <span class="count">(%s)</span>', 'New <span class="count">(%s)</span>' )
-                ) );
-        }
         
         /**
          * Log a new ticket. We use the backend logic
@@ -699,6 +524,32 @@ class KSD_Public {
             return $redirect_to;                        
         }        
         
+        /**
+         * Add an extra column header to the WooCommerce Orders table
+         * @param array $table_headers
+         * @return string
+         */
+        public function woo_orders_add_table_headers( $table_headers ){
+            $table_headers['order-tickets'] = '&nbsp;';
+            return $table_headers;
+        }
+        
+        /**
+         * Add a 'contact support' button to the WooCommerce orders table
+         * @param Array $actions
+         * @param Object $order
+         * @return Array
+         * @TODO Receive and process woo_order_id
+         */
+        public function woo_orders_add_ticket_button( $actions, $order ){
+            $ksd_settings = Kanzu_Support_Desk::get_settings();            
+            $url = esc_url( add_query_arg( 'woo_order_id', $order->id, get_permalink( $ksd_settings['page_submit_ticket'] ) ) );
+            $actions['ksd-woo-orders-create-ticket'] = array(
+                'url' => $url,
+                'name' => __( 'Contact Support','kanzu-support-desk' )                
+            );
+            return $actions;
+        }
         
 }
 endif;

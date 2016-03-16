@@ -14,6 +14,10 @@ jQuery( document ).ready(function() {
        jQuery('div.ksd-form-short-code-form-response').hide();
        jQuery('img.ksd_loading_dialog').hide();
    }
+   //Hide loading dialog
+    if( jQuery("form.ksd-new-ticket-public").length || jQuery("form.ksd-register-public").length ){
+        jQuery('img.ksd_loading_dialog').hide();
+    }  
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function( form ){
         var targetFormDiv = 'div.ksd-support-form-submitted';//Make sure the following actions are on the correct form
@@ -68,7 +72,7 @@ jQuery( document ).ready(function() {
  
        };   
 
-    jQuery( 'input.ksd-submit' ).click( function( e ){
+    jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
         e.preventDefault();
         var supportForm    = jQuery( this ).parents( 'form' );
         jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form

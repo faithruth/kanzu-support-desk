@@ -86,7 +86,10 @@ endif;?>
                 <input type="submit" value="<?php _e( 'Send Message', 'kanzu-support-desk'); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
               </li>
             </ul>
-            <input name="action" type="hidden" value="ksd_log_new_supportform_ticket" />
+            <input name="action" type="hidden" value="ksd_log_new_ticket" />
+            <?php if ( isset( $_GET[ 'woo_order_id' ] ) ): ?>
+            <input name="ksd_woo_order_id" type="hidden" value="<?php  echo sanitize_key( $_GET[ 'woo_order_id' ] ); ?>" />
+            <?php endif; ?>
             <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
             <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
         </form>
