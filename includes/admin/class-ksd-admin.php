@@ -53,6 +53,7 @@ class KSD_Admin {
 		add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ) );
                 add_action( 'wp_ajax_ksd_filter_totals', array( $this, 'filter_totals' ) );
                 add_action( 'wp_ajax_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
+                add_action( 'wp_ajax_ksd_log_new_supportform_ticket', array( $this, 'log_new_supportform_ticket' ) );
 		add_action( 'wp_ajax_ksd_delete_ticket', array( $this, 'delete_ticket' ) );
 		add_action( 'wp_ajax_ksd_change_status', array( $this, 'change_status' ) );
                 add_action( 'wp_ajax_ksd_change_severity', array( $this, 'change_severity' ) );                
@@ -75,8 +76,9 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_enable_usage_stats', array( $this, 'enable_usage_stats' ) ); 
                 add_action( 'wp_ajax_ksd_update_ticket_info', array( $this, 'update_ticket_info' ) ); 
                 add_action( 'wp_ajax_ksd_get_ticket_activity', array( $this, 'get_ticket_activity' ) );           
-                add_action( 'wp_ajax_ksd_migrate_to_v2', array($this, 'migrate_to_v2' ) );
-                add_action( 'wp_ajax_ksd_deletetables_v2', array($this, 'deletetables_v2' ) );
+                add_action( 'wp_ajax_ksd_migrate_to_v2', array( $this, 'migrate_to_v2' ) );
+                add_action( 'wp_ajax_ksd_deletetables_v2', array( $this, 'deletetables_v2' ) );
+                add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
                 
                 
                 //Generate a debug file
@@ -169,6 +171,8 @@ class KSD_Admin {
 	 */
 	public function enqueue_admin_styles() {	
             wp_enqueue_style( KSD_SLUG .'-admin-css', KSD_PLUGIN_URL.'/assets/css/ksd-admin.css', array(), KSD_VERSION );
+            wp_enqueue_style( KSD_SLUG .'-admin-introjs', KSD_PLUGIN_URL.'/assets/introjs/introjs.min.css', array(), KSD_VERSION );
+            wp_enqueue_style( KSD_SLUG .'-admin-introjs-rtl', KSD_PLUGIN_URL.'/assets/introjs/introjs-rtl.min.css', array(), KSD_VERSION );
 	}
 
 	/**
@@ -182,7 +186,9 @@ class KSD_Admin {
 		//Load the script for Google charts. Load this before the next script. 
                 wp_enqueue_script( KSD_SLUG . '-admin-gcharts', '//www.google.com/jsapi', array(), KSD_VERSION ); 
                 wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'/assets/js/ksd-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'json2', 'jquery-ui-dialog', 'jquery-ui-tooltip', 'jquery-ui-accordion' ), KSD_VERSION ); 
-		
+		wp_enqueue_script( KSD_SLUG . '-admin-introjs', KSD_PLUGIN_URL . '/assets/introjs/intro.min.js', array(), KSD_VERSION ); 
+                
+                
                 //Variables to send to the admin JS script
                 $ksd_admin_tab = ( isset( $_GET['page'] ) ?  $_GET['page']  : "" );//This determines which tab to show as active
                 
@@ -248,7 +254,8 @@ class KSD_Admin {
                 
                 //Get current settings
                 $settings = Kanzu_Support_Desk::get_settings();
-
+                $onboarding_enabled = $settings['onboarding_enabled'];
+                
                 //Localization allows us to send variables to the JS script
                 wp_localize_script( KSD_SLUG . '-admin-js',
                                     'ksd_admin',
@@ -263,7 +270,9 @@ class KSD_Admin {
                                             'enable_anonymous_tracking' =>  $settings['enable_anonymous_tracking'],
                                             'ksd_ticket_info'           =>  $ticket_info,
                                             'ksd_current_screen'        =>  $this->get_current_ksd_screen(),
-                                            'ksd_version'               =>  KSD_VERSION
+                                            'ksd_version'               =>  KSD_VERSION,
+                                            'ksd_onboarding_enabled'    => $onboarding_enabled,
+                                            'ksd_statuses'              =>  $this->get_status_list_options()
                                         )
                                     );
 
@@ -284,15 +293,27 @@ class KSD_Admin {
         }
 
         
-
+        /**
+         * Update the next stage of the onboarding/tour process
+         * 
+         * @since 2.1.3
+         */
+        public function update_onboarding_stage() {
+            $completed_stage = $_POST['stage'];
+            include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
+            $ksd_onboarding = new KSD_Onboarding();
+            $ksd_onboarding->mark_stage_complete($completed_stage);
+            echo json_encode( "Ok" );
+            die();
+        }
         
         /**
          * Update ticket messages  displayed
          * @since 2.0.0
-         * @global type $post
-         * @global type $post_ID
-         * @param type $messages
-         * @return type
+         * @global Object $post
+         * @global int $post_ID
+         * @param String $messages
+         * @return Array
          */
         public function ticket_updated_messages( $messages ) {
             global $post, $post_ID;
@@ -553,7 +574,7 @@ class KSD_Admin {
             $this->save_ticket_meta_info( $postarr['ID'], $postarr['post_title'], $postarr );
             
             if ( 'publish' == $data['post_status'] ) {//Change published tickets' statuses from 'publish' to KSD native ticket statuses
-                $post_status = ( 'auto-draft' == $postarr['hidden_ksd_post_status'] ? 'open' : $postarr['hidden_ksd_post_status'] );
+                $post_status = ( 'auto-draft' == $postarr['hidden_ksd_post_status'] && isset( $postarr['hidden_ksd_post_status'] ) ? 'open' : $postarr['hidden_ksd_post_status'] );
                 $data['post_status'] = $post_status;
             }   
             return $data;
@@ -679,6 +700,17 @@ class KSD_Admin {
                 );
         }
         
+        /**
+         * Get status list as select options
+         */
+        public function get_status_list_options(){
+            $options = '';
+            foreach( $this->get_status_list() as $value => $status ){
+                $options.= '<option value="'.$value.'">'.$status.'</option>';
+            }
+            return $options;
+        }
+        
         /***
          * Create options for the status select item in the
          * submitdiv on the edit/reply ticket view
@@ -752,6 +784,12 @@ class KSD_Admin {
 	 */
 	public function output_admin_menu_dashboard() {
 		$this->do_admin_includes();             
+                
+                $settings = Kanzu_Support_Desk::get_settings(); //@TODO 2.1.3 Here
+                if( 'yes' === $settings['onboarding_enabled'] && isset( $_GET['ksd-onboarding']) && 1 == $_GET['ksd-onboarding'] ){
+                    $_GET['ksd-intro'] = 1;
+                }
+                
                 if ( isset( $_GET['ksd-intro'] ) ) {
                     include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-intro.php');         
                 }
@@ -1449,6 +1487,31 @@ class KSD_Admin {
         }
         
         /**
+         * Handle ticket logging from front end support form 
+         * 
+         * @param type $new_ticket_raw Ticket fields
+         * @param type $from_addon    Whether ticket is being logged by an addon
+         * 
+         */
+        public function log_new_supportform_ticket( $new_ticket_raw = null, $from_addon = false ) {
+            
+            if( isset( $_FILES["ksd_tkt_attachment"] ) ) { 
+                $upload_overrides = array('test_form' => false);
+                $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
+				
+                $attachments                    = array();
+                $attachments['url'][]           = $upload['url'];
+                $attachments['size'][]          =  filesize( $upload['file'] );
+                $attachments['filename'][]      = basename( $upload['file'] );
+                $_POST['ksd_attachments']       = $attachments;
+            }
+
+            $this->log_new_ticket( $new_ticket_raw, $from_addon );
+            
+            die();
+        }
+        
+        /**
          * Log new tickets.  The different channels (admin side, front-end) all 
          * call this method to log the ticket. Other plugins call $this->do_new_ticket_logging  through
          * an action
@@ -1914,7 +1977,7 @@ class KSD_Admin {
                 }
                 //For a checkbox, if it is unchecked then it won't be set in $_POST
                 $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                        "supportform_show_categories","supportform_show_severity"
+                        "supportform_show_categories","supportform_show_severity","onboarding_changes"
                 );
                 //Iterate through the checkboxes and set the value to "no" for all that aren't set
                 foreach ( $checkbox_names as $checkbox_name ) {

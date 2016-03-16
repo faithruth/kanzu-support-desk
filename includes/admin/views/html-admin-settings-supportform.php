@@ -71,12 +71,20 @@
         </div>
     </div>
     <div class="setting">
+        <label for="supportform_show_attachment"><?php _e ( 'Show  attachment option', 'kanzu-support-desk' ); ?></label>
+        <div class="ksd-input-wrapper">
+            <input name="supportform_show_attachment"  type="checkbox" <?php checked ( $settings['supportform_show_attachment'], "yes") ?> value="yes"  />        
+            <span class="description"><?php _e ( 'When enabled, a file upload field is added to the support form.', 'kanzu-support-desk' ); ?></span>
+        </div>
+    </div>   
+    <div class="setting">
         <label for="enable_recaptcha"><?php _e ( 'Enable Google reCAPTCHA', 'kanzu-support-desk' ); ?></label>                        
         <div class="ksd-input-wrapper">
             <input name="enable_recaptcha"  type="checkbox" <?php checked ( $settings['enable_recaptcha'], "yes") ?> value="yes"  />        
             <span class="description"><?php _e ( "Add Google reCAPTCHA to your site's forms to prevent spam", 'kanzu-support-desk' ); ?></span>
         </div>
     </div>
+    
     <div class="setting enable_recaptcha">
         <label for="recaptcha_site_key"><?php _e ( 'Google reCAPTCHA Site Key', 'kanzu-support-desk' ); ?></label>                
         <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your Google reCAPTCHA Site Key. Get one at %s', 'kanzu-support-desk' ), 'https://www.google.com/recaptcha/admin' ); ?>"/>

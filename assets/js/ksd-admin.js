@@ -150,6 +150,60 @@ jQuery(document).ready(function () {
                 }
         }
     }
+    
+    
+    /*---------------------------------------------------------------*/
+    /***************************On boarding *******/
+    /*---------------------------------------------------------------*/
+    KSDOnBoarding = function () {
+        this.init = function () {
+            if ( 'yes' !== ksd_admin.ksd_onboarding_enabled ){ 
+                return;
+            }
+            jQuery( '#wpbody' ).addClass( 'ksd-onboarding' );
+            this.assignTicket();
+            this.replyTicket();
+            this.resolveTicket();
+        };
+        
+        KSDUpdateOnboardingStage = function( completedStage,reloadPage ){
+            if ( typeof ( reloadPage ) === 'undefined'){
+                reloadPage = false;
+            }
+            jQuery.post( ksd_admin.ajax_url,
+                    {   action: 'ksd_update_onboarding_stage',
+                        ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
+                        stage: completedStage,
+                    },
+                    function ( response ) {
+                        //@TODO We currently don't do a thing with the response
+                        if( reloadPage ){
+                            location.reload();
+                        }
+                    });            
+        };
+
+        /*
+         * Submit Feedback form.
+         */
+        this.assignTicket = function () {
+            jQuery('.ksd-onboarding .ksd-misc-assign-to a.edit-assign-to').click( function(){
+                KSDUpdateOnboardingStage( 3 );
+            }); 
+            
+        };
+        this.replyTicket = function () {            
+            jQuery( '.ksd-onboarding input[name=ksd_reply_ticket]' ).click( function(){
+                KSDUpdateOnboardingStage( 4, true );  
+            });             
+        };
+        this.resolveTicket = function () {
+            jQuery('.ksd-onboarding .misc-pub-post-status a.edit-post-status').click( function(){
+                 KSDUpdateOnboardingStage( 5 );
+            }); 
+        } ;     
+    };
+       
     /*---------------------------------------------------------------*/
     /*************************************ANALYTICS*********************/
     /*---------------------------------------------------------------*/
@@ -967,7 +1021,11 @@ jQuery(document).ready(function () {
                 _totalTicketsPerFilter();
                 _addSeverityClassToTicketGrid();
             }
-            
+            //If we are displaying the ticket list view
+            if( jQuery('select[name=_status]').length ){
+                jQuery('option[value=publish],option[value=pending]').remove();
+                jQuery('select[name=_status]').append( ksd_admin.ksd_statuses );
+            }
             //Set current active view for our custom views
             if( jQuery.urlParam('ksd_view') ) {
                 var currentView = jQuery.urlParam('ksd_view');
@@ -1293,18 +1351,17 @@ jQuery(document).ready(function () {
         /**AJAX: Send a single ticket response when it's been typed and 'Reply' is hit**/
         //Also, update the private note when 'Update Note' is clicked  
         this.replyTicketAndUpdateNote = function () {
+            var isTinyMCEActive = false;
             var action = jQuery("input#ksd-reply-ticket-submit").attr("name");//ksd_reply_ticket or ksd_update_private_note
             jQuery('.ksd-reply-spinner').removeClass('hidden').addClass('is-active');
-            tinyMCE.triggerSave();//Very important. Without this, the reply's text won't be 'seen' by the serialize below
             var post_title = jQuery('input[name=post_title]').val();//Our JS replaces this field with an h2 field. We keep this here just as a fallbback
             if ( 'undefined' === typeof ( post_title ) ){
                 post_title = jQuery( '#titlewrap h2.post_title' ).text();//This is the title we expect to get always
             }
-            
             //Validate CC when action is ksd_reply_ticket and indicate that there is validation error
             jQuery('#ksd-cc-field').attr('title','');
             jQuery('#ksd-cc-field').removeClass('ksd-cc-field-error');
-            if( jQuery('#ksd-cc-field').val().length && 'none' !== jQuery('#ksd-cc-field').css("display") ){
+            if( jQuery('#ksd-cc-field').val() && 'none' !== jQuery('#ksd-cc-field').css("display") ){
                 var ccArr = jQuery('#ksd-cc-field').val().split(',');
                 var ccLen = ccArr.length;
                 for( i=0; i < ccLen; i++ ){
@@ -1316,11 +1373,16 @@ jQuery(document).ready(function () {
                     }
                 }
             }
-            
+            var ticketReply = jQuery('textarea[name=ksd_ticket_reply]').val();
+            if ( 'undefined' !== typeof( tinyMCE ) && tinyMCE.activeEditor && !tinyMCE.activeEditor.isHidden() ){
+                tinyMCE.triggerSave(); //Required for the tinyMCE.activeEditor.getContent() below to work
+                ticketReply = tinyMCE.activeEditor.getContent();
+                isTinyMCEActive = true;
+            }
             jQuery.post(    ksd_admin.ajax_url,
                     {   action: action,
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                        ksd_ticket_reply: tinyMCE.activeEditor.getContent(),
+                        ksd_ticket_reply: ticketReply,
                         ksd_reply_title: post_title,
                         tkt_private_note: jQuery('textarea[name=tkt_private_note]').val(),
                         tkt_id: jQuery.urlParam('post'),
@@ -1362,8 +1424,13 @@ jQuery(document).ready(function () {
                                 break;
                             default:
                                 KSDUtils.showDialog( "success", ksd_admin.ksd_labels.msg_reply_sent );
-                                replyData += tinyMCE.activeEditor.getContent();//Get the content                                 
-                                tinyMCE.activeEditor.setContent(''); //Clear the reply field
+                                replyData += ticketReply;//Get the content 
+                                if( isTinyMCEActive ){
+                                    tinyMCE.activeEditor.setContent(''); //Clear the reply field
+                                }
+                                else{
+                                    jQuery('textarea[name=ksd_ticket_reply]').val('');
+                                }
                         }
                         replyData += "</div>";
                         replyData += "</li>";
@@ -2235,6 +2302,10 @@ jQuery(document).ready(function () {
     //Tickets
     Tickets = new KSDTickets();
     Tickets.init();
+    
+    //Onboarding 
+    OnBoarding = new KSDOnBoarding();
+    OnBoarding.init();    
 
 
 });
