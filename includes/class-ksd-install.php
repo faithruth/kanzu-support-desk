@@ -344,6 +344,16 @@ class KSD_Install {
             
             /**
              * Get default settings
+             * @since 1.1.0 tour_mode
+             * @since 1.3.1 enable_recaptcha
+             * @since 1.3.2 enable_anonymous_tracking
+             * @since 1.5.0 auto_assign_user
+             * @since 1.5.4 enable_notify_on_new_ticket             * 
+             * @since 1.7.0 notify_email             * 
+             * @since 2.0.0 enable_customer_signup
+             * @since 2.0.0 page_submit_ticket
+             * @since 2.0.0 page_my_tickets
+             * @since 2.1.3 onboarding_enabled
              */
             public static function get_default_options() {
                 $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
@@ -354,38 +364,36 @@ class KSD_Install {
                     
                         /** Tickets **************************************************************/
                         'enable_new_tkt_notifxns'           => "yes",
-                        'enable_notify_on_new_ticket'       => "yes",//@since 1.5.4. Email sent to primary admin on new ticket creation
-                        'notify_email'                      => $user_info->user_email,//@since 1.7.0 The default email to send notifications to
-                        'ticket_mail_from_name'             => $user_info->display_name,//Defaults to the admin display name 
-                        'ticket_mail_from_email'            => $user_info->user_email,//Defaults to the admin email
+                        'enable_notify_on_new_ticket'       => "yes", 
+                        'notify_email'                      => $user_info->user_email, 
+                        'ticket_mail_from_name'             => $user_info->display_name, 
+                        'ticket_mail_from_email'            => $user_info->user_email, 
                         'ticket_mail_subject'               => __( 'Your support ticket has been received', 'kanzu-support-desk' ),
                         'ticket_mail_message'               => __( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
                         'recency_definition'                => "1",
                         'show_support_tab'                  => "yes",
                         'support_button_text'               => "Click here for help",
                         'tab_message_on_submit'             => __( 'Thank you. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
-                        'tour_mode'                         => "no", //@since 1.1.0
-                        'enable_recaptcha'                  => "no",//@since 1.3.1 Not on by default since user needs to create & provide reCAPTCHA site & secret keys
+                        'tour_mode'                         => "no",  
+                        'enable_recaptcha'                  => "no", 
                         'recaptcha_site_key'                => "",
                         'recaptcha_secret_key'              => "",
                         'recaptcha_error_message'           => sprintf ( __( 'Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on %s', 'kanzu-support-desk' ), $user_info->user_email ),
-                        'enable_anonymous_tracking'         => "no", //@since 1.3.2,
-                        'auto_assign_user'                  => '',   //@since 1.5.0. Used to auto-assign new tickets when set 
-                        'ticket_management_roles'           => 'administrator', //@since 1.5.0. Who can manage your tickets
-                        'enable_customer_signup'            => "yes",//@since 2.0.0
-                        'page_submit_ticket'                => 0,//@since 2.0.0 ID of the 'Submit ticket' page
-                        'page_my_tickets'                   => 0,//@since 2.0.0 //ID of the 'My tickets page'
+                        'enable_anonymous_tracking'         => "no", 
+                        'auto_assign_user'                  => '',   
+                        'ticket_management_roles'           => 'administrator', 
+                        'enable_customer_signup'            => "yes", 
+                        'page_submit_ticket'                => 0, 
+                        'page_my_tickets'                   => 0, 
                         'salt'                              => '',
+                        'onboarding_enabled'                => 'no',
                     
                         /**Support form settings**/
                         'supportform_show_categories'       => 'no',
                         'supportform_show_severity'         => 'no',
                         'supportform_show_products'         => 'no',
-                        'supportform_show_attachment'       => 'no',
-                        
-                        /*onboarding settings*/
-                        'onboarding_stage'                  => 1, //1-8
-                        'onboarding_enabled'                => 'yes',
+                        'supportform_show_attachment'       => 'no'
+
                     );
             }
             

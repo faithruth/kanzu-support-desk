@@ -155,7 +155,7 @@ jQuery(document).ready(function () {
     /*---------------------------------------------------------------*/
     KSDOnBoarding = function () {
         this.init = function () {
-            if ( 'no' !== ksd_admin.ksd_onboarding_enabled ){//@TODO 2.1.3 Remove this. For testing
+            if ( 'yes' !== ksd_admin.ksd_onboarding_enabled ){ 
                 return;
             }
             jQuery( '#wpbody' ).addClass( 'ksd-onboarding' );

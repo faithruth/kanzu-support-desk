@@ -247,7 +247,6 @@ class KSD_Admin {
                 
                 //Get current settings
                 $settings = Kanzu_Support_Desk::get_settings();
-                $onboarding_stage = $settings['onboarding_stage'];
                 $onboarding_enabled = $settings['onboarding_enabled'];
                 
                 //Localization allows us to send variables to the JS script
@@ -265,7 +264,6 @@ class KSD_Admin {
                                             'ksd_ticket_info'           =>  $ticket_info,
                                             'ksd_current_screen'        =>  $this->get_current_ksd_screen(),
                                             'ksd_version'               =>  KSD_VERSION,
-                                            'ksd_onboarding_stage'      => $onboarding_stage,
                                             'ksd_onboarding_enabled'    => $onboarding_enabled,
                                             'ksd_statuses'              =>  $this->get_status_list_options()
                                         )
@@ -305,10 +303,10 @@ class KSD_Admin {
         /**
          * Update ticket messages  displayed
          * @since 2.0.0
-         * @global type $post
-         * @global type $post_ID
-         * @param type $messages
-         * @return type
+         * @global Object $post
+         * @global int $post_ID
+         * @param String $messages
+         * @return Array
          */
         public function ticket_updated_messages( $messages ) {
             global $post, $post_ID;
@@ -779,7 +777,7 @@ class KSD_Admin {
 	public function output_admin_menu_dashboard() {
 		$this->do_admin_includes();             
                 
-                $settings = Kanzu_Support_Desk::get_settings();
+                $settings = Kanzu_Support_Desk::get_settings(); //@TODO 2.1.3 Here
                 if( 'yes' === $settings['onboarding_enabled'] && isset( $_GET['ksd-onboarding']) && 1 == $_GET['ksd-onboarding'] ){
                     $_GET['ksd-intro'] = 1;
                 }
