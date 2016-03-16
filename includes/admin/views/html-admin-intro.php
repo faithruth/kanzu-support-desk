@@ -18,7 +18,8 @@
             Lead Developer, <span class="ksd-blue">Kanzu Code</span>
             <br />
             <p>PS: If you do run into any issues (or have any feedback whatsoever), get in touch on <a href="mailto:feedback@kanzucode.com">feedback@kanzucode.com</a></p>
-            <a class="button-primary ksd-start-intro" href="<?php echo admin_url( 'edit.php?post_type=ksd_ticket' ); ?>">Start using KSD</a>
+            
+            <a class="button-primary ksd-start-intro" href="<?php echo site_url( 'submit-ticket' ); ?>">Start using KSD</a>
         </div>
     <?php elseif ( $ksd_display_message == 'v200' ): ?>
         <h1>Welcome to Kanzu Support Desk 2.0.0</h1>

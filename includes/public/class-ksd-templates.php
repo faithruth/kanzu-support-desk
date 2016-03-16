@@ -15,7 +15,15 @@ if ( ! class_exists( 'KSD_Templates' ) ) :
     
 
 class KSD_Templates {
-   public function __construct() {
+   
+   /**
+    * Data used in the template
+    * @var Array 
+    */ 
+   private $ksd_template_data;
+    
+   public function __construct( $ksd_template_data = array('test'=>'EDFECECFCFV') ) {
+       $this->ksd_template_data = $ksd_template_data;
        add_action( 'ksd_after_ticket_content', array( $this, 'append_ticket_replies') );
    }
      /**
@@ -93,7 +101,7 @@ class KSD_Templates {
 	}
 
 	if ( ( true == $load ) && ! empty( $located ) )
-		load_template( $located, $require_once );
+		$this->load_template( $located, $require_once );
 
 	return $located;
         }
@@ -133,6 +141,32 @@ class KSD_Templates {
         }
         
         /**
+         * Adapted from WPCore; wp-includes/template.php
+         * Require the template file with WordPress environment.
+         *
+         * The globals are set up for the template file to ensure that the WordPress
+         * environment is available from within the function. The query variables are
+         * also available.
+         *
+         * @since WP 1.5.0
+         * @since 2.1.3
+         *
+         * @param string $_template_file Path to template file.
+         * @param bool $require_once Whether to require_once or require. Default true.
+         */
+        private function load_template( $_template_file, $require_once = true ) {
+                global $posts, $post, $wp_did_header, $wp_query, $wp_rewrite, $wpdb, $wp_version, $wp, $id, $comment, $user_ID;
+ 
+                if ( is_array( $wp_query->query_vars ) )
+                        extract( $wp_query->query_vars, EXTR_SKIP );
+
+                if ( $require_once )
+                        require_once( $_template_file );
+                else
+                        require( $_template_file );
+}        
+        
+        /**
          * Get the active KSD theme
          * Active theme can be changed by using the ksd_active_theme filter
          * By default, the active theme is, well, default. :-)
@@ -146,6 +180,7 @@ class KSD_Templates {
         /**
          * Append content to a single ticket. We use this to append replies
          * @param int $tkt_id The ticket's ID
+         * @TODO Move this to a more appropriate class
          */
         public function append_ticket_replies( $tkt_id ){
             //Retrieve the replies

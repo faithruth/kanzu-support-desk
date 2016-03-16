@@ -83,6 +83,7 @@ class KSD_Public {
     private function do_public_includes() {
         require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-widget-support-form.php' );
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-hash-urls.php' );
+        include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
     }
     
     public function allow_secret_urls(){
@@ -527,6 +528,7 @@ class KSD_Public {
                     die();//This is important for WordPress AJAX
                 }
             }
+                        
             //Use the admin side logic to do the ticket logging
             $ksd_admin =  KSD_Admin::get_instance();
             $ksd_admin->log_new_ticket( $_POST );
