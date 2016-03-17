@@ -2013,6 +2013,7 @@ ul#ksd-tabs{
   right: 0;
   z-index: 5;
   display: none;
+  max-width: 30%;
 }
 #ksd-feedback  h3{
     padding: 8px 12px;

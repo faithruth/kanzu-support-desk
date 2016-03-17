@@ -3122,11 +3122,11 @@ class KSD_Admin {
         
         public function append_admin_feedback(){
             //@TODO Prequalification criteria. Are you admin? Do you have x tickets?
-            //@TODO Retrieve message & title from ksd_feedback
+            //@TODO Retrieve message & title from KSD_Notifications
             //@TODO If nothing exists, return, well, nothing :-)
-            include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-feedback.php' );
-            $ksd_feedback = new KSD_Feedback();
-            $notification = $ksd_feedback->get_new_notification();
+            include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
+            $KSD_Notifications = new KSD_Notifications();
+            $notification = $KSD_Notifications->get_new_notification();
             echo $notification;
         }
         

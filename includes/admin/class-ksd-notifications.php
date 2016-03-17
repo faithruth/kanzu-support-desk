@@ -13,9 +13,9 @@
 if (!defined('ABSPATH'))
     exit; // Exit if accessed directly
 
-if (!class_exists('KSD_Feedback')) :
+if (!class_exists('KSD_Notifications')) :
 
-    class KSD_Feedback {
+    class KSD_Notifications {
 
         /**
          * Instance of this class.
@@ -68,10 +68,10 @@ if (!class_exists('KSD_Feedback')) :
                     'title' => '[Kanzu Support Desk] Have time for a quick chat?',
                     'threshold' => 1,
                     'displayed' => false,
-                    'message' => "<p>As lead developer of the team behind Kanzu Code, we have so many features we THINK you want. We, however, are so sold on'
-                    . 'trying to make sure we devote our time to creating features you actually want, we would love to hear from you directly.</p>
-                    <p>If you’re willing to give me 10-15 minutes of your time, it would mean a lot to me. And you’ll get to be a big part of helping us make KSD the best product it can possibly be.Plus, I’m happy to offer help with any support issues you’re tackling :)</p>
-                    <p>If you’re interested, just reply to this message, and I’ll send you instructions for setting up our call. Kakoma</p>",
+                    'message' => "<p>Hi {name}. Kakoma, lead developer of Kanzu Support Desk - your Help Desk plugin, here. As we build the plugin, we have several features we THINK you want. 
+                    We, however, are very sold on trying to make sure that we devote our time to creating features you ACTUALLY want. To do this, we would love to hear from you directly.</p>
+                    <p>If you’re willing to give me 10-15 minutes of your time, it would mean a lot to me. You'll get to be a big part of helping us make KSD the best plugin it can possibly be.</p>
+                    <p>If you’re interested, just reply to this message below, and I’ll send you instructions for setting up our call. Also, I’m happy to offer help with any support issues you’re tackling<br /><a href='#'>Let's Improve KSD</a><a href='#'>Na bro</a>Kakoma</p>",
                     'user_response' => ""
                 ),
                 array(
