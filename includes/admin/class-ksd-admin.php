@@ -3099,14 +3099,13 @@ class KSD_Admin {
             global $wpdb;
             ini_set( "max_execution_time",0 );
             
-            foreach ( 
-                array(
+            $delete_tables = array(
                 "{$wpdb->prefix}kanzusupport_replies",
                 "{$wpdb->prefix}kanzusupport_assignments",
                 "{$wpdb->prefix}kanzusupport_attachments",
                 "{$wpdb->prefix}kanzusupport_tickets",
-                ) as $table 
-            ) {
+                );
+            foreach ( $delete_tables as $table ) {
                 $sql = "DROP TABLE IF EXISTS $table";
                 $wpdb->query( $sql );
             }
@@ -3125,7 +3124,10 @@ class KSD_Admin {
             //@TODO Prequalification criteria. Are you admin? Do you have x tickets?
             //@TODO Retrieve message & title from ksd_feedback
             //@TODO If nothing exists, return, well, nothing :-)
-            echo '<div id="ksd-feedback" class="postbox"><h3 class="hndle ui-sortable-handle">Yo man</h3><div class="inside">How is the going? For real? </div></div>';
+            include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-feedback.php' );
+            $ksd_feedback = new KSD_Feedback();
+            $notification = $ksd_feedback->get_new_notification();
+            echo $notification;
         }
         
         /**
