@@ -69,8 +69,9 @@ class KSD_Uninstall {
     }
     
     private function delete_options(){
-         delete_option( 'kanzu_support_desk' );//Can't use KSD_OPTIONS_KEY since it isn't defined here
-         delete_option('ksd_activation_time');
+        delete_option( 'kanzu_support_desk' );//Can't use KSD_OPTIONS_KEY since it isn't defined here
+        delete_option( 'ksd_activation_time' ); 
+        delete_option( 'ksd_notifications' );
     }
     
     /**

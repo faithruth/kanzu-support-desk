@@ -111,6 +111,7 @@ class KSD_Install {
                 $ksd_install->log_initial_tickets();
                 $ksd_install->create_roles();  
                 $ksd_install->create_woo_edd_products();
+                $ksd_install->set_default_notifications();
                 set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
             }
             flush_rewrite_rules();//Because of the custom post types    
@@ -196,6 +197,9 @@ class KSD_Install {
                 //@since $this->ksd_db_version 111 Added tkt_is_read & made tkt_time_updated not null , @1.6.2
                $dbChanges[]= "ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` ADD `tkt_is_read` BOOLEAN NOT NULL DEFAULT FALSE ;";
                $dbChanges[]= "ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_time_updated` `tkt_time_updated` TIMESTAMP NOT NULL;";
+            }
+            if ( $sanitized_version < 213 ) {//@since 2.1.3 Added ksd_notifications
+                 $this->set_default_notifications();
             }
  
             if ( count( $dbChanges ) > 0 ) {  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
@@ -326,11 +330,17 @@ class KSD_Install {
         }
  
         
-            private function set_default_options() {                    
-                
-                 add_option( KSD_OPTIONS_KEY, $this->get_default_options() );
-                 add_option( 'ksd_activation_time', date( 'U' ) );//Log activation time
-                    
+            private function set_default_options() {              
+                add_option( KSD_OPTIONS_KEY, $this->get_default_options() );
+                add_option( 'ksd_activation_time', date( 'U' ) );//Log activation time
+                $this->set_default_notifications();
+            }
+            
+            private function set_default_notifications(){
+                include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
+                $ksd_notifications      = new KSD_Notifications();
+                $notification_defaults  = $ksd_notifications->get_defaults();
+                add_option( 'ksd_notifications', $notification_defaults );                
             }
             
             /**

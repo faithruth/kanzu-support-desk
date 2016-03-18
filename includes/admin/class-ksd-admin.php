@@ -3125,8 +3125,8 @@ class KSD_Admin {
             //@TODO Retrieve message & title from KSD_Notifications
             //@TODO If nothing exists, return, well, nothing :-)
             include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
-            $KSD_Notifications = new KSD_Notifications();
-            $notification = $KSD_Notifications->get_new_notification();
+            $ksd_notifications = new KSD_Notifications();
+            $notification = $ksd_notifications->get_new_notification();
             echo $notification;
         }
         
