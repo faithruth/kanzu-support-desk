@@ -10,8 +10,8 @@ var KSDHooks = KSDHooks || {};
 
 
 jQuery(document).ready(function () {
-    //KSD Feedback
-    jQuery( "#ksd-feedback" ).slideToggle( "slow" );
+    //KSD Notifications
+    jQuery( "#ksd-notifications" ).slideToggle( "slow" );
     
     //Added to remove/hide distortion of UI that shows up during initial load of the plugin.
     jQuery("#admin-kanzu-support-desk").css({visibility: 'visible'});
@@ -269,6 +269,7 @@ jQuery(document).ready(function () {
             this.modifyLicense();
             this.handleAddons();
             this.enableUsageStats();
+            this.notifications();
             this.doMigrationV2();
             
         };
@@ -287,6 +288,37 @@ jQuery(document).ready(function () {
                 }
             });
         };
+        
+        __submitNotificationFeedback = function( data ){
+            jQuery.post(ksd_admin.ajax_url,
+                    data,
+            function (response) {
+                var respObj = {};
+                //To catch cases when the ajax response is not json
+                try {
+                    respObj = JSON.parse(response);
+                } catch (err) {                    
+                    return;
+                }
+                jQuery('#ksd-notifications').html(respObj).delay(3000).slideToggle( "slow" );
+            });            
+        };
+        
+        this.notifications = function () {
+            jQuery('.ksd-notification-close img').click(function () {
+                jQuery( "#ksd-notifications" ).slideToggle( "slow" );
+            });
+            //Leave me alone!!!!
+            jQuery('.ksd-notification-cancel').click(function () {
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: 123, response: 'no' };
+                __submitNotificationFeedback( data );
+            });            
+            //quick call
+            jQuery('#ksd-notification-quick-call').click(function () {
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: 123, response: 'yes' };
+                __submitNotificationFeedback( data );
+            });
+        };        
         
         /**
          * Enable usage & error statistics
@@ -542,7 +574,7 @@ jQuery(document).ready(function () {
             this.init = function () {
             this.statistics();
             this.charts();
-            this.notifications();
+            this.blogNotifications();
         };
 
 
@@ -637,14 +669,14 @@ jQuery(document).ready(function () {
                 jQuery('#ksd_dashboard_chart').html(err);
             }
         };//eof:charts
-        this.notifications = function () {
+        this.blogNotifications = function () {
             //Show/Hide the notifications panel
             jQuery('.admin-ksd-title span.more_nav img').click(function (e) {
                 e.preventDefault();
                 jQuery(this).toggleClass("active");
                 jQuery("#ksd-blog-notifications").toggle("slide");
             });
-            //Retrieve the notifications
+            //Retrieve the blog notifications
             try {
                 if ( 'ksd-dashboard' !== ksd_admin.ksd_current_screen && 'ksd-addons' !== ksd_admin.ksd_current_screen && 'ksd-settings' !== ksd_admin.ksd_current_screen ){
                     return;

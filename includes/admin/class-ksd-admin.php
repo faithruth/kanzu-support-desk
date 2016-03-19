@@ -78,8 +78,8 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_migrate_to_v2', array( $this, 'migrate_to_v2' ) );
                 add_action( 'wp_ajax_ksd_deletetables_v2', array( $this, 'deletetables_v2' ) );
                 add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
-                
-                
+                add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
+                                
                 //Generate a debug file
                 add_action( 'ksd_generate_debug_file', array( $this, 'generate_debug_file' ) );                  
                 
@@ -305,6 +305,19 @@ class KSD_Admin {
             echo json_encode( "Ok" );
             die();
         }
+        
+        /**
+         * Process the notification feedback
+         * 
+         * @since 2.1.3
+         */
+        public function process_notification_feedback() {
+            include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
+            $ksd_onboarding = new KSD_Notifications();
+            $response = $ksd_onboarding->process_notification_feedback();
+            echo json_encode( $response );
+            die();
+        }        
         
         /**
          * Update ticket messages  displayed

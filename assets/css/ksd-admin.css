@@ -2005,19 +2005,48 @@ ul#ksd-tabs{
     
 }
 /*Feedback */
-#ksd-feedback {
-  background-color: #fff;
-  bottom: 0;
-  margin-bottom: 0;
-  position: fixed;
-  right: 0;
-  z-index: 5;
-  display: none;
-  max-width: 30%;
+#ksd-notifications {
+    background-color: #fff;
+    bottom: 0;
+    margin-bottom: 0;
+    position: fixed;
+    right: 0;
+    z-index: 105;
+    display: none;
+    max-width: 30%;
 }
-#ksd-feedback  h3{
+#ksd-notifications  h3{
     padding: 8px 12px;
     margin-top: 0;
+    cursor: default;
+}
+
+.ksd-notification-salutation > img {
+    float: right;
+    height: 100px;
+    width: 100px;
+}
+#ksd-notifications .inside {
+    margin-bottom: 0;
+    padding-bottom: 3px;
+}
+.ksd-notification-close {
+    float: right;
+}
+.ksd-notification-close > img {
+    cursor: pointer;
+}
+.ksd-disable-notifications {
+    border-top: 1px solid #eee;
+    clear: both;
+    font-size: 0.8em;
+}
+.ksd-salut-text {
+    float: left;
+    padding-top: 20px;
+}
+#ksd-notifications .ksd-notification-button{
+  margin-right: 12px;
 }
 
 
