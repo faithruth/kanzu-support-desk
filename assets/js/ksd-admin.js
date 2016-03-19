@@ -225,10 +225,14 @@ jQuery(document).ready(function () {
             a.async = 1;
             a.src = g;
             m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');//analytics_debug - Step 1
+        //window.ga_debug = {trace: true}; //Step 2
         ga( 'create', 'UA-48956820-3', 'auto' );
+       // ga('create', 'UA-48956820-3', { //Step 3
+       //   'cookieDomain': 'none'
+      //  });        
         ga( 'require', 'linkid', 'linkid.js' );
-        if ("yes" !== ksd_admin.enable_anonymous_tracking) {//Disable tracking if the user hasn't allowed it
+        if ( "yes" !== ksd_admin.enable_anonymous_tracking ) {//Disable tracking if the user hasn't allowed it
              window['ga-disable-UA-48956820-3'] = true;
         }      
 
@@ -251,6 +255,18 @@ jQuery(document).ready(function () {
         pageTitle = pageName + " - Kanzu Support Desk";
         ga('send', 'pageview', {'page': thePage, 'title': pageTitle});
     };
+    
+    /**
+     * Send an event
+     * @param string category
+     * @param string action
+     * @param string label
+     * @returns none
+     */
+    KSDAnalytics.sendEvent = function ( category, action, label ) {
+        window['ga-disable-UA-48956820-3'] = false;
+        ga('send', 'event', category, action, label );         
+    }    
 
     /*---------------------------------------------------------------*/
     /****************************SETTINGS****************************/
@@ -305,33 +321,40 @@ jQuery(document).ready(function () {
         };
         
         this.notifications = function () {
+            var notificationID = jQuery('#ksd-notifications').data("notificationId");//NOTE: This doesn't work in IE
             jQuery('.ksd-notification-close img').click(function () {
                 jQuery( "#ksd-notifications" ).slideToggle( "slow" );
-                //@TODO Update the db with the 'close' response
-            });                   
-            var notificationID = jQuery('#ksd-notifications').data("notificationId");//NOTE: This doesn't work in IE
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'close' };
+                __submitNotificationFeedback( data );   
+                KSDAnalytics.sendEvent( 'Feedback', 'General', 'close-'+notificationID );
+            });   
             //Leave me alone!!!!
             jQuery('.ksd-notification-cancel').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'no' };
                 __submitNotificationFeedback( data );
-                //@TODO Analytics here
+                KSDAnalytics.sendEvent( 'Feedback', 'General', 'leave-me-'+notificationID );
             });    
             //Disable all notifications 
             jQuery( 'a.ksd-notifications-disable' ).click(function () {
                 var data = { action: 'ksd_notifications_disable' };
                 __submitNotificationFeedback( data );
-                //@TODO Analytics here
+                KSDAnalytics.sendEvent( 'Feedback', 'General', 'disable-all-'+notificationID );
             });              
             //Quick call
             jQuery('#ksd-notification-quick-call').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'yes' };
                 __submitNotificationFeedback( data );
-                //@TODO Analytics here
+                KSDAnalytics.sendEvent( 'Feedback', 'Quick Call', 'quick_call' );
             });
             //KSD content
            jQuery('#ksd-notification-content-topic').click(function () {
-                window['ga-disable-UA-48956820-3'] = false;
-                ga('send', 'event', 'button', 'click', 'test' );               
+                var ksdTopics = '';
+                jQuery('.ksd-content-topics input:checked').each(function(){
+                    KSDAnalytics.sendEvent( 'Feedback', 'KSD Content', jQuery(this).val() );
+                    ksdTopics+=jQuery(this).val()+' ';
+                });
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: ksdTopics };
+                __submitNotificationFeedback( data );
            });         
                      
         };        

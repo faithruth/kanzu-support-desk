@@ -124,7 +124,7 @@ if (!class_exists('KSD_Notifications')) :
             update_option( $this->ksd_notifications_option, $notifications );
 
             //Said no? End the party. $notificationID is empty for IE
-            if ( 'no' == $user_response || empty( $notificationID ) ){
+            if ( 'no' == $user_response || 'close' == $user_response || empty( $notificationID ) ){
                 return $response;
             }
             
@@ -136,8 +136,8 @@ if (!class_exists('KSD_Notifications')) :
                     $quick_call_message = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname},{$current_user->display_name},{$site_url}";
                     $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Quick Call",$quick_call_message ) ? __( 'Response sent successfully. We will be in touch shortly. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
                     break;
-                case 3502:
-                    
+                case 3502://ksd content                    
+                    //Do nothing. The JS did err'thing
                     break;
             }
             return $response;
