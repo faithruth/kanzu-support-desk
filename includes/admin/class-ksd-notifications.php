@@ -206,22 +206,22 @@ if (!class_exists('KSD_Notifications')) :
                             . "<p>Could you enable this feature by clicking the button below? KSD will be tonnes better because of you.</p>"
                             . "<div class='ksd-buttons'><button type='button' id='ksd-notification-enable-usage' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>I'll improve KSD</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>",
                             'user_response' => ""
-                        ),*/                
+                        ),                
                 3504 => array(
                             'title' => '[Kanzu Support Desk] WordPress rating',
                             'threshold' => 40,
                             'displayed' => 0,
                             'content' => "<p>Hi {{display_name}},<br />Most WordPress users evaluate a plugin based on its rating in the repository. Would you mind giving us a rating? It'll go a long way in making us more discoverable by other users. </p>"
-                            . "<span class='ksd-buttons'><a href='#' class='ksd-notification-button ksd-notification-button-default'>Leave a rating</a><a href='#' class='ksd-notification-button'>Leave me alone!</a></span>",
+                            . "<div class='ksd-buttons'><a href='https://wordpress.org/support/view/plugin-reviews/kanzu-support-desk?filter=5#postform' target='_blank' class='ksd-notification-review button button-large button-primary ksd-notification-button ksd-notification-button-default'>I'll improve KSD</a><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>",
                             'user_response' => ""
-                    ),
+                    ),*/
                 3505 => array(
                             'title' => '[Kanzu Support Desk] That one feature...',
                             'threshold' => 50,
                             'displayed' => 0,
                             'content' => "<p>Hi {{display_name}},<br />Is there any particular KSD feature that's been on your mind lately? Yeah? No? Let us know below."
                             . "<input class='ksd-notifications-other' type='textarea'/>"
-                            . "<span class='ksd-buttons'><a href='#' class='ksd-notification-button ksd-notification-button-default'>Send</a><a href='#' class='ksd-notification-button'>Na,I'm good</a></span></p>",
+                            . "<span class='ksd-buttons'><a href='https://wordpress.org/support/view/plugin-reviews/kanzu-support-desk?filter=5#postform' target='_blank' class='ksd-notification-button ksd-notification-review ksd-notification-button-default'>Send</a><a href='#' class='ksd-notification-button'>Na,I'm good</a></span></p>",
                             'user_response' => ""
                     ),
                 3506 => array(

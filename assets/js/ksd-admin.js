@@ -361,6 +361,11 @@ jQuery(document).ready(function () {
                 var data = { action: 'ksd_enable_usage_stats' };
                 __submitNotificationFeedback( data );               
            });
+           //Leave a review
+           jQuery('a.ksd-notification-review').click(function () {
+               jQuery( "#ksd-notifications" ).slideToggle( "slow" );
+           });
+           
                      
         };        
         
