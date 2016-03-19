@@ -300,23 +300,32 @@ jQuery(document).ready(function () {
                 } catch (err) {                    
                     return;
                 }
-                jQuery('#ksd-notifications').html(respObj).delay(3000).slideToggle( "slow" );
+                jQuery('#ksd-notifications').html( '<div class="ksd-notifications-response">'+respObj+ '</div>' ).delay(3000).slideToggle( "slow" );
             });            
         };
         
         this.notifications = function () {
             jQuery('.ksd-notification-close img').click(function () {
                 jQuery( "#ksd-notifications" ).slideToggle( "slow" );
-            });
+            });                   
+            var notificationID = jQuery('#ksd-notifications').data("notificationId");//NOTE: This doesn't work in IE
             //Leave me alone!!!!
             jQuery('.ksd-notification-cancel').click(function () {
-                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: 123, response: 'no' };
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'no' };
                 __submitNotificationFeedback( data );
-            });            
-            //quick call
+                //@TODO Analytics here
+            });    
+            //Disable all notifications 
+            jQuery( 'a.ksd-notifications-disable' ).click(function () {
+                var data = { action: 'ksd_notifications_disable' };
+                __submitNotificationFeedback( data );
+                //@TODO Analytics here
+            });              
+            //Quick call
             jQuery('#ksd-notification-quick-call').click(function () {
-                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: 123, response: 'yes' };
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'yes' };
                 __submitNotificationFeedback( data );
+                //@TODO Analytics here
             });
         };        
         

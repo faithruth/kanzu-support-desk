@@ -79,6 +79,7 @@ class KSD_Admin {
                 add_action( 'wp_ajax_ksd_deletetables_v2', array( $this, 'deletetables_v2' ) );
                 add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
                 add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
+                add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );
                                 
                 //Generate a debug file
                 add_action( 'ksd_generate_debug_file', array( $this, 'generate_debug_file' ) );                  
@@ -316,6 +317,18 @@ class KSD_Admin {
             $ksd_onboarding = new KSD_Notifications();
             $response = $ksd_onboarding->process_notification_feedback();
             echo json_encode( $response );
+            die();
+        }        
+        
+         /**
+          * Disable display of notifications
+          * @since 2.1.3
+          */
+         public function disable_notifications() {
+            $ksd_settings = Kanzu_Support_Desk::get_settings();
+            $ksd_settings['notifications_enabled'] = "no";
+            Kanzu_Support_Desk::update_settings($ksd_settings );
+            echo json_encode( __('Thanks for your time. If you ever have any feedback, please get in touch - feedback@kanzucode.com', 'kanzu-support-desk') );
             die();
         }        
         

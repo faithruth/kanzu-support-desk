@@ -2048,6 +2048,9 @@ ul#ksd-tabs{
 #ksd-notifications .ksd-notification-button{
   margin-right: 12px;
 }
+.ksd-notifications-response{
+    padding: 35px;
+}
 
 
 

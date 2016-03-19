@@ -369,6 +369,7 @@ class KSD_Install {
              * @since 2.0.0 page_submit_ticket
              * @since 2.0.0 page_my_tickets
              * @since 2.1.3 onboarding_enabled
+             * @since 2.1.3 notifications_enabled 
              */
             public function get_default_options() {
                 $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
@@ -402,6 +403,7 @@ class KSD_Install {
                         'page_my_tickets'                   => 0, 
                         'salt'                              => '',
                         'onboarding_enabled'                => 'no',
+                        'notifications_enabled'             => 'yes',
                     
                         /**Support form settings**/
                         'supportform_show_categories'       => 'no',

@@ -64,21 +64,21 @@ if (!class_exists('KSD_Notifications')) :
             $notification_html = $notification_header = '';
             //@TODO If time not elapsec (transient present), do nothing
             $notifications = get_option( $this->ksd_notifications_option );
-            for ( $i=0; $i < count( $notifications ) ; $i++ ){
-                if( 1 == $notifications[$i]['displayed'] ){
+            foreach ( $notifications as $id  => $current_nofification ){
+                if( 1 == $current_nofification['displayed'] ){
                     continue;
                 }
                 //If threshold has elapsed, continue
                 
-                $notification_html  .= '<div id="ksd-notifications" class="postbox ksd-notification-id-'.$notifications[$i]['id'].'">';
+                $notification_html  .= '<div id="ksd-notifications" data-notification-id="'.$id.'" class="postbox">';
                 $notification_html  .= apply_filters( 'ksd_notification_header',$notification_header );
-                $notification_html  .= '<h3 class="hndle">'.$notifications[$i]['title'].'</h3>';
+                $notification_html  .= '<h3 class="hndle">'.$current_nofification['title'].'</h3>';
                 $notification_html  .= '<div class="inside">';
-                $notification_html  .= apply_filters( 'ksd_notification_content',$notifications[$i]['content'] );
+                $notification_html  .= apply_filters( 'ksd_notification_content',$current_nofification['content'] );
                 $notification_html  .= '</div></div>';  
                 //Update the array to indicate that we've displayed this notification
-                $notifications[$i]['displayed'] = 1;                
-                //update_option( $this->ksd_notifications_option, $notifications );
+                $current_nofification['displayed'] = 1;                
+                //@TODO 2.1.3 update_option( $this->ksd_notifications_option, $notifications );
                 break;
             }  
             return $notification_html;
@@ -100,7 +100,7 @@ if (!class_exists('KSD_Notifications')) :
             }
             $notification = $this->replace_place_holders( $notification );
             $notification.="<div class='ksd-notification-salutation'><span class='ksd-salut-text'>Cheers,<br />Kakoma<br />feedback@kanzucode.com</span><img src='".KSD_PLUGIN_URL."assets/images/logo.png'/></div>";
-            $notification.="<div class='ksd-disable-notifications'>If you no longer want to receive any more messages from us, you can disable them <a href='#' class='ksd-disable'>here.</a></div>";           
+            $notification.="<div class='ksd-disable-notifications'>If you no longer want to receive any more messages from us, you can disable them <a href='#' class='ksd-notifications-disable'>here.</a></div>";           
             return $notification;
         }
         
@@ -114,9 +114,28 @@ if (!class_exists('KSD_Notifications')) :
          * When a user submits feedback, process it
          */
         public function process_notification_feedback(){
-            Kanzu_Support_Desk::kanzu_support_log_me($_POST);
-            //Find the notification
-            return 'Thanks dude';
+            $notifications      = get_option( $this->ksd_notifications_option );
+            $user_response      = sanitize_text_field( $_POST['response'] );
+            $notificationID     = sanitize_key( $_POST['id'] );
+            $response   = __( 'Thanks for your time. If you ever have any feedback, please get in touch - feedback@kanzucode.com','kanzu-support-desk' );
+            
+            //Save the user response
+            $notifications[ $notificationID ]['user_response'] = $user_response;
+            update_option( $this->ksd_notifications_option, $notifications );
+            
+            //Said no? End the party. $notificationID is empty for IE
+            if ( 'no' == $user_response || empty( $notificationID ) ){
+                return $response;
+            }
+            
+            //Take action for all the yeses...
+            switch( $notificationID ){
+                case 3501://quick call
+                    $current_user = wp_get_current_user();       
+                    $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Quick Call",$current_user->user_email ) ? __( 'Response sent successfully. We will be in touch shortly. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
+                    break;
+            }
+            return $response;
         }
         
         /**
@@ -146,74 +165,68 @@ if (!class_exists('KSD_Notifications')) :
          */
         public function get_defaults() {
             $defaults = array(
-                array(
-                    'id' => 0501,
-                    'title' => '[Kanzu Support Desk] Have time for a quick chat?',
-                    'threshold' => 5,
-                    'displayed' => 0,
-                    'content' => "<p>Hi {{display_name}},<br />Kakoma here, lead developer of Kanzu Support Desk - your simple Help Desk plugin. We currently have several features we <strong>THINK</strong> you want. 
-                    We, however, want to make sure that we devote our time to building features you <strong>ACTUALLY</strong> want. To do this, we would love to hear from you.</p>
-                    <p><span class='ksd-blue'>If you’re willing to give me 10-15 minutes of your time</span>, it would go a long way to ensure that we serve you better.</p>
-                    <p>If you’re interested, just click the button below and I’ll send you instructions for setting up our call. Also, <span class='ksd-blue'>I’m happy to take feature requests or offer help with any support issues you’re tackling</span><br />
-                    <div class='ksd-buttons'><button type='button' id='ksd-notification-quick-call' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>I'll improve KSD</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>
-                    </p>",
-                    'user_response' => ""
-                ),
-                array(
-                    'id' => 0502,
-                    'title' => '[Kanzu Support Desk] What would you like to read?',
-                    'threshold' => 10,
-                    'displayed' => 0,
-                    'content' => "<p>Hi {{display_name}},<br />It's Kakoma again, lead developer of Kanzu Support Desk - your simple Help Desk plugin. So, over the course of development of KSD and building a business out of it, we've learnt a few things that you might find useful.</p>"
-                    . "<p>We'd love to hear from you though. What would you like to read about?</p>"
-                    . "<span><select>"
-                    . "<option>WordPress plugin development</option>"
-                    . "<option>WordPress plugin business</option>"
-                    . "<option>Customer care</option>"
-                    . "</select></span>"
-                    . "<input class='ksd-notifications-other' type='text'/>",
-                    'user_response' => ""
-                ),     
-                array(
-                    'id' => 0503,
-                    'title' => '[Kanzu Support Desk] Enable usage & error statistics',
-                    'threshold' => 20,
-                    'displayed' => 0,
-                    'content' => "<p>Hi {{display_name}},<br />It's Kakoma again, lead developer of Kanzu Support Desk - your simple Help Desk plugin. We use <em>Usage & Error statistics</em> to get the KSD’s performance, usage and customization data. These allow us make it more useful, stable and above all, more secure.</p>"
-                    . "<p>Could you enable this feature by clicking the button below? KSD will be tonnes better because of you."
-                    . "<span class='ksd-buttons'><a href='#' class='ksd-notification-button ksd-notification-button-default'>Let's Improve KSD</a><a href='#' class='ksd-notification-button'>Leave me alone!</a></span></p>",
-                    'user_response' => ""
-                ),                
-                array(
-                    'id' => 0503,
-                    'title' => '[Kanzu Support Desk] WordPress rating',
-                    'threshold' => 40,
-                    'displayed' => 0,
-                    'content' => "<p>Hi {{display_name}},<br />Most WordPress users evaluate a plugin based on its rating in the repository. Would you mind giving us a rating? It'll go a long way in making us more discoverable by other users. </p>"
-                    . "<span class='ksd-buttons'><a href='#' class='ksd-notification-button ksd-notification-button-default'>Leave a rating</a><a href='#' class='ksd-notification-button'>Leave me alone!</a></span>",
-                    'user_response' => ""
-                ),
-                array(
-                    'id' => 0504,
-                    'title' => '[Kanzu Support Desk] That one feature...',
-                    'threshold' => 50,
-                    'displayed' => 0,
-                    'content' => "<p>Hi {{display_name}},<br />Is there any particular KSD feature that's been on your mind lately? Yeah? No? Let us know below."
-                    . "<input class='ksd-notifications-other' type='textarea'/>"
-                    . "<span class='ksd-buttons'><a href='#' class='ksd-notification-button ksd-notification-button-default'>Send</a><a href='#' class='ksd-notification-button'>Na,I'm good</a></span></p>",
-                    'user_response' => ""
-                ),
-                array(
-                    'id' => 0505,
-                    'title' => '[Kanzu Support Desk] Would you recommend us?',
-                    'threshold' => 90,
-                    'displayed' => 0,
-                    'content' => "<p>Hi {{display_name}},<br />To get a better idea of whether we are serving you well, we'd like to know, <strong>How likely is it that you would recommend KSD to a friend or colleague?</strong></p>"
-                    . "<div class='ksd-notifications-nps'><div class='ksd-nps-labels'>"
-                    . "<span class='ksd-nps-not-likely'>Not at all likely</span><span class='ksd-nps-ext-likely'>Extremely likely</span></div>"
-                    . "<ul class='ksd-nps-score'><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li></ul></div>",
-                    'user_response' => ""
-                )                  
+                3501 => array(
+                            'title' => '[Kanzu Support Desk] Have time for a quick chat?',
+                            'threshold' => 5,
+                            'displayed' => 0,
+                            'content' => "<p>Hi {{display_name}},<br />Kakoma here, lead developer of Kanzu Support Desk - your simple Help Desk plugin. We currently have several features we <strong>THINK</strong> you want. 
+                            We, however, want to make sure that we devote our time to building features you <strong>ACTUALLY</strong> want. To do this, we would love to hear from you.</p>
+                            <p><span class='ksd-blue'>If you’re willing to give me 10-15 minutes of your time</span>, it would go a long way to ensure that we serve you better.</p>
+                            <p>If you’re interested, just click the button below and I’ll send you instructions for setting up our call. Also, <span class='ksd-blue'>I’m happy to take feature requests or offer help with any support issues you’re tackling</span><br />
+                            <div class='ksd-buttons'><button type='button' id='ksd-notification-quick-call' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>I'll improve KSD</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>
+                            </p>",
+                            'user_response' => ""
+                    ),
+                3502 => array(
+                            'title' => '[Kanzu Support Desk] What would you like to read?',
+                            'threshold' => 10,
+                            'displayed' => 0,
+                            'content' => "<p>Hi {{display_name}},<br />It's Kakoma again, lead developer of Kanzu Support Desk - your simple Help Desk plugin. So, over the course of development of KSD and building a business out of it, we've learnt a few things that you might find useful.</p>"
+                            . "<p>We'd love to hear from you though. What would you like to read about?</p>"
+                            . "<span><select>"
+                            . "<option>WordPress plugin development</option>"
+                            . "<option>WordPress plugin business</option>"
+                            . "<option>Customer care</option>"
+                            . "</select></span>"
+                            . "<input class='ksd-notifications-other' type='text'/>",
+                            'user_response' => ""
+                    ),     
+                3503 => array(
+                            'title' => '[Kanzu Support Desk] Enable usage & error statistics',
+                            'threshold' => 20,
+                            'displayed' => 0,
+                            'content' => "<p>Hi {{display_name}},<br />It's Kakoma again, lead developer of Kanzu Support Desk - your simple Help Desk plugin. We use <em>Usage & Error statistics</em> to get the KSD’s performance, usage and customization data. These allow us make it more useful, stable and above all, more secure.</p>"
+                            . "<p>Could you enable this feature by clicking the button below? KSD will be tonnes better because of you."
+                            . "<span class='ksd-buttons'><a href='#' class='ksd-notification-button ksd-notification-button-default'>Let's Improve KSD</a><a href='#' class='ksd-notification-button'>Leave me alone!</a></span></p>",
+                            'user_response' => ""
+                        ),                
+                3504 => array(
+                            'title' => '[Kanzu Support Desk] WordPress rating',
+                            'threshold' => 40,
+                            'displayed' => 0,
+                            'content' => "<p>Hi {{display_name}},<br />Most WordPress users evaluate a plugin based on its rating in the repository. Would you mind giving us a rating? It'll go a long way in making us more discoverable by other users. </p>"
+                            . "<span class='ksd-buttons'><a href='#' class='ksd-notification-button ksd-notification-button-default'>Leave a rating</a><a href='#' class='ksd-notification-button'>Leave me alone!</a></span>",
+                            'user_response' => ""
+                    ),
+                3505 => array(
+                            'title' => '[Kanzu Support Desk] That one feature...',
+                            'threshold' => 50,
+                            'displayed' => 0,
+                            'content' => "<p>Hi {{display_name}},<br />Is there any particular KSD feature that's been on your mind lately? Yeah? No? Let us know below."
+                            . "<input class='ksd-notifications-other' type='textarea'/>"
+                            . "<span class='ksd-buttons'><a href='#' class='ksd-notification-button ksd-notification-button-default'>Send</a><a href='#' class='ksd-notification-button'>Na,I'm good</a></span></p>",
+                            'user_response' => ""
+                    ),
+                3506 => array(
+                            'title' => '[Kanzu Support Desk] Would you recommend us?',
+                            'threshold' => 90,
+                            'displayed' => 0,
+                            'content' => "<p>Hi {{display_name}},<br />To get a better idea of whether we are serving you well, we'd like to know, <strong>How likely is it that you would recommend KSD to a friend or colleague?</strong></p>"
+                            . "<div class='ksd-notifications-nps'><div class='ksd-nps-labels'>"
+                            . "<span class='ksd-nps-not-likely'>Not at all likely</span><span class='ksd-nps-ext-likely'>Extremely likely</span></div>"
+                            . "<ul class='ksd-nps-score'><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li></ul></div>",
+                            'user_response' => ""
+                    )                  
             );
 
             return $defaults;
