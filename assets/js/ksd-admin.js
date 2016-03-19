@@ -642,7 +642,7 @@ jQuery(document).ready(function () {
             jQuery('.admin-ksd-title span.more_nav img').click(function (e) {
                 e.preventDefault();
                 jQuery(this).toggleClass("active");
-                jQuery("#ksd-notifications").toggle("slide");
+                jQuery("#ksd-blog-notifications").toggle("slide");
             });
             //Retrieve the notifications
             try {
@@ -656,7 +656,7 @@ jQuery(document).ready(function () {
                 function (response) {
                     var respObj = JSON.parse(response);
                     if ('undefined' !== typeof (respObj.error)) {
-                        jQuery('#ksd-notifications').html(respObj.error);
+                        jQuery('#ksd-blog-notifications').html(respObj.error);
                         return;
                     }
                     //Parse the XML. We chose to do it here, rather than in the PHP (at the server end)
@@ -674,10 +674,10 @@ jQuery(document).ready(function () {
                     });
                     notificationData += '</ul>';
                     //Add the entries to the div*/
-                    jQuery("#ksd-notifications").html(notificationData);
+                    jQuery("#ksd-blog-notifications").html(notificationData);
                 });
             } catch (err) {
-                jQuery('#ksd-notifications').html(err);
+                jQuery('#ksd-blog-notifications').html(err);
             }
         };//eof:notifications
     };//eof:Dashboard
