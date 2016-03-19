@@ -355,7 +355,12 @@ jQuery(document).ready(function () {
                 });
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: ksdTopics };
                 __submitNotificationFeedback( data );
-           });         
+           });       
+           //Enable usage 
+           jQuery('#ksd-notification-enable-usage').click(function () {
+                var data = { action: 'ksd_enable_usage_stats' };
+                __submitNotificationFeedback( data );               
+           });
                      
         };        
         
