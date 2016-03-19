@@ -2004,7 +2004,7 @@ ul#ksd-tabs{
 #ksd-tabs .help_tip img{
     
 }
-/*Feedback */
+/*Notifications */
 #ksd-notifications {
     background-color: #fff;
     bottom: 0;
@@ -2051,7 +2051,7 @@ ul#ksd-tabs{
 .ksd-notifications-response{
     padding: 35px;
 }
-
+ 
 
 
 

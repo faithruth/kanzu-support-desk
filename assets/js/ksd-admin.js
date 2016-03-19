@@ -307,6 +307,7 @@ jQuery(document).ready(function () {
         this.notifications = function () {
             jQuery('.ksd-notification-close img').click(function () {
                 jQuery( "#ksd-notifications" ).slideToggle( "slow" );
+                //@TODO Update the db with the 'close' response
             });                   
             var notificationID = jQuery('#ksd-notifications').data("notificationId");//NOTE: This doesn't work in IE
             //Leave me alone!!!!
@@ -327,6 +328,12 @@ jQuery(document).ready(function () {
                 __submitNotificationFeedback( data );
                 //@TODO Analytics here
             });
+            //KSD content
+           jQuery('#ksd-notification-content-topic').click(function () {
+                window['ga-disable-UA-48956820-3'] = false;
+                ga('send', 'event', 'button', 'click', 'test' );               
+           });         
+                     
         };        
         
         /**

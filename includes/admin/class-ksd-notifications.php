@@ -60,7 +60,7 @@ if (!class_exists('KSD_Notifications')) :
             if ( ! current_user_can( 'manage_options' ) ) {//If not an admin, end the party
                 return;
             }
-            //$this->set_defaults();
+           // $this->set_defaults();
             $notification_html = $notification_header = '';
             //@TODO If time not elapsec (transient present), do nothing
             $notifications = get_option( $this->ksd_notifications_option );
@@ -77,8 +77,8 @@ if (!class_exists('KSD_Notifications')) :
                 $notification_html  .= apply_filters( 'ksd_notification_content',$current_nofification['content'] );
                 $notification_html  .= '</div></div>';  
                 //Update the array to indicate that we've displayed this notification
-                $current_nofification['displayed'] = 1;                
-                //@TODO 2.1.3 update_option( $this->ksd_notifications_option, $notifications );
+                $notifications[$id]['displayed'] = 1;                
+                //update_option( $this->ksd_notifications_option, $notifications );
                 break;
             }  
             return $notification_html;
@@ -116,13 +116,13 @@ if (!class_exists('KSD_Notifications')) :
         public function process_notification_feedback(){
             $notifications      = get_option( $this->ksd_notifications_option );
             $user_response      = sanitize_text_field( $_POST['response'] );
-            $notificationID     = sanitize_key( $_POST['id'] );
+            $notificationID     = sanitize_key( $_POST['notfxn_ID'] );
             $response   = __( 'Thanks for your time. If you ever have any feedback, please get in touch - feedback@kanzucode.com','kanzu-support-desk' );
             
             //Save the user response
             $notifications[ $notificationID ]['user_response'] = $user_response;
             update_option( $this->ksd_notifications_option, $notifications );
-            
+
             //Said no? End the party. $notificationID is empty for IE
             if ( 'no' == $user_response || empty( $notificationID ) ){
                 return $response;
@@ -131,8 +131,13 @@ if (!class_exists('KSD_Notifications')) :
             //Take action for all the yeses...
             switch( $notificationID ){
                 case 3501://quick call
-                    $current_user = wp_get_current_user();       
-                    $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Quick Call",$current_user->user_email ) ? __( 'Response sent successfully. We will be in touch shortly. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
+                    $current_user   = wp_get_current_user();   
+                    $site_url       = get_site_url();
+                    $quick_call_message = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname},{$current_user->display_name},{$site_url}";
+                    $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Quick Call",$quick_call_message ) ? __( 'Response sent successfully. We will be in touch shortly. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
+                    break;
+                case 3502:
+                    
                     break;
             }
             return $response;
@@ -165,7 +170,7 @@ if (!class_exists('KSD_Notifications')) :
          */
         public function get_defaults() {
             $defaults = array(
-                3501 => array(
+            /*    3501 => array(
                             'title' => '[Kanzu Support Desk] Have time for a quick chat?',
                             'threshold' => 5,
                             'displayed' => 0,
@@ -176,19 +181,19 @@ if (!class_exists('KSD_Notifications')) :
                             <div class='ksd-buttons'><button type='button' id='ksd-notification-quick-call' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>I'll improve KSD</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>
                             </p>",
                             'user_response' => ""
-                    ),
+                    ),*/
                 3502 => array(
                             'title' => '[Kanzu Support Desk] What would you like to read?',
                             'threshold' => 10,
                             'displayed' => 0,
                             'content' => "<p>Hi {{display_name}},<br />It's Kakoma again, lead developer of Kanzu Support Desk - your simple Help Desk plugin. So, over the course of development of KSD and building a business out of it, we've learnt a few things that you might find useful.</p>"
-                            . "<p>We'd love to hear from you though. What would you like to read about?</p>"
-                            . "<span><select>"
-                            . "<option>WordPress plugin development</option>"
-                            . "<option>WordPress plugin business</option>"
-                            . "<option>Customer care</option>"
-                            . "</select></span>"
-                            . "<input class='ksd-notifications-other' type='text'/>",
+                            . "<p>We'd love to hear from you though - <span class='ksd-blue'>what would you like to read about?</span></p>"
+                            . "<ul class='ksd-content-topics'>"
+                            . "<li><input type='checkbox' name='ksd_content_topics[]' value='wp_plugin_dev' />Developing a premium WordPress plugin</li>"
+                            . "<li><input type='checkbox' name='ksd_content_topics[]' value='startup' />Building a WordPress start-up</li>"
+                            . "<li><input type='checkbox' name='ksd_content_topics[]' value='customer_care' />Customer Care</li>"                           
+                            . "</ul>"
+                            . "<div class='ksd-buttons'><button type='button' id='ksd-notification-content-topic' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>Send</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>",
                             'user_response' => ""
                     ),     
                 3503 => array(
