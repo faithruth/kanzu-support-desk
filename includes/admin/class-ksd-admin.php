@@ -2675,7 +2675,7 @@ class KSD_Admin {
                 switch ( $action ) {
                     case 'activate_license':
                     case 'check_license':
-                        if ( $license_data->license == 'valid' ) {
+                        if ( $license_data && 'valid' == $license_data->license ) {
                             $plugin_settings[ $license_status_key ] = 'valid';
                             $response_message = __('License successfully validated. Welcome to a super-charged Kanzu Support Desk!', 'kanzu-support-desk' );
                            }
@@ -2685,7 +2685,7 @@ class KSD_Admin {
                         }
                         break;
                     case 'deactivate_license':
-                        if ( $license_data->license == 'deactivated' ) {
+                        if ( $license_data && 'deactivated' == $license_data->license ) {
                             $plugin_settings[ $license_status_key ] = 'invalid';
                             $response_message = __( 'Your license has been deactivated successfully. Thank you.', 'kanzu-support-desk' );                            
                         }
