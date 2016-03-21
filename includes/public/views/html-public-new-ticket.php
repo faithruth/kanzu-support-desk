@@ -98,7 +98,7 @@
                 <input type="submit" value="<?php _e( 'Send Message', 'kanzu-support-desk'); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
               </li>
             </ul>
-            <input name="action" type="hidden" value="ksd_log_new_supportform_ticket" />
+            <input name="action" type="hidden" value="ksd_log_new_ticket" />
             <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
             <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
     </form>
