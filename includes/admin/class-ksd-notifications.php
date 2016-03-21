@@ -29,8 +29,8 @@ if (!class_exists('KSD_Notifications')) :
         protected static $instance = null;
 
         public function __construct() {
-            add_filter( 'ksd_notification_content', array( $this, modify_notification_content ) );
-            add_filter( 'ksd_notification_header', array( $this, notification_append_close_button ) );            
+            add_filter( 'ksd_notification_content', array( $this, 'modify_notification_content' ) );
+            add_filter( 'ksd_notification_header', array( $this, 'notification_append_close_button' ) );            
         }
         /**
          * Return an instance of this class.
