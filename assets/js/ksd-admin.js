@@ -365,7 +365,13 @@ jQuery(document).ready(function () {
            jQuery('a.ksd-notification-review').click(function () {
                jQuery( "#ksd-notifications" ).slideToggle( "slow" );
            });
-           
+           //One feature...
+           jQuery('#ksd-notification-one-feature').click(function () {
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: jQuery('textarea.ksd-notifications-one-feature').val() };
+                __submitNotificationFeedback( data );
+                KSDAnalytics.sendEvent( 'Feedback', 'General', 'one_feature' );
+           });           
+
                      
         };        
         

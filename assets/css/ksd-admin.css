@@ -2051,14 +2051,10 @@ ul#ksd-tabs{
 .ksd-notifications-response{
     padding: 35px;
 }
- 
-
-
-
-
-
-
-
+.ksd-notifications-one-feature {
+    margin: 10px auto;
+    width: 90%;
+}
 
 /*Onboarding*/
 .ksd-onboarding-progress{

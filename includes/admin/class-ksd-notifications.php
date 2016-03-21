@@ -138,8 +138,13 @@ if (!class_exists('KSD_Notifications')) :
                     break;
                 case 3502://ksd content                    
                     $current_user       = wp_get_current_user();   
-                    $ksd_content_message = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname}";
+                    $ksd_content_message = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname},{$user_response}";
                     $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Subscription",$ksd_content_message ) ? __( 'Thanks for your feedback! We will be in touch with the most popular content as soon as a substantial number of votes is in. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Vote not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );    
+                    break;
+                case 3505://One feature...
+                    $current_user       = wp_get_current_user();   
+                    $ksd_content_message = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname},{$user_response}";
+                    $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Feature Request",$ksd_content_message ) ? __( 'Thanks for your feedback! We will be in touch with the most popular content as soon as a substantial number of votes is in. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Vote not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
                     break;
             }
             return $response;
@@ -214,16 +219,16 @@ if (!class_exists('KSD_Notifications')) :
                             'content' => "<p>Hi {{display_name}},<br />Most WordPress users evaluate a plugin based on its rating in the repository. Would you mind giving us a rating? It'll go a long way in making us more discoverable by other users. </p>"
                             . "<div class='ksd-buttons'><a href='https://wordpress.org/support/view/plugin-reviews/kanzu-support-desk?filter=5#postform' target='_blank' class='ksd-notification-review button button-large button-primary ksd-notification-button ksd-notification-button-default'>I'll improve KSD</a><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>",
                             'user_response' => ""
-                    ),*/
+                    ),
                 3505 => array(
                             'title' => '[Kanzu Support Desk] That one feature...',
                             'threshold' => 50,
                             'displayed' => 0,
-                            'content' => "<p>Hi {{display_name}},<br />Is there any particular KSD feature that's been on your mind lately? Yeah? No? Let us know below."
-                            . "<input class='ksd-notifications-other' type='textarea'/>"
-                            . "<span class='ksd-buttons'><a href='https://wordpress.org/support/view/plugin-reviews/kanzu-support-desk?filter=5#postform' target='_blank' class='ksd-notification-button ksd-notification-review ksd-notification-button-default'>Send</a><a href='#' class='ksd-notification-button'>Na,I'm good</a></span></p>",
+                            'content' => "<p>Hi {{display_name}},<br />Is there any particular Help Desk feature that's been on your mind lately? Yeah? No? Let us know below."
+                            . "<textarea class='ksd-notifications-one-feature' rows='4'> </textarea>"
+                            . "<div class='ksd-buttons'><button type='button' id='ksd-notification-one-feature' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>Send Feature Request</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>",
                             'user_response' => ""
-                    ),
+                ),*/
                 3506 => array(
                             'title' => '[Kanzu Support Desk] Would you recommend us?',
                             'threshold' => 90,
