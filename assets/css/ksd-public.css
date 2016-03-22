@@ -300,6 +300,17 @@ ul.ksd_attachments li{
 
 
 /*Onboarding*/
+.ksd-onboarding-progress a.button.ksd-onboarding-next {
+    background: #00a0d2 none repeat scroll 0 0;
+    color: #fff;
+    font-weight: bold;
+    height: 35px;
+    line-height: 35px;
+    padding: 12px 36px;
+    text-align: center;
+    text-decoration: none;
+    width: 150px;
+}
 .ksd-onboarding-progress{
     width:99%;
     margin-bottom: 5px;

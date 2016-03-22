@@ -820,11 +820,8 @@ class KSD_Admin {
     public function output_admin_menu_dashboard() {
             $this->do_admin_includes();             
 
-            $settings = Kanzu_Support_Desk::get_settings(); //@TODO 2.1.3 Here
-            if( 'yes' === $settings['onboarding_enabled'] && isset( $_GET['ksd-onboarding']) && 1 == $_GET['ksd-onboarding'] ){
-                $_GET['ksd-intro'] = 1;
-            }
-
+            $settings = Kanzu_Support_Desk::get_settings(); 
+            
             if ( isset( $_GET['ksd-intro'] ) ) {
                 include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-intro.php');         
             }

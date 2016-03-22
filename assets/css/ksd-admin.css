@@ -2179,6 +2179,9 @@ ul.ksd-nps-score {
     margin: 5px 0px 2px 0px;
     padding: 15px;
 }
+.ksd-onboarding-url {
+    margin-top: 7px;
+}
 .ksd-onboarding-progress a.button.ksd-onboarding-next {
     font-weight: bold;
     height: 35px;

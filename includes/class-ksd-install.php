@@ -402,7 +402,7 @@ class KSD_Install {
                         'page_submit_ticket'                => 0, 
                         'page_my_tickets'                   => 0, 
                         'salt'                              => '',
-                        'onboarding_enabled'                => 'no',
+                        'onboarding_enabled'                => 'yes',
                         'notifications_enabled'             => 'yes',
                     
                         /**Support form settings**/
