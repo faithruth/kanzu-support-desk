@@ -211,7 +211,7 @@ class KSD_Public {
    /**
     * Append ticket list to WooCommerce 'My Account' page
     * 
-    * @since 2.1.3
+    * @since 2.2.0
     */
    public function woo_edd_append_ticket_list(){
        printf( '<h2>%s</h2>',__( 'My Tickets','kanzu-support-desk' ) );

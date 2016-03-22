@@ -6,7 +6,7 @@
  * @license   GPL-2.0+
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
- * @since 2.1.3
+ * @since 2.2.0
  */
  
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
@@ -69,7 +69,7 @@ class KSD_Onboarding {
         /**
          * Show the onboarding progress
          * @param int $current_stage String value of the stage to show. e.g. two
-         * @since 2.1.3
+         * @since 2.2.0
          */
         public function show_onboarding_progress(){
             $this->ksd_settings = Kanzu_Support_Desk::get_settings();
@@ -121,7 +121,7 @@ class KSD_Onboarding {
          * For instances where 'stage_notes' is an array, that stage has multiple
          * levels; in that case, the stage_notes values would have to be exhausted before
          * proceeding to the next stage
-         * @TODO 2.1.3 Clean up the internationalization
+         * @TODO 2.2.0 Clean up the internationalization
          * @return Array
          */
         private function get_stage_details(){
@@ -203,7 +203,7 @@ class KSD_Onboarding {
                 $next_url       = esc_url( add_query_arg( 'ksd-onboarding', $next_stage , $the_stages[$current_stage]['next_url'] ) );
                 $next_url_html  = '<a href="' . $next_url. '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
             }      
-            //The last URL @TODO 2.1.3 On first access of settings, display link to 'quick-start guide' on our site
+            //The last URL @TODO 2.2.0 On first access of settings, display link to 'quick-start guide' on our site
             if ( $current_stage == count( $the_stages ) ){
                  $next_url_html  = '<a href="' . admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-settings' ). '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Customize your KSD', 'kanzu-support-desk' ).'</a>';
             }

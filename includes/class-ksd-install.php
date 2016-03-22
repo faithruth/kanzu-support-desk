@@ -98,6 +98,7 @@ class KSD_Install {
                     do_action ( 'ksd_upgrade_plugin', $settings['kanzu_support_version'] );//Holds all upgrade-related changes except changes to the settings. We send the current version to the action           
                     $settings['kanzu_support_version'] =  KSD_VERSION;   //Update the version
                     $upgraded_settings = apply_filters( 'ksd_upgrade_settings', $settings );
+                    $upgraded_settings['onboarding_enabled'] = 'no';//@2.2.0 Disable onboarding. Change this in next version
                     Kanzu_Support_Desk::update_settings( $upgraded_settings );                            
                     set_transient( '_ksd_upgrade_redirect', 1, 60 * 60 );// Redirect to welcome screen. Only do tthis for upgrades that have a special intro message
                     return;
@@ -145,10 +146,9 @@ class KSD_Install {
 			return;
                 }
                
-                if ( get_transient( '_ksd_upgrade_redirect' ) ) {//Display version-specific welcome message
+                if ( get_transient( '_ksd_upgrade_redirect' ) ) { 
                     delete_transient( '_ksd_upgrade_redirect' );
-                    $sanitized_version =  str_replace('.', '', KSD_VERSION ) ;
-                    wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard&ksd-intro=v' . $sanitized_version ) );  
+                    wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard' ) );  
                     exit;	
                 }
 		wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard&ksd-intro=1' ) );  
@@ -198,7 +198,7 @@ class KSD_Install {
                $dbChanges[]= "ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` ADD `tkt_is_read` BOOLEAN NOT NULL DEFAULT FALSE ;";
                $dbChanges[]= "ALTER TABLE `{$wpdb->prefix}kanzusupport_tickets` CHANGE `tkt_time_updated` `tkt_time_updated` TIMESTAMP NOT NULL;";
             }
-            if ( $sanitized_version < 213 ) {//@since 2.1.3 Added ksd_notifications
+            if ( $sanitized_version < 213 ) {//@since 2.2.0 Added ksd_notifications
                  $this->set_default_notifications();
             }
  
@@ -368,8 +368,8 @@ class KSD_Install {
              * @since 2.0.0 enable_customer_signup
              * @since 2.0.0 page_submit_ticket
              * @since 2.0.0 page_my_tickets
-             * @since 2.1.3 onboarding_enabled
-             * @since 2.1.3 notifications_enabled 
+             * @since 2.2.0 onboarding_enabled
+             * @since 2.2.0 notifications_enabled 
              */
             public function get_default_options() {
                 $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
@@ -540,7 +540,7 @@ class KSD_Install {
             
             /**
              * Create products from WooCommerce products and EDD downloads
-             * @since 2.1.3
+             * @since 2.2.0
              */
             private function create_woo_edd_products(){
                 $woocommerce_products   = $this->get_woocommerce_products();

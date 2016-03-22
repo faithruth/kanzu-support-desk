@@ -309,7 +309,7 @@ class KSD_Admin {
     /**
      * Update the next stage of the onboarding/tour process
      * 
-     * @since 2.1.3
+     * @since 2.2.0
      */
     public function update_onboarding_stage() {
         $completed_stage = $_POST['stage'];
@@ -323,7 +323,7 @@ class KSD_Admin {
     /**
      * Process the notification feedback
      * 
-     * @since 2.1.3
+     * @since 2.2.0
      */
     public function process_notification_feedback() {
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
@@ -335,7 +335,7 @@ class KSD_Admin {
 
      /**
       * Disable display of notifications
-      * @since 2.1.3
+      * @since 2.2.0
       */
      public function disable_notifications() {
         $ksd_settings = Kanzu_Support_Desk::get_settings();
@@ -2451,7 +2451,7 @@ class KSD_Admin {
       * @param string $agent_name The agent's name
       * @param string $notify_email The email to notify
       * @param int $tkt_id The ID of the ticket that's been re-assigned
-      * @since 2.1.3
+      * @since 2.2.0
       */
      public function do_notify_ticket_reassignment( $agent_name, $notify_email, $tkt_id ){
         $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
@@ -3163,7 +3163,7 @@ class KSD_Admin {
     /**
      * When a new product/download is published by EDD or WooCommerce,
      * add it as a ticket product
-     * @since 2.1.3
+     * @since 2.2.0
      */
     public function on_new_product( $postID, $new_product ){
         if( ! term_exists( $new_product->post_title, 'product' ) ){
