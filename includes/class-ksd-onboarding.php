@@ -189,8 +189,8 @@ class KSD_Onboarding {
                 $onboarding_div .= "<li {$stage_class}>{$the_stages[$i]['title']}</li>";
             }
             $onboarding_div .= '</ol>';
-            $onboarding_div .= $next_url_html;
             $onboarding_div .= '<div class="ksd-onboarding-notes">' . $notes . '</div>';
+            $onboarding_div .= $next_url_html;
             $onboarding_div .= '</div>';
             return $onboarding_div;
         }
