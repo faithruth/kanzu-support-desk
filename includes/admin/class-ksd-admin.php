@@ -142,6 +142,9 @@ class KSD_Admin {
         //On EDD download/WooCommerce publish
         add_action(  'publish_product',  array( $this, 'on_new_product' ), 10, 2 );
         add_action(  'publish_download',  array( $this, 'on_new_product' ), 10, 2 );
+        
+        //Change 'Publish' button to 'Update'
+        add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
     }
 
 
@@ -392,9 +395,9 @@ class KSD_Admin {
     private function get_current_ksd_screen( $screen = null ) {
         $current_ksd_screen_id = 'not_a_ksd_screen';
         if ( null == $screen ) {
-            $screen = get_current_screen();
+            $screen = get_current_screen(); 
         }
-        if ( 'ksd_ticket' !== $screen->post_type ) {
+        if ( ! $screen || 'ksd_ticket' !== $screen->post_type ) {
              return $current_ksd_screen_id;
         } 
         switch ( $screen->id ) {
@@ -832,6 +835,7 @@ class KSD_Admin {
                 include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');   
             }
     }
+    
 
 
     /**
@@ -3170,6 +3174,21 @@ class KSD_Admin {
             wp_insert_category( $cat_details );  
         }
     }
+    
+    /**
+     * Change the Publish button to update
+     * @param string $translation
+     * @param string $text
+     * @return string
+     * @TODO Re-do this. Not too consistent
+     */
+    public function change_publish_button( $translation, $text ) {
+        if ( $text == 'Publish' && 'ksd_ticket' == get_post_type() ){
+            return __( 'Update', 'kanzu-support-desk' );
+        }
+            
+        return $translation;
+    }    
 }   
         
 endif;
