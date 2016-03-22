@@ -2047,7 +2047,8 @@ jQuery(document).ready(function () {
                 jQuery('#post-status-display').removeClass().addClass('ksd-post-status-display').addClass( newStatus );                
             });
            //Change the 'Save Draft' button text to just 'Save'
-           jQuery( '#save-post' ).val( ksd_admin.ksd_labels.lbl_save );   
+           jQuery( '#save-post' ).remove();
+           jQuery('#preview-action').remove();
            //Cancel a change 'assign to' or 'severity'
            jQuery( 'a.cancel-severity,a.cancel-assign-to,a.cancel-customer' ).click( function( event ){
                event.preventDefault();
