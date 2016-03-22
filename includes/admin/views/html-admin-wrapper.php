@@ -28,6 +28,6 @@
         <div class="ksd-dialog loading hidden"><?php __( 'Loading...', 'kanzu-support-desk'); ?></div>
         <div class="ksd-dialog error hidden"><?php __( 'Error...', 'kanzu-support-desk'); ?></div>
         <div class="ksd-dialog success hidden"><?php __( 'Success...', 'kanzu-support-desk'); ?></div> 
-        <div id="ksd-notifications"><?php _e( 'Loading...', 'kanzu-support-desk'); ?></div>
+        <div id="ksd-blog-notifications"><?php _e( 'Loading...', 'kanzu-support-desk'); ?></div>
     </div>
 </div>

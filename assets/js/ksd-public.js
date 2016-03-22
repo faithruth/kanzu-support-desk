@@ -32,43 +32,43 @@ jQuery( document ).ready(function() {
         
         jQuery( targetFormClass+' img.ksd_loading_dialog' ).show();//Show the loading button
         jQuery( targetFormClass+' :submit').hide(); //Hide the submit button
-        jQuery.post(    ksd_public.ajax_url, 
-                        jQuery(form).serialize(), //The action and nonce are hidden fields in the form
-                        function( response ) { 
-                            jQuery( targetFormClass+' img.ksd_loading_dialog' ).hide();//Hide the loading button
-                            var respObj = {};
-                            try {
-                                //to reduce cost of recalling parse
-                                respObj = JSON.parse(response);
-                            } catch (err) {
-                                jQuery ( targetFormDiv+ ' div.ksd-support-form-response' ).show().html( ksd_public.ksd_public_labels.msg_error_refresh );
-                                jQuery( targetFormClass+' :submit' ).show(); //Hide the submit button
-                                return;
-                            }
-                            //Show the response received. Check for errors
-                            if ( 'undefined' !== typeof(respObj.error) ){
-                                jQuery ( targetFormDiv+ ' div.ksd-support-form-response' ).show().html(respObj.error.message);
-                                jQuery( targetFormClass+' :submit').show(); //Show the submit button
-                                return ;
-                            }
-                            jQuery ( targetFormDiv+ ' div.ksd-support-form-response' ).show().html(respObj);
-                            if( jQuery( form ).hasClass( '.ksd-register-public' ) ){//Registration successful. Redirect...
-                                window.location.replace( ksd_public.ksd_submit_tickets_url );
-                            }
-                            //Remove the form
-                            jQuery( targetFormClass ).remove();
-                            //Remove the 'submitted' class
-                            jQuery( targetFormDiv ).removeClass( 'ksd-support-form-submitted' );
-                });
-            
-        };   
 
+        jQuery.post(ksd_public.ajax_url,
+                jQuery(form).serialize(), //The action and nonce are hidden fields in the form
+                function (response) {
+                    jQuery(targetFormClass + ' img.ksd_loading_dialog').hide(); //Hide the loading button
+                    var respObj = {};
+                    try {
+                        //to reduce cost of recalling parse
+                        respObj = JSON.parse(response);
+                    } catch (err) {
+                        jQuery(targetFormDiv + ' div.ksd-support-form-response').show().html(ksd_public.ksd_public_labels.msg_error_refresh);
+                        jQuery(targetFormClass + ' :submit').show(); //Hide the submit button
+                        return;
+                    }
+                    //Show the response received. Check for errors
+                    if ('undefined' !== typeof (respObj.error)) {
+                        jQuery(targetFormDiv + ' div.ksd-support-form-response').show().html(respObj.error.message);
+                        jQuery(targetFormClass + ' :submit').show(); //Show the submit button
+                        return;
+                    }
+                    jQuery(targetFormDiv + ' div.ksd-support-form-response').show().html(respObj);
+                    if (jQuery(form).hasClass('.ksd-register-public')) {//Registration successful. Redirect...
+                        window.location.replace(ksd_public.ksd_submit_tickets_url);
+                    }
+                    //Remove the form
+                    jQuery(targetFormClass).remove();
+                    //Remove the 'submitted' class
+                    jQuery(targetFormDiv).removeClass('ksd-support-form-submitted');
+                });
+
+    }; 
     jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
         e.preventDefault();
         var supportForm    = jQuery( this ).parents( 'form' );
         jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
         if( jQuery( supportForm ).valid() ){
-            logNewTicket( supportForm );
+            logNewTicket( supportForm ); 
         }        
     });
     

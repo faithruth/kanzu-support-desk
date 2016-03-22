@@ -28,19 +28,42 @@
 .admin-ksd-title h2{
     text-transform: capitalize;
 }
-.ceo-caricature{
-    background-image: url("../images/ceo_caricature.png");
+.ksd-logo-intro{
+    background-image: url("../images/logo.png");
     background-repeat: no-repeat;
-    width: 120px;
-    height: 131px;
+    width: 200px;
+    height: 200px;
     position: absolute;
     top: 0;
     right: 0;
-    background-color: none;
 }
-.ksd-start-intro,.ksd-so-far{
-    width: 50%;
+#ksd-intro-one input.button-primary {
+    height: 40px;
+    width: 20%;
+}
+.ksd-feedback-intro textarea {
+    float: left;
+    height: 80px;
+    width: 60%;
+}
+#ksd-intro-one input.button-primary {
+    background-color: #fff;
+    border: 1px solid #00a0d2;
+    color: #00a0d2;
+    height: 40px;
+    margin: 20px;
+    width: 20%;
+    box-shadow: none;
+}
+#ksd-intro-one input.button-primary:hover{
+    background-color: #00a0d2;
+    color: #FFF;    
+}
+#ksd-intro-one a.ksd-start-intro{
+    width: 60%;
     text-align: center;
+    height: 40px;
+    line-height: 40px;
 }
 .more_nav {
     height: 38px;
@@ -59,7 +82,7 @@
     max-width: 1120px;
     min-width: 600px;
 }
-#ksd-notifications {
+#ksd-blog-notifications {
     background: url("../images/notifications_bg.png") repeat-y scroll 0 0 rgba(0, 0, 0, 0);
     display: none;
     min-height: 100%;
@@ -70,20 +93,20 @@
     width: 228px;
     z-index: 99;
 }
-#ksd-notifications a.post-title {
+#ksd-blog-notifications a.post-title {
     color: #2ea2cc;
     font-size: 14px;
     text-decoration: none;
     text-transform: capitalize;
     width: 100%;
 }
-#ksd-notifications a.excerpt{
+#ksd-blog-notifications a.excerpt{
     text-decoration: none;
 }
-#ksd-notifications a.excerpt:hover{
+#ksd-blog-notifications a.excerpt:hover{
     color: #2ea2cc;
 }
-#ksd-notifications .date-published {
+#ksd-blog-notifications .date-published {
     border-top: 1px solid #ccc;
     color: #999;
     float: left;
@@ -218,6 +241,9 @@
 
 #ksd-feedback textarea{
     width: 99%;
+}
+.ksd-feedback-response{
+    font-size: 0.8em;
 }
 ul.ksd-top-nav{
     margin: 0;
@@ -414,11 +440,22 @@ ul.ksd_attachments li{
 #post-body .ksd-misc-customer-email:before {
 	content: "\f466";
 }
+#post-body .ksd-misc-woo-order-id:before {
+	content: "\f174";
+}
 #post-body .ksd-misc-assign-to::before{
     content: "\f483";
 }
+#post-body .ksd-misc-customer-since::before{
+   content: "\f469";
+}
 #ksd-messages-metabox > div#ksd-ticket-message {
   min-height: 200px;
+}
+.ksd-misc-extras .ksd-post-status-display {
+    font-size: 0.8em;
+    padding: 2px;
+    margin: 0 3px;
 }
 .ksd-misc-value{
     font-weight: bold;
@@ -436,7 +473,7 @@ ul.ksd_attachments li{
     border-radius:3px;
     color: #FFF;   
 }
-#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before {
+#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before,#post-body .ksd-misc-woo-order-id:before,#post-body .ksd-misc-customer-since:before {
   display: inline-block;
   font: 400 20px/1 dashicons;
   left: -1px;
@@ -1091,9 +1128,12 @@ ul.edit-ticket-options.ui-widget-header{
     line-height: 15px;
     width: 90%;
 }
-.ksd-blue{
+.ksd-blue,.ksd-blue-bold{
     color: #2ea2cc;
 } 
+.ksd-blue-bold{
+    font-weight: bold;
+}
 .help_tip{
     cursor: help;
 }
@@ -1992,4 +2032,160 @@ ul#ksd-tabs{
 }
 #ksd-tabs .help_tip img{
     
+}
+/*Notifications */
+#ksd-notifications {
+    background-color: #fff;
+    bottom: 0;
+    margin-bottom: 0;
+    position: fixed;
+    right: 0;
+    z-index: 105;
+    display: none;
+    max-width: 30%;
+}
+#ksd-notifications  h3{
+    padding: 8px 12px;
+    margin-top: 0;
+    cursor: default;
+}
+
+.ksd-notification-salutation > img {
+    float: right;
+    height: 100px;
+    width: 100px;
+}
+#ksd-notifications .inside {
+    margin-bottom: 0;
+    padding-bottom: 3px;
+}
+.ksd-notification-close {
+    float: right;
+}
+.ksd-notification-close > img {
+    cursor: pointer;
+}
+.ksd-disable-notifications {
+    border-top: 1px solid #eee;
+    clear: both;
+    font-size: 0.8em;
+}
+.ksd-salut-text {
+    float: left;
+    padding-top: 20px;
+}
+#ksd-notifications .ksd-notification-button{
+  margin-right: 12px;
+}
+.ksd-notifications-response{
+    padding: 35px;
+}
+.ksd-notifications-one-feature {
+    margin: 10px auto;
+    width: 90%;
+}
+ul.ksd-nps-score {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+.ksd-nps-score > li {
+    border: 1px solid #eee;
+    display: table-cell;
+    height: 35px;
+    text-align: center;
+    vertical-align: middle;
+}
+.ksd-nps-score > li:hover,.ksd-nps-score > li.active{
+    background-color:  #eee;
+}
+.ksd-nps-ext-likely {
+    float: right;
+}
+.ksd-nps-not-likely {
+    float: left;
+}
+
+/*Onboarding*/
+.ksd-onboarding-progress{
+    width:99%;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    border: 1px solid #0073aa !important;
+    padding:2px;
+}
+.ksd-onboarding-stages {
+    width:90%;
+    padding: 0 0 5px;
+    margin: 0;
+    list-style: none;
+    overflow: hidden;
+    color: #ccc;
+    width: 100%;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+}
+
+.ksd-onboarding-stages li {
+    width: 20%;
+    float: left;
+    padding: 0 0 .8em;
+    margin: 0;
+    text-align: center;
+    position: relative;
+    border-bottom: 4px solid #ccc;
+    line-height: 1.4em;
+}
+
+.ksd-onboarding-stages li.done:before {
+    border-color: #0073aa;
+    background: #0073aa;
+}
+.ksd-onboarding-stages li:before {
+    content: "";
+    border: 4px solid #ccc;
+    border-radius: 100%;
+    width: 4px;
+    height: 4px;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    margin-left: -6px;
+    margin-bottom: -8px;
+    background: #fff;
+}
+
+.ksd-onboarding-stages li.active {
+    border-color: #0073aa;
+    color: #0073aa;
+}
+
+.ksd-onboarding-stages li.active:before {
+    border-color: #0073aa;
+}
+
+
+.ksd-onboarding-stages li.done {
+    border-color: #0073aa;
+    color: #0073aa;
+}
+
+.ksd-onboarding-notes{
+    background: #fff;
+    border-left: 4px solid #fff;
+    -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+    box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+    margin: 5px 0px 2px 0px;
+    padding: 15px;
+}
+.ksd-onboarding-url {
+    margin-top: 7px;
+}
+.ksd-onboarding-progress a.button.ksd-onboarding-next {
+    font-weight: bold;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    width: 150px;
 }

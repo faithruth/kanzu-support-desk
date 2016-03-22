@@ -25,7 +25,7 @@ if (!class_exists('KSD_Debug') ) :
 	 */
 	protected static $instance = null;   
 
-        	/**
+        /**
 	 * Return an instance of this class.
 	 *
 	 * @since     1.7.0

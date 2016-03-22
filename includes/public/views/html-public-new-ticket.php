@@ -10,7 +10,6 @@
  * @since 2.0.0
  */
 ?>
-
 <div class="ksd-new-ticket-form-wrap ksd-form-hidden-tab hidden"> 
     <div class="ksd-close-form-wrapper">
         <span class="ksd_close_button">
@@ -18,7 +17,7 @@
             <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>"  width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />        
         </span>        
     </div>
-    <form method="POST" class="ksd-new-ticket-public ksd-form-hidden-tab-form">
+    <form method="POST" class="ksd-new-ticket-public ksd-form-hidden-tab-form" enctype="multipart/form-data">
         <ul>   
             <?php if( "no" == $settings['enable_customer_signup'] && ! is_user_logged_in() ): ?>
                 <li class="ksd-cust-fullname">       
@@ -34,7 +33,9 @@
             <?php
             $show_categories    = $settings['supportform_show_categories'];
             $show_products      = $settings['supportform_show_products'];
-            $show_severity      = $settings['supportform_show_severity'];            
+            $show_severity      = $settings['supportform_show_severity'];   
+            $show_attachment    = $settings['supportform_show_attachment'];   
+
             if( 'yes' === $show_severity ):
             ?>
             <li class="ksd-pdt-severity">  
@@ -60,6 +61,7 @@
                 </select>    
             </li>
             <?php endif; ?>     
+            
             <?php if( 'yes' === $show_categories ): ?>
             <li class="ksd-tkt-categories" >
                 <select  name="ksd_tkt_cat_id" >
@@ -72,7 +74,15 @@
                     ?>
                 </select>    
             </li>
-            <?php endif; ?>             
+            <?php endif; ?> 
+            
+            
+            <?php if( 'yes' == $show_attachment ): ?>
+            <li class="ksd-tkt-attachment" >
+                <input type="file" name="ksd_tkt_attachment" />
+            </li>
+            <?php endif; ?> 
+            
             <li class="ksd-message">     
                 <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="7" class="ksd-message" name="ksd_tkt_message" required></textarea>
             </li>
