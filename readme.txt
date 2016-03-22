@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.4
-Stable tag: 2.1.2
+Stable tag: 2.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,14 @@ Yes; KSD will work with any theme
 7. Private note support
 
 == Changelog ==
+= 2.2.0, March 27, 2016 =
+ * WooCommerce and EDD support added
+ * Onboarding process added to guide through first ticket creation
+ * Feedback mechanism added
+ * Notifications sent on ticket re-assignment
+ * BUG FIX | Quick editing title would reset post
+ * BUG FIX | KSD Rules settings reset on update
+
 = 2.1.2, March 09, 2016 =
  * BUG FIX | Single ticket public replies failing
  * BUG FIX | Showing loading button before send action
@@ -298,6 +306,11 @@ Yes; KSD will work with any theme
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.0, March 27, 2016 =
+ * WooCommerce and EDD support added
+ * Onboarding process added to guide through first ticket creation
+ * Feedback mechanism added
+
 = 2.1.2 =
  * BUG FIX | Single ticket public replies failing
  * BUG FIX | Showing loading button before send action
