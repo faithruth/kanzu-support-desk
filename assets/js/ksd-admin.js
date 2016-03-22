@@ -812,6 +812,7 @@ jQuery(document).ready(function () {
             //All other feedback forms. They start with class ksd-feedback-
             jQuery("form[class^='ksd-feedback-']").submit(function (e) {
                 e.preventDefault();
+                var form = jQuery(this);
                 KSDUtils.showDialog("loading", ksd_admin.ksd_labels.msg_sending);
                 jQuery.post(ksd_admin.ajax_url,
                         jQuery(this).serialize(), //The action and nonce are hidden fields in the form, 
@@ -820,6 +821,8 @@ jQuery(document).ready(function () {
                                 return;
                             }
                             KSDUtils.showDialog("success", JSON.parse(response));
+                            form.remove();//Remove the form
+                            jQuery('.ksd-feedback-response').html( JSON.parse(response) ).fadeIn(400).delay(2000).fadeOut(400);
                         });
             });
         };

@@ -129,7 +129,7 @@ class KSD_Onboarding {
                 1   => array(
                     'title'         => __( 'Start tour', 'kanzu-support-desk' ),
                     'next_url'      =>  get_permalink( $this->ksd_settings['page_submit_ticket'] ),
-                    'stage_notes'   => ''
+                    'stage_notes'   => "Ready? Let's go! Click next to proceed..."
                 ),
                 2   => array(
                     'title'         => __( 'Create ticket', 'kanzu-support-desk' ),
@@ -202,11 +202,11 @@ class KSD_Onboarding {
             if ( ! empty ( $the_stages[$current_stage]['next_url'] ) ){
                 $next_stage     = $current_stage + 1;//Increment the current stage and add the next as a query argument to the next url
                 $next_url       = esc_url( add_query_arg( 'ksd-onboarding', $next_stage , $the_stages[$current_stage]['next_url'] ) );
-                $next_url_html  = '<a href="' . $next_url. '" class="button-small button button-primary">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
+                $next_url_html  = '<a href="' . $next_url. '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
             }      
             //The last URL @TODO 2.1.3 On first access of settings, display link to 'quick-start guide' on our site
             if ( $current_stage == count( $the_stages ) ){
-                 $next_url_html  = '<a href="' . admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-settings' ). '" class="button-small button button-primary">'.__( 'Customize your KSD', 'kanzu-support-desk' ).'</a>';
+                 $next_url_html  = '<a href="' . admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-settings' ). '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Customize your KSD', 'kanzu-support-desk' ).'</a>';
             }
             return $next_url_html;
         }        

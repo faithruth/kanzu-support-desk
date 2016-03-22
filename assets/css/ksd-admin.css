@@ -242,6 +242,9 @@
 #ksd-feedback textarea{
     width: 99%;
 }
+.ksd-feedback-response{
+    font-size: 0.8em;
+}
 ul.ksd-top-nav{
     margin: 0;
     padding: 0;
@@ -2174,5 +2177,12 @@ ul.ksd-nps-score {
     -webkit-box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
     box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
     margin: 5px 0px 2px 0px;
-    padding: 5px;
+    padding: 15px;
+}
+a.button.ksd-onboarding-next {
+    font-weight: bold;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    width: 150px;
 }

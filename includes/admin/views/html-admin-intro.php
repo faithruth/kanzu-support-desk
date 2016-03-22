@@ -11,7 +11,7 @@
         <?php echo KSD_Admin::output_feeback_form( 'intro','Reply' ); ?>        
         <br />
         
-        <a class="button-primary ksd-start-intro" href="<?php echo site_url( 'submit-ticket' ); ?>">Get Started! </a>
+        <a class="button-primary ksd-start-intro" href="<?php echo admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard&ksd-intro=1&ksd-onboarding=1' ); ?>">Get Started! </a>
         <p>PS: If you do run into any issues (or have any feedback whatsoever), get in touch on <a href="mailto:feedback@kanzucode.com">feedback@kanzucode.com</a></p>
     </div>
 </div>

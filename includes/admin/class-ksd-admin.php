@@ -2466,7 +2466,7 @@ class KSD_Admin {
       * @param string $send_button_text Submit button text
       * @TODO Move this to templates folder
       */
-     public static function output_feeback_form( $position, $send_button_text='Send' ) {
+     public static function output_feeback_form( $position, $send_button_text='Send' ) {              
         $form = '<form action="#" class="ksd-feedback-' . $position.'" method="POST">';        
         $form.= '<p><textarea name="ksd_user_feedback" rows="5" cols="100"></textarea></p>';
         $form.= '<input name="action" type="hidden" value="ksd_send_feedback" />';
@@ -2474,6 +2474,7 @@ class KSD_Admin {
         $form.= wp_nonce_field( 'ksd-send-feedback', 'feedback-nonce' ); 
         $form.= '<p><input type="submit" class="button-primary '.$position.'" name="ksd-feedback-submit" value="' . $send_button_text.'"/></p>';
         $form.= '</form>';
+        $form.= '<div class="ksd-feedback-response"></div>';  
         return $form;
      }         
 
