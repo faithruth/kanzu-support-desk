@@ -52,7 +52,7 @@ if (!class_exists('KSD_Notifications')) :
         /**
          * Get a notification to display
          * @return string
-         * @since 2.1.3
+         * @since 2.2.0
          */
         public function get_new_notification() {
             if ( ! current_user_can( 'manage_options' ) ) {//If not an admin, end the party
@@ -105,7 +105,7 @@ if (!class_exists('KSD_Notifications')) :
         
         /**
          * Set the default notifications
-         * @since 2.1.3
+         * @since 2.2.0
          */
         public function set_defaults(){ 
             $defaults = $this->get_defaults();

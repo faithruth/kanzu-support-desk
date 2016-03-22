@@ -149,7 +149,7 @@ class KSD_Templates {
          * also available.
          *
          * @since WP 1.5.0
-         * @since 2.1.3
+         * @since 2.2.0
          *
          * @param string $_template_file Path to template file.
          * @param bool $require_once Whether to require_once or require. Default true.
