@@ -56,19 +56,38 @@ if (!class_exists('KSD_Notifications')) :
          * @since 2.1.3
          */
         public function get_new_notification() {
-            //If displaying settings is disabled
             if ( ! current_user_can( 'manage_options' ) ) {//If not an admin, end the party
                 return;
             }
-           $this->set_defaults();
+
+            //If notifications are disabled
+            $ksd_settings = Kanzu_Support_Desk::get_settings();
+            if( 'no' == $ksd_settings['notifications_enabled'] ){
+                return;
+            } 
             $notification_html = $notification_header = '';
-            //@TODO If time not elapsec (transient present), do nothing
+            //Wait 5 days before attempting to display a notification
+            if (  false === get_transient( '_ksd_notification_transient' ) ){ 
+                $expiry = 60 * 60 * 24 * 5;//5 days
+                set_transient( '_ksd_notification_transient', '_ksd_notification_transient', $expiry );        
+            } else{
+                return;
+            }
             $notifications = get_option( $this->ksd_notifications_option );
             foreach ( $notifications as $id  => $current_nofification ){
                 if( 1 == $current_nofification['displayed'] ){
                     continue;
                 }
-                //If threshold has elapsed, continue
+                //Have the minimum no. of days required before displaying this notification elapsed?
+                if ( ! isset( $ksd_settings['ksd_activation_time'] ) ){
+                    $ksd_settings['ksd_activation_time'] = date('U' );
+                    Kanzu_Support_Desk::update_settings( $ksd_settings );
+                }
+                //If the plugin hasn't been active long enough, end the party
+                $plugin_tenure_days =  ( date('U') - $ksd_settings['ksd_activation_time'] )/60/60/24;
+                if ( $plugin_tenure_days < $current_nofification['threshold'] ){
+                    continue;
+                }
                 
                 $notification_html  .= '<div id="ksd-notifications" data-notification-id="'.$id.'" class="postbox">';
                 $notification_html  .= apply_filters( 'ksd_notification_header',$notification_header );
@@ -78,7 +97,7 @@ if (!class_exists('KSD_Notifications')) :
                 $notification_html  .= '</div></div>';  
                 //Update the array to indicate that we've displayed this notification
                 $notifications[$id]['displayed'] = 1;                
-                //update_option( $this->ksd_notifications_option, $notifications );
+                update_option( $this->ksd_notifications_option, $notifications );
                 break;
             }  
             return $notification_html;
@@ -127,28 +146,30 @@ if (!class_exists('KSD_Notifications')) :
             if ( 'no' == $user_response || 'close' == $user_response || empty( $notificationID ) ){
                 return $response;
             }
-            
+            $current_user   = wp_get_current_user();   
             //Take action for all the yeses...
             switch( $notificationID ){
-                case 3501://quick call
-                    $current_user   = wp_get_current_user();   
-                    $site_url       = get_site_url();
+                case 3501://quick call                    
+                    $site_url           = get_site_url();
                     $quick_call_message = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname},{$current_user->display_name},{$site_url}";
-                    $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Quick Call",$quick_call_message ) ? __( 'Response sent successfully. We will be in touch shortly. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
+                    $response           =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Quick Call",$quick_call_message ) ? __( 'Response sent successfully. We will be in touch shortly. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
                     break;
                 case 3502://ksd content                    
-                    $current_user       = wp_get_current_user();   
                     $ksd_content_message = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname},{$user_response}";
-                    $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Subscription",$ksd_content_message ) ? __( 'Thanks for your feedback! We will be in touch with the most popular content as soon as a substantial number of votes is in. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Vote not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );    
+                    $response            =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Subscription",$ksd_content_message ) ? __( 'Thanks for your feedback! We will be in touch with the most popular content as soon as a substantial number of votes is in. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Vote not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );    
                     break;
                 case 3505://One feature...
-                    $current_user       = wp_get_current_user();   
                     $ksd_content_message = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname},{$user_response}";
-                    $response =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Feature Request",$ksd_content_message ) ? __( 'Thanks for your feedback! We will be in touch with the most popular content as soon as a substantial number of votes is in. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Vote not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
+                    $response            =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - Feature Request",$ksd_content_message ) ? __( 'Thanks for your feedback! We will be in touch with the most popular content as soon as a substantial number of votes is in. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Vote not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );                    
+                    break;
+                case 3506://NPS 
+                    $ksd_nps_message    = "{$current_user->user_email},{$current_user->user_firstname},{$current_user->user_lastname},{$user_response}";
+                    $response           =  ( wp_mail( "feedback@kanzucode.com", "KSD Feedback - NPS",$ksd_nps_message ) ? __( 'Thanks for your feedback! We look forward to improving KSD based on it.', 'kanzu-support-desk' ) : __( 'Error | Feedback not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );    
                     break;
             }
             return $response;
         }
+                
         
         /**
          * Replace all placeholders
@@ -177,7 +198,7 @@ if (!class_exists('KSD_Notifications')) :
          */
         public function get_defaults() {
             $defaults = array(
-            /*    3501 => array(
+                3501 => array(
                             'title' => '[Kanzu Support Desk] Have time for a quick chat?',
                             'threshold' => 5,
                             'displayed' => 0,
@@ -211,7 +232,7 @@ if (!class_exists('KSD_Notifications')) :
                             . "<p>Could you enable this feature by clicking the button below? KSD will be tonnes better because of you.</p>"
                             . "<div class='ksd-buttons'><button type='button' id='ksd-notification-enable-usage' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>I'll improve KSD</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>",
                             'user_response' => ""
-                        ),                
+                        ),               
                 3504 => array(
                             'title' => '[Kanzu Support Desk] WordPress rating',
                             'threshold' => 40,
@@ -219,7 +240,7 @@ if (!class_exists('KSD_Notifications')) :
                             'content' => "<p>Hi {{display_name}},<br />Most WordPress users evaluate a plugin based on its rating in the repository. Would you mind giving us a rating? It'll go a long way in making us more discoverable by other users. </p>"
                             . "<div class='ksd-buttons'><a href='https://wordpress.org/support/view/plugin-reviews/kanzu-support-desk?filter=5#postform' target='_blank' class='ksd-notification-review button button-large button-primary ksd-notification-button ksd-notification-button-default'>I'll improve KSD</a><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>",
                             'user_response' => ""
-                    ),
+                    ), 
                 3505 => array(
                             'title' => '[Kanzu Support Desk] That one feature...',
                             'threshold' => 50,
@@ -228,7 +249,7 @@ if (!class_exists('KSD_Notifications')) :
                             . "<textarea class='ksd-notifications-one-feature' rows='4'> </textarea>"
                             . "<div class='ksd-buttons'><button type='button' id='ksd-notification-one-feature' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>Send Feature Request</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>",
                             'user_response' => ""
-                ),*/
+                ),
                 3506 => array(
                             'title' => '[Kanzu Support Desk] Would you recommend us?',
                             'threshold' => 90,
@@ -236,7 +257,10 @@ if (!class_exists('KSD_Notifications')) :
                             'content' => "<p>Hi {{display_name}},<br />To get a better idea of whether we are serving you well, we'd like to know, <strong>How likely is it that you would recommend KSD to a friend or colleague?</strong></p>"
                             . "<div class='ksd-notifications-nps'><div class='ksd-nps-labels'>"
                             . "<span class='ksd-nps-not-likely'>Not at all likely</span><span class='ksd-nps-ext-likely'>Extremely likely</span></div>"
-                            . "<ul class='ksd-nps-score'><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li></ul></div>",
+                            . "<ul class='ksd-nps-score'><li>0</li><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li></ul>"
+                            . "<div class='ksd-notification-nps-error'></div>"
+                            . "<div class='ksd-buttons'><button type='button' id='ksd-notification-nps' class='button button-large button-primary ksd-notification-button ksd-notification-button-default'>Rate KSD</button><button type='button' class='button button-large ksd-notification-button ksd-notification-cancel'>Leave me alone!</button></div>"     
+                            . "</div>",
                             'user_response' => ""
                     )                  
             );

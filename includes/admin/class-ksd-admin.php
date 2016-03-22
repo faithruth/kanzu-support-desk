@@ -198,57 +198,7 @@ class KSD_Admin {
             $tour_pointer_messages['ksd_intro_tour'] =  $this->load_intro_tour();
 
             //This array allows us to internationalize (translate) the words/phrases/labels displayed in the JS 
-            $admin_labels_array = array();
-            $admin_labels_array['dashboard_chart_title']        = __('Incoming Tickets', 'kanzu-support-desk' );
-            $admin_labels_array['dashboard_open_tickets']       = __('Total Open Tickets', 'kanzu-support-desk' );
-            $admin_labels_array['dashboard_unassigned_tickets'] = __('Unassigned Tickets', 'kanzu-support-desk' );
-            $admin_labels_array['dashboard_avg_response_time']  = __('Avg. Response Time', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_trash']                    = __('Trash', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_assign_to']                = __('Assign To', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_change_status']            = __('Change Status', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_change_severity']          = __('Change Severity', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_mark_read']                = __('Mark as Read', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_mark_unread']              = __('Mark as Unread', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_subject']                  = __('Subject', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_cust_fullname']            = __('Customer Name', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_cust_email']               = __('Customer Email', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_reply']                    = __('Send', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_forward']                  = __('Forward', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_update_note']              = __('Add Note', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_attach_file']              = __('Attach File', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_attach']                   = __('Attach', 'kanzu-support-desk' );                
-            $admin_labels_array['tkt_status_open']              = __('OPEN', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_status_pending']           = __('PENDING', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_status_resolved']          = __('RESOLVED', 'kanzu-support-desk' );                
-            $admin_labels_array['tkt_severity_low']             = __('LOW', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_severity_medium']          = __('MEDIUM', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_severity_high']            = __('HIGH', 'kanzu-support-desk' );
-            $admin_labels_array['tkt_severity_urgent']          = __('URGENT', 'kanzu-support-desk' );              
-            $admin_labels_array['msg_still_loading']            = __('Loading Replies...', 'kanzu-support-desk' );
-            $admin_labels_array['msg_loading']                  = __('Loading...', 'kanzu-support-desk' );
-            $admin_labels_array['msg_sending']                  = __('Sending...', 'kanzu-support-desk' );
-            $admin_labels_array['msg_reply_sent']               = __('Reply Sent!', 'kanzu-support-desk' );
-            $admin_labels_array['msg_error']                    = __('Sorry, an unexpected error occurred. Kindly retry. Thank you.', 'kanzu-support-desk' );
-            $admin_labels_array['msg_error_refresh']            = __('Sorry, but something went wrong. Please try again or reload the page.', 'kanzu-support-desk' );
-            $admin_labels_array['pointer_next']                 = __('Next', 'kanzu-support-desk' );
-            $admin_labels_array['lbl_toggle_trimmed_content']   = __('Toggle Trimmed Content', 'kanzu-support-desk' );
-            $admin_labels_array['lbl_tickets']                  = __( 'Tickets', 'kanzu-support-desk' );
-            $admin_labels_array['lbl_CC']                       = __( 'CC', 'kanzu-support-desk' );
-            $admin_labels_array['lbl_reply_to_all']             = __( 'Reply to all', 'kanzu-support-desk' );
-            $admin_labels_array['lbl_populate_cc']              = __( 'Populate CC field', 'kanzu-support-desk' );
-            $admin_labels_array['lbl_save']                     = __( 'Save', 'kanzu-support-desk' );
-            $admin_labels_array['lbl_update']                   = __( 'Update', 'kanzu-support-desk' );
-            $admin_labels_array['lbl_created_on']               = __( 'Created on', 'kanzu-support-desk' );
-
-            //jQuery form validator internationalization
-            $admin_labels_array['validator_required']           = __( 'This field is required.', 'kanzu-support-desk' );
-            $admin_labels_array['validator_email']              = __( 'Please enter a valid email address.', 'kanzu-support-desk' );
-            $admin_labels_array['validator_minlength']          = __( 'Please enter at least {0} characters.', 'kanzu-support-desk' );
-            $admin_labels_array['validator_cc']                 = __( 'Please enter a comma separated list of valid email addresses.', 'kanzu-support-desk' );
-
-            //Messages for migration to v2.0.0
-            $admin_labels_array['msg_migrationv2_started']      = __('Migration of your tickets and replies has started. This may take some time. Please wait...', 'kanzu-support-desk' );
-            $admin_labels_array['msg_migrationv2_deleting']     = __('Deleting tickets. This may take sometime. Please wait...', 'kanzu-support-desk' );
+            $admin_labels_array = $this->get_admin_labels();
 
             $ticket_info = array( 'status_list' => $this->get_submitdiv_status_options() );
 
@@ -292,6 +242,66 @@ class KSD_Admin {
         }
     }
 
+    /**
+     * Get the labels internationalized for use in 
+     * our JS, ksd-admin.js
+     */
+    private function get_admin_labels(){
+        $admin_labels_array = array();
+        $admin_labels_array['dashboard_chart_title']        = __('Incoming Tickets', 'kanzu-support-desk' );
+        $admin_labels_array['dashboard_open_tickets']       = __('Total Open Tickets', 'kanzu-support-desk' );
+        $admin_labels_array['dashboard_unassigned_tickets'] = __('Unassigned Tickets', 'kanzu-support-desk' );
+        $admin_labels_array['dashboard_avg_response_time']  = __('Avg. Response Time', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_trash']                    = __('Trash', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_assign_to']                = __('Assign To', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_change_status']            = __('Change Status', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_change_severity']          = __('Change Severity', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_mark_read']                = __('Mark as Read', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_mark_unread']              = __('Mark as Unread', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_subject']                  = __('Subject', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_cust_fullname']            = __('Customer Name', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_cust_email']               = __('Customer Email', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_reply']                    = __('Send', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_forward']                  = __('Forward', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_update_note']              = __('Add Note', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_attach_file']              = __('Attach File', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_attach']                   = __('Attach', 'kanzu-support-desk' );                
+        $admin_labels_array['tkt_status_open']              = __('OPEN', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_status_pending']           = __('PENDING', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_status_resolved']          = __('RESOLVED', 'kanzu-support-desk' );                
+        $admin_labels_array['tkt_severity_low']             = __('LOW', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_severity_medium']          = __('MEDIUM', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_severity_high']            = __('HIGH', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_severity_urgent']          = __('URGENT', 'kanzu-support-desk' );              
+        $admin_labels_array['msg_still_loading']            = __('Loading Replies...', 'kanzu-support-desk' );
+        $admin_labels_array['msg_loading']                  = __('Loading...', 'kanzu-support-desk' );
+        $admin_labels_array['msg_sending']                  = __('Sending...', 'kanzu-support-desk' );
+        $admin_labels_array['msg_reply_sent']               = __('Reply Sent!', 'kanzu-support-desk' );
+        $admin_labels_array['msg_error']                    = __('Sorry, an unexpected error occurred. Kindly retry. Thank you.', 'kanzu-support-desk' );
+        $admin_labels_array['msg_error_refresh']            = __('Sorry, but something went wrong. Please try again or reload the page.', 'kanzu-support-desk' );
+        $admin_labels_array['pointer_next']                 = __('Next', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_toggle_trimmed_content']   = __('Toggle Trimmed Content', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_tickets']                  = __( 'Tickets', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_CC']                       = __( 'CC', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_reply_to_all']             = __( 'Reply to all', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_populate_cc']              = __( 'Populate CC field', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_save']                     = __( 'Save', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_update']                   = __( 'Update', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_created_on']               = __( 'Created on', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_notification_nps_error']               = __( 'Please select one of the values above (0 to 10)', 'kanzu-support-desk' );
+        
+        //jQuery form validator internationalization
+        $admin_labels_array['validator_required']           = __( 'This field is required.', 'kanzu-support-desk' );
+        $admin_labels_array['validator_email']              = __( 'Please enter a valid email address.', 'kanzu-support-desk' );
+        $admin_labels_array['validator_minlength']          = __( 'Please enter at least {0} characters.', 'kanzu-support-desk' );
+        $admin_labels_array['validator_cc']                 = __( 'Please enter a comma separated list of valid email addresses.', 'kanzu-support-desk' );
+
+        //Messages for migration to v2.0.0
+        $admin_labels_array['msg_migrationv2_started']      = __('Migration of your tickets and replies has started. This may take some time. Please wait...', 'kanzu-support-desk' );
+        $admin_labels_array['msg_migrationv2_deleting']     = __('Deleting tickets. This may take sometime. Please wait...', 'kanzu-support-desk' );        
+        
+        return $admin_labels_array;
+    }
 
     /**
      * Update the next stage of the onboarding/tour process
@@ -1986,7 +1996,7 @@ class KSD_Admin {
                     $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? wp_kses_post ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
                     continue;
                 }                    
-                $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
+                $updated_settings[$option_name] = ( isset ( $_POST[$option_name] ) && ! is_array( $_POST[$option_name] ) ? sanitize_text_field ( stripslashes ( $_POST[$option_name] ) ) : $updated_settings[$option_name] );
             }
             //For a checkbox, if it is unchecked then it won't be set in $_POST
             $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
@@ -3147,12 +3157,9 @@ class KSD_Admin {
     }
 
     public function append_admin_feedback(){
-        //@TODO Prequalification criteria. Are you admin? Do you have x tickets?
-        //@TODO Retrieve message & title from KSD_Notifications
-        //@TODO If nothing exists, return, well, nothing :-)
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
-        $ksd_notifications = new KSD_Notifications();
-        $notification = $ksd_notifications->get_new_notification();
+        $ksd_notifications  = new KSD_Notifications();
+        $notification       = $ksd_notifications->get_new_notification();
         echo $notification;
     }
 

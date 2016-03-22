@@ -370,8 +370,20 @@ jQuery(document).ready(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: jQuery('textarea.ksd-notifications-one-feature').val() };
                 __submitNotificationFeedback( data );
                 KSDAnalytics.sendEvent( 'Feedback', 'General', 'one_feature' );
-           });           
-
+           });    
+           //NPS 
+           jQuery('ul.ksd-nps-score li').click(function () {
+               jQuery('ul.ksd-nps-score li').removeClass('active');
+               jQuery(this).addClass('active');
+           });
+           jQuery('#ksd-notification-nps').click(function () {
+               if ( ! jQuery('ul.ksd-nps-score li.active').length ){
+                   jQuery('div.ksd-notification-nps-error').html( ksd_admin.ksd_labels.lbl_notification_nps_error );
+                   return;
+               }
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: jQuery('ul.ksd-nps-score li.active').text() };
+                __submitNotificationFeedback( data );
+           });   
                      
         };        
         
@@ -2308,7 +2320,6 @@ jQuery(document).ready(function () {
          */
         _loadTicketPagination = function (tab_id, current_page, total_results, limit) {
 
-            //@TODO: Why is this coming as o instead of 0.
             if (total_results === "o" || total_results === "0")
                 return;
             var pages = (total_results / limit);

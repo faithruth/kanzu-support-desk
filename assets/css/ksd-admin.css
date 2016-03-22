@@ -2055,6 +2055,27 @@ ul#ksd-tabs{
     margin: 10px auto;
     width: 90%;
 }
+ul.ksd-nps-score {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+.ksd-nps-score > li {
+    border: 1px solid #eee;
+    display: table-cell;
+    height: 35px;
+    text-align: center;
+    vertical-align: middle;
+}
+.ksd-nps-score > li:hover,.ksd-nps-score > li.active{
+    background-color:  #eee;
+}
+.ksd-nps-ext-likely {
+    float: right;
+}
+.ksd-nps-not-likely {
+    float: left;
+}
 
 /*Onboarding*/
 .ksd-onboarding-progress{
