@@ -2464,6 +2464,7 @@ class KSD_Admin {
       * Return the HTML for a feedback form
       * @param string $position The position of the form
       * @param string $send_button_text Submit button text
+      * @TODO Move this to templates folder
       */
      public static function output_feeback_form( $position, $send_button_text='Send' ) {
         $form = '<form action="#" class="ksd-feedback-' . $position.'" method="POST">';        
@@ -2471,7 +2472,7 @@ class KSD_Admin {
         $form.= '<input name="action" type="hidden" value="ksd_send_feedback" />';
         $form.= '<input name="feedback_type" type="hidden" value="' . $position.'" />';
         $form.= wp_nonce_field( 'ksd-send-feedback', 'feedback-nonce' ); 
-        $form.= '<p><input type="submit" class="button-primary" name="ksd-feedback-submit" value="' . $send_button_text.'"/></p>';
+        $form.= '<p><input type="submit" class="button-primary '.$position.'" name="ksd-feedback-submit" value="' . $send_button_text.'"/></p>';
         $form.= '</form>';
         return $form;
      }         
@@ -2482,34 +2483,28 @@ class KSD_Admin {
       * @since 1.1.0
       */
      public function send_feedback() {
-         if ( isset( $_POST['feedback_type'] ) ) {//If it a request to be added to our waiting list, add them
-            switch ( $_POST['feedback_type'] ):
-                case 'waiting_list':
-                    $current_user = wp_get_current_user();
-                    $addon_message = sanitize_text_field( $_POST['ksd_user_feedback'] ) . ', ' . $current_user->user_email;
-                    $response = ( $this->send_email("feedback@kanzucode.com", $addon_message, "KSD Add-on Waiting List") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );
-                    break;
-                default:
-                    $feedback_message = sanitize_text_field( $_POST['ksd_user_feedback'] ) . ', ' . $_POST['feedback_type'];
-                    $response = ( $this->send_email("feedback@kanzucode.com", $feedback_message, "KSD Feedback") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );
-            endswitch;
-
-            echo json_encode($response );
-            die(); // IMPORTANT: don't leave this out
+        $feedback_type  =  isset( $_POST['feedback_type'] ) ?  sanitize_text_field( $_POST['feedback_type'] ) : 'default';
+        $user_feedback  = sanitize_text_field( $_POST['ksd_user_feedback'] );
+        
+        if (  'waiting_list' == $feedback_type ) {
+            $current_user = wp_get_current_user();
+            $addon_message =  "{$user_feedback},{$current_user->user_email}";
+            $response = ( $this->send_email( "feedback@kanzucode.com", $addon_message, "KSD Add-on Waiting List") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );
+            echo json_encode( $response );
+            die();              
         }
-
-        if ( ! wp_verify_nonce( $_POST['feedback-nonce'], 'ksd-send-feedback' ) ) {
-            die ( __('Busted!', 'kanzu-support-desk') );
-           }
-         if ( strlen( $_POST['ksd_user_feedback'] )<= 2 ) {
-            $response = __( "Error | The feedback field's empty. Please type something then send", "kanzu-support-desk"); 
-         }  
-         else{
-            $response =  ( $this->send_email( "feedback@kanzucode.com", sanitize_text_field( $_POST['ksd_user_feedback'] ),"KSD Feedback" ) ? __( 'Sent successfully. Thank you!', 'kanzu-support-desk' ) : __( 'Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );
-         }
-         echo json_encode( $response );	
-         die();// IMPORTANT: don't leave this out
-     }
+        
+        if ( strlen( $user_feedback ) <= 2 ) {
+            $response = __("Error | The feedback field's empty. Please type something then send", "kanzu-support-desk");
+            echo json_encode( $response );
+            die();              
+        }
+        
+        $feedback_message = "{$user_feedback},{$feedback_type}";
+        $response = ( $this->send_email( "feedback@kanzucode.com", $feedback_message, "KSD Feedback") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') ); 
+        echo json_encode( $response );
+        die();  
+    }
 
      /**
       * Send mail. 

@@ -108,7 +108,7 @@ class KSD_Install {
                 $ksd_install = self::get_instance();
                 $ksd_install->set_default_options(); 	
                 $ksd_install->create_support_pages_and_salt();
-                $ksd_install->log_initial_tickets();
+                //$ksd_install->log_initial_tickets();
                 $ksd_install->create_roles();  
                 $ksd_install->create_woo_edd_products();
                 $ksd_install->set_default_notifications();

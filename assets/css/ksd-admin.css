@@ -28,19 +28,42 @@
 .admin-ksd-title h2{
     text-transform: capitalize;
 }
-.ceo-caricature{
-    background-image: url("../images/ceo_caricature.png");
+.ksd-logo-intro{
+    background-image: url("../images/logo.png");
     background-repeat: no-repeat;
-    width: 120px;
-    height: 131px;
+    width: 200px;
+    height: 200px;
     position: absolute;
     top: 0;
     right: 0;
-    background-color: none;
 }
-.ksd-start-intro,.ksd-so-far{
-    width: 50%;
+#ksd-intro-one input.button-primary {
+    height: 40px;
+    width: 20%;
+}
+.ksd-feedback-intro textarea {
+    float: left;
+    height: 80px;
+    width: 60%;
+}
+#ksd-intro-one input.button-primary {
+    background-color: #fff;
+    border: 1px solid #00a0d2;
+    color: #00a0d2;
+    height: 40px;
+    margin: 20px;
+    width: 20%;
+    box-shadow: none;
+}
+#ksd-intro-one input.button-primary:hover{
+    background-color: #00a0d2;
+    color: #FFF;    
+}
+#ksd-intro-one a.ksd-start-intro{
+    width: 60%;
     text-align: center;
+    height: 40px;
+    line-height: 40px;
 }
 .more_nav {
     height: 38px;
@@ -1102,9 +1125,12 @@ ul.edit-ticket-options.ui-widget-header{
     line-height: 15px;
     width: 90%;
 }
-.ksd-blue{
+.ksd-blue,.ksd-blue-bold{
     color: #2ea2cc;
 } 
+.ksd-blue-bold{
+    font-weight: bold;
+}
 .help_tip{
     cursor: help;
 }

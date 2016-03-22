@@ -52,7 +52,6 @@ if (!class_exists('KSD_Notifications')) :
         /**
          * Get a notification to display
          * @return string
-         * @TODO Analytics when notification is shown. Analytics when CTA is clicked
          * @since 2.1.3
          */
         public function get_new_notification() {
