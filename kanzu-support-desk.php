@@ -2,8 +2,8 @@
 /**
  * Plugin Name:       Kanzu Support Desk
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
- * Description:       Simple, powerful, personal customer service ( support ticket ) solution for your small business
- * Version:           2.2.0
+ * Description:       Kanzu Support Desk (KSD) is a simple, personal and powerful help desk solution that takes your customer support to the next level.
+ * Version:           2.2.1
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
  * Text Domain:       kanzu-support-desk
@@ -24,7 +24,7 @@ final class Kanzu_Support_Desk {
 	/**
 	 * @var string
 	 */
-	public $version = '2.2.0';
+	public $version = '2.2.1';
 
 	/**
 	 * @var string

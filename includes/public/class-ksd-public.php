@@ -47,7 +47,7 @@ class KSD_Public {
         add_filter( 'the_content', array( $this, 'apply_templates' ) );
         
         //Redirect customers on login                
-        add_filter( 'login_redirect', array ( $this, 'do_login_redirect' ), 10, 3 );
+        //add_filter( 'login_redirect', array ( $this, 'do_login_redirect' ), 10, 3 );
         
         //Add CC button to tinyMCE editor
         $this->add_tinymce_cc_button();
@@ -510,6 +510,7 @@ class KSD_Public {
          * @param object $user Logged user's data.
          * @return string
          * @since 2.0.0
+         * @since 2.2.1 Filter commented out
          */
         public function do_login_redirect( $redirect_to, $request, $user ) {                
                 global $user;//is there a user to check?
