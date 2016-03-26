@@ -1,11 +1,11 @@
 Kanzu Support Desk
 ==================
 
-Kanzu Support Desk (KSD) is a simple, powerful, personal customer service ( support ticket ) solution for your small business
+Kanzu Support Desk (KSD) is a simple, personal and powerful help desk solution that takes your customer support to the next level.
 
 ##Description 
 
-Great customer care is at the heart of every good product or service. Kanzu Support Desk breathes fresh life into ticketing solutions
+Great customer care is at the heart of every good product or service. Kanzu Support Desk breathes fresh life into help desk solutions
 so that you and your team can focus on what you do best-being awesome. This nifty and pretty plugin boasts of a native WordPress 
 interface so you don't have to worry about a learning curve-get up and running immediately!
 We do the heavy-lifting for you so you can focus on your customers. KSD was built with **SIMPLICITY** in the driving seat. 
@@ -13,11 +13,13 @@ You'll love how simple and powerful it is. Ok ok, enough already! So...
 
 What's under the hood? Let's see:
 
-* Multiple channels for ticket-creation: Front-end via a support tab, backend via a pretty form, via Email as an optional add-on
+* Very simple user interface
+* Email Notifications to keep you and your customer up-to-date on a ticket's progress
+* Support for various products created using KSD itself, WooCommerce or Easy Digital Downloads
+* Multiple channels for ticket-creation: Front-end via a support form, backend via a pretty form, via Email as an optional add-on
 * Unlimited number of agents supported
 * Beautiful graphs to let you in on your performance
-* Customers receive email notifications on ticket creation
-* Private notes on tickets
+* Private notes on tickets to allow agents share extra information on tickets with each other
 * Simple ticket re-assignment 
 * Ticket severity supported 
 * Translation-ready 
@@ -47,9 +49,16 @@ What's under the hood? Let's see:
 4. Activate the plugin in the Plugin dashboard
 
 ## After activation 
-You'll be redirected to **Kanzu Support Desk > Dashboard**. This'll display your performance statistics when you receive new tickets. Navigate to **Kanzu Support Desk > Settings** to change your settings.
-Add shortcode **[ksd_support_form]** anywhere you want the support form to be displayed to your customers.
+You'll get an intro message and walk through an quick tour of the plugin. 
+Two pages will be created automatically on activation:
+1. My Tickets       - It shows a customer's tickets after they log in
+2. Submit Ticket    - Allows customers to submit tickets
 
-To add CAPTCHA to the form, go [here](https://www.google.com/recaptcha/admin), get Google reCAPTCHA keys and then add them to your KSD settings
+Ticket submission can also be done using the Support form hidden in the bottom left corner
+of your site. There's also a support form Widget should you require it. Optionally, you could 
+get our [Mail add-on](kanzucode.com/downloads/kanzu-support-desk-mail) to allow your customers 
+create tickets by emailing your support email address.
+
+To add CAPTCHA to your support form, go [here](https://www.google.com/recaptcha/admin), get Google reCAPTCHA keys and then add them to your KSD settings
 
 Please check out [our documentation here](https://kanzucode.com/documentation/wordpress-customer-service-plugin-ksd-getting-started/) for a more detailed walk-through should you need it
