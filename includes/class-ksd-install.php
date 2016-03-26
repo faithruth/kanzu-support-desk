@@ -370,9 +370,10 @@ class KSD_Install {
              * @since 2.0.0 page_my_tickets
              * @since 2.2.0 onboarding_enabled
              * @since 2.2.0 notifications_enabled 
+             * @since 2.2.1 Changed $user_info to current user, not primary admin 
              */
             public function get_default_options() {
-                $user_info = get_userdata(1);//Get the admin user's information. Used to set default email
+                $user_info = wp_get_current_user();  
                 return  array (
                         /** KSD Version info ********************************************************/
                         'kanzu_support_version'             => KSD_VERSION,
@@ -396,7 +397,7 @@ class KSD_Install {
                         'recaptcha_secret_key'              => "",
                         'recaptcha_error_message'           => sprintf ( __( 'Sorry, an error occurred. If this persists, kindly get in touch with the site administrator on %s', 'kanzu-support-desk' ), $user_info->user_email ),
                         'enable_anonymous_tracking'         => "no", 
-                        'auto_assign_user'                  => '',   
+                        'auto_assign_user'                  => $user_info->ID,   
                         'ticket_management_roles'           => 'administrator', 
                         'enable_customer_signup'            => "yes", 
                         'page_submit_ticket'                => 0, 
