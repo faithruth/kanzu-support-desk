@@ -286,7 +286,6 @@ jQuery(document).ready(function () {
             this.handleAddons();
             this.enableUsageStats();
             this.notifications();
-            this.doMigrationV2();
             
         };
 
@@ -587,48 +586,6 @@ jQuery(document).ready(function () {
             });
         };
         
-        /**
-         * Migrate tickets, private notes, etc to v2.0.0
-         * @returns {undefined}
-         */
-        this.doMigrationV2 = function () {
-                    //Expand migration tab
-                    if( null !== jQuery(location).attr("href").match(/active_tab=migration/)){
-                        var ind = jQuery("#ksd-migration-status").parent().parent().index();
-                        var idx = ((ind+1)/2)- 1;
-                        jQuery("div.ksd-settings-accordion").accordion( "option", "active", idx );
-                    }
-
-                    jQuery("#ksd-migration-tickets").click(function(){
-                        jQuery('.ksd-migration-spinner').addClass('is-active');
-                        jQuery("#ksd-migration-tickets").remove();
-                        jQuery("#ksd-migration-status").html( ksd_admin.ksd_labels.msg_migrationv2_started );
-                        var data = {
-                            action: "ksd_migrate_to_v2",
-                            ksd_admin_nonce: ksd_admin.ksd_admin_nonce
-                        };
-
-                        jQuery.post(ksd_admin.ajax_url, data, function (response) {
-                                jQuery('.ksd-migration-spinner').removeClass('is-active');
-                               jQuery("#ksd-migration-status").html(response);
-                        });
-                    });   
-                    
-                    jQuery("#ksd-migration-deletetickets").click(function(){
-                        jQuery('.ksd-migration-spinner').addClass('is-active');
-                        jQuery("#ksd-migration-deletetickets").remove();
-                        jQuery("#ksd-migration-status").html( ksd_admin.ksd_labels.msg_migrationv2_deleting );
-                        var data = {
-                            action: "ksd_deletetables_v2",
-                            ksd_admin_nonce: ksd_admin.ksd_admin_nonce
-                        };
-                        
-                        jQuery.post(ksd_admin.ajax_url, data, function (response) {
-                                jQuery('.ksd-migration-spinner').removeClass('is-active');
-                               jQuery("#ksd-migration-status").html(response);
-                        });
-                    });           
-        };
         
     };//eof:KSDSettings
 
