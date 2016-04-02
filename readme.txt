@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.4
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,9 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
+= 2.2.2, April 3, 2016 =
+ * Update translation strings
+
 = 2.2.1, March 27, 2016 =
  * Disable KSD Customer redirection on login
  * BUG FIX | Preformatted text shouldn't overflow in replies
@@ -317,6 +320,9 @@ Yes, it will
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.2 =
+ * Update translation strings
+
 = 2.2.1 =
  * Disable KSD Customer redirection on login
  * BUG FIX | Preformatted text shouldn't overflow in replies
