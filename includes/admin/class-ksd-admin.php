@@ -192,11 +192,6 @@ class KSD_Admin {
             //Variables to send to the admin JS script
             $ksd_admin_tab = ( isset( $_GET['page'] ) ?  $_GET['page']  : "" );//This determines which tab to show as active
 
-
-
-            //Get intro tour messages if we are in tour mode @since 1.1.0
-            $tour_pointer_messages['ksd_intro_tour'] =  $this->load_intro_tour();
-
             //This array allows us to internationalize (translate) the words/phrases/labels displayed in the JS 
             $admin_labels_array = $this->get_admin_labels();
 
@@ -216,7 +211,6 @@ class KSD_Admin {
                                         'ksd_agents_list'           =>  self::get_agent_list( $settings['ticket_management_roles'] ),
                                         'ksd_current_user_id'       =>  get_current_user_id(),
                                         'ksd_labels'                =>  $admin_labels_array,
-                                        'ksd_tour_pointers'         =>  $tour_pointer_messages,
                                         'enable_anonymous_tracking' =>  $settings['enable_anonymous_tracking'],
                                         'ksd_ticket_info'           =>  $ticket_info,
                                         'ksd_current_screen'        =>  $this->get_current_ksd_screen(),
@@ -252,12 +246,12 @@ class KSD_Admin {
         $admin_labels_array['dashboard_open_tickets']       = __('Total Open Tickets', 'kanzu-support-desk' );
         $admin_labels_array['dashboard_unassigned_tickets'] = __('Unassigned Tickets', 'kanzu-support-desk' );
         $admin_labels_array['dashboard_avg_response_time']  = __('Avg. Response Time', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_trash']                    = __('Trash', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_assign_to']                = __('Assign To', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_change_status']            = __('Change Status', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_change_severity']          = __('Change Severity', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_mark_read']                = __('Mark as Read', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_mark_unread']              = __('Mark as Unread', 'kanzu-support-desk' );
+//      $admin_labels_array['tkt_trash']                    = __('Trash', 'kanzu-support-desk' );
+//      $admin_labels_array['tkt_assign_to']                = __('Assign To', 'kanzu-support-desk' );
+//      $admin_labels_array['tkt_change_status']            = __('Change Status', 'kanzu-support-desk' );
+//      $admin_labels_array['tkt_change_severity']          = __('Change Severity', 'kanzu-support-desk' );
+//      $admin_labels_array['tkt_mark_read']                = __('Mark as Read', 'kanzu-support-desk' );
+//      $admin_labels_array['tkt_mark_unread']              = __('Mark as Unread', 'kanzu-support-desk' );
         $admin_labels_array['tkt_subject']                  = __('Subject', 'kanzu-support-desk' );
         $admin_labels_array['tkt_cust_fullname']            = __('Customer Name', 'kanzu-support-desk' );
         $admin_labels_array['tkt_cust_email']               = __('Customer Email', 'kanzu-support-desk' );
@@ -288,7 +282,7 @@ class KSD_Admin {
         $admin_labels_array['lbl_save']                     = __( 'Save', 'kanzu-support-desk' );
         $admin_labels_array['lbl_update']                   = __( 'Update', 'kanzu-support-desk' );
         $admin_labels_array['lbl_created_on']               = __( 'Created on', 'kanzu-support-desk' );
-        $admin_labels_array['lbl_notification_nps_error']               = __( 'Please select one of the values above (0 to 10)', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_notification_nps_error']   = __( 'Please select one of the values above (0 to 10)', 'kanzu-support-desk' );
         
         //jQuery form validator internationalization
         $admin_labels_array['validator_required']           = __( 'This field is required.', 'kanzu-support-desk' );
@@ -297,8 +291,8 @@ class KSD_Admin {
         $admin_labels_array['validator_cc']                 = __( 'Please enter a comma separated list of valid email addresses.', 'kanzu-support-desk' );
 
         //Messages for migration to v2.0.0
-        $admin_labels_array['msg_migrationv2_started']      = __('Migration of your tickets and replies has started. This may take some time. Please wait...', 'kanzu-support-desk' );
-        $admin_labels_array['msg_migrationv2_deleting']     = __('Deleting tickets. This may take sometime. Please wait...', 'kanzu-support-desk' );        
+        //$admin_labels_array['msg_migrationv2_started']      = __('Migration of your tickets and replies has started. This may take some time. Please wait...', 'kanzu-support-desk' );
+       //$admin_labels_array['msg_migrationv2_deleting']     = __('Deleting tickets. This may take sometime. Please wait...', 'kanzu-support-desk' );        
         
         return $admin_labels_array;
     }
@@ -497,7 +491,7 @@ class KSD_Admin {
             case 'ksd-addons': 
                 $contextual_help = sprintf( '<span><h2> %s </h2> <p> %s </p></span>',
                                             __( 'KSD Add-ons', 'kanzu-support-desk'),
-                                            __( 'Take your customer support to the next level by activatinng an add-on.', 'kanzu-support-desk')    
+                                            __( 'Take your customer support to the next level by activating an add-on.', 'kanzu-support-desk')    
                                     );                      
                 break;
         }
@@ -2155,142 +2149,7 @@ class KSD_Admin {
         echo json_encode( $response );
         die(); // IMPORTANT: don't leave this out            
     }
-
-    /**
-      * Give the user an introductory tour to KSD
-      * @return Array $pointers Returns an array of pointers or false
-      * @since 1.1.0
-      */
-     private function load_intro_tour() {
-        // Don't run on WP < 3.3. The 'pointers' used to give the
-        //intro tour were only introduced in WP 3.3
-        if ( get_bloginfo( 'version' ) < '3.3' ) {
-            return false;                
-        }
-        //Check if tour mode is on
-        $KSD_settings = Kanzu_Support_Desk::get_settings();
-        if ( "no" === $KSD_settings['tour_mode'] ) {
-            return false;
-         }
-        //Generate the tour messages
-        $pointers = $this->generate_tour_content();
-
-        // No pointers? Then we stop.
-        if ( ! $pointers || ! is_array( $pointers ) ) {
-            return false;
-        }
-        wp_enqueue_style( 'wp-pointer' );
-        wp_enqueue_script( 'wp-pointer' );
-
-        return $pointers;
-     }
-
-     /**
-      * The tour content for the different screens
-      * @since 1.1.0
-      */
-     private function generate_tour_content() {
-         //The content is entered into the array based on which tab it'll show on
-         //Content for tab 1 is entered first and for tab n is entered at $p[n]
-         $p[] = array(
-            "target" => "#ksd_dashboard_chart",
-            "tab"  => 0, //Which tab (Dashboard, tickets, new ticket, etc) to show the pointer on
-            "options" => array(
-                "content" => sprintf( "<span><h3> %s </h3> <p> %s </p><p> %s </p></span>",
-                __( 'Kanzu Support Desk Dashboard', 'kanzu-support-desk'),
-                __( "Welcome to Kanzu Support Desk! Thanks for choosing us. Let's see where everything is. First off...", "kanzu-support-desk"),
-                __( 'Your dashboard displays your performance statistics', 'kanzu-support-desk')
-                ),
-                "button2"  => __( 'Next', 'kanzu-support-desk'),
-                "function" => 'window.location="' . admin_url( 'admin.php?page=wpseo_titles' ) . '";',
-                "position" => array( 'edge' => 'right', 'align' => 'top' )
-                )                
-        );
-        $p[] = array(
-            'target' => '.more_nav',
-            'tab'  => 0,
-            'options' => array(
-                'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
-                __( 'Notifications' ,'kanzu-support-desk'),
-                __( 'Notifications to keep you up-to-date with all things KSD! Get the latest news and tips right here.', 'kanzu-support-desk')                    
-                ),
-                'position' => array( 'edge' => 'right', 'align' => 'right', 'nudgehorizontal' => -2 )
-            )
-        );
-        $p[] = array(
-            'target' => '.ticket-list',
-            'tab'  => 1,
-            'options' => array(
-                'content' => sprintf( '<span><h3> %s </h3> <p> %s </p><p> %s </p><p> %s </p></span>',
-                __( 'The tickets' ,'kanzu-support-desk'),
-                __( 'All your tickets are displayed here. Filter tickets using the filters at the top left', 'kanzu-support-desk'),
-                __( 'Search, refresh and paginate the view using the buttons at the top right.' ,'kanzu-support-desk'),
-                __( 'View ticket details by clicking on a single ticket' ,'kanzu-support-desk')                    
-                        ),
-                'position' => array( 'edge' => 'left', 'align' => 'top', 'nudgehorizontal' => 50, 'nudgevertical' => 20 )               
-            )                
-        );
-        $p[] = array(
-            'target' => '#tickets',
-            'tab'  => 1,
-            'options' => array(
-                'content' => sprintf( '<span><h3> %s </h3><ul class="tour"><li class="new">N</li><li class="open">O</li><li class="pending">P</li><li class="resolved">R</li></ul></p><p>%s </p><p><img width="157" height="166" src="%s" /></p><p> %s </p></span>',
-                __( 'Ticket Status & Severity' ,'kanzu-support-desk'),                    
-                __( 'These labels show New, Open, Pending & Resolved tickets respectively' ,'kanzu-support-desk'),
-                 KSD_PLUGIN_URL.'/assets/images/ksd-severity-indicators.png',
-                __( 'The Red and Orange borders show tickets with Urgent & High severity respectively' ,'kanzu-support-desk')
-                        ),
-                'position' => array( 'edge' => 'left', 'align' => 'top' )                
-            )
-        );
-        $p[] = array(
-            'target' => '#ksd-new-ticket',
-            'tab'  => 2,
-            'options' => array(
-                'content' => sprintf( '<span><h3> %s </h3> <p> %s </p><p> %s </p></span>',
-                __( 'New Ticket' ,'kanzu-support-desk'),
-                __( 'You or your agent(s) can log new tickets here. If "Send Email" is checked, an email is sent to your customer', 'kanzu-support-desk'),
-                __( 'New tickets can also be logged by your customers from a form at the front-end of your site.' ,'kanzu-support-desk')
-                ),
-                 'position' => array( 'edge' => 'right', 'align' => 'top', 'nudgehorizontal' => 1 )             
-            )
-        );
-        $p[] = array(
-            'target' => '.ksd-reset',
-            'tab'  => 3,
-            'options' => array(
-                'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
-                __( 'Settings' ,'kanzu-support-desk'),
-                __( 'Modify your settings', 'kanzu-support-desk')
-                ),
-                 'position' => array( 'edge' => 'bottom', 'align' => 'bottom' )        
-            )
-        );
-        $p[] = array(
-            'target' => '.add-ons',
-            'tab'  => 4,  
-            'options' => array(
-                'content' => sprintf( '<span><h3> %s </h3> <p> %s </p></span>',
-                __( 'Add-ons' ,'kanzu-support-desk'),
-                __( 'Activate an add-on to allow your customers to log tickets using other channels such as email', 'kanzu-support-desk')
-                ),
-                'position' => array( 'edge' => 'bottom', 'align' => 'left' )     
-            )                 
-        );
-        $p[] = array(
-            'target' => '#help',
-            'tab'  => 5,
-            'options' => array(
-                'content' => sprintf( '<span><h3> %s </h3> <p> %s </p><p> %s </p></span>',
-                __( 'Help' ,'kanzu-support-desk'),
-                __( 'Resource center to help you make the most of your Kanzu Support Desk experience', 'kanzu-support-desk'),                   
-                __( "That's it! Dive right in. To take this tour again, click 'Enable Tour Mode' in your settings tab, update your settings then refresh your page", "kanzu-support-desk")
-                ),
-                'position' => array( 'edge' => 'left', 'align' => 'top', 'nudgehorizontal' => 1 )
-            )
-        );
-        return $p;
-     }
+                
 
      /**
       * Mark a ticket as read or unread
@@ -2980,175 +2839,9 @@ class KSD_Admin {
         return $states;
     }       
 
+                   
 
-    /**
-     * Migrate tickets and replies to version 2.0+ 
-     * @since 2.0.0
-     * 
-     */
-    public function migrate_to_v2() {
-        if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
-              die ( __('Busted!', 'kanzu-support-desk' ) );                         
-        }
-        ini_set("max_execution_time",0 );
-
-        include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-tickets-controller.php");
-        include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-replies-controller.php");
-        include_once( KSD_PLUGIN_DIR.  "includes/models/class-ksd-assignments-model.php");
-
-        //Tickets
-        $tObj = new KSD_Tickets_Controller();
-
-        $ksd_v2migration_status  = get_option( 'ksd_v2migration_status' );
-        $prev_tkt_id  = ( int )$ksd_v2migration_status;
-
-        $tickets = $tObj->get_tickets( "tkt_id > %d", array( $prev_tkt_id ) );
-
-        foreach ( $tickets as $t ) {
-            $post_arr = array(
-                'post_title'    => $t->tkt_subject,
-                'post_content'  => $t->tkt_message,
-                'post_status'   => strtolower( $t->tkt_status ),
-                'post_author'   => $t->tkt_updated_by,
-                'post_type'     => 'ksd_ticket',
-                'post_date'     => date( 'Y-m-d H:i:s', strtotime($t->tkt_time_logged ) )
-            );
-            $post_id = wp_insert_post( $post_arr );
-
-            //@TODO: Check if post was created before preceeding
-            if ( 0 == $post_id ) { 
-                $option    = 'ksd_v2migration_status';
-                $new_value =   $t->tkt_id - 1; //Last updated ticket
-                update_option( $option, $new_value );   
-                _e( 'Sorry, an error occured. The migration did not complete. Please re-try. If all fails, please get in touch with our support on support@kanzucode.com', 'kanzu-support-desk' );
-                die();
-            }
-
-            //Add assignment,severity, and channel
-            add_post_meta( $post_id, 
-                    '_ksd_tkt_info_assigned_to',  
-                    $t->tkt_assigned_to,
-                    true ); 
-
-            add_post_meta( $post_id, 
-                    '_ksd_tkt_info_severity',   
-                    strtolower( $t->tkt_severity ), 
-                    true ); 
-
-            add_post_meta( $post_id, 
-                    '_ksd_tkt_info_channel',   
-                    strtolower( $t->tkt_channel ),  //@TODO: Translate channels where names changed eg admin-form
-                    true ); 
-
-            //Add private notes
-            if ( "" !== $t->tkt_private_note ) {
-                $priv_arr = array(
-                    'post_title'    => $t->tkt_subject,
-                    'post_content'  => $t->tkt_private_note,
-                    'post_status'   => 'private',
-                    'post_author'   => $t->tkt_updated_by,
-                    'post_type'     => 'ksd_private_note',
-                    'post_date'     => date( 'Y-m-d H:i:s', strtotime( $t->tkt_time_logged ) ),
-                    'comment_status'=> 'closed',
-                    'post_parent'   => $post_id
-                );
-
-                wp_insert_post( $priv_arr );
-            }
-
-            //Update assignments / ticket activity
-            $assModel  = new KSD_Assignments_Model();
-            $assignments = $assModel->get_all( "assign_tkt_id = '%d' ORDER BY assign_date_assigned ASC", array( $t->tkt_id ) );
-            $prev_assignment = 0;
-
-            foreach ( $assignments as $a ) {
-
-                $old_value = $prev_assignment;
-                $new_value = $a->assign_assigned_to;
-                $old_value_name = ( 0 == $old_value ? __( 'No One', 'kanzu-support-desk' ) : '<a href="' .admin_url( "user-edit.php?user_id={$old_value}").'">' .get_userdata( $old_value )->display_name.'</a>' );
-                $new_value_name = ( 0 == $new_value ? __( 'No One', 'kanzu-support-desk' ) : '<a href="' .admin_url( "user-edit.php?user_id={$new_value}").'">' .get_userdata( $new_value )->display_name.'</a>' );
-                $activity_content = sprintf( __( 're-assigned ticket from %1$s to %2$s', 'kanzu-support-desk' ), $old_value_name, $new_value_name );   
-
-                $ass_arr = array(
-                'post_title'    => $t->tkt_subject,
-                'post_content'  => $activity_content ,
-                'post_status'   => 'private',
-                'post_author'   => $a->assign_assigned_by,
-                'post_type'     => 'ksd_ticket_activity',
-                'post_date'     => date( 'Y-m-d H:i:s', strtotime($a->assign_date_assigned ) ),
-                'comment_status'=> 'closed',
-                'post_parent'   => $post_id
-                );
-                $prev_assignment = $a->assign_assigned_to;
-
-                wp_insert_post( $ass_arr );
-            }
-
-            //Add replies
-            $repObj  = new KSD_Replies_Controller();
-            $replies = $repObj->get_replies("rep_tkt_id = '%d'", array($t->tkt_id ) );
-
-            foreach ( $replies as $r ) {
-                $rep_arr = array(
-                'post_title'    => $t->tkt_subject,
-                'post_content'  => $r->rep_message,
-                'post_status'   => 'publish',
-                'post_author'   => $r->rep_created_by,
-                'post_type'     => 'ksd_reply',
-                'post_date'     => date( 'Y-m-d H:i:s', strtotime($r->rep_date_created ) ),
-                'comment_status'=> 'closed',
-                'post_parent'   => $post_id
-                );
-
-                $rep_id = wp_insert_post( $rep_arr );
-            }
-        }//eof:tickets
-
-
-
-        //Update migration stage
-        $option     = 'ksd_v2migration_status';
-        $newvalue   = 'ksd_v2migration_deletetables'; 
-        update_option( $option, $newvalue );    
-        $count      = count($tickets );
-        printf( _n( 'Migration successful. %d ticket has been migrated. Welcome to the next level of amazing customer support!.',
-                    'Migration successful. %d tickets have been migrated. Welcome to the next level of amazing customer support!.',
-                     $count, 'kanzu-support-desk' ), $count );
-
-        die();
-    }
-
-    /**
-     * Delete tables used in KSD prior to version 2.0
-     * @since 2.0.0
-     */
-    public function deletetables_v2() {
-        if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
-              die ( __( 'Busted!', 'kanzu-support-desk' ) );                         
-        }
-        global $wpdb;
-        ini_set( "max_execution_time",0 );
-
-        $delete_tables = array(
-            "{$wpdb->prefix}kanzusupport_replies",
-            "{$wpdb->prefix}kanzusupport_assignments",
-            "{$wpdb->prefix}kanzusupport_attachments",
-            "{$wpdb->prefix}kanzusupport_tickets",
-            );
-        foreach ( $delete_tables as $table ) {
-            $sql = "DROP TABLE IF EXISTS $table";
-            $wpdb->query( $sql );
-        }
-
-                    //Update migration stage
-        $option    = 'ksd_v2migration_status';
-        $new_value = 'ksd_v2migration_done'; 
-        update_option( $option, $new_value );   
-
-        _e( 'Tables successfully deleted.', 'kanzu-support-desk' );
-        die();
-
-    }
+                   
 
     public function append_admin_feedback(){
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
