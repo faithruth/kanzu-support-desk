@@ -789,7 +789,6 @@ jQuery(document).ready(function () {
         this.init = function () {
             //Submit feedback
             this.submitFeedbackForm();
-            this.generateTourContent();
         };
 
         /*
@@ -826,69 +825,7 @@ jQuery(document).ready(function () {
                         });
             });
         };
-        this.generateTourContent = function () {
-            var pointerContentIndex = 0;
-            if (ksd_admin.ksd_tour_pointers.ksd_intro_tour) {//If pointers are set, show them off 
-                var pointer = ksd_admin.ksd_tour_pointers.ksd_intro_tour;
-
-                /**
-                 * Create a pointer using content defined at pointer[pointerContentIndex]
-                 * and display on a particular tab (dashboard, tickets, etc). The tab to display
-                 * it on is defined in pointer[pointerContentIndex].tab
-                 * @param int pointerContentIndex
-                 */
-                generatePointer = function (pointerContentIndex) {
-                    //Change the active tab
-                    jQuery("#tabs").tabs("option", "active", pointer[pointerContentIndex].tab);
-                    //Generate the pointer options
-                    options = jQuery.extend(pointer[pointerContentIndex].options, {
-                        close: function () {
-                            /* jQuery.post( ksd_admin.ajax_url, {
-                             pointer: 'ksd_intro_tour',
-                             action: 'dismiss-wp-pointer'
-                             });*/
-                            //Disable tour mode
-                            jQuery.post(ksd_admin.ajax_url, {
-                                action: 'ksd_disable_tour_mode'
-                            });
-                        }
-                    });
-                    //Open the pointer
-                    jQuery(pointer[pointerContentIndex].target).pointer(options).pointer('open');
-                    //Inject a 'Next' button into the pointer
-                    jQuery('a.close').after('<a href="#" class="ksd-next button-primary">' + ksd_admin.ksd_labels.pointer_next + '</a>');
-                };
-
-                generatePointer(pointerContentIndex);
-                //Move to the next pointer when 'Next' is clicked
-                //Event needs to be attached this way since the link was manually injected into the HTML
-                jQuery('body').on('click', 'a.ksd-next', function (e) {
-                    e.preventDefault();
-                    //Close the current pointer
-                    //jQuery( pointer[pointerContentIndex].target ).pointer('close');
-                    //Manually hide the parent
-                    jQuery(this).parents('.wp-pointer').hide();
-                    if (pointerContentIndex <= (pointer.length - 2)) {//We subtract 2 because of how we are doing the incrementing; tour will automatically end after the array's contents are done
-                        ++pointerContentIndex;
-                    }
-                    else {//End of the tour
-                        //Dismiss the pointer in the WP db
-                        /*jQuery.post( ksd_admin.ajax_url, {
-                         pointer: 'ksd_intro_tour',
-                         action: 'dismiss-wp-pointer'
-                         });*/
-                        //Disable tour mode
-                        jQuery.post(ksd_admin.ajax_url, {
-                            action: 'ksd_disable_tour_mode'
-                        });
-                        return;
-                    }
-                    //Open the next pointer
-                    generatePointer(pointerContentIndex);
-
-                });
-            }
-        };
+ 
     };
 
     /*---------------------------------------------------------------*/

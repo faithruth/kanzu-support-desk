@@ -74,7 +74,7 @@ class KSD_Onboarding {
         public function show_onboarding_progress(){
             $this->ksd_settings = Kanzu_Support_Desk::get_settings();
             if ( 'no' === $this->ksd_settings['onboarding_enabled'] ){ 
-               // return;
+                return;
             } 
 
             if( ! isset( $_GET[ 'ksd-onboarding' ] ) && ! get_option( $this->ksd_current_stage_option_key ) ){
