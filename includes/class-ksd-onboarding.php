@@ -74,7 +74,7 @@ class KSD_Onboarding {
         public function show_onboarding_progress(){
             $this->ksd_settings = Kanzu_Support_Desk::get_settings();
             if ( 'no' === $this->ksd_settings['onboarding_enabled'] ){ 
-                return;
+               // return;
             } 
 
             if( ! isset( $_GET[ 'ksd-onboarding' ] ) && ! get_option( $this->ksd_current_stage_option_key ) ){
@@ -134,37 +134,49 @@ class KSD_Onboarding {
                 2   => array(
                     'title'         => __( 'Create ticket', 'kanzu-support-desk' ),
                     'next_url'      => admin_url('edit.php?post_type=ksd_ticket'),
-                    'stage_notes'   => '<p>This is the support form the customer will use to create a ticket.</p><p><strong>Create a ticket now then click Next to proceed</strong></p>'    
+                    'stage_notes'   => sprintf( '<p>%1$s </p><p><strong>%2$s</strong></p>',
+                                                __( 'This is the support form the customer will use to create a ticket.','kanzu-support-desk'),
+                                                __( 'Create a ticket now then click Next to proceed', 'kanzu-support-desk') 
+                                                )
                 ),            
                 3   => array(
                     'title'         => __( 'Assign ticket', 'kanzu-support-desk' ),
                     'next_url'      => '',
                     'stage_notes'   => array(
-                                        __( '<p>You and your agents view all tickets here. Your customer\'s waiting; Go ahead and
-                                            <strong>select the ticket you\'d like to make changes to</strong></p>' ),
-                                        __( '<p>In this view, you or an agent can make changes to a ticket.</p>
-                                            <p>From the ticket information box to the right, the ticket can be 
-                                            assigned to an agent, the status can be changed and the severity set appropriately.</p>
-                                            <p><strong>Assign the ticket to someone else and click Update to proceed</strong></p>' )    
+                                        sprintf( '<p>%1$s <strong>%2$s</strong></p>',
+                                            __('You and your agents view all tickets here. Your customer\'s waiting; Go ahead and','kanzu-support-desk'),
+                                            __( 'select the ticket you\'d like to make changes to', 'kanzu-support-desk') 
+                                                ),
+                                        sprintf( '<p>%1$s</p><p>%2$s</p><p><strong>%3$s</strong></p>',
+                                            __('In this view, you or an agent can make changes to a ticket.','kanzu-support-desk'),
+                                            __( 'From the ticket information box to the right, the ticket can be assigned to an agent, the status can be changed and the severity set appropriately.', 'kanzu-support-desk'),
+                                            __('Assign the ticket to someone else and click Update to proceed','kanzu-support-desk')
+                                                )    
                                         )
                     ),  
                 4   => array(
                     'title'         => __( 'Reply ticket', 'kanzu-support-desk' ),
                     'next_url'      => '',
-                    'stage_notes'   => __( '<p>Great! Now you need to respond to the customer. You can send a response or choose to type a private note for another agent; private notes are NOT sent to your customer.</p>'
-                            . '             <p><strong>At the bottom of your screen is a textbox; type your response and hit send to proceed.</strong></p> ' )
+                    'stage_notes'   => sprintf( '<p>%1$s</p><p><strong>%2$s</strong></p>',
+                                            __('Great! Now you need to respond to the customer. You can send a response or choose to type a private note for another agent; private notes are NOT sent to your customer.','kanzu-support-desk'),
+                                            __( 'At the bottom of your screen is a textbox; type your response and hit send to proceed.', 'kanzu-support-desk')
+                                              )
                 ),                
                 5   => array(
                     'title'         => __( 'Resolve ticket', 'kanzu-support-desk' ),
                     'next_url'      => '',
-                    'stage_notes'   =>__( '<p>You are on a roll! One last thing...time to resolve the ticket since you have done such a fabulous job serving your customer.</p>'
-                            . '            <p><strong>In the ticket information box, change ticket status from Open to Resolved and click Update to complete</strong></p>' )   
+                    'stage_notes'   => sprintf( '<p>%1$s</p><p><strong>%2$s</strong></p>',
+                                        __('You are on a roll! One last thing...time to resolve the ticket since you have done such a fabulous job serving your customer.','kanzu-support-desk'),
+                                        __( 'In the ticket information box, change ticket status from Open to Resolved and click Update to complete', 'kanzu-support-desk')
+                                                ) 
                 ),               
                 6   => array(
                     'title'         => __( 'Ready!', 'kanzu-support-desk' ) ,
                     'next_url'      => admin_url( 'edit.php?post_type=ksd_ticket' ),
-                    'stage_notes'   => __( '<p>That\'s it! Now that\'s how you handle customer care like a rockstar. To see full documentation & share feedback/feature requests, '
-                            . '         <strong>get in touch at <a target="blank" href="http://kanzucode.com/contact">kanzucode.com</a></strong></p> ' )
+                    'stage_notes'   => sprintf( '<p>%1$s<strong>%2$s<a target="blank" href="http://kanzucode.com/contact">kanzucode.com</a></strong></p>',
+                                        __('That\'s it! Now that\'s how you handle customer care like a rockstar. To see full documentation & share feedback/feature requests, ','kanzu-support-desk'),
+                                        __( 'get in touch at ', 'kanzu-support-desk')
+                                        )
                 )                
             );
         }

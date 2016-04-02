@@ -8,9 +8,7 @@
             $current_user->display_name,
             __( 'Thanks for choosing ', 'kanzu-support-desk'),
             __( ' Kanzu Support Desk (KSD)', 'kanzu-support-desk'),
-            __( 'We built it to make giving great, personal customer support simpler for you. 
-                We focused a lot on simplicity, with the goal of making it as simple to use as WordPress itself.  To get you started, we have added a guided tour. 
-                Quick one though – ', 'kanzu-support-desk'),
+            __( 'We built it to make giving great, personal customer support simpler for you. We focused a lot on simplicity, with the goal of making it as simple to use as WordPress itself.  To get you started, we have added a guided tour. Quick one though – ', 'kanzu-support-desk'),
             __('why did you choose KSD? What features do you hope to find here?','kanzu-support-desk'),
             __('We ask this because it is essential in making sure we deliver on what you want. Hit "reply" below and we’ll get your message. Thanks!','kanzu-support-desk')
                     );
