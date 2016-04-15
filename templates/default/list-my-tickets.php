@@ -4,15 +4,14 @@
         $ksd_admin =  KSD_Admin::get_instance();
         $my_tickets = $ksd_admin->get_customer_tickets( $current_user->ID );
         
-        if ( $my_tickets->have_posts() ) :  
-            while ( $my_tickets->have_posts() ) : $my_tickets->the_post(); ?>
+       if ( ! empty ( $my_tickets ) ) :
+            foreach ( $my_tickets as $a_ticket ): ?>
             <li class="ksd-my-ticket">
-                <span class="ksd-my-ticket-status <?php echo get_post_status() ; ?>"><?php echo get_post_status() ; ?></span>
-                <span class="ksd-my-ticket-title"><a href='<?php the_permalink(); ?>'><?php the_title(); ?></a>                </span>
-                <span class="ksd-my-ticket-date"><?php echo get_post_modified_time( 'd M Y, @ H:i' ); ?></span>                
+                <span class="ksd-my-ticket-status <?php echo $a_ticket->post_status ; ?>"><?php echo $a_ticket->post_status ; ?></span>
+                <span class="ksd-my-ticket-title"><a href='<?php echo get_the_permalink( $a_ticket->ID ); ?>'><?php echo $a_ticket->post_title; ?></a></span>
+                <span class="ksd-my-ticket-date"><?php echo date('d M Y, @ H:i', strtotime( $a_ticket->post_modified ) ); ?></span>                
             </li><?php
-            endwhile;
-            wp_reset_postdata();//Restore original Post Data
+            endforeach;
         else:
            echo '<li>'. __( 'You have not logged any tickets yet','kanzu-support-desk' ).'</li>';
         endif;?>        

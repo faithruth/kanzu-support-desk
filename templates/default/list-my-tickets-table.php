@@ -13,17 +13,16 @@
         $ksd_admin = KSD_Admin::get_instance();
         $my_tickets = $ksd_admin->get_customer_tickets($current_user->ID);
 
-        if ( $my_tickets->have_posts() ) :
-            while ( $my_tickets->have_posts() ) : $my_tickets->the_post(); ?>        
+       if ( ! empty ( $my_tickets ) ) :
+             foreach ( $my_tickets as $a_ticket ): ?>
                 <tr>
-                    <td><?php the_title(); ?></td>
-                    <td><?php echo get_post_status() ; ?></td>     
-                    <td><?php echo get_post_modified_time( 'd M Y, @ H:i' ); ?></td>
-                    <td><a href='<?php echo admin_url( 'post.php?post=' . absint( get_the_ID() ) . '&action=edit' ); ?>'><?php _e('View Ticket', 'kanzu-support-desk'); ?></a></td>
+                    <td><?php echo $a_ticket->post_title; ?></td>
+                    <td><?php echo $a_ticket->post_status ; ?></td>     
+                    <td><?php echo date('d M Y, @ H:i', strtotime( $a_ticket->post_modified ) ); ?></td>
+                    <td><a href='<?php echo admin_url( 'post.php?post=' . absint( $a_ticket->ID ) . '&action=edit' ); ?>'><?php _e('View Ticket', 'kanzu-support-desk'); ?></a></td>
                 </tr>
                 <?php
-            endwhile;
-            wp_reset_postdata(); //Restore original Post Data
+            endforeach;
         else:
             echo '<tr><td colspan="4" >' . __('You have not logged any tickets yet', 'kanzu-support-desk') . '</td></tr>';
         endif;
