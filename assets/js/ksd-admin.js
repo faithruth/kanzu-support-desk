@@ -1018,7 +1018,7 @@ jQuery(document).ready(function () {
                 _addSeverityClassToTicketGrid();
             }
             //If we are displaying the ticket list view
-            if( jQuery('select[name=_status]').length ){
+            if( jQuery('select[name=_status]').length && 'ksd-ticket-list' === ksd_admin.ksd_current_screen ){
                 jQuery('option[value=publish],option[value=pending]').remove();
                 jQuery('select[name=_status]').append( ksd_admin.ksd_statuses );
             }
