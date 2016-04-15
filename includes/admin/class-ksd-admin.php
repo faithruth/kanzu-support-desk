@@ -565,6 +565,19 @@ class KSD_Admin {
         }
         include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-". $metabox['id'].".php");
     }     
+    
+    /**
+     * Output the HTML of the customer fields in the 'Ticket Info'
+     * meta box. The customer fields are 'Customer','Customer Email' and 'Customer Since'
+     * @param Object $ksd_current_customer The customer behind the current ticket
+     * @since 2.2.3
+     */
+    public function output_ticket_info_customer( $ksd_current_customer ){
+        ob_start();
+        include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-ksd-ticket-info-customer.php");
+        $customer_html = ob_get_clean(); 
+        return apply_filters( 'ksd_ticket_info_customer_html', $customer_html );
+    }
 
 
 
