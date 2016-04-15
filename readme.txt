@@ -3,8 +3,8 @@ Contributors: kanzucode
 Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
-Tested up to: 4.4
-Stable tag: 2.2.2
+Tested up to: 4.5
+Stable tag: 2.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,12 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
+= 2.2.3, April 15, 2016 =
+ * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist
+ * User request - Add filter for customer html in ticket information
+ * BUG FIX | Only replace statuses on ticket list page
+ * BUG FIX | In support form, don't clear ticket message on focus
+
 = 2.2.2, April 3, 2016 =
  * Update translation strings
 
@@ -320,6 +326,10 @@ Yes, it will
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.3 =
+ * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist
+ * User request - Add filter for customer html in ticket information
+
 = 2.2.2 =
  * Update translation strings
 
