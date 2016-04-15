@@ -78,17 +78,16 @@
 </div>
 <div class="ksd-misc-extras misc-pub-section"><?php    
         $ksd_admin = KSD_Admin::get_instance();
-        $customer_other_tickets = $ksd_admin->get_customer_tickets( $ksd_current_customer->ID, array( 'post__not_in' => array( $post->ID ) ) );     
-
-        if ( $customer_other_tickets->have_posts() ) :
-            printf( '<h4>%s</h4><ul>',__( 'Other Tickets','kanzu-support-desk' ) );  
-            while ( $customer_other_tickets->have_posts() ) : $customer_other_tickets->the_post(); ?>        
+        $customer_other_tickets = $ksd_admin->get_customer_tickets( $ksd_current_customer->ID, array( 'exclude' => array( $post->ID ) ) );     
+        
+        if ( ! empty ( $customer_other_tickets ) ) :
+            printf( '<h4>%s</h4><ul>',__( 'Other Tickets','kanzu-support-desk' ) ); 
+            foreach ( $customer_other_tickets as $a_ticket ): ?>        
                 <li>                      
-                    <a href='<?php echo admin_url( 'post.php?post=' . absint( get_the_ID() ) . '&action=edit' ); ?>'>#<?php echo get_the_ID(); ?></a><span class="ksd-post-status-display <?php echo get_post_status() ; ?>"> <?php echo get_post_status() ; ?></span><span> <?php the_title();?></span>   
+                    <a href='<?php echo admin_url( 'post.php?post=' . absint( $a_ticket->ID ) . '&action=edit' ); ?>'>#<?php echo $a_ticket->ID ; ?></a><span class="ksd-post-status-display <?php echo $a_ticket->post_status ; ?>"> <?php echo $a_ticket->post_status ; ?></span><span> <?php $a_ticket->post_title;?></span>   
                 </li>
                 <?php
-            endwhile;
-            wp_reset_postdata(); //Restore original Post Data   
+            endforeach;
             echo '</ul>';
         endif;
     ?>

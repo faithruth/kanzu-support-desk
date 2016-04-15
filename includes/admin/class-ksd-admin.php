@@ -1015,12 +1015,17 @@ class KSD_Admin {
     public function get_customer_tickets( $customer_id, $query_params = array() ) {
         $my_ticket_args=array();
         $this->do_admin_includes();   
-        $my_ticket_args['post_type'] = 'ksd_ticket';
-        $my_ticket_args['author']    = $customer_id;      
+        
+        $my_ticket_args['post_type']        = 'ksd_ticket';
+        $my_ticket_args['author']           = $customer_id;     
+        $my_ticket_args['post_status']      = array( 'new', 'open','pending','resolved' );
+        $my_ticket_args['posts_per_page']   = -1;
+        $my_ticket_args['offset']           = 0;                
+                
         if ( ! empty( $query_params ) ){
             $my_ticket_args = array_merge( $my_ticket_args,$query_params );
         }
-        return new WP_Query( $my_ticket_args ); 
+        return get_posts( $my_ticket_args ); 
     }
 
     /**
