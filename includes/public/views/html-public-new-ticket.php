@@ -84,7 +84,7 @@
             <?php endif; ?> 
             
             <li class="ksd-message">     
-                <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" required></textarea>
+                <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" placeholder="<?php _e('Message', 'kanzu-support-desk'); ?>" required></textarea>
             </li>
             <!--Add Google reCAPTCHA-->
             <?php if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>

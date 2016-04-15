@@ -85,7 +85,7 @@ jQuery( document ).ready(function() {
                     }                    
             };
             //The fields and their respective default label text
-            var newFormFields = {//@TODO Message is deleted if you hover and hover away
+            var newFormFields = { 
                 "ksd_cust_fullname" :   ksd_public.ksd_public_labels.lbl_name,               
                 "ksd_tkt_subject"   :   ksd_public.ksd_public_labels.lbl_subject,
                 "ksd_cust_email"    :   ksd_public.ksd_public_labels.lbl_email,
@@ -106,11 +106,7 @@ jQuery( document ).ready(function() {
                                                     fieldName: fieldName
                                                }, toggleFieldLabelText);
             });
-            //Handle the textarea too
-            jQuery( "textarea[name=ksd_tkt_message]" ).on('focus', function() {
-                jQuery( this ).val('');
-            });
-        }
+        };
     _togglePublicFormFieldValues();
      
     //Close the support tab if the close button is clicked
