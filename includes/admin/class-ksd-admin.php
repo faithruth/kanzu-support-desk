@@ -535,6 +535,15 @@ class KSD_Admin {
                 'side',  
                 'high'          
             ); 
+        //For 'Other Tickets'
+        add_meta_box(
+                'ksd-other-tickets', 
+                __( 'Other Tickets', 'kanzu-support-desk'),  
+                array( $this,'output_meta_boxes' ),   
+                'ksd_ticket',  
+                'side',  
+                'high'          
+            );         
         }            
     }
 
