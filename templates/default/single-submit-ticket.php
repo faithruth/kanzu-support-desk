@@ -5,8 +5,15 @@ if ( 'yes' === $settings['onboarding_enabled'] ):
 endif;?>
 <div class="ksd-new-ticket-form-wrap ksd-form-short-code">
         <div class="ksd-close-form-wrapper">
-            <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
+            <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
         </div>
+        <?php 
+        if ( isset( $_GET['ksd_tkt_submitted']) ) {
+            echo "<div class='ksd-form-short-code-form-response ksd-support-form-response'>";
+            _e( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.') ;
+            echo "</div>";
+        }
+        ?>
         <form method="POST" class="ksd-new-ticket-public" enctype="multipart/form-data">
             <ul>      
             <?php if( "no" == $settings['enable_customer_signup'] && ! is_user_logged_in() ): ?>

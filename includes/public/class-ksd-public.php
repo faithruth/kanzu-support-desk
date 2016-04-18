@@ -287,6 +287,7 @@ class KSD_Public {
             
             wp_localize_script( KSD_SLUG . '-public-js', 'ksd_public' , 
                     array(  'ajax_url'                  => admin_url( 'admin-ajax.php'), 
+                            'admin_post_url'            => admin_url( 'admin-post.php' ),
                             'ksd_public_labels'         => $ksd_public_labels,
                             'ksd_submit_tickets_url'    => get_permalink( $settings['page_submit_ticket'] )
                     ) 

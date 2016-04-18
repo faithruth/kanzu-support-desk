@@ -47,7 +47,7 @@ jQuery( document ).ready(function() {
                         return;
                     }
                     //Show the response received. Check for errors
-                    if ('undefined' !== typeof (respObj.error)) {
+                    if ('undefined' !== typeof (respObj.error)) { 
                         jQuery(targetFormDiv + ' div.ksd-support-form-response').show().html(respObj.error.message);
                         jQuery(targetFormClass + ' :submit').show(); //Show the submit button
                         return;
@@ -64,8 +64,14 @@ jQuery( document ).ready(function() {
 
     }; 
     jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
+        var supportForm    = jQuery( this ).parents( 'form' ); 
+        if( supportForm.find('input[type=file]').length > 0 ) {
+            jQuery(supportForm).attr("action",ksd_public.admin_post_url);
+            jQuery("input[name='action']").attr("value","ksd_log_ticket_with_attachment");
+            return;
+        }
         e.preventDefault();
-        var supportForm    = jQuery( this ).parents( 'form' );
+        
         jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
         if( jQuery( supportForm ).valid() ){
             logNewTicket( supportForm ); 

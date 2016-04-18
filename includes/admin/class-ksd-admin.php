@@ -145,6 +145,10 @@ class KSD_Admin {
         
         //Change 'Publish' button to 'Update'
         add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
+        
+        
+        //Handle front end form submission with attachment
+        add_action( 'admin_post_ksd_log_ticket_with_attachment', array( $this,'log_ticket_with_attachment' ) );
     }
 
 
@@ -206,6 +210,7 @@ class KSD_Admin {
                                 'ksd_admin',
                                 array(  'admin_tab'                 =>  $ksd_admin_tab,
                                         'ajax_url'                  =>  admin_url( 'admin-ajax.php' ),
+                                        'admin_post_url'            =>  admin_url( 'admin-post.php' ),
                                         'ksd_admin_nonce'           =>  wp_create_nonce( 'ksd-admin-nonce' ),
                                         'ksd_tickets_url'           =>  admin_url( 'admin.php?page=ksd-tickets' ),
                                         'ksd_agents_list'           =>  self::get_agent_list( $settings['ticket_management_roles'] ),
@@ -311,6 +316,27 @@ class KSD_Admin {
         die();
     }
 
+    /**
+     * Log ticket with attachments
+     * 
+     * @since 2.3.0
+     */
+    public function log_ticket_with_attachment() {
+        $this->do_log_new_ticket( $_POST );
+        echo  wp_get_referer();
+        
+        if ( wp_get_referer() )
+        {
+            $rediret_url = ( strpos( wp_get_referer() , 'ksd_tkt_submitted' ) > 0 ) ? 
+                            wp_get_referer() : wp_get_referer() . "?ksd_tkt_submitted=yes";
+                            
+            wp_safe_redirect( $rediret_url );
+        }else
+        {
+            wp_safe_redirect( get_home_url() );
+        }
+        
+    }
     /**
      * Process the notification feedback
      * 
@@ -2019,7 +2045,7 @@ class KSD_Admin {
             }
             //For a checkbox, if it is unchecked then it won't be set in $_POST
             $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                    "supportform_show_categories","supportform_show_severity","onboarding_changes"
+                    "supportform_show_categories","supportform_show_severity","onboarding_changes","supportform_show_attachment"
             );
             //Iterate through the checkboxes and set the value to "no" for all that aren't set
             foreach ( $checkbox_names as $checkbox_name ) {
@@ -2032,7 +2058,7 @@ class KSD_Admin {
             $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
 
             $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
-
+                
             if( true === $status){
                 do_action( 'ksd_settings_saved' );
                echo json_encode(  __( 'Settings Updated', 'kanzu-support-desk') );
