@@ -7,10 +7,10 @@ endif;?>
         <div class="ksd-close-form-wrapper">
             <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
         </div>
-        <?php 
-        if ( isset( $_GET['ksd_tkt_submitted']) ) {
-            echo "<div class='ksd-form-short-code-form-response ksd-support-form-response'>";
-            _e( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.') ;
+        <?php  
+        if ( isset( $_GET['ksd_tkt_submitted'] ) ) { 
+            echo "<div class='ksd-support-form-response' >";
+            _e( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ) ;
             echo "</div>";
         }
         ?>

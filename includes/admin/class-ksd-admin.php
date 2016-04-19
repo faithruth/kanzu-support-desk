@@ -148,7 +148,7 @@ class KSD_Admin {
         
         
         //Handle front end form submission with attachment
-        add_action( 'admin_post_ksd_log_ticket_with_attachment', array( $this,'log_ticket_with_attachment' ) );
+        add_action( 'admin_post_ksd_log_ticket_with_attachment', array( $this, 'log_ticket_with_attachment' ) );
     }
 
 
@@ -317,26 +317,25 @@ class KSD_Admin {
     }
 
     /**
-     * Log ticket with attachments
+     * Handle new ticket logging with attachment for frontend ticket form
      * 
      * @since 2.3.0
      */
     public function log_ticket_with_attachment() {
         $this->do_log_new_ticket( $_POST );
-        echo  wp_get_referer();
         
         if ( wp_get_referer() )
         {
             $rediret_url = ( strpos( wp_get_referer() , 'ksd_tkt_submitted' ) > 0 ) ? 
-                            wp_get_referer() : wp_get_referer() . "?ksd_tkt_submitted=yes";
+                            wp_get_referer() : wp_get_referer() . "?ksd_tkt_submitted=yes" ;
                             
             wp_safe_redirect( $rediret_url );
         }else
         {
             wp_safe_redirect( get_home_url() );
         }
-        
     }
+    
     /**
      * Process the notification feedback
      * 
