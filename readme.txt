@@ -112,6 +112,7 @@ Yes, it will
 == Changelog ==
 = 2.2.4, April 19, 2016 =
  * Submission of attachment in front-end support form added
+ * BUG FIX | Remove second CC button from the toolbar of the editor during ticket reply
 
 == Changelog ==
 = 2.2.3, April 15, 2016 =
