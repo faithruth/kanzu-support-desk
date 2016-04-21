@@ -2665,7 +2665,9 @@ class KSD_Admin {
     public function register_tinymce_cc_button( $buttons,  $editor_id ) {
         global $current_screen;
         if ( 'ksd_ticket' === $current_screen->post_type ) {//Add the CC button only if it is a KSD editor (not a post, page, etc editor)
-            array_push( $buttons, 'ksd_cc_button' );  
+            if ( ! in_array( 'ksd_cc_button', $buttons ) ) {
+                array_push( $buttons, 'ksd_cc_button' );      
+            }
         }
         return $buttons;
     }
