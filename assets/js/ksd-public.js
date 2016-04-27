@@ -66,8 +66,8 @@ jQuery( document ).ready(function() {
     jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
         var supportForm    = jQuery( this ).parents( 'form' ); 
         if( supportForm.find('input[type=file]').length > 0 ) {
-            jQuery(supportForm).attr("action",ksd_public.admin_post_url);
-            jQuery("input[name='action']").attr("value","ksd_log_ticket_with_attachment");
+            jQuery( supportForm ).attr("action",ksd_public.admin_post_url);
+            jQuery( "input[name='action']" ).attr("value","ksd_log_ticket_with_attachment");
             return;
         }
         e.preventDefault();

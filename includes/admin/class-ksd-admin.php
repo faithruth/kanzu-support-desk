@@ -322,17 +322,14 @@ class KSD_Admin {
      * @since 2.3.0
      */
     public function log_ticket_with_attachment() {
-        $this->do_log_new_ticket( $_POST );
         
+        $this->do_log_new_ticket( $_POST );        
         if ( wp_get_referer() )
-        {
-            $rediret_url = ( strpos( wp_get_referer() , 'ksd_tkt_submitted' ) > 0 ) ? 
-                            wp_get_referer() : wp_get_referer() . "?ksd_tkt_submitted=yes" ;
-                            
-            wp_safe_redirect( $rediret_url );
+        {                  
+            wp_safe_redirect( wp_get_referer() . "?ksd_tkt_submitted=yes" );
         }else
         {
-            wp_safe_redirect( get_home_url() );
+            wp_safe_redirect( get_home_url() ); 
         }
     }
     
