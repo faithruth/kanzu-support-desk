@@ -145,8 +145,7 @@ class KSD_Admin {
         
         //Change 'Publish' button to 'Update'
         add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
-        
-        
+
         //Handle front end form submission with attachment
         add_action( 'admin_post_ksd_log_ticket_with_attachment', array( $this, 'log_ticket_with_attachment' ) );
     }

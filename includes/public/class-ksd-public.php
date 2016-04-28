@@ -29,6 +29,7 @@ class KSD_Public {
         add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
         add_action( 'wp_ajax_nopriv_ksd_register_user', array( $this, 'register_user' ) );        
         add_action( 'wp_ajax_nopriv_ksd_reply_ticket', array( $this, 'reply_ticket' ) );
+        add_action( 'admin_post_nopriv_ksd_log_ticket_with_attachment', array( $this, 'log_ticket_with_attachment' ) );
                         
         //Add a shortcode for the public form
         add_shortcode( 'ksd_support_form', array( $this,'form_short_code' ) );
@@ -359,6 +360,15 @@ class KSD_Public {
             //Use the admin side logic to do the ticket logging
             $ksd_admin =  KSD_Admin::get_instance();
             $ksd_admin->log_new_ticket( $_POST );
+        }
+        
+        /**
+         * Log a new ticket that has attachments
+         * @since 2.2.4
+         */
+        public function log_ticket_with_attachment(){
+            $ksd_admin =  KSD_Admin::get_instance();
+            $ksd_admin->log_ticket_with_attachment();            
         }
         
         /**
