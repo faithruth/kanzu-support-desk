@@ -2,8 +2,9 @@
 $settings = kanzu_support_desk::get_settings();
 if ( 'yes' === $settings['onboarding_enabled'] ):
     do_action( 'ksd_show_onboarding_progress' ); 
-elseif( isset( $_GET['ksd_tkt_submitted'] ) ):
-    echo "<div class='ksd-support-form-response' >{$settings['tab_message_on_submit']}</div>";
+elseif( isset( $_GET['ksd_tkt_submitted'] ) ):    
+    $response_key = KSD()->session->get( 'ksd_notice' );
+    echo "<div class='ksd-support-form-response' >{$settings[$response_key[0]]}</div>";
 endif;?>
 <div class="ksd-new-ticket-form-wrap ksd-form-short-code">
         <div class="ksd-close-form-wrapper">

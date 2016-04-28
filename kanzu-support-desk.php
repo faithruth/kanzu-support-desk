@@ -37,6 +37,13 @@ final class Kanzu_Support_Desk {
          * KSD options using a single options key
          */
         private $ksd_options_name = "kanzu_support_desk";
+        
+	/**
+	 * Session instance.
+	 *
+	 * @var KSD_Session
+	 */
+	public $session = null;        
 	
 	/**
 	 * @var Kanzu_Support_Desk The single instance of the class
@@ -57,6 +64,7 @@ final class Kanzu_Support_Desk {
 		if ( is_null( self::$_instance ) ) {
 			self::$_instance = new self();
 		}
+                self::$_instance->session = new KSD_Session();
 		return self::$_instance;
 	}
 	
@@ -288,16 +296,16 @@ final class Kanzu_Support_Desk {
      * Use this function like you would a global variable, except without needing
      * to declare the global.
      *
-     * Example: <?php $ksd = Kanzu_Support_Desk(); ?>
+     * Example: <?php $ksd = KSD(); ?>
      *
-     * @return The one true Kanzu_Support_Desk Instance
+     * @return The one true KSD Instance
      */
-    function kanzu_support_desk() {
+    function KSD() {
             return Kanzu_Support_Desk::instance();
     }
 
- 
-kanzu_support_desk();
+//Let's start the show.... 
+KSD();
 
 
 endif; // class_exists check

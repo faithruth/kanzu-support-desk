@@ -323,14 +323,26 @@ class KSD_Admin {
      */
     public function log_ticket_with_attachment() {
         
-        $this->do_log_new_ticket( $_POST );        
-        if ( wp_get_referer() )
-        {                  
-            wp_safe_redirect( wp_get_referer() . "?ksd_tkt_submitted=yes" );
+        $this->do_log_new_ticket( $_POST );  
+        $response = array();
+        
+        try{
+            $response[] = "tab_message_on_submit";
+            KSD()->session->set( 'ksd_notice', $response );            
+        }catch( Exception $e ) {
+            $response[] = "recaptcha_error_message";
+            KSD()->session->set( 'ksd_notice', $response );
+        }  
+        
+        if ( ( $referer = wp_get_referer() ) )
+        {   
+            $concatenate = strpos( $referer, '?' ) !== false ? '&' : '?';
+            wp_safe_redirect( $referer . $concatenate. "ksd_tkt_submitted=yes" );
         }else
         {
             wp_safe_redirect( get_home_url() ); 
         }
+        exit;
     }
     
     /**
@@ -1776,7 +1788,7 @@ class KSD_Admin {
             }
 
             if ( $from_addon ) {
-                return; //For addon mode to ensure graceful exit from function. 
+                return true; //For addon mode to ensure graceful exit from function. 
             }
 
             echo json_encode( $new_ticket_status );

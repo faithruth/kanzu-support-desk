@@ -96,6 +96,7 @@ class KSD_Public {
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-hash-urls.php' );
         include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-custom-post-types.php' );
         include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
+        include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-session.php' );
     }
     
     public function allow_secret_urls(){
