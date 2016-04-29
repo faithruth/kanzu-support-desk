@@ -145,8 +145,7 @@ class KSD_Admin {
         
         //Change 'Publish' button to 'Update'
         add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
-        
-        
+
         //Handle front end form submission with attachment
         add_action( 'admin_post_ksd_log_ticket_with_attachment', array( $this, 'log_ticket_with_attachment' ) );
     }
@@ -322,18 +321,27 @@ class KSD_Admin {
      * @since 2.3.0
      */
     public function log_ticket_with_attachment() {
-        $this->do_log_new_ticket( $_POST );
         
-        if ( wp_get_referer() )
-        {
-            $rediret_url = ( strpos( wp_get_referer() , 'ksd_tkt_submitted' ) > 0 ) ? 
-                            wp_get_referer() : wp_get_referer() . "?ksd_tkt_submitted=yes" ;
-                            
-            wp_safe_redirect( $rediret_url );
+        $this->do_log_new_ticket( $_POST );  
+        $response = array();
+        
+        try{
+            $response[] = "tab_message_on_submit";
+            KSD()->session->set( 'ksd_notice', $response );            
+        }catch( Exception $e ) {
+            $response[] = "recaptcha_error_message";
+            KSD()->session->set( 'ksd_notice', $response );
+        }  
+        
+        if ( ( $referer = wp_get_referer() ) )
+        {   
+            $concatenate = strpos( $referer, '?' ) !== false ? '&' : '?';
+            wp_safe_redirect( $referer . $concatenate. "ksd_tkt_submitted=yes" );
         }else
         {
-            wp_safe_redirect( get_home_url() );
+            wp_safe_redirect( get_home_url() ); 
         }
+        exit;
     }
     
     /**
@@ -1779,7 +1787,7 @@ class KSD_Admin {
             }
 
             if ( $from_addon ) {
-                return; //For addon mode to ensure graceful exit from function. 
+                return true; //For addon mode to ensure graceful exit from function. 
             }
 
             echo json_encode( $new_ticket_status );

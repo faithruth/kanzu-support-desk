@@ -11,6 +11,12 @@
  */
 ?>
 <div class="ksd-new-ticket-form-wrap ksd-form-hidden-tab hidden"> 
+<?php
+if( isset( $_GET['ksd_tkt_submitted'] ) ):    
+    $response_key = KSD()->session->get( 'ksd_notice' );
+    echo "<div class='ksd-support-form-response' >{$settings[$response_key[0]]}</div>";
+endif;
+?>    
     <div class="ksd-close-form-wrapper">
         <span class="ksd_close_button">
             <?php _e( 'Close', 'kanzu-support-desk' ); ?>

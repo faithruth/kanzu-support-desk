@@ -18,18 +18,23 @@ jQuery( document ).ready(function() {
     if( jQuery("form.ksd-new-ticket-public").length || jQuery("form.ksd-register-public").length ){
         jQuery('img.ksd_loading_dialog').hide();
     }  
+    
+    //Ensure that the Google reCAPTCHA checkbox was checked 
+    isGoogleReCaptchaValid = function(){
+        if ( 'undefined' !== typeof(grecaptcha) ){
+            if (!grecaptcha.getResponse()){
+                jQuery( "div.ksd-support-form-submitted form span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
+                return false;
+            } 
+        }      
+        return true;
+    };
+    
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function( form ){
         var targetFormDiv = 'div.ksd-support-form-submitted';//Make sure the following actions are on the correct form
         var targetFormClass = targetFormDiv+ ' form';
-        //First ensure that the Google reCAPTCHA checkbox was checked 
-        if ( 'undefined' !== typeof(grecaptcha) ){
-            if (!grecaptcha.getResponse()){
-                jQuery( targetFormDiv+" span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
-                return;
-            } 
-        }    
-        
+
         jQuery( targetFormClass+' img.ksd_loading_dialog' ).show();//Show the loading button
         jQuery( targetFormClass+' :submit').hide(); //Hide the submit button
 
@@ -64,18 +69,21 @@ jQuery( document ).ready(function() {
 
     }; 
     jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
-        var supportForm    = jQuery( this ).parents( 'form' ); 
-        if( supportForm.find('input[type=file]').length > 0 ) {
-            jQuery(supportForm).attr("action",ksd_public.admin_post_url);
-            jQuery("input[name='action']").attr("value","ksd_log_ticket_with_attachment");
+        var supportForm    = jQuery( this ).parents( 'form' );                 
+        jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
+        
+        if( ! jQuery( supportForm ).valid() || ! isGoogleReCaptchaValid() ){
+           e.preventDefault(); 
+           return;
+        }        
+        if( supportForm.find('input[type=file]').length  ) {
+            jQuery( supportForm ).attr("action", ksd_public.admin_post_url );
+            jQuery( "input[name='action']" ).attr( "value","ksd_log_ticket_with_attachment" );
             return;
         }
-        e.preventDefault();
-        
-        jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
-        if( jQuery( supportForm ).valid() ){
-            logNewTicket( supportForm ); 
-        }        
+        e.preventDefault(); 
+        logNewTicket( supportForm ); 
+  
     });
     
      /**In the front end forms, we use labels in the input fields to
