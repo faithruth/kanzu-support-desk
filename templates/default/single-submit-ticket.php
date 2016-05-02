@@ -2,18 +2,14 @@
 $settings = kanzu_support_desk::get_settings();
 if ( 'yes' === $settings['onboarding_enabled'] ):
     do_action( 'ksd_show_onboarding_progress' ); 
+elseif( isset( $_GET['ksd_tkt_submitted'] ) ):    
+    $response_key = KSD()->session->get( 'ksd_notice' );
+    echo "<div class='ksd-support-form-response' >{$settings[$response_key[0]]}</div>";
 endif;?>
 <div class="ksd-new-ticket-form-wrap ksd-form-short-code">
         <div class="ksd-close-form-wrapper">
             <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
         </div>
-        <?php  
-        if ( isset( $_GET['ksd_tkt_submitted'] ) ) { 
-            echo "<div class='ksd-support-form-response' >";
-            _e( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ) ;
-            echo "</div>";
-        }
-        ?>
         <form method="POST" class="ksd-new-ticket-public" enctype="multipart/form-data">
             <ul>      
             <?php if( "no" == $settings['enable_customer_signup'] && ! is_user_logged_in() ): ?>
@@ -28,10 +24,11 @@ endif;?>
               <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
             </li>
        <?php
-            $show_categories    = $settings['supportform_show_categories'];
-            $show_products      = $settings['supportform_show_products'];
-            $show_severity      = $settings['supportform_show_severity'];  
-            $show_attachment    = $settings['supportform_show_attachment'];   
+            $show_categories                = $settings['supportform_show_categories'];
+            $show_products                  = $settings['supportform_show_products'];
+            $show_severity                  = $settings['supportform_show_severity'];  
+            $show_attachment                = $settings['supportform_show_attachment'];   
+            $enable_multiple_attachments    = $settings['enable_multiple_attachments'];   
             
             if( 'yes' === $show_severity ):
             ?>
@@ -74,8 +71,17 @@ endif;?>
             
             <?php if( 'yes' == $show_attachment ): ?>
             <li class="ksd-tkt-attachment" >
-                <input type="file" name="ksd_tkt_attachment"/>
+                <input type="file" name="ksd_tkt_attachment[]"/>
             </li>
+
+                <?php if ( 'yes' == $enable_multiple_attachments ):?>
+                <div class="ksd-tkt-multiple-attachments">
+                </div>
+                <li>
+                    <a href="#" class="ksd-tkt-attachment-add"> <?php _e( 'Add attachment', 'kanzu-support-desk' ); ?></a>
+                </li>
+                <?php endif; ?>
+            
             <?php endif; ?> 
             
               <li class="ksd-message">     

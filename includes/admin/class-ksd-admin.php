@@ -145,8 +145,7 @@ class KSD_Admin {
         
         //Change 'Publish' button to 'Update'
         add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
-        
-        
+
         //Handle front end form submission with attachment
         add_action( 'admin_post_ksd_log_ticket_with_attachment', array( $this, 'log_ticket_with_attachment' ) );
     }
@@ -322,18 +321,27 @@ class KSD_Admin {
      * @since 2.3.0
      */
     public function log_ticket_with_attachment() {
-        $this->do_log_new_ticket( $_POST );
         
-        if ( wp_get_referer() )
-        {
-            $rediret_url = ( strpos( wp_get_referer() , 'ksd_tkt_submitted' ) > 0 ) ? 
-                            wp_get_referer() : wp_get_referer() . "?ksd_tkt_submitted=yes" ;
-                            
-            wp_safe_redirect( $rediret_url );
+        $this->do_log_new_ticket( $_POST );  
+        $response = array();
+        
+        try{
+            $response[] = "tab_message_on_submit";
+            KSD()->session->set( 'ksd_notice', $response );            
+        }catch( Exception $e ) {
+            $response[] = "recaptcha_error_message";
+            KSD()->session->set( 'ksd_notice', $response );
+        }  
+        
+        if ( ( $referer = wp_get_referer() ) )
+        {   
+            $concatenate = strpos( $referer, '?' ) !== false ? '&' : '?';
+            wp_safe_redirect( $referer . $concatenate. "ksd_tkt_submitted=yes" );
         }else
         {
-            wp_safe_redirect( get_home_url() );
+            wp_safe_redirect( get_home_url() ); 
         }
+        exit;
     }
     
     /**
@@ -1615,7 +1623,32 @@ class KSD_Admin {
                 $new_ticket['post_date']        = $new_ticket_raw['ksd_tkt_time_logged'];
             }//No need for an else; if this isn't specified, the current time is automatically used
 
-            if( isset( $_FILES["ksd_tkt_attachment"] ) ) { 
+            //multiple file uploads
+            if ( isset( $_FILES["ksd_tkt_attachment"] ) && is_array( $_FILES["ksd_tkt_attachment"]['name'] ) ) {
+                $files           = $_FILES['ksd_tkt_attachment'];
+                $num_attachments = count( $files['name'] );
+                $attachments     = array();
+                $upload_overrides = array( 'test_form' => false );
+                for( $i = 0; $i < $num_attachments; $i++ ) {
+                    if ( $files['name'][$i] ) { 
+                        $file = array(
+                            'name'     => $files['name'][$i],
+                            'type'     => $files['type'][$i],
+                            'tmp_name' => $files['tmp_name'][$i],
+                            'error'    => $files['error'][$i],
+                            'size'     => $files['size'][$i]
+                        );
+                        
+                        $upload = wp_handle_upload( $file, $upload_overrides );
+                        $attachments['url'][]               = $upload['url'];
+                        $attachments['size'][]              =  filesize( $upload['file'] );
+                        $attachments['filename'][]          = basename( $upload['file'] );
+                    }
+                }
+                
+                $new_ticket_raw['ksd_attachments']  = $attachments;
+            }
+            if( isset( $_FILES["ksd_tkt_attachment"] ) && ! is_array( $_FILES["ksd_tkt_attachment"]['name'] ) ) { 
                 $upload_overrides = array( 'test_form' => false );
                 $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
 
@@ -1779,7 +1812,7 @@ class KSD_Admin {
             }
 
             if ( $from_addon ) {
-                return; //For addon mode to ensure graceful exit from function. 
+                return true; //For addon mode to ensure graceful exit from function. 
             }
 
             echo json_encode( $new_ticket_status );
@@ -2044,7 +2077,7 @@ class KSD_Admin {
             }
             //For a checkbox, if it is unchecked then it won't be set in $_POST
             $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                    "supportform_show_categories","supportform_show_severity","onboarding_changes","supportform_show_attachment"
+                    "supportform_show_categories","supportform_show_severity","onboarding_changes","supportform_show_attachment","enable_multiple_attachments"
             );
             //Iterate through the checkboxes and set the value to "no" for all that aren't set
             foreach ( $checkbox_names as $checkbox_name ) {

@@ -11,6 +11,12 @@
  */
 ?>
 <div class="ksd-new-ticket-form-wrap ksd-form-hidden-tab hidden"> 
+<?php
+if( isset( $_GET['ksd_tkt_submitted'] ) ):    
+    $response_key = KSD()->session->get( 'ksd_notice' );
+    echo "<div class='ksd-support-form-response' >{$settings[$response_key[0]]}</div>";
+endif;
+?>    
     <div class="ksd-close-form-wrapper">
         <span class="ksd_close_button">
             <?php _e( 'Close', 'kanzu-support-desk' ); ?>
@@ -35,7 +41,8 @@
             $show_products      = $settings['supportform_show_products'];
             $show_severity      = $settings['supportform_show_severity'];   
             $show_attachment    = $settings['supportform_show_attachment'];   
-
+            $enable_multiple_attachments    = $settings['enable_multiple_attachments'];   
+            
             if( 'yes' === $show_severity ):
             ?>
             <li class="ksd-pdt-severity">  
@@ -81,6 +88,14 @@
             <li class="ksd-tkt-attachment" >
                 <input type="file" name="ksd_tkt_attachment" />
             </li>
+            
+            <?php if ( 'yes' == $enable_multiple_attachments ):?>
+            <div class="ksd-tkt-multiple-attachments"></div>
+            <li>
+                <a href="#" class="ksd-tkt-attachment-add"><?php _e( 'Add attachment', 'kanzu-support-desk' ); ?></a>
+            </li>
+            <?php endif; ?>
+                
             <?php endif; ?> 
             
             <li class="ksd-message">     

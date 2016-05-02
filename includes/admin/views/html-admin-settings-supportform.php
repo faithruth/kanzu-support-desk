@@ -78,6 +78,13 @@
         </div>
     </div> 
     <div class="setting">
+        <label for="enable_multiple_attachments"><?php _e ( 'Enable multiple attachments', 'kanzu-support-desk' ); ?></label>
+        <div class="ksd-input-wrapper">
+            <input name="enable_multiple_attachments"  type="checkbox" <?php checked ( $settings['enable_multiple_attachments'], "yes") ?> value="yes"  />        
+            <span class="description"><?php _e ( 'When enabled, more than one attachment can be uploaded when submitting a ticket.', 'kanzu-support-desk' ); ?></span>
+        </div>
+    </div> 
+    <div class="setting">
         <label for="enable_recaptcha"><?php _e ( 'Enable Google reCAPTCHA', 'kanzu-support-desk' ); ?></label>                        
         <div class="ksd-input-wrapper">
             <input name="enable_recaptcha"  type="checkbox" <?php checked ( $settings['enable_recaptcha'], "yes") ?> value="yes"  />        
