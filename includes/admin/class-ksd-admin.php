@@ -1623,7 +1623,32 @@ class KSD_Admin {
                 $new_ticket['post_date']        = $new_ticket_raw['ksd_tkt_time_logged'];
             }//No need for an else; if this isn't specified, the current time is automatically used
 
-            if( isset( $_FILES["ksd_tkt_attachment"] ) ) { 
+            //multiple file uploads
+            if ( isset( $_FILES["ksd_tkt_attachment"] ) && is_array( $_FILES["ksd_tkt_attachment"]['name'] ) ) {
+                $files           = $_FILES['ksd_tkt_attachment'];
+                $num_attachments = count( $files['name'] );
+                $attachments     = array();
+                $upload_overrides = array( 'test_form' => false );
+                for( $i = 0; $i < $num_attachments; $i++ ) {
+                    if ( $files['name'][$i] ) { 
+                        $file = array(
+                            'name'     => $files['name'][$i],
+                            'type'     => $files['type'][$i],
+                            'tmp_name' => $files['tmp_name'][$i],
+                            'error'    => $files['error'][$i],
+                            'size'     => $files['size'][$i]
+                        );
+                        
+                        $upload = wp_handle_upload( $file, $upload_overrides );
+                        $attachments['url'][]               = $upload['url'];
+                        $attachments['size'][]              =  filesize( $upload['file'] );
+                        $attachments['filename'][]          = basename( $upload['file'] );
+                    }
+                }
+                
+                $new_ticket_raw['ksd_attachments']  = $attachments;
+            }
+            if( isset( $_FILES["ksd_tkt_attachment"] ) && ! is_array( $_FILES["ksd_tkt_attachment"]['name'] ) ) { 
                 $upload_overrides = array( 'test_form' => false );
                 $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
 
@@ -2052,7 +2077,7 @@ class KSD_Admin {
             }
             //For a checkbox, if it is unchecked then it won't be set in $_POST
             $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                    "supportform_show_categories","supportform_show_severity","onboarding_changes","supportform_show_attachment"
+                    "supportform_show_categories","supportform_show_severity","onboarding_changes","supportform_show_attachment","enable_multiple_attachments"
             );
             //Iterate through the checkboxes and set the value to "no" for all that aren't set
             foreach ( $checkbox_names as $checkbox_name ) {

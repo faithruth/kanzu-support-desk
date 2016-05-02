@@ -410,3 +410,7 @@ ul.ksd_attachments li{
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
+.ksd-tkt-attachment-remove{
+    cursor: pointer;
+}

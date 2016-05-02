@@ -68,6 +68,17 @@ jQuery( document ).ready(function() {
                 });
 
     }; 
+    
+    //Add multiple attachment to ticket
+    if ( 'undefined' != typeof ksd_public.enable_multiple_attachments && 'yes' == ksd_public.enable_multiple_attachments  ){
+        jQuery( '.ksd-tkt-attachment-add' ).click(function(){ 
+            jQuery('.ksd-tkt-multiple-attachments').append('<li class="ksd-tkt-attachment" ><input type="file" name="ksd_tkt_attachment[]"/><span class="ksd-tkt-attachment-remove">-</span>')
+        });
+        
+        jQuery( '.ksd-new-ticket-form-wrap' ).on('click','.ksd-tkt-attachment-remove',function(){ 
+            jQuery(this).parent().remove();
+        });
+    }
     jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
         var supportForm    = jQuery( this ).parents( 'form' );                 
         jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
@@ -76,6 +87,7 @@ jQuery( document ).ready(function() {
            e.preventDefault(); 
            return;
         }        
+        
         if( supportForm.find('input[type=file]').length  ) {
             jQuery( supportForm ).attr("action", ksd_public.admin_post_url );
             jQuery( "input[name='action']" ).attr( "value","ksd_log_ticket_with_attachment" );
