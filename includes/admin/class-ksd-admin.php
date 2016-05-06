@@ -1602,12 +1602,12 @@ class KSD_Admin {
             }//No need for an else; if this isn't specified, the current time is automatically used
 
             if( isset( $_POST['ksd_tkt_attachment_ids'] ) ){
-                $new_ticket_raw['ksd_attachment_ids'] = $_POST['ksd_tkt_attachment'];
+                $new_ticket_raw['ksd_attachment_ids'] = $_POST['ksd_tkt_attachment_ids'];
             }
             if( isset( $_FILES["ksd_tkt_attachment"] ) && ! is_array( $_FILES["ksd_tkt_attachment"]['name'] ) ) { 
                 $upload_overrides = array( 'test_form' => false );
                 $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
-
+                        
                 $attachments                        = array();
                 $attachments['url'][]               = $upload['url'];
                 $attachments['size'][]              =  filesize( $upload['file'] );
