@@ -6,7 +6,21 @@
     <div class="ksd_tkt_info_customer ksd_tkt_info_wrapper hidden">
         <select name="_ksd_tkt_info_customer"> 
             <?php
-                $ksd_customer_list      = get_users( array('role' => 'ksd_customer' ) );
+                global $wp_roles;
+                $roles = array( 'ksd_customer' );
+                $wp_role_keys = array_keys( $wp_roles->roles );
+                if( in_array( 'subscriber', $wp_role_keys ) )
+                    $roles[] = 'subscriber';
+                if( in_array( 'customer', $wp_role_keys ) )
+                    $roles[] = 'customer';
+                $ksd_customer_list = array();
+                foreach ( $roles as $role ):
+                    $users = get_users( array( 'role' => $role ) );
+                    if( ! empty( $users ) )
+                        foreach ( $users as $user ):
+                            $ksd_customer_list[] = $user;
+                        endforeach;
+                endforeach;
                 $ksd_customer_list[]    = $ksd_current_customer;
                 foreach ( $ksd_customer_list  as $ksd_customer ) : ?>
                     <option value="<?php echo $ksd_customer->ID; ?>" 
