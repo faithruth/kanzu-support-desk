@@ -600,10 +600,10 @@ class KSD_Admin {
      * @param Array $metabox The metabox array
      * @since 2.0.0
      */
-    public function output_meta_boxes( $the_ticket, $metabox  ) {
+    public function output_meta_boxes( $post, $metabox  ) {
         //If this is the ticket messages metabox, format the content for viewing
         if ( $metabox['id'] == 'ksd-ticket-messages' ) {
-            $the_ticket->content = $this->format_message_content_for_viewing( $the_ticket->content );
+            $post->content = $this->format_message_content_for_viewing( $post->content );
         }
         include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-". $metabox['id'].".php");
     }     

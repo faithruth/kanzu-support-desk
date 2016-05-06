@@ -1,12 +1,12 @@
 <div id="ksd-messages-metabox">
     <div id="ksd-ticket-message">
-        <?php $ksd_cc = get_post_meta ( $the_ticket->ID, '_ksd_tkt_info_cc', true ); 
+        <?php $ksd_cc = get_post_meta ( $post->ID, '_ksd_tkt_info_cc', true ); 
         if ( ! empty ( $ksd_cc ) ) : ?><div class="ksd-ticket-cc"><?php _e ( 'CC', 'ksd-support-desk' ) ; ?>:<span class="ksd-cc-emails"><?php echo $ksd_cc; ?></span></div><?php endif; ?>
-        <?php echo $the_ticket->post_content; ?></div>
+        <?php echo $post->post_content; ?></div>
     <ul id="ksd-ticket-replies" class="pending"><?php _e('Loading Replies...', 'kanzu-support-desk'); ?></ul>   
     <div id="edit-ticket-tabs"> 
         <ul class="edit-ticket-options">
-            <li><a href="#reply_ticket"><?php _e('Public Reply', 'kanzu-support-desk'); ?></a></li>
+            <li><a href="#reply_ticket"><?php _e( 'Public Reply', 'kanzu-support-desk' ); ?></a></li>
             <li><a href="#update_private_note"><?php _e('Private Note', 'kanzu-support-desk'); ?></a></li>
         </ul>
         <div class="edit-ticket-description" id="reply_ticket">
