@@ -1,3 +1,11 @@
+<?php $ksd_current_customer = get_userdata( $post->post_author ) ?>
+<?php 
+$ksd_user_avatar = get_avatar( $ksd_current_customer->user_email );
+if ( $ksd_user_avatar ):  ?>
+<div class="ksd-misc-customer-display-pic misc-pub-section">
+    <?php echo $ksd_user_avatar; ?>
+</div>
+<?php endif; ?>
 <div class="ksd-misc-customer misc-pub-section">
     <?php $customer_label = __( 'Customer: ','kanzu-support-desk' );  ?>
     <span><?php echo apply_filters( 'ksd_ticket_info_customer_label', $customer_label ) ?></span>

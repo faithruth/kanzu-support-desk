@@ -559,6 +559,15 @@ class KSD_Admin {
                 'normal',  
                 'high'          
             );   
+        //Customer information        
+        add_meta_box(
+                'ksd-ticket-info-customer', 
+                __( 'Customer Information', 'kanzu-support-desk'),  
+                array( $this,'output_ticket_info_customer' ),   
+                'ksd_ticket',  
+                'side',  
+                'high'          
+            );        
         //For ticket activity
         add_meta_box(
                 'ksd-ticket-activity', 
@@ -596,7 +605,7 @@ class KSD_Admin {
 
     /**
      * Output ticket meta boxes
-     * @param Object The WP_Object
+     * @param Object $post The WP_Object
      * @param Array $metabox The metabox array
      * @since 2.0.0
      */
@@ -609,16 +618,16 @@ class KSD_Admin {
     }     
     
     /**
-     * Output the HTML of the customer fields in the 'Ticket Info'
-     * meta box. The customer fields are 'Customer','Customer Email' and 'Customer Since'
-     * @param Object $ksd_current_customer The customer behind the current ticket
+     * Output the HTML of the customer fields in the 'Customer Information'
+     * meta box. The customer fields are 'Customer','Customer Email','Customer Since', etc.
+     * @param Object $post The WP_Object
      * @since 2.2.3
      */
-    public function output_ticket_info_customer( $ksd_current_customer ){
+    public function output_ticket_info_customer( $post ){        
         ob_start();
         include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-ksd-ticket-info-customer.php");
         $customer_html = ob_get_clean(); 
-        return apply_filters( 'ksd_ticket_info_customer_html', $customer_html );
+        echo apply_filters( 'ksd_ticket_info_customer_html', $customer_html );
     }
 
 

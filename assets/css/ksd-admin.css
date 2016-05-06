@@ -462,6 +462,9 @@ ul.ksd_attachments li{
     padding: 2px;
     margin: 0 3px;
 }
+.ksd-misc-customer-display-pic{
+    text-align: center;
+}
 .ksd-misc-value{
     font-weight: bold;
     text-transform: capitalize;
