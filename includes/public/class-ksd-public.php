@@ -29,7 +29,6 @@ class KSD_Public {
         add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
         add_action( 'wp_ajax_nopriv_ksd_register_user', array( $this, 'register_user' ) );        
         add_action( 'wp_ajax_nopriv_ksd_reply_ticket', array( $this, 'reply_ticket' ) );
-        add_action( 'admin_post_nopriv_ksd_log_ticket_with_attachment', array( $this, 'log_ticket_with_attachment' ) );
                         
         //Add a shortcode for the public form
         add_shortcode( 'ksd_support_form', array( $this,'form_short_code' ) );
@@ -75,6 +74,8 @@ class KSD_Public {
         //Filter tickets archive page
         add_action('pre_get_posts', array( $this, 'hide_ticket_archive_content' ));
         
+        //Only show a user his own attachments
+        add_filter( 'ajax_query_attachments_args', array( $this, 'filter_media' ) );
     }   
     
     /**
@@ -97,6 +98,16 @@ class KSD_Public {
                         
     }
     
+    /**
+     * Filter attachments to only show those of the current user
+     * @return $query
+     */
+    public function filter_media( $query ){
+        if ( is_user_logged_in() && ! current_user_can( 'manage_options' ) ){
+                $query['author'] = get_current_user_id();
+        }
+        return $query;        
+    }
     /**
      * Tickets that have hash URLs have the word 'Protected' prepended to the title.
      * We remove that word here
@@ -284,7 +295,8 @@ class KSD_Public {
 	 *
 	 */
 	public function enqueue_public_styles() {	
-		wp_enqueue_style( KSD_SLUG .'-public-css', KSD_PLUGIN_URL . 'assets/css/ksd-public.css' , array() , KSD_VERSION );
+            wp_enqueue_style( 'thickbox' );
+            wp_enqueue_style( KSD_SLUG .'-public-css', KSD_PLUGIN_URL . 'assets/css/ksd-public.css' , array() , KSD_VERSION );
         }
         
         /**
@@ -292,7 +304,12 @@ class KSD_Public {
          * @since 1.0.0
          */
         public function enqueue_public_scripts() {	
-            wp_enqueue_script( KSD_SLUG . '-public-js', KSD_PLUGIN_URL .  'assets/js/ksd-public.js' , array( 'jquery', 'jquery-ui-core', 'jquery-ui-tooltip' ), KSD_VERSION );
+            if( ! is_admin() ){
+                 wp_enqueue_media();
+            }           
+            wp_enqueue_script( 'media-upload' );
+            wp_enqueue_script( 'thickbox' );
+            wp_enqueue_script( KSD_SLUG . '-public-js', KSD_PLUGIN_URL .  'assets/js/ksd-public.js' , array( 'jquery', 'jquery-ui-core', 'jquery-ui-tooltip', 'media-upload', 'thickbox' ), KSD_VERSION );
             $ksd_public_labels =  array();
             $ksd_public_labels['msg_grecaptcha_error']  = sprintf( __( 'Please check the <em>%s</em> checkbox and wait for it to complete loading', 'kanzu-support-desk'), "I'm not a robot" );
             $ksd_public_labels['msg_error_refresh']     = __( 'Sorry, but it seems like something went wrong. Please try again or reload the page.', 'kanzu-support-desk');
@@ -314,14 +331,14 @@ class KSD_Public {
                     array(  'ajax_url'                      => admin_url( 'admin-ajax.php'), 
                             'admin_post_url'                => admin_url( 'admin-post.php' ),
                             'ksd_public_labels'             => $ksd_public_labels,
-                            'ksd_submit_tickets_url'        => get_permalink( $settings['page_submit_ticket'] ),
-                            'enable_multiple_attachments'   => $settings['enable_multiple_attachments']
+                            'ksd_submit_tickets_url'        => get_permalink( $settings['page_submit_ticket'] )
                     ) 
                     );    
             //Check whether enable_recaptcha is checked. 
             if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ) {
                wp_enqueue_script( KSD_SLUG . '-public-grecaptcha', '//www.google.com/recaptcha/api.js', array(), KSD_VERSION );  
             }
+   
         }
         
         /**
@@ -386,14 +403,7 @@ class KSD_Public {
             $ksd_admin->log_new_ticket( $_POST );
         }
         
-        /**
-         * Log a new ticket that has attachments
-         * @since 2.2.4
-         */
-        public function log_ticket_with_attachment(){
-            $ksd_admin =  KSD_Admin::get_instance();
-            $ksd_admin->log_ticket_with_attachment();            
-        }
+                        
         
         /**
          * Add a reply to a ticket

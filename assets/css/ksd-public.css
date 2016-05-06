@@ -61,6 +61,13 @@
     color: #fff;
     padding: 8px;
 }
+.ksd-attachment-remove {
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    line-height: 30px;
+    padding-right: 10px;
+}
 #ksd-public-reply-error{
     background-color: red;
 }

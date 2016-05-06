@@ -71,13 +71,6 @@
         </div>
     </div>
     <div class="setting">
-        <label for="supportform_show_attachment"><?php _e ( 'Show  attachment option', 'kanzu-support-desk' ); ?></label>
-        <div class="ksd-input-wrapper">
-            <input name="supportform_show_attachment"  type="checkbox" <?php checked ( $settings['supportform_show_attachment'], "yes") ?> value="yes"  />        
-            <span class="description"><?php _e ( 'When enabled, a file upload field is added to the support form.', 'kanzu-support-desk' ); ?></span>
-        </div>
-    </div> 
-    <div class="setting">
         <label for="enable_recaptcha"><?php _e ( 'Enable Google reCAPTCHA', 'kanzu-support-desk' ); ?></label>                        
         <div class="ksd-input-wrapper">
             <input name="enable_recaptcha"  type="checkbox" <?php checked ( $settings['enable_recaptcha'], "yes") ?> value="yes"  />        

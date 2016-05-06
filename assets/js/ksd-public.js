@@ -38,7 +38,7 @@ jQuery( document ).ready(function() {
         jQuery( targetFormClass+' img.ksd_loading_dialog' ).show();//Show the loading button
         jQuery( targetFormClass+' :submit').hide(); //Hide the submit button
 
-        jQuery.post(ksd_public.ajax_url,
+        jQuery.post( ksd_public.ajax_url,
                 jQuery(form).serialize(), //The action and nonce are hidden fields in the form
                 function (response) {
                     jQuery(targetFormClass + ' img.ksd_loading_dialog').hide(); //Hide the loading button
@@ -68,17 +68,7 @@ jQuery( document ).ready(function() {
                 });
 
     }; 
-    
-    //Add multiple attachment to ticket
-    if ( 'undefined' != typeof ksd_public.enable_multiple_attachments && 'yes' == ksd_public.enable_multiple_attachments  ){
-        jQuery( '.ksd-tkt-attachment-add' ).click(function(){ 
-            jQuery('.ksd-tkt-multiple-attachments').append('<li class="ksd-tkt-attachment" ><input type="file" name="ksd_tkt_attachment[]"/><span class="ksd-tkt-attachment-remove">-</span>')
-        });
-        
-        jQuery( '.ksd-new-ticket-form-wrap' ).on('click','.ksd-tkt-attachment-remove',function(){ 
-            jQuery(this).parent().remove();
-        });
-    }
+
     jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
         var supportForm    = jQuery( this ).parents( 'form' );                 
         jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
@@ -88,15 +78,58 @@ jQuery( document ).ready(function() {
            return;
         }        
         
-        if( supportForm.find('input[type=file]').length  ) {
-            jQuery( supportForm ).attr("action", ksd_public.admin_post_url );
-            jQuery( "input[name='action']" ).attr( "value","ksd_log_ticket_with_attachment" );
-            return;
-        }
         e.preventDefault(); 
         logNewTicket( supportForm ); 
   
     });
+    
+    /**
+     * Add logic to handle WP uploads (attachments) in the
+     * support forms 
+     * @since 2.2.4
+     */
+    if( jQuery( '.ksd-new-ticket-public input.ksd-submit').length ){
+        var frame,attachmentHTML;
+        jQuery('#ksd-insert-media-button').click(function ( e ) {
+            e.preventDefault();
+            var supportForm    = jQuery( this ).parents( 'form' );                 
+            jQuery( supportForm ).parent().addClass( 'ksd-support-form-attaching' );//Tag the form being used           
+            // If the media frame already exists, reopen it.
+            if ( frame ) {
+              frame.open();
+              return;
+            }
+
+            // Create a new media frame
+            frame = wp.media({
+              multiple: true   
+            });
+
+
+            // When an image is selected in the media frame...
+            frame.on( 'select', function() {
+
+              // Get media attachment details from the frame state
+              var attachments = frame.state().get('selection');
+              attachments.map( function( attachment ) {
+                attachment = attachment.toJSON();
+                 
+                // Send the attachment URL to our list
+                attachmentHTML = '<li><a href="'+attachment.url+'">'+attachment.title+'</a><input type="hidden" name="ksd_tkt_attachment_ids[]" value="'+attachment.id+'"/><span class="ksd-attachment-remove">x</span></li>';
+                jQuery( "div.ksd-support-form-attaching ul.ksd_attachments" ).append( attachmentHTML );             
+              });
+
+            });
+
+            // Finally, open the modal on click
+            frame.open();
+        });
+
+        //Remove an attachment
+        jQuery( 'ul.ksd_attachments' ).on( 'click','span.ksd-attachment-remove', function(){
+            jQuery( this ).parent().remove();
+        });
+    };
     
      /**In the front end forms, we use labels in the input fields to
         indicate what info each input requires. On click though, these labels
