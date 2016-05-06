@@ -451,6 +451,11 @@ ul.ksd_attachments li{
 }
 #ksd-messages-metabox > div#ksd-ticket-message {
   min-height: 200px;
+  position: relative;
+}
+.ksd-attachments-addon{
+    position: absolute;
+    bottom: 0;
 }
 .ksd-misc-extras .ksd-post-status-display {
     font-size: 0.8em;

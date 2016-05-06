@@ -41,7 +41,8 @@ endif;
             $show_products      = $settings['supportform_show_products'];
             $show_severity      = $settings['supportform_show_severity'];   
             $show_attachment    = $settings['supportform_show_attachment'];   
-
+            $enable_multiple_attachments    = $settings['enable_multiple_attachments'];   
+            
             if( 'yes' === $show_severity ):
             ?>
             <li class="ksd-pdt-severity">  
@@ -87,6 +88,14 @@ endif;
             <li class="ksd-tkt-attachment" >
                 <input type="file" name="ksd_tkt_attachment" />
             </li>
+            
+            <?php if ( 'yes' == $enable_multiple_attachments ):?>
+            <div class="ksd-tkt-multiple-attachments"></div>
+            <li>
+                <a href="#" class="ksd-tkt-attachment-add"><?php _e( 'Add attachment', 'kanzu-support-desk' ); ?></a>
+            </li>
+            <?php endif; ?>
+                
             <?php endif; ?> 
             
             <li class="ksd-message">     

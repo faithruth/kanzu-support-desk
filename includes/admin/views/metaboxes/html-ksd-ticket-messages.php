@@ -20,6 +20,6 @@
     <?php wp_nonce_field( 'ksd-add-new-reply', 'ksd_new_reply_nonce' ); ?>
     <div class="ksd-reply-submit-wrapper">
         <span class="spinner ksd-reply-spinner hidden"></span>
-        <input type="submit" value="<?php _e('Send', 'kanzu-support-desk'); ?>" name="ksd_reply_ticket" id="ksd-reply-ticket-submit" class="button button-primary button-large ksd-submit"/>         
+        <input type="submit" value="<?php _e('Reply', 'kanzu-support-desk'); ?>" name="ksd_reply_ticket" id="ksd-reply-ticket-submit" class="button button-primary button-large ksd-submit"/>         
     </div>
 </div>  
