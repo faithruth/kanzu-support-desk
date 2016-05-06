@@ -1,8 +1,8 @@
 <div class="ksd-misc-customer misc-pub-section">
-    <?php $customer_label = __('Customer: ','kanzu-support-desk');  ?>
+    <?php $customer_label = __( 'Customer: ','kanzu-support-desk' );  ?>
     <span><?php echo apply_filters( 'ksd_ticket_info_customer_label', $customer_label ) ?></span>
     <span class="ksd-misc-value" id="ksd-misc-customer"><?php echo apply_filters( 'ksd_ticket_info_customer_display_name', $ksd_current_customer->display_name ); ?></span>
-    <?php if( ! isset( $_GET['post'] ) ):?><a href="#customer" class="edit-customer"><?php _e( 'Edit','kanzu-support-desk' ); ?></a>
+    <a href="#customer" class="edit-customer"><?php _e( 'Edit','kanzu-support-desk' ); ?></a>
     <div class="ksd_tkt_info_customer ksd_tkt_info_wrapper hidden">
         <select name="_ksd_tkt_info_customer"> 
             <?php
@@ -18,7 +18,6 @@
         <a class="save-customer button" href="#customer"><?php _e( 'OK','kanzu-support-desk' ); ?></a>
         <a class="cancel-customer button-cancel" href="#customer"><?php _e( 'Cancel','kanzu-support-desk' ); ?></a>
     </div>
-    <?php endif;?>
 </div>
 <div class="ksd-misc-customer-email misc-pub-section">
     <span><?php _e( 'Customer Email','kanzu-support-desk' ); ?>:</span>
