@@ -78,13 +78,6 @@
         </div>
     </div> 
     <div class="setting">
-        <label for="enable_multiple_attachments"><?php _e ( 'Enable multiple attachments', 'kanzu-support-desk' ); ?></label>
-        <div class="ksd-input-wrapper">
-            <input name="enable_multiple_attachments"  type="checkbox" <?php checked ( $settings['enable_multiple_attachments'], "yes") ?> value="yes"  />        
-            <span class="description"><?php _e ( 'When enabled, more than one attachment can be uploaded when submitting a ticket.', 'kanzu-support-desk' ); ?></span>
-        </div>
-    </div> 
-    <div class="setting">
         <label for="enable_recaptcha"><?php _e ( 'Enable Google reCAPTCHA', 'kanzu-support-desk' ); ?></label>                        
         <div class="ksd-input-wrapper">
             <input name="enable_recaptcha"  type="checkbox" <?php checked ( $settings['enable_recaptcha'], "yes") ?> value="yes"  />        
@@ -94,13 +87,13 @@
     
     <div class="setting enable_recaptcha">
         <label for="recaptcha_site_key"><?php _e ( 'Google reCAPTCHA Site Key', 'kanzu-support-desk' ); ?></label>                
-        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your Google reCAPTCHA Site Key. Get one at %s', 'kanzu-support-desk' ), 'https://www.google.com/recaptcha/admin' ); ?>"/>
         <input type="text" value="<?php echo $settings['recaptcha_site_key']; ?>" size="30" name="recaptcha_site_key" />        
+        <span class="description"><?php printf ( __ ( 'Your Google reCAPTCHA Site Key. Get one at %s', 'kanzu-support-desk' ), '<a href="https://www.google.com/recaptcha/admin" target="_blank">Google reCAPTCHA</a>' ); ?></span>
     </div>
     <div class="setting enable_recaptcha">
         <label for="recaptcha_secret_key"><?php _e ( 'Google reCAPTCHA Secret Key', 'kanzu-support-desk' ); ?></label>                
-        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your Google reCAPTCHA Secret Key. Get one at %s', 'kanzu-support-desk' ), 'https://www.google.com/recaptcha/admin' ); ?>"/>
-        <input type="text" value="<?php echo $settings['recaptcha_secret_key']; ?>" size="30" name="recaptcha_secret_key" />        
+        <input type="text" value="<?php echo $settings['recaptcha_secret_key']; ?>" size="30" name="recaptcha_secret_key" />      
+        <span class="description"><?php printf ( __ ( 'Your Google reCAPTCHA Secret Key. Get one at %s', 'kanzu-support-desk' ), '<a href="https://www.google.com/recaptcha/admin" target="_blank">Google reCAPTCHA</a>' ); ?></span>
     </div>
     <div class="setting enable_recaptcha">
         <label for="recaptcha_error_message"><?php _e ( 'Message on reCAPTCHA failure', 'kanzu-support-desk' ); ?></label>
