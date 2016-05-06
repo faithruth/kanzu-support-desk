@@ -72,7 +72,30 @@ class KSD_Public {
         add_filter( 'woocommerce_my_account_my_orders_columns', array ( $this, 'woo_orders_add_table_headers' ) );
         add_filter( 'woocommerce_my_account_my_orders_actions' , array ( $this, 'woo_orders_add_ticket_button' ), 10, 2 );
         
+        //Filter tickets archive page
+        add_action('pre_get_posts', array( $this, 'hide_ticket_archive_content' ));
+        
     }   
+    
+    /**
+     * In the ticket archive, only show the current user's
+     * tickets. This prevents one user from seeing another's 
+     * tickets
+     * 
+     * @since 2.2.4
+     */    
+    public function hide_ticket_archive_content( $query ){
+        
+        if ( is_admin() || ! $query->is_main_query() ){
+           return;  
+        }
+       
+        if ( is_post_type_archive( 'ksd_ticket' ) && ! empty( $query->query['post_type']  == 'ksd_ticket'  ) ) {
+            $query->set( 'author', get_current_user_id() );
+            return;
+        }
+                        
+    }
     
     /**
      * Tickets that have hash URLs have the word 'Protected' prepended to the title.
