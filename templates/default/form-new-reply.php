@@ -1,10 +1,10 @@
 <form id="ksd-reply">
-    <div>
+    <div class="ksd-reply-wp-editor">
         <?php global $post;
             if( ! is_user_logged_in() && ! empty( $post->post_password ) ): ?>
                 <input type="email" value="<?php _e( 'Your Email', 'kanzu-support-desk' ); ?>" name="ksd_cust_email" label="Email" class="ksd-customer-email" minlength="2" required/>
         <?php endif; ?>
-        <?php wp_editor( '',  'ksd-public-new-reply', array( "textarea_rows" => 5 ) ); ?>    
+        <?php wp_editor( '',  'ksd-public-new-reply', array( "media_buttons" => true,"textarea_rows" => 5 ) ); ?>    
     </div>
     <div id="ksd-public-reply-error" class="hidden"></div>
     <div id="ksd-public-reply-success" class="hidden"></div>

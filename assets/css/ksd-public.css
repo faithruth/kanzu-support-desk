@@ -64,6 +64,9 @@
 #ksd-public-reply-error{
     background-color: red;
 }
+.ksd-reply-wp-editor{
+    padding-top: 12px;
+}
 .entry-content .ksd-customer-email {
   margin-bottom: 15px;
   margin-top: 15px;
