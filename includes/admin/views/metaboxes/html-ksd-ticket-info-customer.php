@@ -6,28 +6,26 @@
     <div class="ksd_tkt_info_customer ksd_tkt_info_wrapper hidden">
         <select name="_ksd_tkt_info_customer"> 
             <?php
-                global $wp_roles;
-                $roles = array( 'ksd_customer' );
-                $wp_role_keys = array_keys( $wp_roles->roles );
-                if( in_array( 'subscriber', $wp_role_keys ) )
-                    $roles[] = 'subscriber';
-                if( in_array( 'customer', $wp_role_keys ) )
-                    $roles[] = 'customer';
-                $ksd_customer_list = array();
-                foreach ( $roles as $role ):
-                    $users = get_users( array( 'role' => $role ) );
-                    if( ! empty( $users ) )
-                        foreach ( $users as $user ):
-                            $ksd_customer_list[] = $user;
-                        endforeach;
-                endforeach;
-                $ksd_customer_list[]    = $ksd_current_customer;
-                foreach ( $ksd_customer_list  as $ksd_customer ) : ?>
+            global $wpdb;
+            $blog_id = get_current_blog_id();
+            $meta_query = array(
+                'key'       => $wpdb->get_blog_prefix( $blog_id ) . 'capabilities',
+                 'value'    => '"(ksd_customer|subscriber|customer)"',
+                'compare'   => 'REGEXP'
+            );
+            $ksd_customer_query = new WP_User_Query( 
+                    array(
+                        'meta_query' => array( $meta_query )
+            ));
+            if ( ! empty( $ksd_customer_query->results ) ) :
+                foreach ( $ksd_customer_query->results  as $ksd_customer ) : ?>
                     <option value="<?php echo $ksd_customer->ID; ?>" 
                     <?php selected( $ksd_customer->ID , $post->post_author ); ?>> 
                         <?php echo $ksd_customer->display_name; ?>  
                     </option>
-            <?php endforeach; ?>
+                <?php endforeach; 
+            endif;    
+            ?>
         </select>
         <a class="save-customer button" href="#customer"><?php _e( 'OK','kanzu-support-desk' ); ?></a>
         <a class="cancel-customer button-cancel" href="#customer"><?php _e( 'Cancel','kanzu-support-desk' ); ?></a>
