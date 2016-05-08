@@ -94,7 +94,7 @@ class KSD_Public {
            return;  
         }
        
-        if ( is_post_type_archive( 'ksd_ticket' ) && ! empty( $query->query['post_type']  == 'ksd_ticket'  ) ) {
+        if ( is_post_type_archive( 'ksd_ticket' ) && ! empty( $query->query['post_type'] ) &&  'ksd_ticket' == $query->query['post_type'] ) {
             $query->set( 'author', get_current_user_id() );
             return;
         }
