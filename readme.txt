@@ -110,11 +110,14 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
-= 2.2.4, April 19, 2016 =
- * Submission of attachment in front-end support form added
+= 2.2.4, May 8, 2016 =
+ * Submission of attachments in front-end support form added
  * BUG FIX | Remove second CC button from the toolbar of the editor during ticket reply
+ * Display customer information in separate metabox; add display pic
+ * Display Woo and EDD customers in customer list
+ * Allow editing of ticket customer
+ * Minor color changes to single ticket view UI
 
-== Changelog ==
 = 2.2.3, April 15, 2016 =
  * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist
  * User request - Add filter for customer html in ticket information
@@ -331,6 +334,10 @@ Yes, it will
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.4 =
+ * Submission of attachments in front-end support form added
+ * BUG FIX | Remove second CC button from the toolbar of the editor during ticket reply
+
 = 2.2.3 =
  * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist
  * User request - Add filter for customer html in ticket information
