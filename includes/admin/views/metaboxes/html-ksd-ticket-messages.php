@@ -2,7 +2,8 @@
     <div id="ksd-ticket-message">
         <?php $ksd_cc = get_post_meta ( $post->ID, '_ksd_tkt_info_cc', true ); 
         if ( ! empty ( $ksd_cc ) ) : ?><div class="ksd-ticket-cc"><?php _e ( 'CC', 'ksd-support-desk' ) ; ?>:<span class="ksd-cc-emails"><?php echo $ksd_cc; ?></span></div><?php endif; ?>
-        <?php echo $post->post_content; ?></div>
+        <div class="ksd-ticket-message-content"><?php echo apply_filters( 'ksd_the_ticket_content', $post->post_content, $post->ID ); ?></div>
+    </div>
     <ul id="ksd-ticket-replies" class="pending"><?php _e('Loading Replies...', 'kanzu-support-desk'); ?></ul>   
     <div id="edit-ticket-tabs"> 
         <ul class="edit-ticket-options">

@@ -1576,7 +1576,7 @@ class KSD_Admin {
             try{
             $supported__ticket_channels = array ( "admin-form","support-tab","email","sample-ticket" );   
             $tkt_channel                = sanitize_text_field( $new_ticket_raw['ksd_tkt_channel']);
-            if ( !in_array( $tkt_channel, $supported__ticket_channels ) ) {
+            if ( ! in_array( $tkt_channel, $supported__ticket_channels ) ) {
                 throw new Exception( __('Error | Unsupported channel specified', 'kanzu-support-desk'), -1 );
             }                  
 
@@ -1603,17 +1603,7 @@ class KSD_Admin {
 
             if( isset( $_POST['ksd_tkt_attachment_ids'] ) ){
                 $new_ticket_raw['ksd_attachment_ids'] = $_POST['ksd_tkt_attachment_ids'];
-            }
-            if( isset( $_FILES["ksd_tkt_attachment"] ) && ! is_array( $_FILES["ksd_tkt_attachment"]['name'] ) ) { 
-                $upload_overrides = array( 'test_form' => false );
-                $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
-                        
-                $attachments                        = array();
-                $attachments['url'][]               = $upload['url'];
-                $attachments['size'][]              =  filesize( $upload['file'] );
-                $attachments['filename'][]          = basename( $upload['file'] );
-                $new_ticket_raw['ksd_attachments']  = $attachments;
-            }                
+            }             
 
             //Server side validation for the inputs. Only holds if we aren't in add-on mode
             if ( ( ! $from_addon && strlen( $new_ticket['post_title'] ) < 2 || strlen( $new_ticket['post_content'] ) < 2 ) ) {
@@ -1731,12 +1721,12 @@ class KSD_Admin {
 
             $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
 
-            //@TODO Save the attachments
+            //Save the attachments
             if ( isset( $new_ticket_raw['ksd_attachments'] ) ) {
                 $this->add_ticket_attachments( $new_ticket_id, $new_ticket_raw['ksd_attachments'] );
             }
             if( isset( $new_ticket_raw['ksd_attachment_ids'] ) ){
-                $this->append_attachments_to_ticket( $new_ticket_id, $new_ticket_raw['ksd_attachment_ids'] );
+                $this->save_ticket_attachments( $new_ticket_id, $new_ticket_raw['ksd_attachment_ids'] );
             }
 
             //If the ticket was logged by using the import feature, end the party here
@@ -1867,8 +1857,8 @@ class KSD_Admin {
      */
     private function add_ticket_attachments( $ticket_id, $attachments_array, $is_reply=false ) {
         $attachment_ids = array(); 
-        for ( $i = 0; $i < count( $attachments_array['url'] ); $i++ ) {
-            $filename = $attachments_array['url'][$i];
+        foreach ( $attachments_array as $attachment ) {
+            $filename = $attachment['url'];
             $filetype = wp_check_filetype( basename( $filename ), null );
 
             $attachment = array(
@@ -1887,7 +1877,7 @@ class KSD_Admin {
             $attachment_ids[] = $attach_id;
         }
         
-        $this->append_attachments_to_ticket( $ticket_id, $attachment_ids );
+        $this->save_ticket_attachments( $ticket_id, $attachment_ids );
     }
     
     /**
@@ -1895,15 +1885,8 @@ class KSD_Admin {
      * @param int $ticket_id
      * @param array $attachment_ids
      */
-    private function append_attachments_to_ticket( $ticket_id, $attachment_ids ){
-        $attachment_html = ''; 
-        foreach( $attachment_ids as $attach_id ){
-            $attachment_html .= '<li><a href="' . get_attachment_link( $attach_id ) . '">' .  get_the_title( $attach_id ) . '</a></li>';
-        }
-        $attachment_html = '<div class="ksd-attachments-addon"><h3>' . __( 'Attachments', 'kanzu-support-desk' ).':</h3> <ul class="ksd_attachments">' . $attachment_html. '</ul></div>';
-        $wp_post = get_post ( ( int )$ticket_id );
-        $wp_post->post_content = $wp_post->post_content . $attachment_html ;
-        wp_update_post( $wp_post );        
+    private function save_ticket_attachments( $ticket_id, $attachment_ids ){
+        add_post_meta( $ticket_id, '_ksd_tkt_attachments', $attachment_ids ); 
     }
 
     /**

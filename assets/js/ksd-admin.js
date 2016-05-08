@@ -1854,18 +1854,16 @@ jQuery(document).ready(function () {
                                 tkt_id: jQuery.urlParam('post')//We get the ticket ID from the URL
                             },
                     function ( the_replies ) {
-                        var respObj = {};
-                        //To catch cases when the ajax response is not json
+                        var respObj = {};    
+                        jQuery("ul#ksd-ticket-replies").removeClass('pending');
                         try {
-                            //to reduce cost of recalling parse
                             respObj = JSON.parse(the_replies);
                         } catch (err) {
                             KSDUtils.showDialog("error", ksd_admin.ksd_labels.msg_error_refresh );
                             return;
                         }
-                        the_replies = respObj;
                         //Check for error in request.
-                        if ('undefined' !== typeof (respObj.error)) {
+                        if ( 'undefined' !== typeof ( respObj.error ) ) {
                             KSDUtils.showDialog("error", respObj.error.message);
                             return;
                         }

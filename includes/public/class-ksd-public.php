@@ -76,6 +76,9 @@ class KSD_Public {
         
         //Only show a user his own attachments
         add_filter( 'ajax_query_attachments_args', array( $this, 'filter_media' ) );
+        
+        //Add attachments to ticket content
+        add_filter( 'ksd_the_ticket_content', array( $this, 'append_attachments_to_content' ), 10, 2 );
     }   
     
     /**
@@ -154,6 +157,24 @@ class KSD_Public {
             $content = '<div class="ksd-ticket-cc"><span class="ksd-cc-emails">' . __( 'CC', 'kanzu-support-desk' ) . $cc . '</span></div>' . $content;   
         }
         return $content;
+    }
+    
+    /**
+     * Append ticket attachment HTML to ticket content
+     * @param string $ticket_content
+     * @param int $ticket_id
+     * @return string Ticket content
+     */
+    public function append_attachments_to_content( $ticket_content, $ticket_id ){
+        $attachment_html    = ''; 
+        $attachments        = get_post_meta( $ticket_id, '_ksd_tkt_attachments', true );     
+        if ( '' !== $attachments ){  
+            foreach( $attachments as $attach_id ){
+                $attachment_html .= '<li><a href="' . get_attachment_link( $attach_id ) . '">' .  get_the_title( $attach_id ) . '</a></li>';
+            }
+            $ticket_content .= '<div class="ksd-attachments-addon"><h3>' . __( 'Attachments', 'kanzu-support-desk' ).':</h3> <ul class="ksd_attachments">' . $attachment_html. '</ul></div>';
+        }
+        return $ticket_content;
     }
     
     /**
