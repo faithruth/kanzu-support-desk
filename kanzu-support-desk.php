@@ -3,7 +3,7 @@
  * Plugin Name:       Kanzu Support Desk
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
  * Description:       Kanzu Support Desk (KSD) is a simple, personal and powerful help desk solution that takes your customer support to the next level.
- * Version:           2.2.3
+ * Version:           2.2.4
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
  * Text Domain:       kanzu-support-desk
@@ -24,7 +24,7 @@ final class Kanzu_Support_Desk {
 	/**
 	 * @var string
 	 */
-	public $version = '2.2.3';
+	public $version = '2.2.4';
 
 	/**
 	 * @var string
@@ -37,6 +37,13 @@ final class Kanzu_Support_Desk {
          * KSD options using a single options key
          */
         private $ksd_options_name = "kanzu_support_desk";
+        
+	/**
+	 * Session instance.
+	 *
+	 * @var KSD_Session
+	 */
+	public $session = null;        
 	
 	/**
 	 * @var Kanzu_Support_Desk The single instance of the class
@@ -57,6 +64,7 @@ final class Kanzu_Support_Desk {
 		if ( is_null( self::$_instance ) ) {
 			self::$_instance = new self();
 		}
+                self::$_instance->session = new KSD_Session();
 		return self::$_instance;
 	}
 	
@@ -288,16 +296,16 @@ final class Kanzu_Support_Desk {
      * Use this function like you would a global variable, except without needing
      * to declare the global.
      *
-     * Example: <?php $ksd = Kanzu_Support_Desk(); ?>
+     * Example: <?php $ksd = KSD(); ?>
      *
-     * @return The one true Kanzu_Support_Desk Instance
+     * @return The one true KSD Instance
      */
-    function kanzu_support_desk() {
+    function KSD() {
             return Kanzu_Support_Desk::instance();
     }
 
- 
-kanzu_support_desk();
+//Let's start the show.... 
+KSD();
 
 
 endif; // class_exists check

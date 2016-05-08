@@ -278,8 +278,7 @@ class KSD_Install {
             /**Support form settings**/
             'supportform_show_categories'       => 'no',
             'supportform_show_severity'         => 'no',
-            'supportform_show_products'         => 'no',
-            'supportform_show_attachment'       => 'no'
+            'supportform_show_products'         => 'no'
 
             );
     }

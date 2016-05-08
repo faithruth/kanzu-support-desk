@@ -33,11 +33,6 @@ do_action( 'ksd_load_addons' );
         'image' => 'chat',
         'description' => 'Your customer prefers a quick chat with a real human being; give them just that. Add a live chat window to your site.'
     );
-    $prospective_addons[] = array(
-        'name' => 'Labels',
-        'image' => 'labels',
-        'description' => 'Add tags to your tickets to differentiate them based on product, service, company or whatever you choose.'
-    );
     shuffle( $prospective_addons );//Shuffle the array to eliminate item position from being a factor
     ?><span class="ksd-dummy-addons"><?php
     foreach ($prospective_addons as $dummy_addon):?>

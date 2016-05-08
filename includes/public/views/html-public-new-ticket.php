@@ -11,6 +11,12 @@
  */
 ?>
 <div class="ksd-new-ticket-form-wrap ksd-form-hidden-tab hidden"> 
+<?php
+if( isset( $_GET['ksd_tkt_submitted'] ) ):    
+    $response_key = KSD()->session->get( 'ksd_notice' );
+    echo "<div class='ksd-support-form-response' >{$settings[$response_key[0]]}</div>";
+endif;
+?>    
     <div class="ksd-close-form-wrapper">
         <span class="ksd_close_button">
             <?php _e( 'Close', 'kanzu-support-desk' ); ?>
@@ -34,8 +40,7 @@
             $show_categories    = $settings['supportform_show_categories'];
             $show_products      = $settings['supportform_show_products'];
             $show_severity      = $settings['supportform_show_severity'];   
-            $show_attachment    = $settings['supportform_show_attachment'];   
-
+            
             if( 'yes' === $show_severity ):
             ?>
             <li class="ksd-pdt-severity">  
@@ -77,14 +82,16 @@
             <?php endif; ?> 
             
             
-            <?php if( 'yes' == $show_attachment ): ?>
-            <li class="ksd-tkt-attachment" >
-                <input type="file" name="ksd_tkt_attachment" />
-            </li>
+             <?php if ( current_user_can( 'upload_files' ) ): ?>
+                <li class="ksd-tkt-attachment" >
+                    <a title="<?php _e( 'Add Media','kanzu-support-desk' ); ?>"  class="button insert-media add_media" id="ksd-insert-media-button" href="#"><span class="wp-media-buttons-icon"></span><?php _e( 'Add Media','kanzu-support-desk' ); ?></a>
+                    <ul class="ksd_attachments">
+                    </ul>
+                </li>                
             <?php endif; ?> 
             
             <li class="ksd-message">     
-                <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" placeholder="<?php _e('Message', 'kanzu-support-desk'); ?>" required></textarea>
+                <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" placeholder="<?php _e('Message', 'kanzu-support-desk'); ?>" id="ksd-ticket-message" required></textarea>
             </li>
             <!--Add Google reCAPTCHA-->
             <?php if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>

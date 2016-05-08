@@ -2,10 +2,13 @@
 $settings = kanzu_support_desk::get_settings();
 if ( 'yes' === $settings['onboarding_enabled'] ):
     do_action( 'ksd_show_onboarding_progress' ); 
+elseif( isset( $_GET['ksd_tkt_submitted'] ) ):    
+    $response_key = KSD()->session->get( 'ksd_notice' );
+    echo "<div class='ksd-support-form-response' >{$settings[$response_key[0]]}</div>";
 endif;?>
 <div class="ksd-new-ticket-form-wrap ksd-form-short-code">
         <div class="ksd-close-form-wrapper">
-            <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
+            <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
         </div>
         <form method="POST" class="ksd-new-ticket-public" enctype="multipart/form-data">
             <ul>      
@@ -21,10 +24,9 @@ endif;?>
               <input type="text" value="<?php _e('Subject','kanzu-support-desk'); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
             </li>
        <?php
-            $show_categories    = $settings['supportform_show_categories'];
-            $show_products      = $settings['supportform_show_products'];
-            $show_severity      = $settings['supportform_show_severity'];  
-            $show_attachment    = $settings['supportform_show_attachment'];   
+            $show_categories                = $settings['supportform_show_categories'];
+            $show_products                  = $settings['supportform_show_products'];
+            $show_severity                  = $settings['supportform_show_severity'];  
             
             if( 'yes' === $show_severity ):
             ?>
@@ -65,14 +67,16 @@ endif;?>
             </li>
             <?php endif; ?>    
             
-            <?php if( 'yes' == $show_attachment ): ?>
-            <li class="ksd-tkt-attachment" >
-                <input type="file" name="ksd_tkt_attachment"/>
-            </li>
+            <?php if ( current_user_can( 'upload_files' ) ): ?>
+                <li class="ksd-tkt-attachment" >
+                    <a title="<?php _e( 'Add Media','kanzu-support-desk' ); ?>"  class="button insert-media add_media" id="ksd-insert-media-button" href="#"><span class="wp-media-buttons-icon"></span><?php _e( 'Add Media','kanzu-support-desk' ); ?></a>
+                    <ul class="ksd_attachments">
+                    </ul>
+                </li>            
             <?php endif; ?> 
             
               <li class="ksd-message">     
-                  <textarea value="<?php _e('Message','kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" required></textarea>
+                  <textarea value="<?php _e('Message','kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" id="ksd-ticket-message" required></textarea>
               </li>
             <!--Add Google reCAPTCHA-->
             <?php if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>

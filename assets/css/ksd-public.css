@@ -61,8 +61,18 @@
     color: #fff;
     padding: 8px;
 }
+.ksd-attachment-remove {
+    cursor: pointer;
+    float: right;
+    font-weight: bold;
+    line-height: 30px;
+    padding-right: 10px;
+}
 #ksd-public-reply-error{
     background-color: red;
+}
+.ksd-reply-wp-editor{
+    padding-top: 12px;
 }
 .entry-content .ksd-customer-email {
   margin-bottom: 15px;
@@ -409,4 +419,8 @@ ul.ksd_attachments li{
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+}
+
+.ksd-tkt-attachment-remove{
+    cursor: pointer;
 }

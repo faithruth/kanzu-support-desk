@@ -18,22 +18,27 @@ jQuery( document ).ready(function() {
     if( jQuery("form.ksd-new-ticket-public").length || jQuery("form.ksd-register-public").length ){
         jQuery('img.ksd_loading_dialog').hide();
     }  
+    
+    //Ensure that the Google reCAPTCHA checkbox was checked 
+    isGoogleReCaptchaValid = function(){
+        if ( 'undefined' !== typeof(grecaptcha) ){
+            if (!grecaptcha.getResponse()){
+                jQuery( "div.ksd-support-form-submitted form span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
+                return false;
+            } 
+        }      
+        return true;
+    };
+    
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function( form ){
         var targetFormDiv = 'div.ksd-support-form-submitted';//Make sure the following actions are on the correct form
         var targetFormClass = targetFormDiv+ ' form';
-        //First ensure that the Google reCAPTCHA checkbox was checked 
-        if ( 'undefined' !== typeof(grecaptcha) ){
-            if (!grecaptcha.getResponse()){
-                jQuery( targetFormDiv+" span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
-                return;
-            } 
-        }    
-        
+
         jQuery( targetFormClass+' img.ksd_loading_dialog' ).show();//Show the loading button
         jQuery( targetFormClass+' :submit').hide(); //Hide the submit button
 
-        jQuery.post(ksd_public.ajax_url,
+        jQuery.post( ksd_public.ajax_url,
                 jQuery(form).serialize(), //The action and nonce are hidden fields in the form
                 function (response) {
                     jQuery(targetFormClass + ' img.ksd_loading_dialog').hide(); //Hide the loading button
@@ -47,7 +52,7 @@ jQuery( document ).ready(function() {
                         return;
                     }
                     //Show the response received. Check for errors
-                    if ('undefined' !== typeof (respObj.error)) {
+                    if ('undefined' !== typeof (respObj.error)) { 
                         jQuery(targetFormDiv + ' div.ksd-support-form-response').show().html(respObj.error.message);
                         jQuery(targetFormClass + ' :submit').show(); //Show the submit button
                         return;
@@ -63,14 +68,68 @@ jQuery( document ).ready(function() {
                 });
 
     }; 
+
     jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
-        e.preventDefault();
-        var supportForm    = jQuery( this ).parents( 'form' );
+        var supportForm    = jQuery( this ).parents( 'form' );                 
         jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
-        if( jQuery( supportForm ).valid() ){
-            logNewTicket( supportForm ); 
+        
+        if( ! jQuery( supportForm ).valid() || ! isGoogleReCaptchaValid() ){
+           e.preventDefault(); 
+           return;
         }        
+        
+        e.preventDefault(); 
+        logNewTicket( supportForm ); 
+  
     });
+    
+    /**
+     * Add logic to handle WP uploads (attachments) in the
+     * support forms 
+     * @since 2.2.4
+     */
+    if( jQuery( '.ksd-new-ticket-public input.ksd-submit').length ){
+        var frame,attachmentHTML;
+        jQuery('#ksd-insert-media-button').click(function ( e ) {
+            e.preventDefault();
+            var supportForm    = jQuery( this ).parents( 'form' );                 
+            jQuery( supportForm ).parent().addClass( 'ksd-support-form-attaching' );//Tag the form being used           
+            // If the media frame already exists, reopen it.
+            if ( frame ) {
+              frame.open();
+              return;
+            }
+
+            // Create a new media frame
+            frame = wp.media({
+              multiple: true   
+            });
+
+
+            // When an image is selected in the media frame...
+            frame.on( 'select', function() {
+
+              // Get media attachment details from the frame state
+              var attachments = frame.state().get('selection');
+              attachments.map( function( attachment ) {
+                attachment = attachment.toJSON();
+                 
+                // Send the attachment URL to our list
+                attachmentHTML = '<li><a href="'+attachment.url+'">'+attachment.title+'</a><input type="hidden" name="ksd_tkt_attachment_ids[]" value="'+attachment.id+'"/><span class="ksd-attachment-remove">x</span></li>';
+                jQuery( "div.ksd-support-form-attaching ul.ksd_attachments" ).append( attachmentHTML );             
+              });
+
+            });
+
+            // Finally, open the modal on click
+            frame.open();
+        });
+
+        //Remove an attachment
+        jQuery( 'ul.ksd_attachments' ).on( 'click','span.ksd-attachment-remove', function(){
+            jQuery( this ).parent().remove();
+        });
+    };
     
      /**In the front end forms, we use labels in the input fields to
         indicate what info each input requires. On click though, these labels

@@ -1,24 +1,43 @@
+<?php $ksd_current_customer = get_userdata( $post->post_author ) ?>
+<?php 
+$ksd_user_avatar = get_avatar( $ksd_current_customer->user_email );
+if ( $ksd_user_avatar ):  ?>
+<div class="ksd-misc-customer-display-pic misc-pub-section">
+    <?php echo $ksd_user_avatar; ?>
+</div>
+<?php endif; ?>
 <div class="ksd-misc-customer misc-pub-section">
-    <?php $customer_label = __('Customer: ','kanzu-support-desk');  ?>
+    <?php $customer_label = __( 'Customer: ','kanzu-support-desk' );  ?>
     <span><?php echo apply_filters( 'ksd_ticket_info_customer_label', $customer_label ) ?></span>
     <span class="ksd-misc-value" id="ksd-misc-customer"><?php echo apply_filters( 'ksd_ticket_info_customer_display_name', $ksd_current_customer->display_name ); ?></span>
-    <?php if( ! isset( $_GET['post'] ) ):?><a href="#customer" class="edit-customer"><?php _e( 'Edit','kanzu-support-desk' ); ?></a>
+    <a href="#customer" class="edit-customer"><?php _e( 'Edit','kanzu-support-desk' ); ?></a>
     <div class="ksd_tkt_info_customer ksd_tkt_info_wrapper hidden">
         <select name="_ksd_tkt_info_customer"> 
             <?php
-                $ksd_customer_list      = get_users( array('role' => 'ksd_customer' ) );
-                $ksd_customer_list[]    = $ksd_current_customer;
-                foreach ( $ksd_customer_list  as $ksd_customer ) : ?>
+            global $wpdb;
+            $blog_id = get_current_blog_id();
+            $meta_query = array(
+                'key'       => $wpdb->get_blog_prefix( $blog_id ) . 'capabilities',
+                 'value'    => '"(ksd_customer|subscriber|customer)"',
+                'compare'   => 'REGEXP'
+            );
+            $ksd_customer_query = new WP_User_Query( 
+                    array(
+                        'meta_query' => array( $meta_query )
+            ));
+            if ( ! empty( $ksd_customer_query->results ) ) :
+                foreach ( $ksd_customer_query->results  as $ksd_customer ) : ?>
                     <option value="<?php echo $ksd_customer->ID; ?>" 
                     <?php selected( $ksd_customer->ID , $post->post_author ); ?>> 
                         <?php echo $ksd_customer->display_name; ?>  
                     </option>
-            <?php endforeach; ?>
+                <?php endforeach; 
+            endif;    
+            ?>
         </select>
         <a class="save-customer button" href="#customer"><?php _e( 'OK','kanzu-support-desk' ); ?></a>
         <a class="cancel-customer button-cancel" href="#customer"><?php _e( 'Cancel','kanzu-support-desk' ); ?></a>
     </div>
-    <?php endif;?>
 </div>
 <div class="ksd-misc-customer-email misc-pub-section">
     <span><?php _e( 'Customer Email','kanzu-support-desk' ); ?>:</span>
