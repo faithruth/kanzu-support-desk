@@ -587,8 +587,8 @@ h1.ksd-single-ticket-subject {
     padding-right: 15px;
 }
 #ksd-single-ticket .description {
-    border-bottom: 1px solid #FFA500;
-    border-top: 1px solid #FFA500;
+    border-bottom: 1px solid #EEE;
+    border-top: 1px solid #EEE;
     margin: 0;
     padding: 20px 15px;
 }
@@ -719,7 +719,7 @@ ul.edit-ticket-options li.selected{
     padding-left: 0;
 }
 ul#ksd-ticket-replies {
-    border-top: 1px solid #ffa500;
+    border-top: 1px solid #EEE;
     margin: 0;
     padding: 0;
 }
@@ -754,8 +754,12 @@ ul#ksd-ticket-replies li {
     margin-bottom: 0;
 }
 .ksd-ticket-post-body #titlewrap > h2 {
-    color: orange;
-    padding: 8px 12px;
+    color: #00a0d2;
+    margin-bottom: 0;
+    padding: 8px 12px 0;
+}
+.ksd-ticket-post-body #edit-slug-box {
+  font-size: 0.8em;
 }
 #ksd-ticket-messages h3.hndle.ui-sortable-handle{
     display: none;
@@ -764,7 +768,7 @@ div.replies-more:hover{
     opacity: 0.9;
 }
 .ticket-reply {
-    border-bottom: 1px solid #FFA500;
+    border-bottom: 1px solid #EEE;
     padding: 15px;
 }
 .ticket-reply.ksd_private_note {

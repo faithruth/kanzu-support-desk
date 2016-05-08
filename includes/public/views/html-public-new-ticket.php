@@ -84,7 +84,7 @@ endif;
             
              <?php if ( current_user_can( 'upload_files' ) ): ?>
                 <li class="ksd-tkt-attachment" >
-                    <input type="file" name="ksd_tkt_insert_attachment" id="ksd-insert-media-button" />
+                    <a title="<?php _e( 'Add Media','kanzu-support-desk' ); ?>"  class="button insert-media add_media" id="ksd-insert-media-button" href="#"><span class="wp-media-buttons-icon"></span><?php _e( 'Add Media','kanzu-support-desk' ); ?></a>
                     <ul class="ksd_attachments">
                     </ul>
                 </li>                
