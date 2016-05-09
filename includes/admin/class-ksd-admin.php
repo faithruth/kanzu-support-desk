@@ -1833,26 +1833,20 @@ class KSD_Admin {
      * Call this after $this->do_admin_includes() is called
      * @param int $ticket_id The ticket or reply's ID
      * @param Array $attachments_array Array containing the attachments
-     *        The array is of the form:
+     * The array is of the form:
                     Array
                     (
-                        [url] => Array
-                            (
-                                [0] => http://url/filename.txt
-                                [1] => http://url/filename.jpg
+                        [0] => Array(  
+                               [url]        => http://url/filename.txt,
+                               [size]       =>  724 B,
+                               [filename]   =>  filename.txt
+                            ),
+                        [1] => Array(  
+                               [url]        => http://url/filename.jpg,
+                               [size]       =>  146 kB,
+                               [filename]   =>  filename.jpg
                             )
-
-                        [size] => Array
-                            (
-                                [0] => 724 B
-                                [1] => 146 kB
-                            )
-
-                        [filename] => Array
-                            (
-                                [0] => filename.txt
-                                [1] => filename.jpg
-                            )
+     *                )
      * @param Boolean $is_reply Whether this is a reply or a ticket
      */
     private function add_ticket_attachments( $ticket_id, $attachments_array, $is_reply=false ) {
