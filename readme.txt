@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.5
-Stable tag: 2.2.4
+Stable tag: 2.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,11 +110,13 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
+= 2.2.5, May 13, 2016 =
+ * Support for custom fields in the front-end support forms.
+
 = 2.2.4, April 19, 2016 =
  * Submission of attachment in front-end support form added
  * BUG FIX | Remove second CC button from the toolbar of the editor during ticket reply
 
-== Changelog ==
 = 2.2.3, April 15, 2016 =
  * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist
  * User request - Add filter for customer html in ticket information
@@ -331,6 +333,9 @@ Yes, it will
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.5 =
+ * Support for custom fields in the front-end support forms.
+
 = 2.2.3 =
  * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist
  * User request - Add filter for customer html in ticket information

@@ -28,3 +28,15 @@
     <span><?php _e( 'Customer Since','kanzu-support-desk' ); ?>:</span>
     <span class="ksd-misc-value" id="ksd-misc-customer-since"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $ksd_current_customer->user_registered ) ); ?></span>
 </div>
+<?php
+$customer_info = array();
+$customer_info = apply_filters( 'ksd_add_customer_info', $customer_info );
+foreach ( $customer_info as $k => $v ) {
+    $dom_id = str_replace( " ", "", trim( $k ) );
+    echo '<div class="ksd-misc-customer-' . $dom_id . ' misc-pub-section">';
+    echo '<span class="dashicons dashicons-info"></span>&nbsp;';
+    echo '<span>' .  _e( $k,'kanzu-support-desk' ) . ':</span> &nbsp;';
+    echo '<span clsass="ksd-misc-value" id="ksd-misc-customer-' . $dom_id . '">' . $v .'</span>';
+    echo '</div>';
+}
+?>

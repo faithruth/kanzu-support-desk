@@ -24,7 +24,7 @@ final class Kanzu_Support_Desk {
 	/**
 	 * @var string
 	 */
-	public $version = '2.2.4';
+	public $version = '2.2.5';
 
 	/**
 	 * @var string
