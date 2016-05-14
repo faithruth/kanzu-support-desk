@@ -49,13 +49,12 @@ if ( $ksd_user_avatar ):  ?>
 </div>
 
 <?php
-$customer_info = array();
-$customer_info = apply_filters( 'add_customer_info', $customer_info );
-foreach ( $customer_info as $k => $v ) {
-$dom_id = str_replace( " ", "", trim( $k ) );
-echo '<div class="ksd-misc-customer-' . $dom_id . ' misc-pub-section">';
-    echo '<span>' .  _e( $k,'kanzu-support-desk' ) . ':</span>';
-    echo '<span clsass="ksd-misc-value" id="ksd-misc-customer-' . $dom_id . '">' . $v .'</span>';
-    echo '</div>';
-}
-?>
+    $customer_info = array();
+    $customer_info = apply_filters( 'ksd_customer_info_meta', $customer_info );
+    foreach ( $customer_info as $label => $value ) {
+        $custom_field_id = sanitize_title( $label );
+        echo '<div class="ksd-misc-customer-' . $custom_field_id . ' misc-pub-section">';
+        echo '<span>' .  $label . ':</span>';
+        echo '<span clsass="ksd-misc-value" id="ksd-misc-customer-' . $custom_field_id . '">' . $value .'</span>';
+        echo '</div>';
+    }

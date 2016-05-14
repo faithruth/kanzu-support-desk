@@ -2038,9 +2038,8 @@ class KSD_Admin {
             $updated_settings['ticket_management_roles'] = !isset( $_POST['ticket_management_roles'] ) ? "administrator" : $this->convert_multiple_checkbox_to_setting( $_POST['ticket_management_roles'] );
 
             //Apply the settings filter to get settings from add-ons
-            $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
-            
-            error_log( print_r( $updated_settings, true) ); 
+            $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );            
+                
             $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
                 
             if( true === $status){ 
