@@ -2763,7 +2763,9 @@ class KSD_Admin {
         if ( is_admin() && $query->query['post_type'] == 'ksd_ticket' ) {
 
              $qv = &$query->query_vars;
-             $qv['meta_query'] = array();
+             //Change the ticket order
+             $qv['orderby']     = 'modified';
+             $qv['meta_query']  = array();
 
             if ( ! empty( $_GET['ksd_severities_filter'] ) ) {
                 $qv['meta_query'][] = array(
