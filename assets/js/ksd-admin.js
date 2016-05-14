@@ -132,6 +132,21 @@ jQuery(document).ready(function () {
             return letter.toUpperCase();
         });
     };
+    
+    /**
+     * Convert text to a slug. 
+     * Replaces all spaces with hyphens, removes anything not alphanumeric, underscore, or hyphen
+     * @param {String} Text
+     * @returns {String}
+     */
+    KSDUtils.slugify = function (Text) {
+        return Text
+            .toLowerCase()
+            .replace(/ /g,'-')
+            .replace(/[^\w-]+/g,'')
+            ;
+    };
+   
 
     /*---------------------------------------------------------------*/
     /***************************JS HOOKS: Callback functions defined by addons *******/

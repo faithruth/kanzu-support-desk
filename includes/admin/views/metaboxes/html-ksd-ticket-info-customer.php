@@ -47,3 +47,14 @@ if ( $ksd_user_avatar ):  ?>
     <span><?php _e( 'Customer Since','kanzu-support-desk' ); ?>:</span>
     <span class="ksd-misc-value" id="ksd-misc-customer-since"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $ksd_current_customer->user_registered ) ); ?></span>
 </div>
+
+<?php
+    $customer_info = array();
+    $customer_info = apply_filters( 'ksd_customer_info_meta', $customer_info );
+    foreach ( $customer_info as $label => $value ) {
+        $custom_field_id = sanitize_title( $label );
+        echo '<div class="ksd-misc-customer-' . $custom_field_id . ' misc-pub-section">';
+        echo '<span>' .  $label . ':</span>';
+        echo '<span clsass="ksd-misc-value" id="ksd-misc-customer-' . $custom_field_id . '">' . $value .'</span>';
+        echo '</div>';
+    }

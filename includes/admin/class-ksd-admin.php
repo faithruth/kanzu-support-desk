@@ -1430,7 +1430,7 @@ class KSD_Admin {
      *                   Returns given text with transformations of quotes to smart quotes, apostrophes, dashes, ellipses, the trademark symbol, and the multiplication symbol. 
      * @param string $raw_message The ticket message 
      * @return string The formatted message
-     * @since 1.7.0
+     * @since 1.7.0s
      */
     private function format_message_content_for_viewing( $raw_message ) {
         return wpautop( wptexturize( str_replace( ']]>', ']]&gt;', $raw_message ) ) );//wpautop does the <p> replacements, wptexturize does the transformations
@@ -2032,11 +2032,11 @@ class KSD_Admin {
             $updated_settings['ticket_management_roles'] = !isset( $_POST['ticket_management_roles'] ) ? "administrator" : $this->convert_multiple_checkbox_to_setting( $_POST['ticket_management_roles'] );
 
             //Apply the settings filter to get settings from add-ons
-            $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );
-
+            $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );            
+                
             $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
                 
-            if( true === $status){
+            if( true === $status){ 
                 do_action( 'ksd_settings_saved' );
                echo json_encode(  __( 'Settings Updated', 'kanzu-support-desk') );
             }else{

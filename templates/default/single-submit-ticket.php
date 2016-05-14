@@ -75,6 +75,9 @@ endif;?>
                 </li>            
             <?php endif; ?> 
             
+             <?php 
+             do_action('ksd_add_custom_fields');
+             ?>
               <li class="ksd-message">     
                   <textarea value="<?php _e('Message','kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" id="ksd-ticket-message" required></textarea>
               </li>
