@@ -110,12 +110,17 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
-= 2.2.5, May 13, 2016 =
- * Support for custom fields in the front-end support forms.
+= 2.2.5, May 14, 2016 =
+ * Sort tickets by last time updated
+ * Add support for KSD Custom fields add-on
 
-= 2.2.4, April 19, 2016 =
- * Submission of attachment in front-end support form added
+= 2.2.4, May 8, 2016 =
+ * Submission of attachments in front-end support form added
  * BUG FIX | Remove second CC button from the toolbar of the editor during ticket reply
+ * Display customer information in separate metabox; add display pic
+ * Display Woo and EDD customers in customer list
+ * Allow editing of ticket customer
+ * Minor color changes to single ticket view UI
 
 = 2.2.3, April 15, 2016 =
  * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist
@@ -334,7 +339,16 @@ Yes, it will
 
 == Upgrade Notice ==
 = 2.2.5 =
+<<<<<<< HEAD
  * Support for custom fields in the front-end support forms.
+=======
+ * Sort tickets by last time updated
+ * Add support for KSD Custom fields add-on
+
+= 2.2.4 =
+ * Submission of attachments in front-end support form added
+ * BUG FIX | Remove second CC button from the toolbar of the editor during ticket reply
+>>>>>>> 868446de9866e5c0b811037f1a25cfe2030bb88d
 
 = 2.2.3 =
  * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist

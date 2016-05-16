@@ -145,9 +145,6 @@ class KSD_Admin {
         
         //Change 'Publish' button to 'Update'
         add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
-
-        //Handle front end form submission with attachment
-        add_action( 'admin_post_ksd_log_ticket_with_attachment', array( $this, 'log_ticket_with_attachment' ) );
     }
 
 
@@ -315,34 +312,6 @@ class KSD_Admin {
         die();
     }
 
-    /**
-     * Handle new ticket logging with attachment for frontend ticket form
-     * 
-     * @since 2.3.0
-     */
-    public function log_ticket_with_attachment() {
-        
-        $this->do_log_new_ticket( $_POST );  
-        $response = array();
-        
-        try{
-            $response[] = "tab_message_on_submit";
-            KSD()->session->set( 'ksd_notice', $response );            
-        }catch( Exception $e ) {
-            $response[] = "recaptcha_error_message";
-            KSD()->session->set( 'ksd_notice', $response );
-        }  
-        
-        if ( ( $referer = wp_get_referer() ) )
-        {   
-            $concatenate = strpos( $referer, '?' ) !== false ? '&' : '?';
-            wp_safe_redirect( $referer . $concatenate. "ksd_tkt_submitted=yes" );
-        }else
-        {
-            wp_safe_redirect( get_home_url() ); 
-        }
-        exit;
-    }
     
     /**
      * Process the notification feedback
@@ -559,6 +528,15 @@ class KSD_Admin {
                 'normal',  
                 'high'          
             );   
+        //Customer information        
+        add_meta_box(
+                'ksd-ticket-info-customer', 
+                __( 'Customer Information', 'kanzu-support-desk'),  
+                array( $this,'output_ticket_info_customer' ),   
+                'ksd_ticket',  
+                'side',  
+                'high'          
+            );        
         //For ticket activity
         add_meta_box(
                 'ksd-ticket-activity', 
@@ -596,29 +574,29 @@ class KSD_Admin {
 
     /**
      * Output ticket meta boxes
-     * @param Object The WP_Object
+     * @param Object $post The WP_Object
      * @param Array $metabox The metabox array
      * @since 2.0.0
      */
-    public function output_meta_boxes( $the_ticket, $metabox  ) {
+    public function output_meta_boxes( $post, $metabox  ) {
         //If this is the ticket messages metabox, format the content for viewing
         if ( $metabox['id'] == 'ksd-ticket-messages' ) {
-            $the_ticket->content = $this->format_message_content_for_viewing( $the_ticket->content );
+            $post->content = $this->format_message_content_for_viewing( $post->content );
         }
         include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-". $metabox['id'].".php");
     }     
     
     /**
-     * Output the HTML of the customer fields in the 'Ticket Info'
-     * meta box. The customer fields are 'Customer','Customer Email' and 'Customer Since'
-     * @param Object $ksd_current_customer The customer behind the current ticket
+     * Output the HTML of the customer fields in the 'Customer Information'
+     * meta box. The customer fields are 'Customer','Customer Email','Customer Since', etc.
+     * @param Object $post The WP_Object
      * @since 2.2.3
      */
-    public function output_ticket_info_customer( $ksd_current_customer ){
+    public function output_ticket_info_customer( $post ){        
         ob_start();
         include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-ksd-ticket-info-customer.php");
         $customer_html = ob_get_clean(); 
-        return apply_filters( 'ksd_ticket_info_customer_html', $customer_html );
+        echo apply_filters( 'ksd_ticket_info_customer_html', $customer_html );
     }
 
 
@@ -1598,7 +1576,7 @@ class KSD_Admin {
             try{
             $supported__ticket_channels = array ( "admin-form","support-tab","email","sample-ticket" );   
             $tkt_channel                = sanitize_text_field( $new_ticket_raw['ksd_tkt_channel']);
-            if ( !in_array( $tkt_channel, $supported__ticket_channels ) ) {
+            if ( ! in_array( $tkt_channel, $supported__ticket_channels ) ) {
                 throw new Exception( __('Error | Unsupported channel specified', 'kanzu-support-desk'), -1 );
             }                  
 
@@ -1609,12 +1587,12 @@ class KSD_Admin {
 
             //We sanitize each input before storing it in the database
             $new_ticket = array(); 
-            $new_ticket['post_title']    	    = sanitize_text_field( stripslashes( $new_ticket_raw['ksd_tkt_subject'] ) );
+            $new_ticket['post_title']           = sanitize_text_field( stripslashes( $new_ticket_raw['ksd_tkt_subject'] ) );
             $sanitized_message                  = wp_kses_post( stripslashes( $new_ticket_raw['ksd_tkt_message'] ) );
             $new_ticket['post_excerpt']         = wp_trim_words( $sanitized_message, $ksd_excerpt_length );
             $new_ticket['post_content']         = $sanitized_message;                
             $new_ticket['post_status']          = ( isset( $new_ticket_raw['ksd_tkt_status'] ) && in_array( $new_ticket_raw['ksd_tkt_status'], array( 'new', 'open', 'pending', 'draft', 'resolved' ) ) ? sanitize_text_field( $new_ticket_raw['ksd_tkt_status'] ) : 'open' ); 
-
+                        
             if ( isset( $new_ticket_raw['ksd_cust_email'] ) ) {
                 $new_ticket['ksd_cust_email']   = sanitize_email( $new_ticket_raw['ksd_cust_email'] );
             }
@@ -1623,41 +1601,9 @@ class KSD_Admin {
                 $new_ticket['post_date']        = $new_ticket_raw['ksd_tkt_time_logged'];
             }//No need for an else; if this isn't specified, the current time is automatically used
 
-            //multiple file uploads
-            if ( isset( $_FILES["ksd_tkt_attachment"] ) && is_array( $_FILES["ksd_tkt_attachment"]['name'] ) ) {
-                $files           = $_FILES['ksd_tkt_attachment'];
-                $num_attachments = count( $files['name'] );
-                $attachments     = array();
-                $upload_overrides = array( 'test_form' => false );
-                for( $i = 0; $i < $num_attachments; $i++ ) {
-                    if ( $files['name'][$i] ) { 
-                        $file = array(
-                            'name'     => $files['name'][$i],
-                            'type'     => $files['type'][$i],
-                            'tmp_name' => $files['tmp_name'][$i],
-                            'error'    => $files['error'][$i],
-                            'size'     => $files['size'][$i]
-                        );
-                        
-                        $upload = wp_handle_upload( $file, $upload_overrides );
-                        $attachments['url'][]               = $upload['url'];
-                        $attachments['size'][]              =  filesize( $upload['file'] );
-                        $attachments['filename'][]          = basename( $upload['file'] );
-                    }
-                }
-                
-                $new_ticket_raw['ksd_attachments']  = $attachments;
-            }
-            if( isset( $_FILES["ksd_tkt_attachment"] ) && ! is_array( $_FILES["ksd_tkt_attachment"]['name'] ) ) { 
-                $upload_overrides = array( 'test_form' => false );
-                $upload           = wp_handle_upload( $_FILES["ksd_tkt_attachment"] , $upload_overrides );
-
-                $attachments                        = array();
-                $attachments['url'][]               = $upload['url'];
-                $attachments['size'][]              =  filesize( $upload['file'] );
-                $attachments['filename'][]          = basename( $upload['file'] );
-                $new_ticket_raw['ksd_attachments']  = $attachments;
-            }                
+            if( isset( $_POST['ksd_tkt_attachment_ids'] ) ){
+                $new_ticket_raw['ksd_attachment_ids'] = $_POST['ksd_tkt_attachment_ids'];
+            }             
 
             //Server side validation for the inputs. Only holds if we aren't in add-on mode
             if ( ( ! $from_addon && strlen( $new_ticket['post_title'] ) < 2 || strlen( $new_ticket['post_content'] ) < 2 ) ) {
@@ -1775,9 +1721,12 @@ class KSD_Admin {
 
             $new_ticket_status = (  $new_ticket_id > 0  ? $output_messages_by_channel[ $tkt_channel ] : __("Error", 'kanzu-support-desk') );
 
-            //@TODO Save the attachments
+            //Save the attachments
             if ( isset( $new_ticket_raw['ksd_attachments'] ) ) {
                 $this->add_ticket_attachments( $new_ticket_id, $new_ticket_raw['ksd_attachments'] );
+            }
+            if( isset( $new_ticket_raw['ksd_attachment_ids'] ) ){
+                $this->save_ticket_attachments( $new_ticket_id, $new_ticket_raw['ksd_attachment_ids'] );
             }
 
             //If the ticket was logged by using the import feature, end the party here
@@ -1884,32 +1833,26 @@ class KSD_Admin {
      * Call this after $this->do_admin_includes() is called
      * @param int $ticket_id The ticket or reply's ID
      * @param Array $attachments_array Array containing the attachments
-     *        The array is of the form:
+     * The array is of the form:
                     Array
                     (
-                        [url] => Array
-                            (
-                                [0] => http://url/filename.txt
-                                [1] => http://url/filename.jpg
+                        [0] => Array(  
+                               [url]        => http://url/filename.txt,
+                               [size]       =>  724 B,
+                               [filename]   =>  filename.txt
+                            ),
+                        [1] => Array(  
+                               [url]        => http://url/filename.jpg,
+                               [size]       =>  146 kB,
+                               [filename]   =>  filename.jpg
                             )
-
-                        [size] => Array
-                            (
-                                [0] => 724 B
-                                [1] => 146 kB
-                            )
-
-                        [filename] => Array
-                            (
-                                [0] => filename.txt
-                                [1] => filename.jpg
-                            )
+     *                )
      * @param Boolean $is_reply Whether this is a reply or a ticket
      */
     private function add_ticket_attachments( $ticket_id, $attachments_array, $is_reply=false ) {
-        $attachment_html = ''; 
-        for ( $i = 0; $i < count( $attachments_array['url'] ); $i++ ) {
-            $filename = $attachments_array['url'][$i];
+        $attachment_ids = array(); 
+        foreach ( $attachments_array as $attachment ) {
+            $filename = $attachment['url'];
             $filetype = wp_check_filetype( basename( $filename ), null );
 
             $attachment = array(
@@ -1920,22 +1863,24 @@ class KSD_Admin {
                     'post_status'    => 'inherit'
             );
 
-            // Insert the attachment.
+            //Insert the attachment.
             $attach_id = wp_insert_attachment( $attachment, $filename, $ticket_id );
             require_once( ABSPATH . 'wp-admin/includes/image.php' );
             $attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
             wp_update_attachment_metadata( $attach_id, $attach_data );
-            $attachment_html .= '<li><a href="' . get_attachment_link($attach_id ) . '">' . preg_replace( '/\.[^.]+$/', '', basename( $filename ) ) . '</a></li>';
+            $attachment_ids[] = $attach_id;
         }
-
-        if ( count($attachments_array ) > 0 ) {
-            $attachment_html = '<div class="ksd-attachments-addon">' . __( 'Attachments', 'kanzu-support-desk' ).': <ul class="ksd_attachments">' . $attachment_html. '</ul></div>';
-        }
-
-        //Update tickets message with the attachments in atachments
-        $wp_post = get_post ( ( int )$ticket_id );
-        $wp_post->post_content = $wp_post->post_content . $attachment_html ;
-        wp_update_post($wp_post );
+        
+        $this->save_ticket_attachments( $ticket_id, $attachment_ids );
+    }
+    
+    /**
+     * Append attachments to a ticket
+     * @param int $ticket_id
+     * @param array $attachment_ids
+     */
+    private function save_ticket_attachments( $ticket_id, $attachment_ids ){
+        add_post_meta( $ticket_id, '_ksd_tkt_attachments', $attachment_ids ); 
     }
 
     /**
@@ -2077,7 +2022,7 @@ class KSD_Admin {
             }
             //For a checkbox, if it is unchecked then it won't be set in $_POST
             $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                    "supportform_show_categories","supportform_show_severity","onboarding_changes","supportform_show_attachment","enable_multiple_attachments"
+                    "supportform_show_categories","supportform_show_severity","onboarding_changes"
             );
             //Iterate through the checkboxes and set the value to "no" for all that aren't set
             foreach ( $checkbox_names as $checkbox_name ) {
@@ -2818,7 +2763,9 @@ class KSD_Admin {
         if ( is_admin() && $query->query['post_type'] == 'ksd_ticket' ) {
 
              $qv = &$query->query_vars;
-             $qv['meta_query'] = array();
+             //Change the ticket order
+             $qv['orderby']     = 'modified';
+             $qv['meta_query']  = array();
 
             if ( ! empty( $_GET['ksd_severities_filter'] ) ) {
                 $qv['meta_query'][] = array(

@@ -12,7 +12,7 @@
     text-decoration: none;
 }
 #admin-kanzu-support-desk .ui-widget-content {
-/*    background-color: #f1f1f1;*/
+    /*    background-color: #f1f1f1;*/
     color: #222;
 }
 
@@ -405,7 +405,7 @@ ul.ksd_attachments li{
     float: left;
     margin: 5px auto;
     position: relative;
-    
+
 }
 
 .ksd-close-dialog {
@@ -432,30 +432,40 @@ ul.ksd_attachments li{
 .edit-ticket-description .ksd-cc{ margin-bottom: 5px;}
 
 #post-body .ksd-misc-severity::before {
-  content: "\f348";
+    content: "\f348";
 } 
 #post-body .ksd-misc-customer::before {
     content: "\f110";
 }
 #post-body .ksd-misc-customer-email:before {
-	content: "\f466";
+    content: "\f466";
 }
 #post-body .ksd-misc-woo-order-id:before {
-	content: "\f174";
+    content: "\f174";
 }
 #post-body .ksd-misc-assign-to::before{
     content: "\f483";
 }
 #post-body .ksd-misc-customer-since::before{
-   content: "\f469";
+    content: "\f469";
 }
 #ksd-messages-metabox > div#ksd-ticket-message {
-  min-height: 200px;
+    overflow: hidden;
+    padding-bottom: 20px;
+}
+.ksd-attachments-addon {
+    margin-top: 20px;
+}
+#poststuff .ksd-attachments-addon > h3 {
+    padding-left: 0;
 }
 .ksd-misc-extras .ksd-post-status-display {
     font-size: 0.8em;
     padding: 2px;
     margin: 0 3px;
+}
+.ksd-misc-customer-display-pic{
+    text-align: center;
 }
 .ksd-misc-value{
     font-weight: bold;
@@ -466,22 +476,22 @@ ul.ksd_attachments li{
     text-transform: lowercase;
 }
 .ksd-post-status-display{
-   text-transform: capitalize;
-   padding: 4px;
+    text-transform: capitalize;
+    padding: 4px;
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
     border-radius:3px;
     color: #FFF;   
 }
 #post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before,#post-body .ksd-misc-woo-order-id:before,#post-body .ksd-misc-customer-since:before {
-  display: inline-block;
-  font: 400 20px/1 dashicons;
-  left: -1px;
-  padding: 0 2px 0 0;
-  position: relative;
-  text-decoration: none !important;
-  top: 0;
-  vertical-align: top;
+    display: inline-block;
+    font: 400 20px/1 dashicons;
+    left: -1px;
+    padding: 0 2px 0 0;
+    position: relative;
+    text-decoration: none !important;
+    top: 0;
+    vertical-align: top;
 }
 #ksd-misc-current-severity.high{
     color: orange;
@@ -494,20 +504,20 @@ ul.ksd_attachments li{
     font-size: 1.1em;
 }
 .ksd-reply-submit-wrapper {
-  clear: both;
+    clear: both;
 }
 .ksd-reply-submit-wrapper .spinner {
-  float: left;
+    float: left;
 }
 .spinner.ksd-reply-spinner.hidden{
     display: none;    
 }
 .ksd-migration-spinner {
-  display: none;
-  float: left;
+    display: none;
+    float: left;
 }
 .ksd-migration-spinner.is-active {
-  display: inline-block;
+    display: inline-block;
 }
 
 .ksd-severity-and-assign{
@@ -577,8 +587,8 @@ h1.ksd-single-ticket-subject {
     padding-right: 15px;
 }
 #ksd-single-ticket .description {
-    border-bottom: 1px solid #FFA500;
-    border-top: 1px solid #FFA500;
+    border-bottom: 1px solid #EEE;
+    border-top: 1px solid #EEE;
     margin: 0;
     padding: 20px 15px;
 }
@@ -596,9 +606,10 @@ ul#ksd_attachments{
     padding-bottom: 55px;
 }
 #edit-ticket-tabs {
-  border-color: #eee #fff #fff;
-  border-style: solid none none;
-  border-width: 1px medium medium;
+    border-color: #eee #fff #fff;
+    border-style: solid none none;
+    border-width: 1px medium medium;
+    clear: both;
 }
 ul.edit-ticket-options {
     height: 30px;
@@ -649,7 +660,7 @@ ul.edit-ticket-options li.selected{
     height: 30px;
 }
 #ksd-ticket-info-action .spinner {
-  float: left;
+    float: left;
 }
 #ksd-ticket-info-footer a{ 
     color: #a00;
@@ -661,8 +672,8 @@ ul.edit-ticket-options li.selected{
     text-align: right;
 }
 #ksd-ticket-info-main {
-  margin: 6px 0 0;
-  padding: 6px 12px 12px;
+    margin: 6px 0 0;
+    padding: 6px 12px 12px;
 }
 #ksd-single-ticket #edit-ticket-tabs ul.ui-tabs-nav {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
@@ -708,19 +719,22 @@ ul.edit-ticket-options li.selected{
     padding-left: 0;
 }
 ul#ksd-ticket-replies {
-  border-top: 1px solid #ffa500;
-  margin: 0;
-  padding: 0;
+    border-top: 1px solid #EEE;
+    margin: 0;
+    padding: 0;
+}
+ul#ksd-ticket-replies.pending {
+  padding: 20px 0;
 }
 ul#ksd-ticket-replies li {
-  list-style-type: none;
+    list-style-type: none;
 }
 #ksd-ticket-replies pre {
-        overflow-x: auto; /* Use horizontal scroller if needed */
-        white-space: pre-wrap; /* css-3 */
-        white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
-        word-wrap: break-word; /* Internet Explorer 5.5+ */
-        white-space : normal;
+    overflow-x: auto; /* Use horizontal scroller if needed */
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+    white-space : normal;
 }
 .replies-more {
     background-color: #f1f1f1;
@@ -736,12 +750,16 @@ ul#ksd-ticket-replies li {
     width: 20px;
 }
 .ksd-ticket-post-body div#post-body-content {
-  background-color: #fff;
-  margin-bottom: 0;
+    background-color: #fff;
+    margin-bottom: 0;
 }
 .ksd-ticket-post-body #titlewrap > h2 {
-  color: orange;
-  padding: 8px 12px;
+    color: #00a0d2;
+    margin-bottom: 0;
+    padding: 8px 12px 0;
+}
+.ksd-ticket-post-body #edit-slug-box {
+  font-size: 0.8em;
 }
 #ksd-ticket-messages h3.hndle.ui-sortable-handle{
     display: none;
@@ -750,14 +768,14 @@ div.replies-more:hover{
     opacity: 0.9;
 }
 .ticket-reply {
-    border-bottom: 1px solid #FFA500;
+    border-bottom: 1px solid #EEE;
     padding: 15px;
 }
 .ticket-reply.ksd_private_note {
-  background-color: #efefef;
+    background-color: #efefef;
 }
 .reply_date {
-  float: right;
+    float: right;
 }
 
 .ksd-reply-cc {
@@ -767,7 +785,7 @@ div.replies-more:hover{
     font-size: 0.9em;
 }
 .reply_message {
-  clear: both;
+    clear: both;
 }
 
 .reply_message img {
@@ -1032,13 +1050,13 @@ ul.edit-ticket-options.ui-widget-header{
     width: 20%;
 }
 .ksd-input-wrapper {
-  float: left;
-  width: 80%;
-  margin: 10px 0;
+    float: left;
+    width: 80%;
+    margin: 10px 0;
 }
 .ksd-input-wrapper span.description {
-  font-size: 13px;
-  font-style: italic;
+    font-size: 13px;
+    font-style: italic;
 }
 #update-settings h3{
     margin-bottom: 0;  
@@ -1784,7 +1802,7 @@ span.feedback_note{
 .ui-tabs .ui-tabs-panel {
     display: block;
     border-width: 0;
-/*    padding: 1em 1.4em;*/
+    /*    padding: 1em 1.4em;*/
     padding : 0px;
     background: none;
 }
@@ -2037,7 +2055,7 @@ ul#ksd-tabs{
     padding:0px !important;
 }
 #ksd-tabs .help_tip img{
-    
+
 }
 /*Notifications */
 #ksd-notifications {
@@ -2081,7 +2099,7 @@ ul#ksd-tabs{
     padding-top: 20px;
 }
 #ksd-notifications .ksd-notification-button{
-  margin-right: 12px;
+    margin-right: 12px;
 }
 .ksd-notifications-response{
     padding: 35px;

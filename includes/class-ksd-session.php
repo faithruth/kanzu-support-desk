@@ -50,7 +50,7 @@ class KSD_Session {
 			}
 
 			if ( ! class_exists( 'Recursive_ArrayAccess' ) ) {
-				require_once KSD_PLUGIN_DIR . 'includes/libraries/class-recursive-arrayaccess.php';
+				require_once KSD_PLUGIN_DIR . 'includes/libraries/wp_session/class-recursive-arrayaccess.php';
 			}
 
 			if ( ! class_exists( 'WP_Session' ) ) {
