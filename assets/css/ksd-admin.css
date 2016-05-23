@@ -54,6 +54,7 @@
     margin: 20px;
     width: 20%;
     box-shadow: none;
+    text-shadow: none;
 }
 #ksd-intro-one input.button-primary:hover{
     background-color: #00a0d2;
