@@ -218,70 +218,7 @@ jQuery(document).ready(function () {
             }); 
         } ;     
     };
-       
-    /*---------------------------------------------------------------*/
-    /*************************************ANALYTICS*********************/
-    /*---------------------------------------------------------------*/
-    KSDAnalytics = function () {
-        _this = this;
-    };
-    KSDAnalytics.init = function () {
-        
-        if( ksd_admin.ksd_current_screen === "not_a_ksd_screen" ){//@since 1.6.4. Exclude non-KSD pages from stats
-          return;  //@TODO Update Analytics to send Tickets, Add New, Tags and Categories views
-        }
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');//analytics_debug - Step 1
-        //window.ga_debug = {trace: true}; //Step 2
-        ga( 'create', 'UA-48956820-3', 'auto' );
-       // ga('create', 'UA-48956820-3', { //Step 3
-       //   'cookieDomain': 'none'
-      //  });        
-        ga( 'require', 'linkid', 'linkid.js' );
-        if ( "yes" !== ksd_admin.enable_anonymous_tracking ) {//Disable tracking if the user hasn't allowed it
-             window['ga-disable-UA-48956820-3'] = true;
-        }      
-
-        //Send the page view for the current page. This is called the first time the page is loaded
-        //so we get the current admin_tab from ksd_admin.admin_tab
-        this.sendPageView(ksd_admin.ksd_current_screen);
-    };
-    /**
-     * Send a page view to Google Analytics
-     * @param {string} current_admin_tab ID of the screen view to send. e.g. ksd-tickets
-     * @returns none
-     */
-    KSDAnalytics.sendPageView = function (current_admin_tab) {
-        pageName = KSDUtils.capitalizeFirstLetter(current_admin_tab.replace("ksd-", "").replace(/\-/g, " "));
-        if (pageName === "Kanzu Support Desk") {//For instances where user directly clicks the main KSD menu item, its title is "Kanzu Support Desk" and it displays the dashboard so we translate it here
-            pageName = "Dashboard";
-            current_admin_tab = "ksd-dashboard";
-        }
-        thePage = '/' + current_admin_tab;//NB: Page names must start with a / 
-        pageTitle = pageName + " - Kanzu Support Desk";
-        ga('send', 'pageview', {'page': thePage, 'title': pageTitle});
-    };
-    
-    /**
-     * Send an event
-     * @param string category
-     * @param string action
-     * @param string label
-     * @returns none
-     */
-    KSDAnalytics.sendEvent = function ( category, action, label ) {
-        window['ga-disable-UA-48956820-3'] = false;
-        ga('send', 'event', category, action, label );         
-    }    
+   
 
     /*---------------------------------------------------------------*/
     /****************************SETTINGS****************************/
