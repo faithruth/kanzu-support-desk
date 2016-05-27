@@ -71,11 +71,6 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Refresh your page after enabling this and tour mode will start automatically", 'kanzu-support-desk' ); ?>"/>
                     </div>
                 <div class="setting">
-                    <label for="enable_anonymous_tracking"><?php _e ( 'Enable usage & error statistics', 'kanzu-support-desk' ); ?></label>                
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Shares performance, usage and customization data about your KSD to help Kanzu Code make the plugin more useful, secure and stable", 'kanzu-support-desk' ); ?>"/>
-                    <input name="enable_anonymous_tracking"  type="checkbox" <?php checked ( $settings['enable_anonymous_tracking'], "yes") ?> value="yes"  />                    
-                </div>
-                <div class="setting">
                     <label for="ticket_management_roles"><?php _e ( 'Roles that manage tickets', 'kanzu-support-desk' ); ?></label>                
                     <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Only users with these roles can manage tickets. All other users won't have access to your support desk. Note that the Administrator role always has access.", 'kanzu-support-desk' ); ?>"/>
                     <ul class="ksd-multiple-checkboxes"><?php
