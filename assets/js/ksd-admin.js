@@ -277,31 +277,31 @@ jQuery(document).ready(function () {
                 jQuery( "#ksd-notifications" ).slideToggle( "slow" );
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'close' };
                 __submitNotificationFeedback( data );   
-                KSDAnalytics.sendEvent( 'Feedback', 'General', 'close-'+notificationID );
+                //KSDAnalytics.sendEvent( 'Feedback', 'General', 'close-'+notificationID );
             });   
             //Leave me alone!!!!
             jQuery('.ksd-notification-cancel').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'no' };
                 __submitNotificationFeedback( data );
-                KSDAnalytics.sendEvent( 'Feedback', 'General', 'leave-me-'+notificationID );
+                //KSDAnalytics.sendEvent( 'Feedback', 'General', 'leave-me-'+notificationID );
             });    
             //Disable all notifications 
             jQuery( 'a.ksd-notifications-disable' ).click(function () {
                 var data = { action: 'ksd_notifications_disable' };
                 __submitNotificationFeedback( data );
-                KSDAnalytics.sendEvent( 'Feedback', 'General', 'disable-all-'+notificationID );
+                //KSDAnalytics.sendEvent( 'Feedback', 'General', 'disable-all-'+notificationID );
             });              
             //Quick call
             jQuery('#ksd-notification-quick-call').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'yes' };
                 __submitNotificationFeedback( data );
-                KSDAnalytics.sendEvent( 'Feedback', 'Quick Call', 'quick_call' );
+                //KSDAnalytics.sendEvent( 'Feedback', 'Quick Call', 'quick_call' );
             });
             //KSD content
            jQuery('#ksd-notification-content-topic').click(function () {
                 var ksdTopics = '';
                 jQuery('.ksd-content-topics input:checked').each(function(){
-                    KSDAnalytics.sendEvent( 'Feedback', 'KSD Content', jQuery(this).val() );
+                   // KSDAnalytics.sendEvent( 'Feedback', 'KSD Content', jQuery(this).val() );
                     ksdTopics+=jQuery(this).val()+' ';
                 });
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: ksdTopics };
@@ -320,7 +320,7 @@ jQuery(document).ready(function () {
            jQuery('#ksd-notification-one-feature').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: jQuery('textarea.ksd-notifications-one-feature').val() };
                 __submitNotificationFeedback( data );
-                KSDAnalytics.sendEvent( 'Feedback', 'General', 'one_feature' );
+                //KSDAnalytics.sendEvent( 'Feedback', 'General', 'one_feature' );
            });    
            //NPS 
            jQuery('ul.ksd-nps-score li').click(function () {
@@ -1582,7 +1582,7 @@ jQuery(document).ready(function () {
             jQuery("#tabs .ksd-main-nav li a").click(function () {
                 jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#", "").replace("_", " "));//Remove the hashtag, replace _ with a space
                 if ("yes" === ksd_admin.enable_anonymous_tracking) { 
-                    KSDAnalytics.sendPageView(jQuery(this).attr('href').replace("#", "ksd-").replace("_", "-"));//Make it match the admin_tab format e.g. ksd-dashboard, ksd-tickets, etc
+                    //KSDAnalytics.sendPageView(jQuery(this).attr('href').replace("#", "ksd-").replace("_", "-"));//Make it match the admin_tab format e.g. ksd-dashboard, ksd-tickets, etc
                 }
             });
 
@@ -2227,11 +2227,6 @@ jQuery(document).ready(function () {
         };
 
     };
-
-
-
-    //Analytics
-    KSDAnalytics.init();
 
     //Settings
     Settings = new KSDSettings();
