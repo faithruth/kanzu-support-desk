@@ -44,5 +44,14 @@
         <a class="cancel-assign-to button-cancel" href="#assign-to"><?php _e( 'Cancel','kanzu-support-desk' ); ?></a>
     </div>
 </div>
+<?php
+    $ksd_tkt_referer = get_post_meta( $post->ID, '_ksd_tkt_info_referer', true );
+    if( ! empty( $ksd_tkt_referer ) ):
+?>
+    <div class="ksd-misc-referer misc-pub-section">
+        <span><?php _e( 'Submitted From','kanzu-support-desk' ); ?>:</span>
+        <span class="ksd-misc-value" id="ksd-misc-referer"><?php echo $ksd_tkt_referer ; ?></span>
+    </div>
+<?php endif; ?>
 <input type="hidden" value="<?php echo $post->post_status; ?>" id="hidden_ksd_post_status" name="hidden_ksd_post_status"><!--On change, save the ticket status-->
 <input type="hidden" value="admin-form" id="_ksd_tkt_info_channel" name="_ksd_tkt_info_channel"><!--On change, save the ticket status-->

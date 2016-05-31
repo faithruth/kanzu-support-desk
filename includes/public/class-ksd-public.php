@@ -244,7 +244,7 @@ class KSD_Public {
      * Display a form wherever shortcode [ksd_support_form] is used
      */
    public function form_short_code() {
-        self::generate_support_form();
+        return self::generate_support_form();
    }    
    
    /**
@@ -257,11 +257,17 @@ class KSD_Public {
         include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
         if ( "yes" == $settings['enable_customer_signup'] && !is_user_logged_in() ) { 
+            ob_start();
             $form_position_class = 'ksd-form-short-code';
-            include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' );   
+            include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' ); 
+            return ob_get_clean();
         } else{
+            ob_start();
             $ksd_template = new KSD_Templates();
-            $ksd_template->get_template_part( 'single', 'submit-ticket' );
+            $template_part = $ksd_template->get_template_part( 'single', 'submit-ticket', false );
+            if( !empty( $template_part ))
+                include( $template_part );
+            return ob_get_clean();
         }       
    }
    
