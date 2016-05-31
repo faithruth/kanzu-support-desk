@@ -518,6 +518,16 @@ class KSD_Admin {
         $publish_callback_args = array( 'revisions_count' => 0, 'revision_id' => NULL   );   
         add_meta_box( 'submitdiv', __( 'Ticket Information' ), 'post_submit_meta_box', null, 'side', 'high', $publish_callback_args );
 
+        //Customer information        
+        add_meta_box(
+                'ksd-ticket-info-customer', 
+                __( 'Customer Information', 'kanzu-support-desk'),  
+                array( $this,'output_ticket_info_customer' ),   
+                'ksd_ticket',  
+                'side',  
+                'high'          
+            );  
+        
         if ( $post->post_status !== 'auto-draft' ) {//For ticket updates            
         //Add main metabox for ticket replies
         add_meta_box(
@@ -527,16 +537,7 @@ class KSD_Admin {
                 'ksd_ticket',  
                 'normal',  
                 'high'          
-            );   
-        //Customer information        
-        add_meta_box(
-                'ksd-ticket-info-customer', 
-                __( 'Customer Information', 'kanzu-support-desk'),  
-                array( $this,'output_ticket_info_customer' ),   
-                'ksd_ticket',  
-                'side',  
-                'high'          
-            );        
+            );         
         //For ticket activity
         add_meta_box(
                 'ksd-ticket-activity', 
