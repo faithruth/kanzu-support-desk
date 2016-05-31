@@ -651,26 +651,29 @@ class KSD_Admin {
      * 
      */
     private function save_ticket_meta_info( $tkt_id, $tkt_title, $meta_array ) {
-        $ksd_meta_keys = array (
+        $ksd_dynamic_meta_keys = array (
             '_ksd_tkt_info_severity'    => 'low',
             '_ksd_tkt_info_assigned_to' => 0,
             '_ksd_tkt_info_channel'     => 'admin-form',
             '_ksd_tkt_info_cc'          => '',
             '_ksd_tkt_info_woo_order_id'=> ''
         );
+        
+        $ksd_static_meta_keys = array(
+            '_ksd_tkt_info_hash_url',
+            '_ksd_tkt_info_referer'
+        );
+        
         //Save ticket customer meta information in the activity list. This is all we do with the _ksd_tkt_info_customer field
         if ( isset( $meta_array['_ksd_tkt_info_customer'] ) ) {
             $this->update_ticket_activity( '_ksd_tkt_info_customer', $tkt_title, $tkt_id, wp_get_current_user()->ID, $meta_array['_ksd_tkt_info_customer'] );
         }
+        
+        //Save the static keys
+        $this->save_static_meta_keys( $tkt_id,$ksd_static_meta_keys,$meta_array );
 
-        //Save the hash URL   
-        if( isset( $meta_array[ '_ksd_tkt_info_hash_url' ] ) ){  
-            add_post_meta( $tkt_id, '_ksd_tkt_info_hash_url', $meta_array[ '_ksd_tkt_info_hash_url' ], true ); 
-            unset( $meta_array[ '_ksd_tkt_info_hash_url' ] );
-        }
-
-        //Update the other meta information  
-        foreach ( $ksd_meta_keys as $tkt_info_meta_key => $tkt_info_default_value ) {
+        //Update the dynamic meta information  
+        foreach ( $ksd_dynamic_meta_keys as $tkt_info_meta_key => $tkt_info_default_value ) {
             if ( !isset( $meta_array[$tkt_info_meta_key] ) ) {
                 continue;//Only do this if the value exists
             }
@@ -691,6 +694,24 @@ class KSD_Admin {
             update_post_meta( $tkt_id, $tkt_info_meta_key, $meta_array[ $tkt_info_meta_key ] ); 
         }
 
+    }
+    
+    /**
+     * Save static meta keys. These are keys that have values
+     * that don't change when a ticket is updated. They are only
+     * populated when the ticket is first created
+     * @param int $tkt_id                   Ticket ID
+     * @param array $ksd_static_meta_keys   The meta keys
+     * @param array $meta_array             The ticket's meta array. Note that this is passed by reference
+     * @since 2.2.8
+     */
+    private function save_static_meta_keys( $tkt_id, $ksd_static_meta_keys, &$meta_array ){
+        foreach ( $ksd_static_meta_keys as $tkt_info_meta_key ) {
+            if( isset( $meta_array[ $tkt_info_meta_key ] ) ){  
+                       add_post_meta( $tkt_id, $tkt_info_meta_key, $meta_array[ $tkt_info_meta_key ], true ); 
+                       unset( $meta_array[ $tkt_info_meta_key ] );
+                   }
+        }        
     }
 
 
@@ -1685,7 +1706,11 @@ class KSD_Admin {
 
             //Add meta fields
             $meta_array     = array();
-            $meta_array['_ksd_tkt_info_channel']    = $tkt_channel;
+            $meta_array['_ksd_tkt_info_channel']        = $tkt_channel;
+            
+            if ( wp_get_referer() ){
+                $meta_array['_ksd_tkt_info_referer']    = wp_get_referer();
+            }
             if ( isset( $new_ticket_raw['ksd_tkt_cc'] ) && $new_ticket_raw['ksd_tkt_cc'] != __( 'CC', 'kanzu-support-desk' ) ) {
                 $meta_array['_ksd_tkt_info_cc']     = sanitize_text_field( $new_ticket_raw['ksd_tkt_cc'] ); 
             }

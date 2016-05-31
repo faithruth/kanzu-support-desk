@@ -438,6 +438,9 @@ ul.ksd_attachments li{
 #post-body .ksd-misc-customer::before {
     content: "\f110";
 }
+#post-body .ksd-misc-referer::before {
+    content: "\f319";
+}
 #post-body .ksd-misc-customer-email:before {
     content: "\f466";
 }
@@ -472,7 +475,10 @@ ul.ksd_attachments li{
     font-weight: bold;
     text-transform: capitalize;
 }
-.ksd-misc-customer-email .ksd-misc-value{
+.ksd-misc-referer .ksd-misc-value{
+    font-size: 0.9em;
+}
+.ksd-misc-customer-email .ksd-misc-value,.ksd-misc-referer .ksd-misc-value{
     font-weight: normal;
     text-transform: lowercase;
 }
@@ -484,7 +490,7 @@ ul.ksd_attachments li{
     border-radius:3px;
     color: #FFF;   
 }
-#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before,#post-body .ksd-misc-woo-order-id:before,#post-body .ksd-misc-customer-since:before {
+#post-body .ksd-misc-severity::before,#post-body .ksd-misc-assign-to::before,#post-body .ksd-misc-customer::before,#post-body .ksd-misc-customer-email:before,#post-body .ksd-misc-woo-order-id:before,#post-body .ksd-misc-customer-since:before,#post-body .ksd-misc-referer::before  {
     display: inline-block;
     font: 400 20px/1 dashicons;
     left: -1px;
@@ -605,6 +611,7 @@ ul#ksd_attachments{
 }
 #ksd-messages-metabox {
     padding-bottom: 55px;
+    padding-top: 21px;
 }
 #edit-ticket-tabs {
     border-color: #eee #fff #fff;
