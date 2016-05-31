@@ -218,70 +218,7 @@ jQuery(document).ready(function () {
             }); 
         } ;     
     };
-       
-    /*---------------------------------------------------------------*/
-    /*************************************ANALYTICS*********************/
-    /*---------------------------------------------------------------*/
-    KSDAnalytics = function () {
-        _this = this;
-    };
-    KSDAnalytics.init = function () {
-        
-        if( ksd_admin.ksd_current_screen === "not_a_ksd_screen" ){//@since 1.6.4. Exclude non-KSD pages from stats
-          return;  //@TODO Update Analytics to send Tickets, Add New, Tags and Categories views
-        }
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                (i[r].q = i[r].q || []).push(arguments)
-            }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');//analytics_debug - Step 1
-        //window.ga_debug = {trace: true}; //Step 2
-        ga( 'create', 'UA-48956820-3', 'auto' );
-       // ga('create', 'UA-48956820-3', { //Step 3
-       //   'cookieDomain': 'none'
-      //  });        
-        ga( 'require', 'linkid', 'linkid.js' );
-        if ( "yes" !== ksd_admin.enable_anonymous_tracking ) {//Disable tracking if the user hasn't allowed it
-             window['ga-disable-UA-48956820-3'] = true;
-        }      
-
-        //Send the page view for the current page. This is called the first time the page is loaded
-        //so we get the current admin_tab from ksd_admin.admin_tab
-        this.sendPageView(ksd_admin.ksd_current_screen);
-    };
-    /**
-     * Send a page view to Google Analytics
-     * @param {string} current_admin_tab ID of the screen view to send. e.g. ksd-tickets
-     * @returns none
-     */
-    KSDAnalytics.sendPageView = function (current_admin_tab) {
-        pageName = KSDUtils.capitalizeFirstLetter(current_admin_tab.replace("ksd-", "").replace(/\-/g, " "));
-        if (pageName === "Kanzu Support Desk") {//For instances where user directly clicks the main KSD menu item, its title is "Kanzu Support Desk" and it displays the dashboard so we translate it here
-            pageName = "Dashboard";
-            current_admin_tab = "ksd-dashboard";
-        }
-        thePage = '/' + current_admin_tab;//NB: Page names must start with a / 
-        pageTitle = pageName + " - Kanzu Support Desk";
-        ga('send', 'pageview', {'page': thePage, 'title': pageTitle});
-    };
-    
-    /**
-     * Send an event
-     * @param string category
-     * @param string action
-     * @param string label
-     * @returns none
-     */
-    KSDAnalytics.sendEvent = function ( category, action, label ) {
-        window['ga-disable-UA-48956820-3'] = false;
-        ga('send', 'event', category, action, label );         
-    }    
+   
 
     /*---------------------------------------------------------------*/
     /****************************SETTINGS****************************/
@@ -340,31 +277,31 @@ jQuery(document).ready(function () {
                 jQuery( "#ksd-notifications" ).slideToggle( "slow" );
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'close' };
                 __submitNotificationFeedback( data );   
-                KSDAnalytics.sendEvent( 'Feedback', 'General', 'close-'+notificationID );
+                //KSDAnalytics.sendEvent( 'Feedback', 'General', 'close-'+notificationID );
             });   
             //Leave me alone!!!!
             jQuery('.ksd-notification-cancel').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'no' };
                 __submitNotificationFeedback( data );
-                KSDAnalytics.sendEvent( 'Feedback', 'General', 'leave-me-'+notificationID );
+                //KSDAnalytics.sendEvent( 'Feedback', 'General', 'leave-me-'+notificationID );
             });    
             //Disable all notifications 
             jQuery( 'a.ksd-notifications-disable' ).click(function () {
                 var data = { action: 'ksd_notifications_disable' };
                 __submitNotificationFeedback( data );
-                KSDAnalytics.sendEvent( 'Feedback', 'General', 'disable-all-'+notificationID );
+                //KSDAnalytics.sendEvent( 'Feedback', 'General', 'disable-all-'+notificationID );
             });              
             //Quick call
             jQuery('#ksd-notification-quick-call').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'yes' };
                 __submitNotificationFeedback( data );
-                KSDAnalytics.sendEvent( 'Feedback', 'Quick Call', 'quick_call' );
+                //KSDAnalytics.sendEvent( 'Feedback', 'Quick Call', 'quick_call' );
             });
             //KSD content
            jQuery('#ksd-notification-content-topic').click(function () {
                 var ksdTopics = '';
                 jQuery('.ksd-content-topics input:checked').each(function(){
-                    KSDAnalytics.sendEvent( 'Feedback', 'KSD Content', jQuery(this).val() );
+                   // KSDAnalytics.sendEvent( 'Feedback', 'KSD Content', jQuery(this).val() );
                     ksdTopics+=jQuery(this).val()+' ';
                 });
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: ksdTopics };
@@ -383,7 +320,7 @@ jQuery(document).ready(function () {
            jQuery('#ksd-notification-one-feature').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: jQuery('textarea.ksd-notifications-one-feature').val() };
                 __submitNotificationFeedback( data );
-                KSDAnalytics.sendEvent( 'Feedback', 'General', 'one_feature' );
+                //KSDAnalytics.sendEvent( 'Feedback', 'General', 'one_feature' );
            });    
            //NPS 
            jQuery('ul.ksd-nps-score li').click(function () {
@@ -1645,7 +1582,7 @@ jQuery(document).ready(function () {
             jQuery("#tabs .ksd-main-nav li a").click(function () {
                 jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#", "").replace("_", " "));//Remove the hashtag, replace _ with a space
                 if ("yes" === ksd_admin.enable_anonymous_tracking) { 
-                    KSDAnalytics.sendPageView(jQuery(this).attr('href').replace("#", "ksd-").replace("_", "-"));//Make it match the admin_tab format e.g. ksd-dashboard, ksd-tickets, etc
+                    //KSDAnalytics.sendPageView(jQuery(this).attr('href').replace("#", "ksd-").replace("_", "-"));//Make it match the admin_tab format e.g. ksd-dashboard, ksd-tickets, etc
                 }
             });
 
@@ -2290,11 +2227,6 @@ jQuery(document).ready(function () {
         };
 
     };
-
-
-
-    //Analytics
-    KSDAnalytics.init();
 
     //Settings
     Settings = new KSDSettings();

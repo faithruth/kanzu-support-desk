@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.5
-Stable tag: 2.2.5
+Stable tag: 2.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,12 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
+= 2.2.7, May 24, 2016 =
+ * Remove UA tracking
+
+= 2.2.6, May 16, 2016 =
+ * BUG FIX | Add support for custom fields. 
+
 = 2.2.5, May 14, 2016 =
  * Sort tickets by last time updated
  * Add support for KSD Custom fields add-on
@@ -338,6 +344,12 @@ Yes, it will
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.7 =
+ * Remove UA tracking
+
+= 2.2.6 =
+ * BUG FIX | Add support for custom fields. 
+
 = 2.2.5 =
  * Sort tickets by last time updated
  * Add support for KSD Custom fields add-on
