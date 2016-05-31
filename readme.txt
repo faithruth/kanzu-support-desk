@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.5
-Stable tag: 2.2.7
+Stable tag: 2.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,12 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
+= 2.2.8, May 31, 2016 =
+ * BUG FIX | Remove lingering UA Analytics
+ * Add customer selection while creating a ticket
+ * BUG FIX | Shortcode support form doesn't show at the top of the page anymore
+ * User request - Add referrer to ticket info
+
 = 2.2.7, May 24, 2016 =
  * Remove UA tracking
 
@@ -344,6 +350,10 @@ Yes, it will
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.8 =
+ * BUG FIX | Remove lingering UA Analytics
+ * Add customer selection while creating a ticket
+
 = 2.2.7 =
  * Remove UA tracking
 
