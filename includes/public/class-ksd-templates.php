@@ -34,11 +34,12 @@ class KSD_Templates {
       *
       * @param string $slug
       * @param string $name Optional. Default null
+      * @param bool $load Optional. Default true
       * @uses locate_template()
       * @uses load_template()
       * @uses get_template_part()
       */
-     public function get_template_part( $slug, $name = null ) {
+     public function get_template_part( $slug, $name = null, $load = true ) {
 
              // Execute code for this part
              do_action( 'get_template_part_' . $slug, $slug, $name );
@@ -53,7 +54,7 @@ class KSD_Templates {
              $templates = apply_filters( 'ksd_get_template_part', $templates, $slug, $name );
 
              // Return the part that is found
-             return $this->locate_template( $templates, true, false );
+             return $this->locate_template( $templates, $load, false );
      }
 
      /**
