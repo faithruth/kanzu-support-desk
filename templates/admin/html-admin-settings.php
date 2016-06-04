@@ -102,7 +102,7 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
         <!-- Support Form -->
         <div id="ksd-support-form-settings">
             <?php
-            include (  KSD_PLUGIN_DIR . '/includes/admin/views/html-admin-settings-supportform.php' );
+            include (  KSD_PLUGIN_DIR . '/templates/admin/html-admin-settings-supportform.php' );
             ?>
         </div>
 

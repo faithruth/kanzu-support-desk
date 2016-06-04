@@ -178,8 +178,9 @@ class KSD_Settings {
         private function generate_select_html( $addon_setting ) {
             $select_html        = '';
             $id                 = $addon_setting['id'];
-            $multiselect        = ( isset( $addon_setting ) && true === $addon_setting['multiple'] ) ? "multiple'" : "" ;
+            $multiselect        = ( isset( $addon_setting['multiple'] ) && true === $addon_setting['multiple'] ) ? "multiple'" : "" ;
             $select_html        = "<select name='{$id}' {$multiselect}>";
+            $checked            = "";
             foreach ( $addon_setting['options']  as $option ) {
                 $selected       = ( isset($option['selected'] ) && 'selected' === $option['selected'] ) ? 'selected="selected"' : '' ;
                 $select_html    .= "<option value='{$option['value']}' {$checked} >{$option['label']}</option>" ;

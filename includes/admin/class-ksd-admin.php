@@ -569,7 +569,7 @@ class KSD_Admin {
         if ( $post->post_type !== 'ksd_ticket' ) {
             return;
         }
-        include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-ksd-ticket-info.php");
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/metaboxes/html-ksd-ticket-info.php");
     }
 
 
@@ -584,7 +584,7 @@ class KSD_Admin {
         if ( $metabox['id'] == 'ksd-ticket-messages' ) {
             $post->content = $this->format_message_content_for_viewing( $post->content );
         }
-        include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-". $metabox['id'].".php");
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/metaboxes/html-". $metabox['id'].".php");
     }     
     
     /**
@@ -595,7 +595,7 @@ class KSD_Admin {
      */
     public function output_ticket_info_customer( $post ){        
         ob_start();
-        include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-ksd-ticket-info-customer.php");
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/metaboxes/html-ksd-ticket-info-customer.php");
         $customer_html = ob_get_clean(); 
         echo apply_filters( 'ksd_ticket_info_customer_html', $customer_html );
     }
@@ -714,8 +714,6 @@ class KSD_Admin {
         }        
     }
 
-
-
     /**
      * Get a list of agents
      * @param string $roles The WP Roles with access to KSD
@@ -727,9 +725,13 @@ class KSD_Admin {
             $settings = Kanzu_Support_Desk::get_settings();
             $roles = $settings['ticket_management_roles'];
         }
-        include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-users-controller.php");//@since 1.5.0 filter the list to return users in certain roles
+        include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-controllers.php");//@since 1.5.0 filter the list to return users in certain roles
         $UC = new KSD_Users_Controller();
+        
+        $user_IDs = array();
+        
         $tmp_user_IDs = $UC->get_users_with_roles( $roles );
+        $UC->get_users_with_roles( $roles );
         foreach ( $tmp_user_IDs as $userID ) {
             $user_IDs[] = $userID->user_id;
         }
@@ -872,13 +874,13 @@ class KSD_Admin {
             $settings = Kanzu_Support_Desk::get_settings(); 
             
             if ( isset( $_GET['ksd-intro'] ) ) {
-                include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-intro.php');         
+                include_once( KSD_PLUGIN_DIR .  'templates/admin/html-admin-intro.php');         
             }
             else{
                 include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-settings.php');    
                 $addon_settings = new KSD_Settings();
                 $addon_settings_html = $addon_settings->generate_addon_settings_html();
-                include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');   
+                include_once( KSD_PLUGIN_DIR .  'templates/admin/html-admin-wrapper.php');   
             }
     }
     
@@ -888,11 +890,7 @@ class KSD_Admin {
      * Include the files we use in the admin dashboard
      */
     public function do_admin_includes() {		
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-tickets-controller.php");
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-users-controller.php");
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-assignments-controller.php");  
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-attachments-controller.php");  
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-replies-controller.php");  
+            include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-controllers.php");
     }
 
 

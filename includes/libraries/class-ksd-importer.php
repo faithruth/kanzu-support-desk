@@ -40,7 +40,7 @@
           * @since 1.5.4
           */
          public  function showform ( ) {
-            include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-tickets-importer.php');      
+            include_once( KSD_PLUGIN_DIR .  'templates/admin/html-admin-tickets-importer.php');      
          }
 
 
