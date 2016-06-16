@@ -1469,6 +1469,7 @@ class KSD_Admin {
         $TC = new KSD_Tickets_Controller();
         //Check if this was initiated from our notify_email, in which case it is a reply/new ticket from an agent  
         $ksd_settings = Kanzu_Support_Desk::get_settings();
+        $agent_initiated_ticket = false;
         if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
             $agent_initiated_ticket = true;
         }
@@ -1636,7 +1637,7 @@ class KSD_Admin {
             //Return a different message based on the channel the request came on
             $output_messages_by_channel = array();
             $output_messages_by_channel['admin-form'] = __( 'Ticket Logged. Sending notification...', 'kanzu-support-desk');
-            $output_messages_by_channel['support-tab'] = $output_messages_by_channel['email'] = $settings['ticket_mail_message'];
+            $output_messages_by_channel['support-tab'] = $output_messages_by_channel['email'] = $output_messages_by_channel['facebook'] = $settings['ticket_mail_message'];
             $output_messages_by_channel['sample-ticket'] = __( 'Sample tickets logged.', 'kanzu-support-desk');
 
             global $current_user;
