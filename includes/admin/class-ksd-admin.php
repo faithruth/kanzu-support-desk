@@ -1594,7 +1594,7 @@ class KSD_Admin {
             $this->do_admin_includes();
 
             try{
-            $supported__ticket_channels = array ( "admin-form","support-tab","email","sample-ticket" );   
+            $supported__ticket_channels = array ( "admin-form","support-tab","email","sample-ticket", "facebook" );   
             $tkt_channel                = sanitize_text_field( $new_ticket_raw['ksd_tkt_channel']);
             if ( ! in_array( $tkt_channel, $supported__ticket_channels ) ) {
                 throw new Exception( __('Error | Unsupported channel specified', 'kanzu-support-desk'), -1 );
