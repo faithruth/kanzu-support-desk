@@ -214,5 +214,19 @@ class KSD_Settings {
             }
             return '';
         }
+        /**
+         * Generate HTML for settings link
+         * @param array $addon_setting {
+         *      @type string id             anchor name attribute
+         *      @type string text           anchor text
+         *      @type string href           anchor hyperlink reference 
+         *      @type string link_class     anchor class attribute
+         * }
+         * 
+         */
+        private function generate_link_html( $addon_setting ){
+            $link_html = "<a name='{$addon_setting['id']}' class='{$addon_setting['link_class']}' href='{$addon_setting['href']}' >{$addon_setting['text']}</a>";
+            return $link_html;
+        }
 }
 endif;

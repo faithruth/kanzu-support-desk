@@ -656,7 +656,8 @@ class KSD_Admin {
             '_ksd_tkt_info_assigned_to' => 0,
             '_ksd_tkt_info_channel'     => 'admin-form',
             '_ksd_tkt_info_cc'          => '',
-            '_ksd_tkt_info_woo_order_id'=> ''
+            '_ksd_tkt_info_woo_order_id'=> '',
+            '_ksd_tkt_info_post_id'          => ''
         );
         
         $ksd_static_meta_keys = array(
@@ -1375,13 +1376,15 @@ class KSD_Admin {
                 if ( strlen( $new_reply['post_content'] ) < 2 && ! $add_on_mode ) {//If the response sent it too short
                    throw new Exception( __("Error | Reply too short", 'kanzu-support-desk'), -1 );
                 }
-               //Add the reply to the replies table                         
-               $new_reply_id = wp_insert_post( $new_reply );
-
+                //Add the reply to the replies table                         
+                $new_reply_id = wp_insert_post( $new_reply );
+                
+                if( ! $add_on_mode  )// Allow addons not in add_on_mode to do something
+                    do_action( 'ksd_new_reply_created', $parent_ticket_ID, $new_reply_id );
+               
                 if ( null !== $cc ) {
                     add_post_meta( $new_reply_id , '_ksd_tkt_info_cc', $cc, true );
                 }
-
 
                 //Update the main ticket's tkt_time_updated field.  
                 $parent_ticket = get_post( $parent_ticket_ID );
@@ -1475,11 +1478,22 @@ class KSD_Admin {
         }
         //First check if the ticket initiator exists in our users table. 
         $customer_details = get_user_by ( 'email', $new_ticket['ksd_cust_email'] );
-        if ( $customer_details ) {//Customer's already in the Db, get their customer ID  
-           //Check whether it is a new ticket or a reply. We match against subject and ticket initiator
+        if (  $customer_details ) {//Customer's already in the Db, get their customer ID 
+            //Check whether it is a new ticket or a reply. We match against subject and ticket initiator
             $new_ticket['ksd_tkt_cust_id'] = $customer_details->ID;
+            
+            //Handle Facebook channel replies
+            if( $new_ticket['ksd_tkt_channel'] == 'facebook' ){
+                $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
+                $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
+                $new_ticket['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
+                $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
+                $this->reply_ticket( $new_ticket ); 
+                return;
+            }
+            
             $value_parameters   = array();
-            $filter             = " post_title = %s AND post_status != %d AND post_author = %d ";
+            $filter             = " post_title = %s AND post_status != %s AND post_author = %d ";
 
             $value_parameters[] = sanitize_text_field( str_ireplace( "Re:", "", $new_ticket['ksd_tkt_subject'] ) ) ;  //Remove the Re: prefix from the subject of replies. @TODO Stands a very tiny chance of replacing other RE's in the subject                                                                                                                    //Note that we use str_ireplace because it is less expensive than preg_replace
             $value_parameters[] = 'resolved' ;
@@ -1500,6 +1514,7 @@ class KSD_Admin {
            }
 
         }
+        return;
         if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
             $new_ticket['ksd_tkt_cust_id'] = 1;
         }
@@ -1706,6 +1721,9 @@ class KSD_Admin {
             //Add meta fields
             $meta_array     = array();
             $meta_array['_ksd_tkt_info_channel']        = $tkt_channel;
+            if( $tkt_channel == 'facebook' ){
+                $meta_array['_ksd_tkt_info_post_id'] = $new_ticket_raw['ksd_addon_tkt_id'];
+            }
             
             if ( wp_get_referer() ){
                 $meta_array['_ksd_tkt_info_referer']    = wp_get_referer();
