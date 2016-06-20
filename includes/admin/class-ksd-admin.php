@@ -1397,7 +1397,10 @@ class KSD_Admin {
                 else{//This is a reply from an agent. Notify the customer               
                     $notify_user = get_userdata( $parent_ticket->post_author );                        
                 }
-                $this->send_email( $notify_user->user_email, $new_reply['post_content']. Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID, false ), 'Re: ' . $parent_ticket->post_title, $cc );//NOTE: Prefix the reply subject with Re:    
+                
+                $ticket_reply = apply_filters( 'ksd_reply_content_send_pre', $new_reply['post_content'], $parent_ticket_ID );
+                $ticket_reply .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID, false );
+                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . $parent_ticket->post_title, $cc );//NOTE: Prefix the reply subject with Re:    
 
                 if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
                    do_action( 'ksd_new_reply_logged', $_POST['ksd_addon_tkt_id'], $new_reply_id );
