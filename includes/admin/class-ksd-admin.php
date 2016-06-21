@@ -1514,7 +1514,6 @@ class KSD_Admin {
            }
 
         }
-        return;
         if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
             $new_ticket['ksd_tkt_cust_id'] = 1;
         }
