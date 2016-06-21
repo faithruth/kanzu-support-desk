@@ -1505,10 +1505,10 @@ class KSD_Admin {
 
         }
         //Handle Facebook channel replies
-        if( $new_ticket['ksd_tkt_subject'] === 'Facebook Reply' ){
+        if( $new_ticket['ksd_tkt_subject'] === 'Facebook Reply' && $customer_details ){
             $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
             $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
-            $new_ticket['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
+            $new_ticket['ksd_rep_created_by']           = $customer_details->ID;  
             $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
             $this->reply_ticket( $new_ticket ); 
             return;
