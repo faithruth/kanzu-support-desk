@@ -1478,19 +1478,9 @@ class KSD_Admin {
         }
         //First check if the ticket initiator exists in our users table. 
         $customer_details = get_user_by ( 'email', $new_ticket['ksd_cust_email'] );
-        if (  $customer_details ) {//Customer's already in the Db, get their customer ID 
+        if (  $customer_details && $new_ticket['ksd_tkt_channel'] !== 'facebook' ) {//Customer's already in the Db, get their customer ID 
             //Check whether it is a new ticket or a reply. We match against subject and ticket initiator
             $new_ticket['ksd_tkt_cust_id'] = $customer_details->ID;
-            
-            //Handle Facebook channel replies
-            if( $new_ticket['ksd_tkt_channel'] == 'facebook' ){
-                $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
-                $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
-                $new_ticket['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
-                $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
-                $this->reply_ticket( $new_ticket ); 
-                return;
-            }
             
             $value_parameters   = array();
             $filter             = " post_title = %s AND post_status != %s AND post_author = %d ";
@@ -1513,6 +1503,15 @@ class KSD_Admin {
                 return; //die removed because it was triggering a fatal error in add-ons
            }
 
+        }
+        //Handle Facebook channel replies
+        if( $new_ticket['ksd_tkt_subject'] === 'Facebook Reply' ){
+            $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
+            $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
+            $new_ticket['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
+            $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
+            $this->reply_ticket( $new_ticket ); 
+            return;
         }
         if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
             $new_ticket['ksd_tkt_cust_id'] = 1;
