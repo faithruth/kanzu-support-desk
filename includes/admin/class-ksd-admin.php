@@ -569,7 +569,7 @@ class KSD_Admin {
         if ( $post->post_type !== 'ksd_ticket' ) {
             return;
         }
-        include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-ksd-ticket-info.php");
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/metaboxes/html-ksd-ticket-info.php");
     }
 
 
@@ -584,7 +584,7 @@ class KSD_Admin {
         if ( $metabox['id'] == 'ksd-ticket-messages' ) {
             $post->content = $this->format_message_content_for_viewing( $post->content );
         }
-        include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-". $metabox['id'].".php");
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/metaboxes/html-". $metabox['id'].".php");
     }     
     
     /**
@@ -595,7 +595,7 @@ class KSD_Admin {
      */
     public function output_ticket_info_customer( $post ){        
         ob_start();
-        include_once( KSD_PLUGIN_DIR .  "includes/admin/views/metaboxes/html-ksd-ticket-info-customer.php");
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/metaboxes/html-ksd-ticket-info-customer.php");
         $customer_html = ob_get_clean(); 
         echo apply_filters( 'ksd_ticket_info_customer_html', $customer_html );
     }
@@ -656,7 +656,8 @@ class KSD_Admin {
             '_ksd_tkt_info_assigned_to' => 0,
             '_ksd_tkt_info_channel'     => 'admin-form',
             '_ksd_tkt_info_cc'          => '',
-            '_ksd_tkt_info_woo_order_id'=> ''
+            '_ksd_tkt_info_woo_order_id'=> '',
+            '_ksd_tkt_info_post_id'          => ''
         );
         
         $ksd_static_meta_keys = array(
@@ -714,8 +715,6 @@ class KSD_Admin {
         }        
     }
 
-
-
     /**
      * Get a list of agents
      * @param string $roles The WP Roles with access to KSD
@@ -727,9 +726,13 @@ class KSD_Admin {
             $settings = Kanzu_Support_Desk::get_settings();
             $roles = $settings['ticket_management_roles'];
         }
-        include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-users-controller.php");//@since 1.5.0 filter the list to return users in certain roles
+        include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-controllers.php");//@since 1.5.0 filter the list to return users in certain roles
         $UC = new KSD_Users_Controller();
+        
+        $user_IDs = array();
+        
         $tmp_user_IDs = $UC->get_users_with_roles( $roles );
+        $UC->get_users_with_roles( $roles );
         foreach ( $tmp_user_IDs as $userID ) {
             $user_IDs[] = $userID->user_id;
         }
@@ -872,13 +875,13 @@ class KSD_Admin {
             $settings = Kanzu_Support_Desk::get_settings(); 
             
             if ( isset( $_GET['ksd-intro'] ) ) {
-                include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-intro.php');         
+                include_once( KSD_PLUGIN_DIR .  'templates/admin/html-admin-intro.php');         
             }
             else{
                 include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-settings.php');    
                 $addon_settings = new KSD_Settings();
                 $addon_settings_html = $addon_settings->generate_addon_settings_html();
-                include_once( KSD_PLUGIN_DIR .  'includes/admin/views/html-admin-wrapper.php');   
+                include_once( KSD_PLUGIN_DIR .  'templates/admin/html-admin-wrapper.php');   
             }
     }
     
@@ -888,11 +891,7 @@ class KSD_Admin {
      * Include the files we use in the admin dashboard
      */
     public function do_admin_includes() {		
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-tickets-controller.php");
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-users-controller.php");
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-assignments-controller.php");  
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-attachments-controller.php");  
-            include_once( KSD_PLUGIN_DIR.  "includes/controllers/class-ksd-replies-controller.php");  
+            include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-controllers.php");
     }
 
 
@@ -1377,13 +1376,15 @@ class KSD_Admin {
                 if ( strlen( $new_reply['post_content'] ) < 2 && ! $add_on_mode ) {//If the response sent it too short
                    throw new Exception( __("Error | Reply too short", 'kanzu-support-desk'), -1 );
                 }
-               //Add the reply to the replies table                         
-               $new_reply_id = wp_insert_post( $new_reply );
-
+                //Add the reply to the replies table                         
+                $new_reply_id = wp_insert_post( $new_reply );
+                
+                if( ! $add_on_mode  )// Allow addons not in add_on_mode to do something
+                    do_action( 'ksd_new_reply_created', $parent_ticket_ID, $new_reply_id );
+               
                 if ( null !== $cc ) {
                     add_post_meta( $new_reply_id , '_ksd_tkt_info_cc', $cc, true );
                 }
-
 
                 //Update the main ticket's tkt_time_updated field.  
                 $parent_ticket = get_post( $parent_ticket_ID );
@@ -1474,16 +1475,18 @@ class KSD_Admin {
         $TC = new KSD_Tickets_Controller();
         //Check if this was initiated from our notify_email, in which case it is a reply/new ticket from an agent  
         $ksd_settings = Kanzu_Support_Desk::get_settings();
+        $agent_initiated_ticket = false;
         if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
             $agent_initiated_ticket = true;
         }
         //First check if the ticket initiator exists in our users table. 
         $customer_details = get_user_by ( 'email', $new_ticket['ksd_cust_email'] );
-        if ( $customer_details ) {//Customer's already in the Db, get their customer ID  
-           //Check whether it is a new ticket or a reply. We match against subject and ticket initiator
+        if (  $customer_details && $new_ticket['ksd_tkt_channel'] !== 'facebook' ) {//Customer's already in the Db, get their customer ID 
+            //Check whether it is a new ticket or a reply. We match against subject and ticket initiator
             $new_ticket['ksd_tkt_cust_id'] = $customer_details->ID;
+            
             $value_parameters   = array();
-            $filter             = " post_title = %s AND post_status != %d AND post_author = %d ";
+            $filter             = " post_title = %s AND post_status != %s AND post_author = %d ";
 
             $value_parameters[] = sanitize_text_field( str_ireplace( "Re:", "", $new_ticket['ksd_tkt_subject'] ) ) ;  //Remove the Re: prefix from the subject of replies. @TODO Stands a very tiny chance of replacing other RE's in the subject                                                                                                                    //Note that we use str_ireplace because it is less expensive than preg_replace
             $value_parameters[] = 'resolved' ;
@@ -1503,6 +1506,14 @@ class KSD_Admin {
                 return; //die removed because it was triggering a fatal error in add-ons
            }
 
+        }
+        //Handle Facebook channel replies
+        if( $new_ticket['ksd_tkt_subject'] === 'Facebook Reply' ){
+            $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
+            $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
+            $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
+            $this->reply_ticket( $new_ticket ); 
+            return;
         }
         if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
             $new_ticket['ksd_tkt_cust_id'] = 1;
@@ -1599,7 +1610,7 @@ class KSD_Admin {
             $this->do_admin_includes();
 
             try{
-            $supported__ticket_channels = array ( "admin-form","support-tab","email","sample-ticket" );   
+            $supported__ticket_channels = array ( "admin-form","support-tab","email","sample-ticket", "facebook" );   
             $tkt_channel                = sanitize_text_field( $new_ticket_raw['ksd_tkt_channel']);
             if ( ! in_array( $tkt_channel, $supported__ticket_channels ) ) {
                 throw new Exception( __('Error | Unsupported channel specified', 'kanzu-support-desk'), -1 );
@@ -1641,11 +1652,11 @@ class KSD_Admin {
             //Return a different message based on the channel the request came on
             $output_messages_by_channel = array();
             $output_messages_by_channel['admin-form'] = __( 'Ticket Logged. Sending notification...', 'kanzu-support-desk');
-            $output_messages_by_channel['support-tab'] = $output_messages_by_channel['email'] = $settings['ticket_mail_message'];
+            $output_messages_by_channel['support-tab'] = $output_messages_by_channel['email'] = $output_messages_by_channel['facebook'] = $settings['ticket_mail_message'];
             $output_messages_by_channel['sample-ticket'] = __( 'Sample tickets logged.', 'kanzu-support-desk');
 
             global $current_user;
-            if ( $current_user->ID > 0 ) {//If it is a valid user
+            if ( $tkt_channel != 'facebook' && $current_user->ID > 0 ) {//If it is a valid user
                 $new_ticket['post_author']  = $current_user->ID;
                 $cust_email                 = $current_user->user_email;
             }
@@ -1710,6 +1721,9 @@ class KSD_Admin {
             //Add meta fields
             $meta_array     = array();
             $meta_array['_ksd_tkt_info_channel']        = $tkt_channel;
+            if( $tkt_channel == 'facebook' ){
+                $meta_array['_ksd_tkt_info_post_id'] = $new_ticket_raw['ksd_addon_tkt_id'];
+            }
             
             if ( wp_get_referer() ){
                 $meta_array['_ksd_tkt_info_referer']    = wp_get_referer();

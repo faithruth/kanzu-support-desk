@@ -361,12 +361,16 @@ Yes, it will
  * BUG FIX | Add support for custom fields. 
 
 = 2.2.5 =
+<<<<<<< HEAD
+ * Support for custom fields in the front-end support forms.
+=======
  * Sort tickets by last time updated
  * Add support for KSD Custom fields add-on
 
 = 2.2.4 =
  * Submission of attachments in front-end support form added
  * BUG FIX | Remove second CC button from the toolbar of the editor during ticket reply
+>>>>>>> 868446de9866e5c0b811037f1a25cfe2030bb88d
 
 = 2.2.3 =
  * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist

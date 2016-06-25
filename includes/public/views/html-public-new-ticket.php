@@ -94,7 +94,15 @@ endif;
              do_action('ksd_add_custom_fields');
              ?>
             
+<<<<<<< HEAD
+
+             <?php 
+             do_action('ksd_add_custom_fields');
+             ?>
+            <li class="ksd-message">     
+=======
             <li class="ksd-message">      
+>>>>>>> b0103984885251ded1791dd16dfb0e6a392e82b5
                 <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" placeholder="<?php _e('Message', 'kanzu-support-desk'); ?>" id="ksd-ticket-message" required></textarea>
             </li>
             <!--Add Google reCAPTCHA-->

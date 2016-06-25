@@ -178,8 +178,9 @@ class KSD_Settings {
         private function generate_select_html( $addon_setting ) {
             $select_html        = '';
             $id                 = $addon_setting['id'];
-            $multiselect        = ( isset( $addon_setting ) && true === $addon_setting['multiple'] ) ? "multiple'" : "" ;
+            $multiselect        = ( isset( $addon_setting['multiple'] ) && true === $addon_setting['multiple'] ) ? "multiple'" : "" ;
             $select_html        = "<select name='{$id}' {$multiselect}>";
+            $checked            = "";
             foreach ( $addon_setting['options']  as $option ) {
                 $selected       = ( isset($option['selected'] ) && 'selected' === $option['selected'] ) ? 'selected="selected"' : '' ;
                 $select_html    .= "<option value='{$option['value']}' {$checked} >{$option['label']}</option>" ;
@@ -212,6 +213,20 @@ class KSD_Settings {
                 return ' <span class="description">' . $addon_setting['description'] . '</span>';
             }
             return '';
+        }
+        /**
+         * Generate HTML for settings link
+         * @param array $addon_setting {
+         *      @type string id             anchor name attribute
+         *      @type string text           anchor text
+         *      @type string href           anchor hyperlink reference 
+         *      @type string link_class     anchor class attribute
+         * }
+         * 
+         */
+        private function generate_link_html( $addon_setting ){
+            $link_html = "<a name='{$addon_setting['id']}' class='{$addon_setting['link_class']}' href='{$addon_setting['href']}' >{$addon_setting['text']}</a>";
+            return $link_html;
         }
 }
 endif;
