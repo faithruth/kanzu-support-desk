@@ -2789,7 +2789,7 @@ class KSD_Admin {
      * @since 2.0.0
      */
     public function ticket_table_apply_filters( $query ) {
-        if ( is_admin() && $query->query['post_type'] == 'ksd_ticket' ) {
+        if ( is_admin() && isset( $query->query['post_type'] ) && 'ksd_ticket'  == $query->query['post_type'] ) {
 
              $qv = &$query->query_vars;
              //Change the ticket order
