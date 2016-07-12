@@ -52,7 +52,6 @@ class KSD_Custom_Post_Types {
             $ksd_cpt->create_ksd_replies();
             $ksd_cpt->create_ksd_ticket_activity();
             $ksd_cpt->create_private_notes();
-            
             //@TODO Use custom fields for tkt_cc,tkt_is_read and rep_cc
              flush_rewrite_rules();//Because of the rewrites, this is necessary
         }        
@@ -132,7 +131,8 @@ class KSD_Custom_Post_Types {
                 'rewrite'               => array( 'slug' => 'ksd_ticket', 'with_front' => false ),
                 'menu_position'         => 25,
                 'has_archive'           => true,
-                //'capabilities'        => @TODO Define these
+                'capability_type'       => 'ksd_ticket',
+		'map_meta_cap'          => true,
                 'menu_icon'             => 'dashicons-groups',
                 'supports'              => $ticket_supports,
                 'taxonomies'            => array( 'post_tag' )
@@ -208,6 +208,7 @@ class KSD_Custom_Post_Types {
                 'rewrite'               => false,
                 'show_ui'               => false,
                 'map_meta_cap'          => true,
+                'capability_type'       => 'ksd_reply',          
                 'supports'              => array( 'editor', 'custom-fields' ),
                 'can_export'            => true
             );
@@ -241,6 +242,7 @@ class KSD_Custom_Post_Types {
                 'rewrite'               => false,
                 'show_ui'               => false,
                 'map_meta_cap'          => true,
+                'capability_type'       => 'ksd_private_note',             
                 'supports'              => array( 'editor', 'custom-fields' ),//@TODO Change this. None of these are needed
                 'can_export'            => true
             );
@@ -275,6 +277,7 @@ class KSD_Custom_Post_Types {
                 'rewrite'               => false,
                 'show_ui'               => false,
                 'map_meta_cap'          => true,
+                'capability_type'       => 'ksd_ticket_activity',
                 'supports'              => array( 'editor', 'custom-fields' ),//@TODO Change this. None of these are needed
                 'can_export'            => true
             );

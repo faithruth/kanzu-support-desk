@@ -81,6 +81,7 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
         add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );
 
+      
         //Generate a debug file
         add_action( 'ksd_generate_debug_file', array( $this, 'generate_debug_file' ) );                  
 

@@ -2,7 +2,7 @@
 $settings              = Kanzu_Support_Desk::get_settings ( );
 $settings_and_licenses = apply_filters ( 'ksd_display_licenses', $settings );
 $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $settings_and_licenses['licenses'] : array ( ) );
-
+ 
 ?>
 <form method="POST" id="update-settings" class="ksd-settings pending"> 
     <div id="ksd-tabs">
