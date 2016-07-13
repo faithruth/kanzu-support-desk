@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
 Requires at least: 3.0.1
 Tested up to: 4.5
-Stable tag: 2.2.8
+Stable tag: 2.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,10 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
+= 2.2.9, July 14, 2016 =
+ * Add settings options to define default text for subject and message fields
+ * Add settings option to enable/disable the media button in the support form 
+
 = 2.2.8, May 31, 2016 =
  * BUG FIX | Remove lingering UA Analytics
  * Add customer selection while creating a ticket
@@ -350,6 +354,10 @@ Yes, it will
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.9 =
+ * Add settings options to define default text for subject and message fields
+ * Add settings option to enable/disable the media button in the support form 
+
 = 2.2.8 =
  * BUG FIX | Remove lingering UA Analytics
  * Add customer selection while creating a ticket
@@ -361,16 +369,13 @@ Yes, it will
  * BUG FIX | Add support for custom fields. 
 
 = 2.2.5 =
-<<<<<<< HEAD
  * Support for custom fields in the front-end support forms.
-=======
  * Sort tickets by last time updated
  * Add support for KSD Custom fields add-on
 
 = 2.2.4 =
  * Submission of attachments in front-end support form added
  * BUG FIX | Remove second CC button from the toolbar of the editor during ticket reply
->>>>>>> 868446de9866e5c0b811037f1a25cfe2030bb88d
 
 = 2.2.3 =
  * BUG FIX | Wrong ticket details shown in single ticket view when other tickets exist
