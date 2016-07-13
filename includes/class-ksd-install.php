@@ -278,7 +278,10 @@ class KSD_Install {
             /**Support form settings**/
             'supportform_show_categories'       => 'no',
             'supportform_show_severity'         => 'no',
-            'supportform_show_products'         => 'no'
+            'supportform_show_products'         => 'no',
+            'supportform_media_upload'          => 'yes',
+            'supportform_subject'               => __( 'Subject', 'kanzu-support-desk'),
+            'supportform_message'               => __( 'Message', 'kanzu-support-desk')
 
             );
     }
