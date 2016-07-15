@@ -43,22 +43,14 @@
             </div>
     </div>     
     <div class="setting show_support_tab">
-        <label for="support_button_text"><?php _e ( 'Subject field default text', 'kanzu-support-desk' ); ?></label>
-        <input type="text" value="<?php echo $settings['supportform_subject']; ?>" size="15" name="support_button_text" />
+        <label for="support_button_text"><?php _e ( 'Subject', 'kanzu-support-desk' ); ?></label>
+        <input type="text" value="<?php _e ( 'Subject', 'kanzu-support-desk' ); ?>" size="15" name="support_button_text" />
     </div>
     <div class="setting show_support_tab">
-        <label for="support_button_text"><?php _e ( 'Message field default text', 'kanzu-support-desk' ); ?></label>
-        <input type="text" value="<?php echo $settings['supportform_message']; ?>" size="15" name="support_button_text" />
+        <label for="support_button_text"><?php _e ( 'Message', 'kanzu-support-desk' ); ?></label>
+        <input type="text" value="<?php _e ( 'Message', 'kanzu-support-desk' ); ?>" size="15" name="support_button_text" />
     </div>
-    
-    <div class="setting show_support_tab">
-        <label for="show_support_tab"><?php _e ( 'Show media button', 'kanzu-support-desk' ); ?></label>
-        <div class="ksd-input-wrapper">
-            <input name="supportform_media_upload"  type="checkbox" <?php checked ( $settings['supportform_media_upload'], "yes") ?> value="yes"  />        
-            <span class="description"><?php _e ( 'When enabled, shows a media button on the support form', 'kanzu-support-desk' ); ?></span>
-        </div>
-    </div>
-    
+   
     <h3><?php _e ( 'Support Form fields', 'kanzu-support-desk' ); ?></h3>
     <div class="setting">
         <label for="enable_customer_signup"><?php _e ( 'Enable customer registration', 'kanzu-support-desk' ); ?></label>

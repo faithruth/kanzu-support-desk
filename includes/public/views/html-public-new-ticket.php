@@ -34,7 +34,7 @@ endif;
                 </li>    
             <?php endif; ?>
             <li class="ksd-subject">       
-              <input type="text" value="<?php echo $settings['supportform_subject']; ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
+              <input type="text" value="<?php _e( 'Subject', 'kanzu-support-desk' ); ?>" maxlength="255" name="ksd_tkt_subject" label="Subject" class="ksd-subject" minlength="2" required/>
             </li>
             <?php
             $show_categories    = $settings['supportform_show_categories'];
@@ -82,7 +82,7 @@ endif;
             <?php endif; ?> 
             
             
-             <?php if ( current_user_can( 'upload_files' ) && 'yes' === $settings['supportform_media_upload'] ): ?>
+             <?php if ( current_user_can( 'upload_files' ) ): ?>
                 <li class="ksd-tkt-attachment" >
                     <a title="<?php _e( 'Add Media','kanzu-support-desk' ); ?>"  class="button insert-media add_media" id="ksd-insert-media-button" href="#"><span class="wp-media-buttons-icon"></span><?php _e( 'Add Media','kanzu-support-desk' ); ?></a>
                     <ul class="ksd_attachments">
@@ -95,7 +95,7 @@ endif;
              ?>
             
             <li class="ksd-message">      
-                <textarea value="<?php echo $settings['supportform_message'] ; ?>" rows="5" class="ksd-message" name="ksd_tkt_message" placeholder="<?php _e('Message', 'kanzu-support-desk'); ?>" id="ksd-ticket-message" required></textarea>
+                <textarea value="<?php _e('Message', 'kanzu-support-desk'); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" placeholder="<?php _e('Message', 'kanzu-support-desk'); ?>" id="ksd-ticket-message" required></textarea>
             </li>
             <!--Add Google reCAPTCHA-->
             <?php if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
