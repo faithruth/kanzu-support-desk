@@ -733,11 +733,10 @@ class KSD_Admin {
         $user_IDs = array();
         
         $tmp_user_IDs = $UC->get_users_with_roles( $roles );
-        $UC->get_users_with_roles( $roles );
         foreach ( $tmp_user_IDs as $userID ) {
             $user_IDs[] = $userID->user_id;
         }
-        $agents_list = ( !$as_options ? "<ul class='ksd_agent_list hidden'>" : "" );//The available list of agents
+        $agents_list = ( ! $as_options ? "<ul class='ksd_agent_list hidden'>" : "" );//The available list of agents
             foreach (  get_users( array( 'include' => $user_IDs ) ) as $agent ) {
                 $agents_list .= ( !$as_options ? "<li ID=". $agent->ID.">".esc_html( $agent->display_name )."</li>" : "<option value=". $agent->ID.">".esc_html( $agent->display_name )."</option>" );
             }
