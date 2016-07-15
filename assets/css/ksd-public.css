@@ -9,6 +9,9 @@
     position: relative;
     list-style: none; 
 }
+.ksd-new-ticket-form-wrap ul li.ksd-tkt-attachment {
+  margin-bottom: 12px;
+}
 .ksd-new-ticket-form-wrap input,.ksd-register-form-wrap input{
       color: #333;
 }

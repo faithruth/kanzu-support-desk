@@ -136,7 +136,7 @@ class KSD_Onboarding {
                     'next_url'      => admin_url('edit.php?post_type=ksd_ticket'),
                     'stage_notes'   => sprintf( '<p>%1$s </p><p><strong>%2$s</strong></p>',
                                                 __( 'This is the support form the customer will use to create a ticket.','kanzu-support-desk'),
-                                                __( 'Create a ticket now then click Next to proceed', 'kanzu-support-desk') 
+                                                __( "Create a ticket now by entering a subject, a message and clicking 'Send Now'. Then, click 'Next' to proceed", 'kanzu-support-desk') 
                                                 )
                 ),            
                 3   => array(
@@ -159,7 +159,7 @@ class KSD_Onboarding {
                     'next_url'      => '',
                     'stage_notes'   => sprintf( '<p>%1$s</p><p><strong>%2$s</strong></p>',
                                             __('Great! Now you need to respond to the customer. You can send a response or choose to type a private note for another agent; private notes are NOT sent to your customer.','kanzu-support-desk'),
-                                            __( 'At the bottom of your screen is a textbox; type your response and hit send to proceed.', 'kanzu-support-desk')
+                                            __( 'At the bottom of your screen is a textbox; type your response and click Reply to proceed.', 'kanzu-support-desk')
                                               )
                 ),                
                 5   => array(

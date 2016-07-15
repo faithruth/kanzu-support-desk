@@ -1846,7 +1846,7 @@ class KSD_Admin {
                     $new_value_name = ( 0 == $new_value ? __( 'No One', 'kanzu-support-desk' ) : '<a href="' . admin_url( "user-edit. php?user_id={$new_value}").'">' . get_userdata( $new_value )->display_name.'</a>' );
                     $activity_content = sprintf( __( 're-assigned ticket from %1$s to %2$s', 'kanzu-support-desk' ), $old_value_name, $new_value_name );     
                     //Send an email to notify the new assignee
-                    $this->do_notify_ticket_reassignment( get_userdata( $new_value )->display_name, get_userdata( $new_value )->user_email, $ticket_id );
+                    $this->do_notify_ticket_reassignment( $new_value, $ticket_id );
                     break;
                 case '_ksd_tkt_info_customer': 
                     $old_value_name =  ( 0 == $old_value ? __( 'No One', 'kanzu-support-desk' ) : '<a href="' . admin_url( "user-edit.php?user_id={$old_value}").'">' . get_userdata( $old_value )->display_name.'</a>' );
@@ -2378,12 +2378,17 @@ class KSD_Admin {
 
      /**
       * Notify an agent when a ticket has been re-assigned to them
-      * @param string $agent_name The agent's name
-      * @param string $notify_email The email to notify
+      * @param int $new_user_id The ID of the agent to whom the ticket has been reassigned
       * @param int $tkt_id The ID of the ticket that's been re-assigned
       * @since 2.2.0
+      * @since 2.2.9 Params $agent_name and $notify_email replaced by $new_user_id 
       */
-     public function do_notify_ticket_reassignment( $agent_name, $notify_email, $tkt_id ){
+     public function do_notify_ticket_reassignment( $new_user_id, $tkt_id ){
+         if( $new_user_id == 0 ){
+             return;
+         }
+        $agent_name     = get_userdata( $new_user_id )->display_name;
+        $notify_email   = get_userdata( $new_user_id )->user_email;
         $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
         $notify_tkt_reassign_message  = sprintf( __('Hi %1$s, A support ticket has been reassigned to you on %2$s:', 'kanzu-support-desk'), $agent_name, $blog_name ) . "\r\n\r\n";             
         $notify_tkt_reassign_message .= Kanzu_Support_Desk::output_ksd_signature( $tkt_id );

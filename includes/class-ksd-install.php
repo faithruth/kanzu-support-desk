@@ -259,7 +259,7 @@ class KSD_Install {
             'recency_definition'                => "1",
             'show_support_tab'                  => "yes",
             'support_button_text'               => "Click here for help",
-            'tab_message_on_submit'             => __( 'Thank you. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
+            'tab_message_on_submit'             => __( 'Thank you. Your support request has been opened. We will get back to you shortly.', 'kanzu-support-desk' ),
             'tour_mode'                         => "no",  
             'enable_recaptcha'                  => "no", 
             'recaptcha_site_key'                => "",
