@@ -836,7 +836,7 @@ class KSD_Admin {
      */
     public function add_menu_pages() {
             //Add the top-level admin menu
-            $page_title = __('Kanzu Support Desk', 'kanzu-support-desk');
+            $page_title = 'Kanzu Support Desk';
             $capability = 'manage_ksd_settings';
             $menu_slug  = 'edit.php?post_type=ksd_ticket';
             $function   = 'output_admin_menu_dashboard';
