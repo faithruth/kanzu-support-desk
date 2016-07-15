@@ -231,11 +231,11 @@ class KSD_Public {
 
                 <button id="ksd-new-ticket-public"><?php echo $settings['support_button_text']; ?></button><?php
                 if ( "no" == $settings['enable_customer_signup'] || is_user_logged_in() ) {//If we don't require registration or the user's logged in              
-                    include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-new-ticket.php' ); //Note that this isn't an include_once since you can have multiple forms on the same page (In the content using a shortcode and as a hidden slide-in,slide-out element)
+                    include( KSD_PLUGIN_DIR .  'templates/default/html-public-new-ticket.php' ); //Note that this isn't an include_once since you can have multiple forms on the same page (In the content using a shortcode and as a hidden slide-in,slide-out element)
                 }
                 else{
                     $form_position_class = 'ksd-form-hidden-tab';
-                    include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' ); 
+                    include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' ); 
                 }
         }
     }
@@ -259,7 +259,7 @@ class KSD_Public {
         if ( "yes" == $settings['enable_customer_signup'] && !is_user_logged_in() ) { 
             ob_start();
             $form_position_class = 'ksd-form-short-code';
-            include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' ); 
+            include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' ); 
             return ob_get_clean();
         } else{
             ob_start();
@@ -297,7 +297,7 @@ class KSD_Public {
         $settings = Kanzu_Support_Desk::get_settings();
         if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) { 
             $form_position_class = 'ksd-form-short-code';
-            include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' );   
+            include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' );   
         } else{
             $ksd_template = new KSD_Templates();
             $ksd_template->get_template_part( 'list', 'my-tickets' );
@@ -381,7 +381,7 @@ class KSD_Public {
                 if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) {  //@TODO Send the current URL as the redirect URL for the 'login' and 'Register' action
                     include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
                     $form_position_class = 'ksd-form-short-code';
-                    include( KSD_PLUGIN_DIR .  'includes/public/views/html-public-register.php' ); 
+                    include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' ); 
                     return;
                 } 
                         global $current_user;   

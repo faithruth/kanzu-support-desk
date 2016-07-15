@@ -501,7 +501,7 @@ msgstr ""
 #: includes/admin/class-ksd-admin.php:255
 #: includes/admin/views/html-admin-settings.php:37
 #: includes/public/class-ksd-public.php:276
-#: includes/public/views/html-public-new-ticket.php:31
+#: templates/default/html-public-new-ticket.php:31
 #: templates/default/single-submit-ticket.php:21
 msgid "Subject"
 msgstr ""
@@ -512,7 +512,7 @@ msgstr ""
 
 #: includes/admin/class-ksd-admin.php:257
 #: includes/admin/views/metaboxes/html-ksd-ticket-info.php:72
-#: includes/public/views/html-public-register.php:35
+#: templates/default/html-public-register.php:35
 msgid "Customer Email"
 msgstr ""
 
@@ -888,25 +888,25 @@ msgid "Ticket Messages"
 msgstr ""
 
 #: includes/admin/class-ksd-admin.php:713
-#: includes/public/views/html-public-new-ticket.php:44
+#: templates/default/html-public-new-ticket.php:44
 #: templates/default/single-submit-ticket.php:34
 msgid "Low"
 msgstr ""
 
 #: includes/admin/class-ksd-admin.php:714
-#: includes/public/views/html-public-new-ticket.php:45
+#: templates/default/html-public-new-ticket.php:45
 #: templates/default/single-submit-ticket.php:35
 msgid "Medium"
 msgstr ""
 
 #: includes/admin/class-ksd-admin.php:715
-#: includes/public/views/html-public-new-ticket.php:46
+#: templates/default/html-public-new-ticket.php:46
 #: templates/default/single-submit-ticket.php:36
 msgid "High"
 msgstr ""
 
 #: includes/admin/class-ksd-admin.php:716
-#: includes/public/views/html-public-new-ticket.php:47
+#: templates/default/html-public-new-ticket.php:47
 #: templates/default/single-submit-ticket.php:37
 msgid "Urgent"
 msgstr ""
@@ -1250,7 +1250,7 @@ msgid "Assigned To"
 msgstr ""
 
 #: includes/admin/class-ksd-admin.php:2630
-#: includes/public/views/html-public-new-ticket.php:43
+#: templates/default/html-public-new-ticket.php:43
 #: templates/default/single-submit-ticket.php:33
 msgid "Severity"
 msgstr ""
@@ -1535,7 +1535,7 @@ msgid "Defaults to the primary administrator's email address"
 msgstr ""
 
 #: includes/admin/views/html-admin-settings.php:41
-#: includes/public/views/html-public-new-ticket.php:87
+#: templates/default/html-public-new-ticket.php:87
 #: templates/default/single-submit-ticket.php:75
 msgid "Message"
 msgstr ""
@@ -1991,30 +1991,30 @@ msgid ""
 msgstr ""
 
 #: includes/public/class-ksd-public.php:275
-#: includes/public/views/html-public-new-ticket.php:24
+#: templates/default/html-public-new-ticket.php:24
 #: templates/default/single-submit-ticket.php:14
 msgid "Name"
 msgstr ""
 
 #: includes/public/class-ksd-public.php:277
-#: includes/public/views/html-public-new-ticket.php:27
-#: includes/public/views/html-public-register.php:35
+#: templates/default/html-public-new-ticket.php:27
+#: templates/default/html-public-register.php:35
 #: templates/default/single-submit-ticket.php:17
 msgid "Email"
 msgstr ""
 
 #: includes/public/class-ksd-public.php:278
-#: includes/public/views/html-public-register.php:29
+#: templates/default/html-public-register.php:29
 msgid "First Name"
 msgstr ""
 
 #: includes/public/class-ksd-public.php:279
-#: includes/public/views/html-public-register.php:32
+#: templates/default/html-public-register.php:32
 msgid "Last Name"
 msgstr ""
 
 #: includes/public/class-ksd-public.php:280
-#: includes/public/views/html-public-register.php:38
+#: templates/default/html-public-register.php:38
 msgid "Username"
 msgstr ""
 
@@ -2123,49 +2123,49 @@ msgstr ""
 msgid "Title:"
 msgstr ""
 
-#: includes/public/views/html-public-new-ticket.php:16
-#: includes/public/views/html-public-new-ticket.php:17
-#: includes/public/views/html-public-register.php:18
-#: includes/public/views/html-public-register.php:19
+#: templates/default/html-public-new-ticket.php:16
+#: templates/default/html-public-new-ticket.php:17
+#: templates/default/html-public-register.php:18
+#: templates/default/html-public-register.php:19
 #: templates/default/single-submit-ticket.php:8
 msgid "Close"
 msgstr ""
 
-#: includes/public/views/html-public-new-ticket.php:54
+#: templates/default/html-public-new-ticket.php:54
 #: templates/default/single-submit-ticket.php:44
 msgid "Product"
 msgstr ""
 
-#: includes/public/views/html-public-new-ticket.php:68
+#: templates/default/html-public-new-ticket.php:68
 #: templates/default/single-submit-ticket.php:57
 msgid "Category"
 msgstr ""
 
-#: includes/public/views/html-public-new-ticket.php:98
+#: templates/default/html-public-new-ticket.php:98
 #: templates/default/single-submit-ticket.php:86
 msgid "Send Message"
 msgstr ""
 
-#: includes/public/views/html-public-register.php:24
+#: templates/default/html-public-register.php:24
 msgid "Before you submit a ticket, you need to be logged in."
 msgstr ""
 
-#: includes/public/views/html-public-register.php:25
+#: templates/default/html-public-register.php:25
 #, php-format
 msgid ""
 "If you already have an account, please %1$s login here %2$s. If you do not, "
 "register below."
 msgstr ""
 
-#: includes/public/views/html-public-register.php:41
+#: templates/default/html-public-register.php:41
 msgid "Password"
 msgstr ""
 
-#: includes/public/views/html-public-register.php:50
+#: templates/default/html-public-register.php:50
 msgid "Show Password"
 msgstr ""
 
-#: includes/public/views/html-public-register.php:53
+#: templates/default/html-public-register.php:53
 msgid "Register"
 msgstr ""
 
