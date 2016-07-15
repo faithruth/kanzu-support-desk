@@ -31,8 +31,7 @@ class KSD_Roles {
                         'upload_files'  => true,
                         'delete_posts' 	=> false
                 ) );   
-        add_role( 'ksd_supervisor', __( 'KSD Supervisor', 'kanzu-support-desk' ), $this->default_supervisor_caps() );     
-        add_role( 'ksd_owner', __( 'KSD Owner', 'kanzu-support-desk' ), $this->default_supervisor_caps() );     
+        add_role( 'ksd_supervisor', __( 'KSD Supervisor', 'kanzu-support-desk' ), $this->default_supervisor_caps() );        
     }    
     
 
@@ -84,7 +83,7 @@ class KSD_Roles {
      * @since 2.2.9
      */
     public function modify_all_role_caps( $change ){
-        $ksd_roles = array( 'ksd_supervisor','ksd_owner','ksd_agent' );
+        $ksd_roles = array( 'ksd_supervisor','ksd_agent' );
         foreach ( $ksd_roles as $ksd_role ){
             $this->modify_role_caps( $ksd_role, $change );
         }
@@ -94,13 +93,13 @@ class KSD_Roles {
      * Add or remove caps from a role
      * 
      * @param string        $change add|remove
-     * @param string        $role ksd_agent|ksd_owner|ksd_supervisor
+     * @param string        $role ksd_agent|ksd_supervisor
      * @param array         $capabilities 
      */
     public function modify_role_caps( $role, $change = 'add' ){
         global $wp_roles;
         
-        if( ! in_array( $role, array( 'ksd_agent','ksd_supervisor', 'ksd_owner' ) )){
+        if( ! in_array( $role, array( 'ksd_agent','ksd_supervisor' ) )){
             return;
         }
         if( 'add' == $change ){
@@ -119,15 +118,9 @@ class KSD_Roles {
             // Add KSD core capabilities
             $this->modify_default_agent_caps( $cap_function, $wp_roles );
 
-            switch( $role ):
-                case 'ksd_supervisor':
-                        $this->modify_default_supervisor_caps( $cap_function,$wp_roles );
-                    break;
-                case 'ksd_owner':
-                        $this->modify_default_supervisor_caps( $cap_function,$wp_roles );
-                        $wp_roles->$cap_function( 'ksd_owner', 'ksd_manage_licenses' );
-                    break;
-            endswitch;       
+            if( 'ksd_supervisor' == $role ){
+                $this->modify_default_supervisor_caps( $cap_function, $wp_roles );
+            }      
               
         }        
     }

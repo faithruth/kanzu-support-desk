@@ -81,7 +81,7 @@ class KSD_Uninstall {
     }
     
     private function delete_roles(){
-        $ksd_roles = array( 'ksd_customer', 'ksd_agent', 'ksd_supervisor', 'ksd_owner' );
+        $ksd_roles = array( 'ksd_customer', 'ksd_agent', 'ksd_supervisor' );
         foreach( $ksd_roles as $role ){
             remove_role( $role );
         }
