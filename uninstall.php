@@ -31,10 +31,14 @@ class KSD_Uninstall {
         if ( is_multisite() ) {
         $blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs}", ARRAY_A );
         $this->delete_options();
+        $this->delete_roles();
+        $this->remove_caps();
         if ( $blogs ) {
             foreach ( $blogs as $blog ) {
                             switch_to_blog( $blog['blog_id'] );
                             $this->delete_options();
+                            $this->delete_roles();
+                            $this->remove_caps();
                             $this->delete_tables();
                             $this->delete_ticket_info();
                             restore_current_blog();
@@ -42,6 +46,8 @@ class KSD_Uninstall {
             }
         } else {
            $this->delete_options();
+           $this->delete_roles();
+           $this->remove_caps();
            $this->delete_tables();
            $this->delete_ticket_info();
         }
@@ -74,6 +80,13 @@ class KSD_Uninstall {
         delete_option( 'ksd_notifications' );
     }
     
+    private function delete_roles(){
+        $ksd_roles = array( 'ksd_customer', 'ksd_agent', 'ksd_supervisor', 'ksd_owner' );
+        foreach( $ksd_roles as $role ){
+            remove_role( $role );
+        }
+    }
+    
     /**
      * Delete all tickets and related meta information
      * @since 2.0.0
@@ -94,6 +107,17 @@ class KSD_Uninstall {
             $wpdb->query( $delete_ticket_query );
         }
     }
+    
+	/**
+	 * Remove KSD core role capabilities 
+	 *
+	 * @access public
+	 * @since 2.2.9
+	 * @return void
+	 */
+	public function remove_caps() {
+            KSD()->roles->modify_all_role_caps( 'remove' );  
+	}    
 
 }
 endif;

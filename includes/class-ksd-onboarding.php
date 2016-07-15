@@ -136,7 +136,7 @@ class KSD_Onboarding {
                     'next_url'      => admin_url('edit.php?post_type=ksd_ticket'),
                     'stage_notes'   => sprintf( '<p>%1$s </p><p><strong>%2$s</strong></p>',
                                                 __( 'This is the support form the customer will use to create a ticket.','kanzu-support-desk'),
-                                                __( "Create a ticket now by entering a subject, a message and clicking 'Send Now'. Then, click 'Next' to proceed", 'kanzu-support-desk') 
+                                                __( "Create a ticket now by entering a subject, a message and clicking 'Send Message'. Then, click 'Next' to proceed", 'kanzu-support-desk') 
                                                 )
                 ),            
                 3   => array(

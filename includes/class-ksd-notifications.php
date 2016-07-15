@@ -6,14 +6,14 @@
  * @license   GPL-2.0+
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
- * @since     2.8.0
+ * @since     2.2.4
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * KSD_Session Class
+ * KSD_Notifications Class
  *
  * @since 2.2.4
  */

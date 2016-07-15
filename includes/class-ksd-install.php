@@ -106,9 +106,11 @@ class KSD_Install {
             $ksd_install = self::get_instance();
             $ksd_install->set_default_options(); 	
             $ksd_install->create_support_pages_and_salt();
-            $ksd_install->create_roles();  
             $ksd_install->create_woo_edd_products();
-            $ksd_install->set_default_notifications();
+            $ksd_install->set_default_notifications();            
+            KSD()->roles->create_roles();  
+            KSD()->roles->modify_all_role_caps( 'add' );  
+            $ksd_install->make_installer_ksd_owner();              
             set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
         }
         flush_rewrite_rules();//Because of the custom post types    
@@ -188,6 +190,16 @@ class KSD_Install {
              $this->set_default_notifications();
         }
 
+        if ( $sanitized_version < 229 ) {//@since 2.2.9 Added admin, supervisor and agent custom roles
+             KSD()->roles->create_roles();
+             KSD()->roles->modify_all_role_caps( 'add' );  
+             $ksd_settings = Kanzu_Support_Desk::get_settings();
+             $agents = explode( '|', $ksd_settings['ticket_management_roles'] );
+             foreach( $agents as $ksd_agent ){
+                  KSD()->roles->modify_role_caps( 'ksd_agent', 'add' );
+             }
+        }        
+
         if ( count( $dbChanges ) > 0 ) {  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
                                         //how strict and verbose the dbDelta alternative is. We'd
                                         //need to rewrite CREATE table statements for dbDelta.
@@ -195,6 +207,17 @@ class KSD_Install {
                     $wpdb->query( $query );     
               }
         }
+    }
+    
+    /**
+     * Make the user who installs KSD the owner
+     * 
+     * @since 2.2.9
+     */
+    private function make_installer_ksd_owner(){
+       global $current_user;
+       $user = new WP_User( $current_user->ID );
+       KSD()->roles->modify_default_owner_caps( 'add_cap', $user );        
     }
 
 
@@ -212,17 +235,7 @@ class KSD_Install {
         add_option( 'ksd_notifications', $notification_defaults );                
     }
 
-    /**
-     * Create custom user roles
-     * @since 1.5.0
-     */
-    private function create_roles() {
-        add_role(       'ksd_customer', __( 'KSD Customer', 'kanzu-support-desk' ), array(
-                        'read' 		=> true,
-                        'edit_posts' 	=> false,
-                        'delete_posts' 	=> false
-                ) );
-    }
+
 
 
 
@@ -240,6 +253,7 @@ class KSD_Install {
      * @since 2.2.0 onboarding_enabled
      * @since 2.2.0 notifications_enabled 
      * @since 2.2.1 Changed $user_info to current user, not primary admin 
+     * @since 2.2.9 ksd_owner
      */
     public function get_default_options() {
         $user_info = wp_get_current_user();  
@@ -274,6 +288,7 @@ class KSD_Install {
             'salt'                              => '',
             'onboarding_enabled'                => 'yes',
             'notifications_enabled'             => 'yes',
+            'ksd_owner'                         => $user_info->ID,   
 
             /**Support form settings**/
             'supportform_show_categories'       => 'no',

@@ -845,7 +845,7 @@ class KSD_Admin {
             $ticket_types = array();
             $ticket_types['ksd-dashboard']  =   __( 'Dashboard', 'kanzu-support-desk' );
             $ticket_types['ksd-settings']   =   __( 'Settings', 'kanzu-support-desk' );
-            $ticket_types['ksd-addons']     =   '<span style="color:orange;">' .__( 'Add-ons', 'kanzu-support-desk' ). '</span>';           
+            $ticket_types['ksd-addons']     =   '<span style="color:#d54e21;">' .__( 'Add-ons', 'kanzu-support-desk' ). '</span>';           
 
             foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
                 add_submenu_page( $menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array( $this,$function ) );                        		

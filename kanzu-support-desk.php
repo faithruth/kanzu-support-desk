@@ -44,6 +44,14 @@ final class Kanzu_Support_Desk {
 	 * @var KSD_Session
 	 */
 	public $session = null;        
+        
+	/**
+	 * KSD Roles Object.
+	 *
+	 * @var object|KSD_Roles
+	 * @since 2.2.9
+	 */
+	public $roles;        
 	
 	/**
 	 * @var Kanzu_Support_Desk The single instance of the class
@@ -96,6 +104,8 @@ final class Kanzu_Support_Desk {
         //Set-up actions and filters
 	$this->setup_actions();
         
+        self::$instance->roles      = new KSD_Roles();
+        
 	/*
 	 * Register hooks that are fired when the plugin is activated  
 	 * When the plugin is deleted, the uninstall.php file is loaded.
@@ -138,8 +148,9 @@ final class Kanzu_Support_Desk {
 	 */
 	private function includes() {
 		//Do installation-related work
-		include_once( 'includes/class-ksd-install.php' );
-		
+		include_once( KSD_PLUGIN_DIR .'includes/class-ksd-install.php' );
+		include_once( KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php' );
+                
 		//Dashboard and Administrative Functionality 
 		if ( is_admin() ) {
 			require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
