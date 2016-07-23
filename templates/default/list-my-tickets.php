@@ -7,7 +7,7 @@
        if ( ! empty ( $my_tickets ) ) :
             foreach ( $my_tickets as $a_ticket ): ?>
             <li class="ksd-my-ticket">
-                <span class="ksd-my-ticket-status <?php echo $a_ticket->post_status ; ?>"><?php echo $a_ticket->post_status ; ?></span>
+                <span class="ksd-my-ticket-status <?php echo $a_ticket->post_status ; ?>"><?php echo $ksd_admin->get_localized_status( $a_ticket->post_status ) ; ?></span>
                 <span class="ksd-my-ticket-title"><a href='<?php echo get_the_permalink( $a_ticket->ID ); ?>'><?php echo $a_ticket->post_title; ?></a></span>
                 <span class="ksd-my-ticket-date"><?php echo date('d M Y, @ H:i', strtotime( $a_ticket->post_modified ) ); ?></span>                
             </li><?php

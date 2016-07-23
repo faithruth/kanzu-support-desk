@@ -786,6 +786,34 @@ class KSD_Admin {
             'resolved'  => __( 'Resolved', 'kanzu-support-desk' )
             );
     }
+    
+    /**
+     * Get the corresponding localized version of the ticket status
+     * 
+     * @since 2.2.9
+     */
+    public function get_localized_status( $status ){
+        $localized_status='';
+        switch( $status ){
+            case 'new':
+                $localized_status = __( 'New', 'kanzu-support-desk' );
+                break;
+            case 'open':
+                $localized_status = __( 'Open', 'kanzu-support-desk' );
+                break;
+            case 'pending':
+                $localized_status = __( 'Pending', 'kanzu-support-desk' );
+                break;
+            case 'resolved':
+                $localized_status = __( 'Resolved', 'kanzu-support-desk' );
+                break;    
+            case 'draft':
+                $localized_status = __( 'Draft', 'kanzu-support-desk' );
+                break;            
+            
+        }
+        return $localized_status;        
+    }
 
     /**
      * Get status list as select options
