@@ -116,10 +116,11 @@ class KSD_Roles {
 
         if ( is_object( $wp_roles ) ) {            
             // Add KSD core capabilities
-            $this->modify_default_agent_caps( $cap_function, $wp_roles );
+            $role_obj = get_role( $role );
+            $this->modify_default_agent_caps( $role_obj, $cap_function );
 
             if( 'ksd_supervisor' == $role ){
-                $this->modify_default_supervisor_caps( $cap_function, $wp_roles );
+                $this->modify_default_supervisor_caps( $role_obj, $cap_function );
             }      
               
         }        
@@ -130,51 +131,54 @@ class KSD_Roles {
     /**
      * Add the default caps to a supervisor role
      * 
-     * @param string $cap_function add_cap|remove_cap The $wp_roles function to use.
-     * @param Object $wp_roles WP_Roles Object   
+     * @param Object $cap_recipient The user or role receiving the cap
+     * @param string $cap_function add_cap|remove_cap The $wp_roles|$wp_user method to use.
+     * 
      * @since 2.2.9
      */
-    private function modify_default_supervisor_caps( $cap_function,$wp_roles ){
+    private function modify_default_supervisor_caps( $cap_recipient, $cap_function ){
         $supervisor_del_capabilities = $this->get_delete_ticket_caps();
         foreach ( $supervisor_del_capabilities as $sup_cap_group ) {
                 foreach ( $sup_cap_group as $cap ) {
-                    $wp_roles->$cap_function( 'ksd_supervisor', $cap );
+                    $cap_recipient->$cap_function( $cap );
                 }
         }   
         
         $supervisor_capabilities = array( 'ksd_manage_users', 'ksd_view_dashboard', 'ksd_view_addons','manage_ksd_settings' );
         foreach ( $supervisor_capabilities as $caps ) {
-            $wp_roles->$cap_function( 'ksd_supervisor', $caps );
+            $cap_recipient->$cap_function( $caps );
         }        
         
     }
     
     /**
-     * Add the default caps to a supervisor role
+     * Add/Remove the default caps to a supervisor role
      * 
-     * @param string $cap_function add_cap|remove_cap Which of the $wp_user functions to use.
      * @param Object $wp_user WP_User object     
+     * @param string $cap_function add_cap|remove_cap Which of the $wp_user functions to use.
+     * 
      * @since 2.2.9
      */    
-    public function modify_default_owner_caps( $cap_function, $wp_user ){
-        $this->modify_default_supervisor_caps( $cap_function, $wp_user );
-        $wp_user->$cap_function( 'ksd_manage_licenses' );        
+    public function modify_default_owner_caps( $wp_user , $cap_function  ){
+        $this->modify_default_agent_caps( $wp_user, $cap_function  );
+        $this->modify_default_supervisor_caps( $wp_user, $cap_function  );
+        $wp_user->$cap_function( 'ksd_manage_licenses' );     
     }
     
                 
     /**
      * Add the default caps to an agent role
      * 
-     * @param string $cap_function add_cap|remove_cap The $wp_roles function to use.
-     * @param Object $wp_roles
+     * @param Object $cap_recipient The user or role receiving the cap
+     * @param string $cap_function add_cap|remove_cap The $wp_roles|$wp_user method to use.
      * 
      * @since 2.2.9
      */
-    private function modify_default_agent_caps( $cap_function, $wp_roles ){
+    private function modify_default_agent_caps( $cap_recipient, $cap_function ){
         $agent_capabilities = $this->get_default_agent_caps();
         foreach ( $agent_capabilities as $agent_cap_group ) {
                 foreach ( $agent_cap_group as $cap ) {
-                    $wp_roles->$cap_function( 'ksd_agent', $cap );
+                    $cap_recipient->$cap_function( $cap );
                 }
         }  
     }

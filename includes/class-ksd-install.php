@@ -217,7 +217,7 @@ class KSD_Install {
     private function make_installer_ksd_owner(){
        global $current_user;
        $user = new WP_User( $current_user->ID );
-       KSD()->roles->modify_default_owner_caps( 'add_cap', $user );        
+       KSD()->roles->modify_default_owner_caps( $user, 'add_cap' );        
     }
 
 
