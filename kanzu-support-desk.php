@@ -239,8 +239,6 @@ final class Kanzu_Support_Desk {
      * 
      */
     public function init(){
-        global $current_user;
-        self::kanzu_support_log_me($current_user->caps);
         $this->session  = new KSD_Session();
     }
 
@@ -302,14 +300,14 @@ final class Kanzu_Support_Desk {
     * Added to write custom debug messages to the debug log ( wp-content/debug.log). You
     * need to turn debug on for this to work
     */
-    public static function kanzu_support_log_me( $message ) {
+    public function log( $message ) {
         if ( WP_DEBUG === true ) {
             if ( is_array( $message ) || is_object( $message ) ) {
                 error_log( print_r( $message, true ));
             } else {
                 error_log( $message );
             }
-                        }
+        }
     } 
  }
 
