@@ -24,7 +24,6 @@ class KSD_Admin {
      */
     protected static $instance = null;   
 
-
     /**
      * Initialize the plugin by loading admin scripts & styles and adding a
      * settings page and menu. Also define the AJAX callbacks
@@ -146,8 +145,83 @@ class KSD_Admin {
         
         //Change 'Publish' button to 'Update'
         add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
+        
+        //Send tracking data
+        add_action( 'admin_init', array( $this, 'send_tracking_data' ) );
     }
+    
+    /**
+     * Send tracking data
+     * 
+     * @return null
+     */
+    public function send_tracking_data(){
+        $settings = Kanzu_Support_Desk::get_settings();
+        if( 'yes' !== $settings['enable_anonymous_tracking'] ){
+            return;
+        }
+        if( isset( $settings['ksd_tracking_last_send'] ) && $settings['ksd_tracking_last_send'] > strtotime( '-1 week' ) ){
+            return;
+        }
 
+        $data = $this->get_tracking_data();
+
+        wp_remote_post( 'https://analytics.kanzucode.com', array(
+            'method'      => 'POST',
+            'timeout'     => 20,
+            'redirection' => 5,
+            'httpversion' => '1.1',
+            'blocking'    => true,
+            'body'        => $data,
+        ) );
+        
+        $settings['ksd_tracking_last_send'] = time();
+        Kanzu_Support_Desk::update_settings( $settings );
+    }
+    
+    /**
+     * Aggregate tracking data to send
+     * 
+     * @return array
+     */
+    private function get_tracking_data(){
+		$data = array();
+        
+        //Retrieve current plugin info
+        $plugin_data = get_plugin_data( KSD_PLUGIN_FILE );
+        $plugin = $plugin_data['Name'];
+        $data['product'] = $plugin;
+
+		// Retrieve current theme info
+		$theme_data = wp_get_theme();
+		$theme      = $theme_data->Name . ' ' . $theme_data->Version;
+		$data['url']    = home_url();
+		$data['theme']  = $theme;
+		$data['email']  = get_bloginfo( 'admin_email' );
+
+		// Retrieve current plugin information
+		if( ! function_exists( 'get_plugins' ) ) {
+			include ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
+		$plugins        = array_keys( get_plugins() );
+		$active_plugins = get_option( 'active_plugins', array() );
+
+		foreach ( $plugins as $key => $plugin ) {
+			if ( in_array( $plugin, $active_plugins ) ) {
+				// Remove active plugins from list so we can show active and inactive separately
+				unset( $plugins[ $key ] );
+			}
+		}
+        
+        //Load all options
+        $data['options'] = wp_load_alloptions();
+        
+		$data['active_plugins']   = $active_plugins;
+		$data['inactive_plugins'] = $plugins;
+        
+        return $data;
+    }
 
     /**
      * Return an instance of this class.
