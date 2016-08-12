@@ -147,7 +147,7 @@ class KSD_Admin {
         add_filter( 'gettext', array( $this, 'change_publish_button' ), 10, 2 );
         
         //Send tracking data
-        add_action( 'admin_init', array( $this, 'send_tracking_data' ) );
+        add_action( 'admin_head', array( $this, 'send_tracking_data' ) );
     }
     
     /**
@@ -166,7 +166,7 @@ class KSD_Admin {
 
         $data = $this->get_tracking_data();
 
-        wp_remote_post( 'https://analytics.kanzucode.com', array(
+        wp_remote_post( 'http://analytics.kanzucode.com/wp-json/kanzu-analytics/v1/api', array(
             'method'      => 'POST',
             'timeout'     => 20,
             'redirection' => 5,
@@ -186,6 +186,7 @@ class KSD_Admin {
      */
     private function get_tracking_data(){
 		$data = array();
+        $data['action'] = 'tracking_data';
         
         //Retrieve current plugin info
         $plugin_data = get_plugin_data( KSD_PLUGIN_FILE );
@@ -2523,9 +2524,17 @@ class KSD_Admin {
      public function send_feedback() {
         $feedback_type  =  isset( $_POST['feedback_type'] ) ?  sanitize_text_field( $_POST['feedback_type'] ) : 'default';
         $user_feedback  = sanitize_text_field( $_POST['ksd_user_feedback'] );
-        
+        $current_user = wp_get_current_user();
+
+        $data = array();
+        $data['action'] = 'feedback';
+        $data['feedback_item'] = 'kanzu-support-desk';
+        $data['feedback_type'] = $feedback_type;
+        $data['user_feedback'] = $user_feedback;
+        $data['user_email'] = $current_user->user_email;
+
         if (  'waiting_list' == $feedback_type ) {
-            $current_user = wp_get_current_user();
+            $this->send_to_analytics( $data );
             $addon_message =  "{$user_feedback},{$current_user->user_email}";
             $response = ( $this->send_email( "feedback@kanzucode.com", $addon_message, "KSD Add-on Waiting List") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') );
             echo json_encode( $response );
@@ -2538,10 +2547,27 @@ class KSD_Admin {
             die();              
         }
         
+        $this->send_to_analytics( $data );
         $feedback_message = "{$user_feedback},{$feedback_type}";
         $response = ( $this->send_email( "feedback@kanzucode.com", $feedback_message, "KSD Feedback") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') ); 
         echo json_encode( $response );
         die();  
+    }
+    
+    /**
+     * Send feedback to Kanzu Analytics
+     * @param array $data
+     * @return array 
+     */
+    public function send_to_analytics( $data ){
+        return wp_remote_post( 'http://analytics.kanzucode.com/wp-json/kanzu-analytics/v1/api', array(
+            'method'      => 'POST',
+            'timeout'     => 20,
+            'redirection' => 5,
+            'httpversion' => '1.1',
+            'blocking'    => true,
+            'body'        => $data,
+        ) );
     }
 
      /**
