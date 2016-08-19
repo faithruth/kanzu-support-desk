@@ -71,16 +71,18 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Refresh your page after enabling this and tour mode will start automatically", 'kanzu-support-desk' ); ?>"/>
                     </div>
                 <div class="setting">
-                    <label for="ticket_management_roles"><?php _e ( 'Roles that manage tickets', 'kanzu-support-desk' ); ?></label>                
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Only users with these roles can manage tickets. All other users won't have access to your support desk. Note that the Administrator role always has access.", 'kanzu-support-desk' ); ?>"/>
-                    <ul class="ksd-multiple-checkboxes"><?php
-                        global $wp_roles;
-                        foreach ( $wp_roles->roles as $role => $role_info ) {
-                            ?>
-                            <li><input name="ticket_management_roles[]"  type="checkbox" <?php echo false !== strpos ( $settings['ticket_management_roles'], $role ) ? 'checked' : ''; ?> value="<?php echo $role; ?>"  /><label><?php echo $role_info['name']; ?></label></li>  
-                        <?php } ?>
-                    </ul>                    
+                    <label for="ksd_agents"><?php _e ( 'Users that manage tickets', 'kanzu-support-desk' ); ?></label>                
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Only these users can manage tickets. All other users won't have access to your support desk. Note that the Administrator role always has access.", 'kanzu-support-desk' ); ?>"/>
+                    <input type="text" value="" size="30" name="ksd_agents" />
+                    <?php $this->ksd_agent_list(); ?>                   
                 </div>
+                <div class="setting">
+                    <label for="ksd_supervisors"><?php _e ( 'Supervisors', 'kanzu-support-desk' ); ?></label>                
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Only these users can manage ticket settings and agents", 'kanzu-support-desk' ); ?>"/>
+                    <input type="text" value="" size="30" name="ksd_supervisors" />   
+                    <?php $this->ksd_supervisor_list(); ?>
+                </div>                
+                
                 <div id="ksd-below-settings">
                     <div class="ksd-section">
                         <div class="ksd-customer-header">

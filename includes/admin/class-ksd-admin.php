@@ -916,6 +916,13 @@ class KSD_Admin {
             }
     }
     
+    private function ksd_agent_list(){
+      echo '<ul class="ksd-agent-list"><li>test one</li><li>test three</li></ul>';      
+    }
+    
+    private function ksd_supervisor_list(){
+      echo '<ul class="ksd-supervisor-list"><li>test two</li></ul>';      
+    }    
 
 
     /**
