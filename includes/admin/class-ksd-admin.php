@@ -79,6 +79,7 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
         add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
         add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );
+        add_action( 'wp_ajax_ksd_autocomplete_user', array( $this, 'autocomplete_user' ) );
 
       
         //Generate a debug file
@@ -190,7 +191,7 @@ class KSD_Admin {
     public function enqueue_admin_scripts() { 
             //Load the script for Google charts. Load this before the next script. 
             wp_enqueue_script( KSD_SLUG . '-admin-gcharts', '//www.google.com/jsapi', array(), KSD_VERSION ); 
-            wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'/assets/js/ksd-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'json2', 'jquery-ui-dialog', 'jquery-ui-tooltip', 'jquery-ui-accordion' ), KSD_VERSION );
+            wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'/assets/js/ksd-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'json2', 'jquery-ui-dialog', 'jquery-ui-tooltip', 'jquery-ui-accordion','jquery-ui-autocomplete' ), KSD_VERSION );
 
 
             //Variables to send to the admin JS script
@@ -328,7 +329,33 @@ class KSD_Admin {
         $response = $ksd_onboarding->process_notification_feedback();
         echo json_encode( $response );
         die();
-    }        
+    }      
+    
+    /**
+     * Ajax handler for autocomplete user
+     * 
+     */
+    public function autocomplete_user(){
+        global $current_user;                
+        $return = array();
+        
+	$users = get_users( array(
+		'blog_id' => false,
+		'search'  => '*' . $_REQUEST['term'] . '*',
+		'exclude' => $current_user->ID,
+		'search_columns' => array( 'user_login', 'user_nicename', 'user_email' ),
+	) );
+
+	foreach ( $users as $user ) {
+		$return[] = array(
+			/* translators: 1: user_login, 2: user_email */
+			'label' => sprintf( __( '%1$s (%2$s)' ), $user->user_login, $user->user_email ),
+			'value' => $user->user_login,
+		);
+	}
+
+	wp_die( wp_json_encode( $return ) );        
+    }
 
      /**
       * Disable display of notifications

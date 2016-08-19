@@ -232,7 +232,7 @@ jQuery(document).ready(function () {
             this.toggleViewsToHide();
             //Use an accordion in case we have multiple setting blocks
             this.enableAccordion();
-
+            this.autocompleteUsers();
             this.changeSubmitBtnVal();
             this.modifyLicense();
             this.handleAddons();
@@ -255,6 +255,23 @@ jQuery(document).ready(function () {
                 }
             });
         };
+        
+        this.autocompleteUsers = function () {
+            jQuery( '.ksd-suggest-user' ).each( function(){
+                    var $this = jQuery( this );
+                    $this.autocomplete({
+                            source:    ksd_admin.ajax_url + '?action=ksd_autocomplete_user',
+                            delay:     500,
+                            minLength: 2,
+                            open: function() {
+                                    jQuery( this ).addClass( 'open' );
+                            },
+                            close: function() {
+                                    jQuery( this ).removeClass( 'open' );
+                            }
+                    });
+            });
+        };        
         
         __submitNotificationFeedback = function( data ){
             jQuery.post(ksd_admin.ajax_url,
