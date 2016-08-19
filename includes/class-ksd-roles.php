@@ -165,6 +165,15 @@ class KSD_Roles {
         $wp_user->$cap_function( 'ksd_manage_licenses' );     
     }
     
+    /**
+     * Make the specified user a supervisor
+     * @param Object $wp_user
+     */
+    public function add_supervisor_caps_to_user( $wp_user ){
+        $this->modify_default_agent_caps( $wp_user, 'add_cap'  );
+        $this->modify_default_supervisor_caps( $wp_user, 'add_cap'  );
+    }
+    
                 
     /**
      * Add the default caps to an agent role

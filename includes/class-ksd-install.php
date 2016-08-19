@@ -193,11 +193,9 @@ class KSD_Install {
         if ( $sanitized_version < 229 ) {//@since 2.2.9 Added admin, supervisor and agent custom roles
              KSD()->roles->create_roles();
              KSD()->roles->modify_all_role_caps( 'add' );  
-             $ksd_settings = Kanzu_Support_Desk::get_settings();
-             $agents = explode( '|', $ksd_settings['ticket_management_roles'] );
-             foreach( $agents as $ksd_agent ){
-                  KSD()->roles->modify_role_caps( 'ksd_agent', 'add' );
-             }
+             //Make the current user a supervisor. They need to re-select supervisors and agents
+             global $current_user;
+             KSD()->roles->add_supervisor_caps_to_user( $current_user );
         }        
 
         if ( count( $dbChanges ) > 0 ) {  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
