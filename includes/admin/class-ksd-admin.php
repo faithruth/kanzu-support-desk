@@ -23,7 +23,7 @@ class KSD_Admin {
      * @var      object
      */
     protected static $instance = null;   
-
+    
     /**
      * Initialize the plugin by loading admin scripts & styles and adding a
      * settings page and menu. Also define the AJAX callbacks
@@ -42,6 +42,9 @@ class KSD_Admin {
         //Add the attachments button
         add_action('media_buttons', array( $this, 'add_attachments_button' ), 15 );
 
+        //Admin notices
+        add_action( 'admin_notices', array ( $this,'display_admin_notices' ) );
+        
         //Load add-ons
         add_action( 'ksd_load_addons', array( $this, 'load_ksd_addons' ) );
 
@@ -162,13 +165,25 @@ class KSD_Admin {
      */
     public static function get_instance() {
 
-            // If the single instance hasn't been set, set it now.
-            if ( null == self::$instance ) {
-                    self::$instance = new self;
-            }
+        // If the single instance hasn't been set, set it now.
+        if ( null == self::$instance ) {
+                self::$instance = new self;
+        }
 
-            return self::$instance;
+        return self::$instance;
     }
+    
+    public function display_admin_notices() {
+        $ksd_admin_notices = get_option( KSD()->ksd_admin_notices, array() );     
+        if ( $ksd_admin_notices ) {
+            foreach ( $ksd_admin_notices as $admin_notice_type => $admin_notice_message ){
+                $notice_body="<div class='{$admin_notice_type}'><p>";
+                $notice_body.=$admin_notice_message;
+                $notice_body.="</p></div>";
+                echo $notice_body;               
+            }
+        }
+      }      
 
     /**
      * Register and enqueue admin-specific style sheet.
@@ -227,6 +242,7 @@ class KSD_Admin {
                                 );
 
     }
+   
 
     /**
      * Do all KSD actions present in the $_POST & $_GET superglobals.

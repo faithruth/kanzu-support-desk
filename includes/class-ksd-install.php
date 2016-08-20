@@ -78,7 +78,6 @@ class KSD_Install {
      *
      */
     public static function activate() { 
-
         // Bail if activating from network, or bulk. @since 1.1.0
         if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
             return;

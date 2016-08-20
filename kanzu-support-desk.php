@@ -37,6 +37,11 @@ final class Kanzu_Support_Desk {
      * KSD options using a single options key
      */
     private $ksd_options_name = "kanzu_support_desk";
+    
+    /**
+     * The name used to store KSD admin notices in the Db
+     */
+    public $ksd_admin_notices = "ksd_admin_notices";    
 
     /**
      * Session instance.
