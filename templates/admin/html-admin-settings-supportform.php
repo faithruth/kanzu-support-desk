@@ -2,25 +2,21 @@
     <h3><?php _e ( 'Customer Support Form Options', 'kanzu-support-desk' ); ?> </h3>  
     <div class="setting">
         <label for="page_submit_ticket"><?php _e ( 'Support Form Page', 'kanzu-support-desk' ); ?></label>            
-            <div class="ksd-input-wrapper">
-                <select name="page_submit_ticket">
-                <option value="0">--</option>
-                <?php foreach ( get_pages ( ) as $page ) { ?>
-                    <option value="<?php echo $page->ID; ?>" 
-                        <?php selected ( $page->ID, $settings['page_submit_ticket']); ?>> 
-                            <?php echo $page->post_title; ?>  
-                    </option>
-                <?php } ?>                         
-                </select> 
-                <span class="description"><?php _e ( 'This is the page on which customers will submit tickets. The [ksd_support_form] short code must be on this page.', 'kanzu-support-desk' ); ?></span>
-            </div>
+        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php  _e( 'This is the page on which customers will submit tickets. The [ksd_support_form] short code must be on this page.', 'kanzu-support-desk' ); ?>"/>
+        <select name="page_submit_ticket">
+        <option value="0">--</option>
+        <?php foreach ( get_pages ( ) as $page ) { ?>
+            <option value="<?php echo $page->ID; ?>" 
+                <?php selected ( $page->ID, $settings['page_submit_ticket']); ?>> 
+                    <?php echo $page->post_title; ?>  
+            </option>
+        <?php } ?>                         
+        </select> 
     </div>     
     <div class="setting">
         <label for="show_support_tab"><?php _e ( 'Show support button', 'kanzu-support-desk' ); ?></label>
-        <div class="ksd-input-wrapper">
-            <input name="show_support_tab"  type="checkbox" <?php checked ( $settings['show_support_tab'], "yes") ?> value="yes"  />        
-            <span class="description"><?php _e ( 'When enabled, shows a support button in the bottom right of your site which your customers can use to log new tickets', 'kanzu-support-desk' ); ?></span>
-        </div>
+        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php  _e( 'When enabled, shows a support button in the bottom right of your site which your customers can use to log new tickets', 'kanzu-support-desk' ); ?>"/>
+        <input name="show_support_tab"  type="checkbox" <?php checked ( $settings['show_support_tab'], "yes") ?> value="yes"  />        
     </div>
     
     <div class="setting show_support_tab">
@@ -29,18 +25,16 @@
     </div>
     <div class="setting">
         <label for="page_my_tickets"><?php _e ( 'My Tickets Page', 'kanzu-support-desk' ); ?></label>
-            <div class="ksd-input-wrapper">
-                <select name="page_my_tickets">
-                    <option value="0">--</option>
-                    <?php foreach ( get_pages ( ) as $page ) { ?>
-                        <option value="<?php echo $page->ID; ?>" 
-                            <?php selected ( $page->ID, $settings['page_my_tickets']); ?>> 
-                            <?php echo $page->post_title; ?>  
-                        </option>
-                            <?php } ?>                         
-                </select>
-                <span class="description"><?php _e ( 'This is the page on which customers will view all their tickets. The [ksd_my_tickets] short code must be on this page.', 'kanzu-support-desk' ); ?></span>
-            </div>
+        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php  _e( 'This is the page on which customers will view all their tickets. The [ksd_my_tickets] short code must be on this page.', 'kanzu-support-desk' ); ?>"/>
+        <select name="page_my_tickets">
+            <option value="0">--</option>
+            <?php foreach ( get_pages ( ) as $page ) { ?>
+                <option value="<?php echo $page->ID; ?>" 
+                    <?php selected ( $page->ID, $settings['page_my_tickets']); ?>> 
+                    <?php echo $page->post_title; ?>  
+                </option>
+                    <?php } ?>                         
+        </select>
     </div>     
     <div class="setting show_support_tab">
         <label for="support_button_text"><?php _e ( 'Subject', 'kanzu-support-desk' ); ?></label>
@@ -61,24 +55,18 @@
     </div>      
     <div class="setting">
         <label for="supportform_show_categories"><?php _e ( 'Show  categories', 'kanzu-support-desk' ); ?></label>
-        <div class="ksd-input-wrapper">
-            <input name="supportform_show_categories"  type="checkbox" <?php checked ( $settings['supportform_show_categories'], "yes") ?> value="yes"  />        
-            <span class="description"><?php _e ( 'When enabled, a ticket category option is added to the support form.', 'kanzu-support-desk' ); ?></span>
-        </div>
+        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php  _e( 'When enabled, a ticket category option is added to the support form.', 'kanzu-support-desk' ); ?>"/>
+        <input name="supportform_show_categories"  type="checkbox" <?php checked ( $settings['supportform_show_categories'], "yes") ?> value="yes"  />        
     </div>
     <div class="setting">
         <label for="supportform_show_products"><?php _e ( 'Show  Products', 'kanzu-support-desk' ); ?></label>
-        <div class="ksd-input-wrapper">
-            <input name="supportform_show_products"  type="checkbox" <?php checked ( $settings['supportform_show_products'], "yes") ?> value="yes"  />        
-            <span class="description"><?php _e ( 'When enabled, your products are added to the support form.', 'kanzu-support-desk' ); ?></span>
-        </div>
+        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php  _e( 'When enabled, your products are added to the support form.', 'kanzu-support-desk' ); ?>"/>
+        <input name="supportform_show_products"  type="checkbox" <?php checked ( $settings['supportform_show_products'], "yes") ?> value="yes"  />        
     </div>    
     <div class="setting">
         <label for="supportform_show_severity"><?php _e ( 'Show severity options', 'kanzu-support-desk' ); ?></label>        
-        <div class="ksd-input-wrapper">
-            <input name="supportform_show_severity"  type="checkbox" <?php checked ( $settings['supportform_show_severity'], "yes") ?> value="yes"  />        
-            <span class="description"><?php _e ( 'When enabled, a ticket severity option is added to the support form.', 'kanzu-support-desk' ); ?></span>
-        </div>
+        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php  _e( 'When enabled, a ticket severity option is added to the support form.', 'kanzu-support-desk' ); ?>"/>
+        <input name="supportform_show_severity"  type="checkbox" <?php checked ( $settings['supportform_show_severity'], "yes") ?> value="yes"  />        
     </div>
     <div class="setting">
         <label for="enable_recaptcha"><?php _e ( 'Enable Google reCAPTCHA', 'kanzu-support-desk' ); ?></label>                        

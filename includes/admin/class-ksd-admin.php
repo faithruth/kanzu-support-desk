@@ -944,36 +944,6 @@ class KSD_Admin {
             }
     }
     
-    /**
-     * Ajax callback to change a user's role
-     * 
-     * @since 2.2.9
-     * 
-     */
-    public function ksd_change_user_role(){
-        $user_id = wp_update_user( array( 'ID' => sanitize_key( $_POST['user_id'] ), 'role' => sanitize_text_field( $_POST['role'] ) ) );
-        
-        if ( is_wp_error( $user_id ) ) {
-            $response                       = array();
-            $response['error']['message']   = __( 'Sorry, role change failed. Please try again', 'kanzu-support-desk' );
-        } else {
-            $response = __( 'Success!','kanzu-support-desk' );
-        }
-        echo json_encode( $response );
-        die();
-    }
-    
-    private function ksd_agent_list(){
-        $user_id        = 12;
-        $close_button   = "<a tabindex='-1' class='ksd-search-choice-close' href='#' data-ksd-user-id='{$user_id}'></a>";
-        echo "<ul class='ksd-agent-list ksd-user-list'><li>{$close_button} test one</li><li>{$close_button} test three</li></ul>";      
-    }
-    
-    private function ksd_supervisor_list(){
-        $close_button = '<a tabindex="-1" class="ksd-search-choice-close" href="#"></a>';
-        echo "<ul class='ksd-agent-list ksd-user-list'><li>{$close_button} test four</li><li>{$close_button} test five</li></ul>";      
-    }    
-
 
     /**
      * Include the files we use in the admin dashboard
