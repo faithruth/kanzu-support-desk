@@ -256,9 +256,27 @@ jQuery(document).ready(function () {
             });
         };
         
+        this.changeUserRole = function( userId, newRole ){
+            jQuery.post(
+                    ksd_admin.ajax_url,
+                    {   action: 'ksd_change_user_role',
+                        user_id: ui.item.ID,
+                        role: assignRole
+                    },
+            function (response) {
+                var respObj = {};
+                try {
+                    respObj = JSON.parse(response);
+                } catch (err) {
+                    return;
+                }
+            });   
+        };
+        
         this.autocompleteUsers = function () {
             jQuery( '.ksd-suggest-user' ).each( function(){
-                    var $this = jQuery( this );
+                    var $this       = jQuery( this );
+                    var assignRole  = $this.hasClass('ksd-agent-list') ? 'agent' : 'supervisor' ;
                     $this.autocomplete({
                             source:    ksd_admin.ajax_url + '?action=ksd_autocomplete_user',
                             delay:     500,
@@ -268,8 +286,20 @@ jQuery(document).ready(function () {
                             },
                             close: function() {
                                     jQuery( this ).removeClass( 'open' );
-                            }
+                            },
+                            select: function( event, ui ) {
+                                event.preventDefault();
+                                jQuery( this ).parent().find('.ksd-user-list').append('<li><a tabindex="-1" class="ksd-search-choice-close" href="#" data-ksd-user-id="'+ui.item.ID+'"></a>'+ui.item.value+'</li>');
+                                _this.changeUserRole( ui.item.ID, assignRole );
+                            }                                 
                     });
+            });
+            
+            jQuery('.ksd-user-list').on('click', '.ksd-search-choice-close', function (event) {
+                event.preventDefault();
+                var assignRole  = jQuery( this ).parents('.ksd-user-list').hasClass('ksd-agent-list') ? 'agent' : 'supervisor' ;
+                jQuery( this ).parent().remove();
+                 _this.changeUserRole( jQuery( this ).data( "ksdUserId" ), assignRole );
             });
         };        
         

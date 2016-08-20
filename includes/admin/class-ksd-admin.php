@@ -351,6 +351,7 @@ class KSD_Admin {
 			/* translators: 1: user_login, 2: user_email */
 			'label' => sprintf( __( '%1$s (%2$s)' ), $user->user_login, $user->user_email ),
 			'value' => $user->user_login,
+                        'ID'    => $user->ID
 		);
 	}
 
@@ -943,12 +944,34 @@ class KSD_Admin {
             }
     }
     
+    /**
+     * Ajax callback to change a user's role
+     * 
+     * @since 2.2.9
+     * 
+     */
+    public function ksd_change_user_role(){
+        $user_id = wp_update_user( array( 'ID' => sanitize_key( $_POST['user_id'] ), 'role' => sanitize_text_field( $_POST['role'] ) ) );
+        
+        if ( is_wp_error( $user_id ) ) {
+            $response                       = array();
+            $response['error']['message']   = __( 'Sorry, role change failed. Please try again', 'kanzu-support-desk' );
+        } else {
+            $response = __( 'Success!','kanzu-support-desk' );
+        }
+        echo json_encode( $response );
+        die();
+    }
+    
     private function ksd_agent_list(){
-      echo '<ul class="ksd-agent-list"><li>test one</li><li>test three</li></ul>';      
+        $user_id        = 12;
+        $close_button   = "<a tabindex='-1' class='ksd-search-choice-close' href='#' data-ksd-user-id='{$user_id}'></a>";
+        echo "<ul class='ksd-agent-list ksd-user-list'><li>{$close_button} test one</li><li>{$close_button} test three</li></ul>";      
     }
     
     private function ksd_supervisor_list(){
-      echo '<ul class="ksd-supervisor-list"><li>test two</li></ul>';      
+        $close_button = '<a tabindex="-1" class="ksd-search-choice-close" href="#"></a>';
+        echo "<ul class='ksd-agent-list ksd-user-list'><li>{$close_button} test four</li><li>{$close_button} test five</li></ul>";      
     }    
 
 

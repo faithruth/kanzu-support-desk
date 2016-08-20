@@ -1120,13 +1120,13 @@ ul.edit-ticket-options.ui-widget-header{
     float: left;
     width: 100%;
 }
-.ksd-agent-list,.ksd-supervisor-list{
+.ksd-user-list{
     list-style-type: none;
     display: inline-block;
     margin: 0;
     padding: 0;
 }
-.ksd-agent-list li,.ksd-supervisor-list li{
+.ksd-user-list li{
   -moz-user-select: none;
   background-clip: padding-box;
   background-color: #e4e4e4;
@@ -1141,6 +1141,17 @@ ul.edit-ticket-options.ui-widget-header{
   padding: 3px 5px 3px 18px;
   position: relative;
   float: left;
+}
+.ksd-search-choice-close{
+    background: rgba(0, 0, 0, 0) url("../images/select2.png") no-repeat scroll right top;
+    display: block;
+    font-size: 1px;
+    height: 13px;
+    outline: medium none;
+    position: absolute;
+    left: 3px;
+    top: 4px;
+    width: 12px;    
 }
 #ksd-migration-status{
     padding:5px 2px 2px 2px;
