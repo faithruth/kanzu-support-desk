@@ -151,6 +151,7 @@ final class Kanzu_Support_Desk {
      */
     private function includes() {
         //Do installation-related work
+        include_once( KSD_PLUGIN_DIR .'includes/admin/class-ksd-admin-notices.php' );
         include_once( KSD_PLUGIN_DIR .'includes/class-ksd-install.php' );
         include_once( KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php' );
 

@@ -77,8 +77,8 @@ class KSD_Install {
      * @since    1.0.0
      *
      */
-    public static function activate() { 
-        // Bail if activating from network, or bulk. @since 1.1.0
+    public static function activate() {       
+       // Bail if activating from network, or bulk. @since 1.1.0
         if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
             return;
         }
@@ -195,6 +195,8 @@ class KSD_Install {
              //Make the current user a supervisor. They need to re-select supervisors and agents
              global $current_user;
              KSD()->roles->add_supervisor_caps_to_user( $current_user );
+             $this->make_installer_ksd_owner();    
+             KSD_Admin_Notices::add_notice( 'update-roles' );//Inform the user of the changes they need to make
         }        
 
         if ( count( $dbChanges ) > 0 ) {  //Make the Db changes. We use $wpdb->query instead of dbDelta because of
