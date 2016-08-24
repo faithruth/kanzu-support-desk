@@ -21,13 +21,13 @@ class KSD_Admin_Notices {
     }
     
     public function display_admin_notices() {
-//        if ( ! current_user_can( 'ksd_manage_licenses') ){
-//            return;
-//        }
         $ksd_admin_notices = get_option( KSD()->ksd_admin_notices, array() );     
         if ( $ksd_admin_notices ) {
             $notice_body = '';
             foreach ( $ksd_admin_notices as $admin_notice_name ){
+                if( ! $this->current_user_can_view_notice( $admin_notice_name ) ){
+                    continue;
+                }
                 ob_start();
                 include_once( KSD_PLUGIN_DIR .  "templates/admin/notices/{$admin_notice_name}.php");
                 $notice_body .= ob_get_clean();                      
@@ -35,6 +35,18 @@ class KSD_Admin_Notices {
             echo $notice_body;        
         }
     }   
+    
+    /**
+     * Check if the current user can view the notice
+     * @param string $notice_name
+     * @return boolean
+     */
+    private function current_user_can_view_notice( $notice_name ){
+        if( 'update-roles' == $notice_name && current_user_can( 'ksd_manage_licenses' ) ){
+            return true;
+        }
+        return false;
+    }
     
     public function hide_admin_notices(){
         $notice_name = sanitize_key( $_GET['ksd_notice'] );
