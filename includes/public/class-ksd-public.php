@@ -79,7 +79,17 @@ class KSD_Public {
         
         //Add attachments to ticket content
         add_filter( 'ksd_the_ticket_content', array( $this, 'append_attachments_to_content' ), 10, 2 );
+        
+        //Filter ksd-public-grecaptcha script tags
+        add_filter( 'script_loader_tag', array( $this, 'add_async_defer_attributes' ), 10, 2 );
     }   
+    
+    public function add_async_defer_attributes( $tag, $handle ){
+        if( KSD_SLUG . '-public-grecaptcha' != $handle ){
+            return $tag;
+        }
+        return str_replace( ' src', ' async defer src', $tag );
+    }
     
     /**
      * In the ticket archive, only show the current user's
@@ -333,7 +343,7 @@ class KSD_Public {
         public function enqueue_public_scripts() {	
             if( ! is_admin() ){
                  wp_enqueue_media();
-            }           
+            }      
             wp_enqueue_script( 'media-upload' );
             wp_enqueue_script( 'thickbox' );
             wp_enqueue_script( KSD_SLUG . '-public-js', KSD_PLUGIN_URL .  'assets/js/ksd-public.js' , array( 'jquery', 'jquery-ui-core', 'jquery-ui-tooltip', 'media-upload', 'thickbox' ), KSD_VERSION );
@@ -363,7 +373,10 @@ class KSD_Public {
                     );    
             //Check whether enable_recaptcha is checked. 
             if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ) {
-               wp_enqueue_script( KSD_SLUG . '-public-grecaptcha', '//www.google.com/recaptcha/api.js', array(), KSD_VERSION );  
+               wp_enqueue_script( KSD_SLUG . '-public-grecaptcha', '//www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit', array(), KSD_VERSION ); 
+               wp_localize_script( KSD_SLUG . '-public-grecaptcha', 'ksd_grecaptcha', array(
+                   'site_key'       => $settings['recaptcha_site_key']
+               ) );
             }
    
         }

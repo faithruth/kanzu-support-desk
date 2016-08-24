@@ -85,7 +85,7 @@ endif;?>
             <?php if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
                 <li class="ksd-g-recaptcha">
                     <span class="ksd-g-recaptcha-error"></span>
-                    <div class="g-recaptcha" data-sitekey="<?php echo $settings['recaptcha_site_key']; ?>"></div>
+                    <div id="g-recaptcha-field" ></div>
                 </li>
             <?php endif; ?>
               <li class="ksd-public-submit">

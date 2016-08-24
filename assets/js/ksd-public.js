@@ -30,6 +30,11 @@ jQuery( document ).ready(function() {
         return true;
     };
     
+    //Explicitly render Google reCAPTCHA
+    recaptchaCallback = function(){
+        grecaptcha.render('g-recaptcha-field', {'sitekey' : ksd_grecaptcha.site_key});
+    }
+    
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function( form ){
         var targetFormDiv = 'div.ksd-support-form-submitted';//Make sure the following actions are on the correct form
