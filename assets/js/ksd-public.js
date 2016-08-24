@@ -32,8 +32,13 @@ jQuery( document ).ready(function() {
     
     //Explicitly render Google reCAPTCHA
     recaptchaCallback = function(){
-        grecaptcha.render('g-recaptcha-field', {'sitekey' : ksd_grecaptcha.site_key});
-    }
+        if( jQuery( '.g-recaptcha' ).length ){
+       // jQuery.each( jQuery( '.g-recaptcha' ), function( index, value ){
+         //   captchaID=jQuery( this ).attr('id');
+            grecaptcha.render( '.g-recaptcha', {'sitekey' : ksd_grecaptcha.site_key});
+      //  });
+        }
+    };
     
     /**AJAX: Log new ticket on submission of the new ticket form**/
     logNewTicket    = function( form ){
