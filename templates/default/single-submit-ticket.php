@@ -85,7 +85,7 @@ endif;?>
             <?php if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
                 <li class="ksd-g-recaptcha">
                     <span class="ksd-g-recaptcha-error"></span>
-                    <div id="g-recaptcha-field" ></div>
+                    <div id="<?php echo uniqid( 'g-recaptcha-field-' ); ?>" class="g-recaptcha"></div>
                 </li>
             <?php endif; ?>
               <li class="ksd-public-submit">
