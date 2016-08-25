@@ -1,22 +1,19 @@
-=== Kanzu Support Desk ===
+=== Kanzu Support Desk - A WordPress Helpdesk  Plugin ===
 Contributors: kanzucode
 Donate link: https://kanzucode.com/
-Tags: admin,administration,customer service,ticket,case,system,support,help,helpdesk,ticket system,support system,crm,contact
+Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.5
 Stable tag: 2.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kanzu Support Desk (KSD) is a simple, personal and powerful help desk solution that takes your customer support to the next level.
+Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer interactions fast & personal.
 
 == Description ==
 
-Great customer care is at the heart of every good product or service. Kanzu Support Desk breathes fresh life into help desk solutions
-so that you and your team can focus on what you do best-being awesome. This nifty and pretty plugin boasts of a native WordPress 
-interface so you don't have to worry about a learning curve-get up and running immediately!
-We do the heavy-lifting for you so you can focus on your customers. KSD was built with **SIMPLICITY** in the driving seat. 
-You'll love how simple and powerful it is. Ok ok, enough already! So...
+Great customer care is at the heart of every good product or service. Kanzu Support Desk simplifies the process of tracking customer requests, grouping them, assigning them and giving prompt
+feedback, all with a personal touch. KSD fits into your native WordPress interface like a hand in a snug glove so you get to do a lot intuitively.
 
 What's under the hood? Let's see:
 
