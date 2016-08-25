@@ -21,8 +21,9 @@ jQuery( document ).ready(function() {
     
     //Ensure that the Google reCAPTCHA checkbox was checked 
     isGoogleReCaptchaValid = function(){
-        if ( 'undefined' !== typeof(grecaptcha) ){
-            if (!grecaptcha.getResponse()){
+        if ( 'undefined' !== typeof(grecaptcha) ){            
+            var grecaptchaFormId = jQuery( 'div.ksd-support-form-submitted' ).find('.g-recaptcha').attr('id');
+            if (!grecaptcha.getResponse(grecaptchaWidgetIds[grecaptchaFormId])){
                 jQuery( "div.ksd-support-form-submitted form span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
                 return false;
             } 
@@ -31,9 +32,11 @@ jQuery( document ).ready(function() {
     };
     
     //Explicitly render Google reCAPTCHA forms
+    var grecaptchaWidgetIds = [];//Store the widget IDs. Used by isGoogleReCaptchaValid() to validate response
     recaptchaCallback = function(){
     jQuery('[id^=g-recaptcha-field-]').each(function () {
-            grecaptcha.render(this.id, {'sitekey': ksd_grecaptcha.site_key});
+           widgetId = grecaptcha.render(this.id, {'sitekey': ksd_grecaptcha.site_key});
+           grecaptchaWidgetIds[this.id] = widgetId;
         });
     };
  
