@@ -13,9 +13,9 @@ Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer 
 == Description ==
 
 Great customer care is at the heart of every good product or service. Kanzu Support Desk simplifies the process of tracking customer requests, grouping them, assigning them and giving prompt
-feedback, all with a personal touch. KSD fits into your native WordPress interface like a hand in a snug glove so you get to do a lot intuitively.
+feedback, all with a personal touch. KSD fits into your native WordPress interface like a hand in a snug glove so that you can get to do a lot intuitively.
 
-What's under the hood? Let's see:
+KSD allows you to:
 
 * Very simple user interface
 * Email Notifications to keep you and your customer up-to-date on a ticket's progress
