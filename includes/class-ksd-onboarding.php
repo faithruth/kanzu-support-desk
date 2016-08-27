@@ -159,7 +159,7 @@ class KSD_Onboarding {
                     'next_url'      => '',
                     'stage_notes'   => sprintf( '<p>%1$s</p><p><strong>%2$s</strong></p>',
                                             __('Great! Now you need to respond to the customer. You can send a response or choose to type a private note for another agent; private notes are NOT sent to your customer.','kanzu-support-desk'),
-                                            __( 'At the bottom of your screen is a textbox; type your response and click Reply to proceed.', 'kanzu-support-desk')
+                                            __( 'At the bottom of your screen is a textbox; type your response and click Send to proceed.', 'kanzu-support-desk')
                                               )
                 ),                
                 5   => array(
