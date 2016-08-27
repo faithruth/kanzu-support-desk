@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Kanzu Support Desk - A WordPress Helpdesk  Plugin
+ * Plugin Name:       Kanzu Support Desk - WordPress Helpdesk  Plugin
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
  * Description:       Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer interactions fast & personal.
  * Version:           2.2.9
