@@ -1532,7 +1532,7 @@ class KSD_Admin {
      */
     public function do_log_new_ticket( $new_ticket ) {      
         $this->do_admin_includes();
-        $TC = new KSD_Tickets_Controller();
+
         //Check if this was initiated from our notify_email, in which case it is a reply/new ticket from an agent  
         $ksd_settings = Kanzu_Support_Desk::get_settings();
         $agent_initiated_ticket = false;
@@ -1542,22 +1542,14 @@ class KSD_Admin {
         //First check if the ticket initiator exists in our users table. 
         $customer_details = get_user_by ( 'email', $new_ticket['ksd_cust_email'] );
         if (  $customer_details && $new_ticket['ksd_tkt_channel'] !== 'facebook' ) {//Customer's already in the Db, get their customer ID 
-            //Check whether it is a new ticket or a reply. We match against subject and ticket initiator
+                        
             $new_ticket['ksd_tkt_cust_id'] = $customer_details->ID;
+            $disable_ticket_author_check   = $this->is_user_staff( $customer_details );
+            $previous_ticket_id            = $this->check_if_ticket_exists( $new_ticket, $disable_ticket_author_check );
             
-            $value_parameters   = array();
-            $filter             = " post_title = %s AND post_status != %s AND post_author = %d ";
-
-            $value_parameters[] = sanitize_text_field( str_ireplace( "Re:", "", $new_ticket['ksd_tkt_subject'] ) ) ;  //Remove the Re: prefix from the subject of replies. @TODO Stands a very tiny chance of replacing other RE's in the subject                                                                                                                    //Note that we use str_ireplace because it is less expensive than preg_replace
-            $value_parameters[] = 'resolved' ;
-            $value_parameters[] = $new_ticket['ksd_tkt_cust_id'] ;
-
-            global $wpdb;
-            $TC->set_tablename( "{$wpdb->prefix}posts" );
-            $the_ticket = $TC->get_tickets( $filter, $value_parameters );
-            if ( count( $the_ticket ) > 0  ) {//This is a reply
+            if ( $previous_ticket_id > 0  ) {//This is a reply
                 //Create the array the reply function expects
-                $new_ticket['tkt_id']                       = $the_ticket[0]->ID;
+                $new_ticket['tkt_id']                       = $previous_ticket_id;
                 $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
                 $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
                 $new_ticket['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
@@ -1568,7 +1560,7 @@ class KSD_Admin {
 
         }
         //Handle Facebook channel replies
-        if( $new_ticket['ksd_tkt_subject'] === 'Facebook Reply' ){
+        if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
             $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
             $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
             $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
@@ -1580,6 +1572,64 @@ class KSD_Admin {
         }
         //This is a new ticket
         $this->log_new_ticket( $new_ticket, true );                        
+    }
+    
+    /**
+     * Check whether a new ticket already exists. If it does, return its current ID
+     * We check against the ticket subject and author
+     * 
+     * @param Object $new_ticket The new ticket to check
+     * @param boolean $disable_ticket_author_check Whether to check against the ticket author. We don't check if the check's being done
+     *                                              for a member of staff since they are not the ticket creator
+     * @returns int  $ticket_id 0 if the ticket doesn't exist. The ticket's ID if it does
+     * 
+     * @since 2.2.9
+     */
+    public function check_if_ticket_exists( $new_ticket, $disable_ticket_author_check=false ){
+        global $wpdb;
+        $ticket_id = 0;
+        
+        $TC = new KSD_Tickets_Controller();
+        $value_parameters   = array();
+        $filter             = " post_type = %s AND post_status != %s ";
+        $value_parameters[] = 'ksd_ticket' ;
+        $value_parameters[] = 'trash' ;
+        
+        if( ! $disable_ticket_author_check ){
+            $filter             .= " AND post_author = %d ";
+            $value_parameters[] = $new_ticket['ksd_tkt_cust_id'] ;
+        }
+       
+        $TC->set_tablename( "{$wpdb->prefix}posts" );
+        
+        $customers_previous_tickets = $TC->get_tickets( $filter, $value_parameters );
+        
+        if ( count( $customers_previous_tickets ) > 0  ) {
+            foreach( $customers_previous_tickets as $a_ticket ){
+                if( false !== strpos( $new_ticket['ksd_tkt_subject'], $a_ticket->post_title ) ){
+                    $ticket_id = $a_ticket->ID;   
+                    break;
+                }
+            }
+        }      
+        return $ticket_id;
+    }
+    
+    /**
+     * Check if the user's a member of staff. The only users  considered as staff
+     * are agents, supervisors and administrators
+     * 
+     * @param Object $user The user to check
+     * @return boolean Whether the user's a member of staff or not
+     */
+    public function is_user_staff( $user ){
+       if( ! isset( $user->roles ) || ! is_array( $user->roles )  ){
+           return false;
+       }
+       if( in_array( 'ksd_agent', $user->roles ) || in_array( 'ksd_supervisor', $user->roles ) || in_array( 'administrator', $user->roles ) ){
+           return true;
+       }
+       return false;
     }
 
     /**
