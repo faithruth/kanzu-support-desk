@@ -36,15 +36,6 @@
                     <?php } ?>                         
         </select>
     </div>     
-    <div class="setting show_support_tab">
-        <label for="support_button_text"><?php _e ( 'Subject', 'kanzu-support-desk' ); ?></label>
-        <input type="text" value="<?php _e ( 'Subject', 'kanzu-support-desk' ); ?>" size="15" name="support_button_text" />
-    </div>
-    <div class="setting show_support_tab">
-        <label for="support_button_text"><?php _e ( 'Message', 'kanzu-support-desk' ); ?></label>
-        <input type="text" value="<?php _e ( 'Message', 'kanzu-support-desk' ); ?>" size="15" name="support_button_text" />
-    </div>
-   
     <h3><?php _e ( 'Support Form fields', 'kanzu-support-desk' ); ?></h3>
     <div class="setting">
         <label for="enable_customer_signup"><?php _e ( 'Enable customer registration', 'kanzu-support-desk' ); ?></label>
