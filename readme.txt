@@ -17,19 +17,17 @@ feedback, all with a personal touch. KSD fits into your native WordPress interfa
 
 KSD allows you to:
 
-* Very simple user interface
-* Email Notifications to keep you and your customer up-to-date on a ticket's progress
-* Support for various products created using KSD itself, WooCommerce or Easy Digital Downloads
-* Multiple channels for ticket-creation: Front-end via a support form, backend via a pretty form, via Email as an optional add-on
-* Unlimited number of agents supported
-* Beautiful graphs to let you in on your performance
-* Private notes on tickets to allow agents share extra information on tickets with each other
-* Simple ticket re-assignment 
-* Ticket severity supported 
-* Translation-ready 
-
-This isn't a feature but it is worth mentioning that a great help desk plugin ought to have a good support team behind it. This one does,
-if we can say so ourselves :-)
+* Use a very simple, native WordPress interface
+* Receive email notifications to keep you and your happy customer up-to-date on a ticket's progress
+* Work seamlessly with WooCommerce or Easy Digital Downloads
+* Have multiple channels for ticket-creation. You can use a support form on the front-end of your site or a form in your admin panel. Using one of [our premium addons](https://kanzucode.com/downloads/category/kanzu-support-desk/), you can also enable support for tickets created by [email](https://kanzucode.com/downloads/kanzu-support-desk-mail/), [Facebook](https://kanzucode.com/downloads/kanzu-support-desk-facebook/) or [Twitter](https://kanzucode.com/downloads/kanzu-support-desk-twitter/). 
+* Have as many agents as you want
+* Track changes to a ticket from a ticket log
+* Monitor your performance from beautiful graphs on your dashboard
+* Create private notes on tickets to allow agents share extra information on tickets with each other
+* Re-assign tickets in a jiffy
+* Group tickets based on products/categories/tags/departments - whatever works for you 
+* Change to a language you prefer since the plugin supports translation. You can [contribute to translations here](https://translate.wordpress.org/projects/wp-plugins/kanzu-support-desk)
 
 == Installation ==
 
@@ -38,7 +36,11 @@ if we can say so ourselves :-)
 1. Navigate to the 'Add New' in the plugins dashboard
 2. Search for 'kanzu-support-desk'
 3. Click 'Install Now'
-4. Activate the plugin on the Plugin dashboard
+4. Activate the plugin in the Plugin dashboard
+5. Follow the on-screen instructions to create your first ticket
+6. Use shortcode [ksd_support_form] to create a support form anywhere.
+7. Alternatively, use the support form widget
+8. Use the [ksd_my_tickets] shortcode on the page users will use to track responses to their tickets
 
 = Uploading in WordPress Dashboard =
 
@@ -56,19 +58,22 @@ if we can say so ourselves :-)
 4. Activate the plugin in the Plugin dashboard
 
 = After activation =
-You'll get an intro message and walk through an quick tour of the plugin. 
-Two pages will be created automatically on activation:
-1. My Tickets       - It shows a customer's tickets after they log in
-2. Submit Ticket    - Allows customers to submit tickets
+You'll get an intro message and walk through an quick tour of the plugin. You'll create your first ticket and see how to send a reply and make changes to it.
 
-Ticket submission can also be done using the Support form hidden in the bottom left corner
-of your site. There's also a support form Widget should you require it. Optionally, you could 
-get our [Mail add-on](kanzucode.com/downloads/kanzu-support-desk-mail) to allow your customers 
-create tickets by emailing your support email address.
+At installation, two pages are created automatically:
 
-To add CAPTCHA to your support form, go [here](https://www.google.com/recaptcha/admin), get Google reCAPTCHA keys and then add them to your KSD settings
+1. Submit Ticket    - Has a support form for customers to submit tickets
+2. My Tickets       - Shows a customer's tickets after they log in. They'll track ticket progress here
 
-Please check out [our documentation here](https://kanzucode.com/documentation/wordpress-customer-service-plugin-ksd-getting-started/) for a more detailed walk-through should you need it
+== Support Forms ==
+In case you'd like to have extra support forms, use shortcode [ksd_support_form] to create a support form anywhere. Alternatively, use the support form widget
+If you'd like customers to be able to use a support form tucked away in the bottom right of every page on your site, enable the "Show support button" option in your KSD settings.
+
+You can also get our [Mail add-on](https://kanzucode.com/downloads/kanzu-support-desk-mail) to allow your customers create tickets by emailing your support email address.
+
+Adding CAPTCHA inputs to a form is a good way to prevent spam. To add CAPTCHA to your support form, go [here](https://www.google.com/recaptcha/admin), get Google reCAPTCHA keys and then add them to your KSD settings.
+
+Please check out [our documentation here](https://kanzucode.com/kb_topic/kb-kanzu-support-desk/) for a more detailed walk-through should you need it
 
 = Follow the action =
 Contribute to the dev process on [GitHub](https://github.com/kanzucode/kanzu-support-desk)<br />
@@ -82,19 +87,23 @@ No, you cannot unfortunately
 
 = Can my customers log tickets by sending me an email? =
 
-With an optional add-on activated, yes they can. By default though, they can use a support form on your website
+With an [optional add-on activated](https://kanzucode.com/downloads/kanzu-support-desk-mail), yes they can. By default though, they can use a support form on your website
 
 = Where can I find KSD documentation and user guides? =
 
-For help setting-up and configuring KSD, please refer to our [user guide](https://kanzucode.com/documentation/wordpress-customer-service-plugin-ksd-getting-started/)
-
-= Where can I get support? =
-
-If you get stuck, please ask for help on the [KSD Support Forum](http://kanzucode.com/forums/forum/wp-kanzu-support-desk/)
+For help setting-up and configuring KSD, please refer to our [user guide](https://kanzucode.com/kb_topic/kb-kanzu-support-desk/)
 
 = Will KSD work with my theme? =
 
 Yes, it will
+
+= Can a customer reply to the agent email from his inbox? = 
+
+You'd need to have [the email add-on](https://kanzucode.com/downloads/kanzu-support-desk-mail) active for this to work
+
+= Can an agent delete a ticket? =
+
+No. Only supervisors and administrators can delete tickets
 
 == Screenshots ==
 
@@ -107,8 +116,9 @@ Yes, it will
 7. Private note support
 
 == Changelog ==
-= 2.2.9, July 15, 2016 =
+= 2.2.9, August 27, 2016 =
  * Add custom KSD roles
+ * Restore Analytics
 
 = 2.2.8, May 31, 2016 =
  * BUG FIX | Remove lingering UA Analytics
