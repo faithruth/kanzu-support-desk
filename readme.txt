@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.5
-Stable tag: 2.2.9
+Stable tag: 2.2.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,10 +37,6 @@ KSD allows you to:
 2. Search for 'kanzu-support-desk'
 3. Click 'Install Now'
 4. Activate the plugin in the Plugin dashboard
-5. Follow the on-screen instructions to create your first ticket
-6. Use shortcode [ksd_support_form] to create a support form anywhere.
-7. Alternatively, use the support form widget
-8. Use the [ksd_my_tickets] shortcode on the page users will use to track responses to their tickets
 
 = Uploading in WordPress Dashboard =
 
@@ -116,6 +112,9 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+= 2.2.10, August 27, 2016 =
+ * BUG FIX | Autofix new roles and capabilities for any user who's update didn't do it
+
 = 2.2.9, August 27, 2016 =
  * Add custom KSD roles
  * Restore Analytics
