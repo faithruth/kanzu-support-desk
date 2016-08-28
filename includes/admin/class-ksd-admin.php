@@ -895,25 +895,51 @@ class KSD_Admin {
      * Add menu items in the admin panel 
      */
     public function add_menu_pages() {
-            //Add the top-level admin menu
-            $page_title = 'Kanzu Support Desk';
-            $capability = 'manage_ksd_settings';
-            $menu_slug  = 'edit.php?post_type=ksd_ticket';
-            $function   = 'output_admin_menu_dashboard';
+        //Add the top-level admin menu
+        $page_title = 'Kanzu Support Desk';
+        $capability = 'manage_ksd_settings';
+        $menu_slug  = 'edit.php?post_type=ksd_ticket';
+        $function   = 'output_admin_menu_dashboard';
 
-            //Add the ticket sub-pages. 
-            $ticket_types = array();
-            $ticket_types['ksd-dashboard']  =   __( 'Dashboard', 'kanzu-support-desk' );
-            $ticket_types['ksd-settings']   =   __( 'Settings', 'kanzu-support-desk' );
-            $ticket_types['ksd-addons']     =   '<span style="color:#d54e21;">' .__( 'Add-ons', 'kanzu-support-desk' ). '</span>';           
+        //Add the ticket sub-pages. 
+        $ticket_types = array();
+        $ticket_types['ksd-dashboard']  =   __( 'Dashboard', 'kanzu-support-desk' );
+        $ticket_types['ksd-settings']   =   __( 'Settings', 'kanzu-support-desk' );
+        $ticket_types['ksd-addons']     =   '<span style="color:#d54e21;">' .__( 'Add-ons', 'kanzu-support-desk' ). '</span>';           
 
-            foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
-                add_submenu_page( $menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array( $this,$function ) );                        		
-            } 
-            //Remove ticket tags
-            remove_submenu_page( 'edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket' );  
+        foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
+            add_submenu_page( $menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array( $this,$function ) );                        		
+        } 
+        //Remove ticket tags
+        remove_submenu_page( 'edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket' ); 
+        $this->reset_user_rights();
+        
     }
 
+    /**
+     * Temporarily added in 2.2.10 to fix
+     * user rights for anyone who upgrades from 2.2.8 and doesn't get the new roles
+     * 
+     * Remove this > 2.2.10
+     */
+    private function reset_user_rights(){
+        if( ! isset( $_GET['post_type'] ) || ! isset( $_GET['taxonomy'] ) ){
+            return;
+        }
+        if( 'ksd_ticket' != sanitize_text_field( $_GET['post_type'] ) ){
+            return;
+        }
+        if( current_user_can( 'manage_options' ) && ! current_user_can( 'manage_ksd_settings' ) && ! current_user_can( 'edit_ksd_ticket' ) ){
+            KSD()->roles->create_roles();
+            KSD()->roles->modify_all_role_caps( 'add' );  
+            //Make the current user a supervisor. They need to re-select supervisors and agents
+            global $current_user;
+            KSD()->roles->add_supervisor_caps_to_user( $current_user );
+            $user = new WP_User( $current_user->ID );
+            KSD()->roles->modify_default_owner_caps( $user, 'add_cap' );   
+            KSD_Admin_Notices::add_notice( 'update-roles' );//Inform the user of the changes they need to make            
+        }
+    }
     /**
      * Add the button used to add attachments to a ticket
      * @param string $editor_id The editor ID
