@@ -80,6 +80,8 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
         add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );
         add_action( 'wp_ajax_ksd_autocomplete_user', array( $this, 'autocomplete_user' ) );
+        add_action( 'wp_ajax_ksd_change_user_role', array( $this, 'change_user_role' ) );
+        
 
       
         //Generate a debug file
@@ -976,6 +978,65 @@ class KSD_Admin {
             echo json_encode( $response );
             die();// IMPORTANT: don't leave this out
     }
+
+    /**
+     * Ajax callback to change a user's role
+     * 
+     * @since 2.2.9
+     * 
+     */
+    public function change_user_role(){
+        
+        $user_id    = sanitize_key( $_POST['user_id'] );
+        $role       = sanitize_text_field( $_POST['role'] ) ;
+        $change     = sanitize_text_field( $_POST['change'] ) ;//Can be add_role/remove_role
+        $response   = array();
+        
+        if( ! current_user_can( 'manage_options' ) ){           
+            $response['error']['message']   = __( 'Sorry, you are not authorized to make this change.', 'kanzu-support-desk' );            
+        }
+        elseif( 'add_role' != $change && 'remove_role' != $change ){
+            $response['error']['message']   = __( 'Sorry, unrecognized role change. Please try again', 'kanzu-support-desk' );    
+        }else{
+            $user       = get_user_by('id', $user_id );  
+            
+            /**
+             * The challenge with this $user->add_role( 'new_role' ) or $user->remove_role( 'old_role' )
+             * is that it doesn't return a response. There's no way of telling whether the
+             * role was successfully added.
+             * 
+             */
+            $user->add_role( $role );  
+            $response['message'] = __( 'Success!','kanzu-support-desk' );            
+        }
+        KSD()->log($user);
+        echo json_encode( $response );
+        die();
+    }
+    
+    /**
+     * Retrieves unordered list of KSD Agents
+     * Used in settings template templates/admin/html-admin-settings.php 
+     */
+    private function ksd_agent_list(){
+        $args       =   array( 'role' => 'ksd_agent' );
+        $agents     = get_users( $args );
+        $role_html  = "<ul class='ksd-agent-list ksd-user-list'>";
+        $close_button           = "<a tabindex='-1' class='ksd-search-choice-close' href='#' data-ksd-user-id='{$user_id}'></a>";
+        $ajax_response_element  = '<li class="hidden ksd-user-agent-response"></li>';
+        foreach ( $agents as $agent ){
+            $role_html.="<li>{$close_button} {$agent->display_name}</li>";
+        }
+        $role_html.="{$ajax_response_element}</ul>";
+        echo $role_html;      
+    }
+    
+    private function ksd_supervisor_list(){
+        $close_button           = '<a tabindex="-1" class="ksd-search-choice-close" href="#"></a>';
+        $ajax_response_element  = '<li class="hidden ksd-user-agent-response"></li>';
+        echo "<ul class='ksd-agent-list ksd-user-list'><li>{$close_button} test four</li><li>{$close_button} test five</li>{$ajax_response_element}</ul>";      
+    }    
+
 
     /** 
      * Filter tickets in the 'tickets' view 

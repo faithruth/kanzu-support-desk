@@ -65,6 +65,18 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <option value=""><?php _e ( 'No One', 'kanzu-support-desk' ); ?></option>
                     </select>                    
                 </div> 
+                <div class="setting">
+                    <label for="ksd_agents"><?php _e ( 'Users that manage tickets', 'kanzu-support-desk' ); ?></label>                
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Only these users can manage tickets. All other users won't have access to your support desk. Note that the Administrator role always has access.", 'kanzu-support-desk' ); ?>"/>
+                    <input type="text" value="" size="30" name="ksd_agents" class="ksd-suggest-user"/>
+                    <?php $this->ksd_agent_list(); ?>                   
+                </div>
+                <div class="setting">
+                    <label for="ksd_supervisors"><?php _e ( 'Supervisors', 'kanzu-support-desk' ); ?></label>                
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "Only these users can manage ticket settings and agents", 'kanzu-support-desk' ); ?>"/>
+                    <input type="text" value="" size="30" name="ksd_supervisors" class="ksd-suggest-user"/>   
+                    <?php $this->ksd_supervisor_list(); ?>
+                </div>                  
 <!--              <div class="setting">
                    <label for="onboarding_changes"><?php _e ( 'Enable tour mode', 'kanzu-support-desk' ); ?></label>                
                    <input name="onboarding_changes"  type="checkbox" <?php checked ( $settings['tour_mode'], "yes") ?> value="yes"  />
