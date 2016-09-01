@@ -23,12 +23,12 @@ jQuery( document ).ready(function() {
     isGoogleReCaptchaValid = function(){
         if ( 'undefined' !== typeof(grecaptcha) ){            
             var grecaptchaFormId = jQuery( 'div.ksd-support-form-submitted' ).find('.g-recaptcha').attr('id');
-            if (!grecaptcha.getResponse(grecaptchaWidgetIds[grecaptchaFormId])){
-                jQuery( "div.ksd-support-form-submitted form span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
-                return false;
+            if ( grecaptcha.getResponse(grecaptchaWidgetIds[grecaptchaFormId])){
+                return true;
             } 
-        }      
-        return true;
+        }    
+        jQuery( "div.ksd-support-form-submitted form span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
+        return false;
     };
     
     //Explicitly render Google reCAPTCHA forms
