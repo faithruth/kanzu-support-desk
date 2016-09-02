@@ -33,7 +33,7 @@ jQuery( document ).ready(function() {
     
     //Explicitly render Google reCAPTCHA forms
     var grecaptchaWidgetIds = [];//Store the widget IDs. Used by isGoogleReCaptchaValid() to validate response
-    recaptchaCallback = function(){
+    ksdRecaptchaCallback = function(){
     jQuery('[id^=g-recaptcha-field-]').each(function () {
            widgetId = grecaptcha.render(this.id, {'sitekey': ksd_grecaptcha.site_key});
            grecaptchaWidgetIds[this.id] = widgetId;
