@@ -3,31 +3,7 @@
 do_action( 'ksd_load_addons' );
 
     $prospective_addons = array();
-    $prospective_addons[] = array(
-        'name' => 'Customer Satisfaction',
-        'image' => 'feedback',
-        'description' => 'Get to know how well your customer service is performing by asking your customer to rate their experience. Get an NPS score that shows your performance'
-    );
-    $prospective_addons[] = array(
-        'name' => 'Reports',
-        'image' => 'reports',
-        'description' => 'Get detailed reports in your dashboard showing top support agents, tickets by channel, average first reply time, etc '
-    );
-    $prospective_addons[] = array(
-        'name' => 'Twitter',
-        'image' => 'twitter',
-        'description' => 'Have tickets automatically created from tweets. Handle the new tickets like you would any other ticket'
-    );
-    $prospective_addons[] = array(
-        'name' => 'Facebook',
-        'description' => 'Automatically turn posts on your wall into tickets. Respond to these posts from inside Kanzu Support Desk',
-        'image' => 'facebook'
-    );
-    $prospective_addons[] = array(
-        'name' => 'Knowledge Base',
-        'description' => 'Over 50% of your customers prefer self-service; empower them to do just that with this add-on. Create tutorials & in-depth articles to help your DIY customer.',
-        'image' => 'knowledge'
-    );
+
     $prospective_addons[] = array(
         'name' => 'Live Chat',
         'image' => 'chat',
