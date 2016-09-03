@@ -766,8 +766,13 @@ ul#ksd-ticket-replies li {
     margin-bottom: 0;
     padding: 8px 12px 0;
 }
-.ksd-ticket-post-body #edit-slug-box {
+.ksd-ticket-post-body #ksd-edit-slug-box {
   font-size: 0.8em;
+  line-height: 24px;
+  min-height: 25px;
+  margin-top: 5px;
+  padding: 0 10px;
+  color: #666;
 }
 #ksd-ticket-messages h3.hndle.ui-sortable-handle{
     display: none;

@@ -888,6 +888,11 @@ jQuery(document).ready(function () {
          * @returns {undefined}
          */
         this.ticketInfo = function(){
+            //Remove the default WP permalink for tickets with hash URLs
+            if( jQuery('#ksd-edit-slug-wrapper').length){
+                jQuery('#edit-slug-box').remove();
+            }
+                
             jQuery('input#ksd-update-ticket-info').click(function(){
                 jQuery('#ksd-ticket-info-action span.spinner').addClass('is-active');
                 var post_title = jQuery('input[name=post_title]').val();

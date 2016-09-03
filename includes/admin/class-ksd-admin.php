@@ -99,6 +99,9 @@ class KSD_Admin {
 
         //Add items to the submitdiv in 'edit ticket' view
         add_action( 'post_submitbox_misc_actions', array( $this, 'edit_submitdiv' ) );
+        
+        //Add hash URLs to single ticket view
+        add_action( 'edit_form_before_permalink', array( $this, 'show_hash_url') );
 
         //Save ticket and its information
         add_filter( 'wp_insert_post_data' , array( $this, 'save_ticket_info' ) , '99', 2 );
@@ -149,6 +152,7 @@ class KSD_Admin {
         
         //Send tracking data
         add_action( 'admin_head', array( $this, 'send_tracking_data' ) );
+        
     }
     
 
@@ -215,7 +219,6 @@ class KSD_Admin {
                                         'admin_post_url'            =>  admin_url( 'admin-post.php' ),
                                         'ksd_admin_nonce'           =>  wp_create_nonce( 'ksd-admin-nonce' ),
                                         'ksd_tickets_url'           =>  admin_url( 'admin.php?page=ksd-tickets' ),
-                                        'ksd_agents_list'           =>  self::get_agent_list( $settings['ticket_management_roles'] ),
                                         'ksd_current_user_id'       =>  get_current_user_id(),
                                         'ksd_labels'                =>  $admin_labels_array,
                                         'enable_anonymous_tracking' =>  $settings['enable_anonymous_tracking'],
@@ -605,6 +608,23 @@ class KSD_Admin {
         }
         include_once( KSD_PLUGIN_DIR .  "templates/admin/metaboxes/html-ksd-ticket-info.php");
     }
+    
+    /**
+     * While viewing a single ticket that has a hash URL,
+     * display it in place of the permalink
+     * 
+     * @param Object $post
+     */
+    public function show_hash_url( $post ){
+        if ( $post->post_type !== 'ksd_ticket' ) {
+            return;
+        }
+        $hash_url =   get_post_meta( $post->ID, '_ksd_tkt_info_hash_url', true );            
+        if ( empty(  $hash_url ) ) {
+            return;
+        }      
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/metaboxes/hash-url.php");
+    }
 
 
     /**
@@ -749,35 +769,6 @@ class KSD_Admin {
         }        
     }
 
-    /**
-     * Get a list of agents
-     * @param string $roles The WP Roles with access to KSD
-     * @param boolean $as_options Return the agent list as select options. 
-     * @return An unordered list of agents or select options depending on $as_options
-     */
-    public static function get_agent_list( $roles="", $as_options = false ) {
-        if ( empty( $roles ) ) {
-            $settings = Kanzu_Support_Desk::get_settings();
-            $roles = $settings['ticket_management_roles'];
-        }
-        include_once( KSD_PLUGIN_DIR.  "includes/libraries/class-ksd-controllers.php");//@since 1.5.0 filter the list to return users in certain roles
-        $UC = new KSD_Users_Controller();
-        
-        $user_IDs = array();
-        
-        $tmp_user_IDs = $UC->get_users_with_roles( $roles );
-        foreach ( $tmp_user_IDs as $userID ) {
-            $user_IDs[] = $userID->user_id;
-        }
-        $agents_list = ( ! $as_options ? "<ul class='ksd_agent_list hidden'>" : "" );//The available list of agents
-            foreach (  get_users( array( 'include' => $user_IDs ) ) as $agent ) {
-                $agents_list .= ( !$as_options ? "<li ID=". $agent->ID.">".esc_html( $agent->display_name )."</li>" : "<option value=". $agent->ID.">".esc_html( $agent->display_name )."</option>" );
-            }
-         if ( !$as_options ) {
-             $agents_list .= "</ul>";
-         }
-         return $agents_list;
-    }
 
     /*
      * Get categories options
