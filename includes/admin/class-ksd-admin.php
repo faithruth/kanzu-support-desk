@@ -2485,29 +2485,27 @@ class KSD_Admin {
       * @since 1.5.5
       */
      private function do_notify_new_ticket( $notify_email, $tkt_id, $customer_email = null, $ticket_subject = null, $ticket_message = null, $attachments = array() ) {                    
-        $ksd_settings = Kanzu_Support_Desk::get_settings(); 
-        //If new ticket notifications have been set, inform the primary administrator that a new ticket has been logged          
-        if ( "yes" == $ksd_settings['enable_notify_on_new_ticket'] ) {                   
-            // The blogname option is escaped with esc_html on the way into the database in sanitize_option
-            // we want to reverse this for the plain text arena of emails.
-            $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
-            $notify_new_tkt_message  = sprintf( __('New customer support ticket on your site %s:', 'kanzu-support-desk'), $blog_name ) . "\r\n\r\n";
-            if ( !is_null( $customer_email ) ) {
-                $notify_new_tkt_message .= sprintf( __('Customer E-mail: %s', 'kanzu-support-desk'), $customer_email ) . "\r\n\r\n";   
-            }
-            if ( !is_null( $ticket_subject ) ) {
-                $notify_new_tkt_message .= sprintf( __('Ticket Subject: %s', 'kanzu-support-desk'), $ticket_subject ) . "\r\n\r\n";   
-            }
-            if ( !is_null( $ticket_message ) ) {
-                $notify_new_tkt_message .= sprintf( __('Ticket Message: %s', 'kanzu-support-desk'), $ticket_message ) . "\r\n\r\n";   
-            }
-            $notify_new_tkt_message .= Kanzu_Support_Desk::output_ksd_signature( $tkt_id );
-            $notify_new_tkt_subject = sprintf( __('[%s] New Support Ticket'), $blog_name );
+        $ksd_settings = Kanzu_Support_Desk::get_settings();                  
+        // The blogname option is escaped with esc_html on the way into the database in sanitize_option
+        // we want to reverse this for the plain text arena of emails.
+        $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
+        $notify_new_tkt_message  = sprintf( __('New customer support ticket on your site %s:', 'kanzu-support-desk'), $blog_name ) . "\r\n\r\n";
+        if ( !is_null( $customer_email ) ) {
+            $notify_new_tkt_message .= sprintf( __('Customer E-mail: %s', 'kanzu-support-desk'), $customer_email ) . "\r\n\r\n";   
+        }
+        if ( !is_null( $ticket_subject ) ) {
+            $notify_new_tkt_message .= sprintf( __('Ticket Subject: %s', 'kanzu-support-desk'), $ticket_subject ) . "\r\n\r\n";   
+        }
+        if ( !is_null( $ticket_message ) ) {
+            $notify_new_tkt_message .= sprintf( __('Ticket Message: %s', 'kanzu-support-desk'), $ticket_message ) . "\r\n\r\n";   
+        }
+        $notify_new_tkt_message .= Kanzu_Support_Desk::output_ksd_signature( $tkt_id );
+        $notify_new_tkt_subject = sprintf( __('[%s] New Support Ticket'), $blog_name );
 
-            //Use two filters, ksd_new_ticket_notifxn_message and ksd_new_ticket_notifxn_subject, to make changes to the
-            //the notification message and subject by add-ons
-            $this->send_email( $notify_email, apply_filters( 'ksd_new_ticket_notifxn_message', $notify_new_tkt_message, $ticket_message , $ksd_settings, $tkt_id ), apply_filters( 'ksd_new_ticket_notifxn_subject', $notify_new_tkt_subject, $ticket_subject , $ksd_settings, $tkt_id ), null, $attachments );                  
-            } 
+        //Use two filters, ksd_new_ticket_notifxn_message and ksd_new_ticket_notifxn_subject, to make changes to the
+        //the notification message and subject by add-ons
+        $this->send_email( $notify_email, apply_filters( 'ksd_new_ticket_notifxn_message', $notify_new_tkt_message, $ticket_message , $ksd_settings, $tkt_id ), apply_filters( 'ksd_new_ticket_notifxn_subject', $notify_new_tkt_subject, $ticket_subject , $ksd_settings, $tkt_id ), null, $attachments );                  
+
 
      }
 

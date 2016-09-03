@@ -42,11 +42,6 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <textarea cols="60" rows="4" name="ticket_mail_message"><?php echo $settings['ticket_mail_message']; ?></textarea>
                     </div>
                 </div><!--.enable_new_tkt_notifxns-->
-                <div class="setting">
-                    <label for="enable_notify_on_new_ticket"><?php _e ( 'Enable new ticket notifications', 'kanzu-support-desk' ); ?></label>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "If enabled, an email is sent to the ticket assignee whenever a new ticket is logged. If there's no assignee, the notification is sent to the primary administrator", 'kanzu-support-desk' ); ?>"/>
-                    <input name="enable_notify_on_new_ticket"  type="checkbox" <?php checked ( $settings['enable_notify_on_new_ticket'], "yes") ?> value="yes"  />                    
-                </div>
                 <!--<div class="setting enable_notify_on_new_ticket">
                       <label for="notify_email"><?php _e ( 'Send notifications to', 'kanzu-support-desk' ); ?></label>
                       <input type="text" value="<?php echo $settings['notify_email']; ?>" size="30" name="notify_email" />

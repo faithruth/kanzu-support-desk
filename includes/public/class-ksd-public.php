@@ -373,10 +373,10 @@ class KSD_Public {
                     );    
             //Check whether enable_recaptcha is checked. 
             if ( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ) {
-              // wp_enqueue_script( KSD_SLUG . '-public-grecaptcha', '//www.google.com/recaptcha/api.js?onload=ksdRecaptchaCallback&render=explicit', array(), KSD_VERSION ); 
-            //   wp_localize_script( KSD_SLUG . '-public-grecaptcha', 'ksd_grecaptcha', array(
-              //     'site_key'       => $settings['recaptcha_site_key']
-              // ) );
+               wp_enqueue_script( KSD_SLUG . '-public-grecaptcha', '//www.google.com/recaptcha/api.js?onload=ksdRecaptchaCallback&render=explicit', array(), KSD_VERSION ); 
+               wp_localize_script( KSD_SLUG . '-public-grecaptcha', 'ksd_grecaptcha', array(
+                   'site_key'       => $settings['recaptcha_site_key']
+               ) );
             }
    
         }
