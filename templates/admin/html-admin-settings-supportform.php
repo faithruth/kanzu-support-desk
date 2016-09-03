@@ -69,12 +69,12 @@
     
     <div class="setting enable_recaptcha">
         <label for="recaptcha_site_key"><?php _e ( 'Google reCAPTCHA Site Key', 'kanzu-support-desk' ); ?></label>                
-        <input type="text" value="<?php echo $settings['recaptcha_site_key']; ?>" size="30" name="recaptcha_site_key" />        
+        <input type="text" value="<?php echo $settings['recaptcha_site_key']; ?>" size="45" name="recaptcha_site_key" />        
         <span class="description"><?php printf ( __ ( 'Your Google reCAPTCHA Site Key. Get one at %s', 'kanzu-support-desk' ), '<a href="https://www.google.com/recaptcha/admin" target="_blank">Google reCAPTCHA</a>' ); ?></span>
     </div>
     <div class="setting enable_recaptcha">
         <label for="recaptcha_secret_key"><?php _e ( 'Google reCAPTCHA Secret Key', 'kanzu-support-desk' ); ?></label>                
-        <input type="text" value="<?php echo $settings['recaptcha_secret_key']; ?>" size="30" name="recaptcha_secret_key" />      
+        <input type="text" value="<?php echo '************************************'.substr( $settings['recaptcha_secret_key'], -4 ); ?>" size="45" name="recaptcha_secret_key" />      
         <span class="description"><?php printf ( __ ( 'Your Google reCAPTCHA Secret Key. Get one at %s', 'kanzu-support-desk' ), '<a href="https://www.google.com/recaptcha/admin" target="_blank">Google reCAPTCHA</a>' ); ?></span>
     </div>
     <div class="setting enable_recaptcha">
