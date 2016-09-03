@@ -765,7 +765,12 @@ ul#ksd-ticket-replies li {
     color: #00a0d2;
     margin-bottom: 0;
     padding: 8px 12px 0;
+    font-size: 18px;
 }
+.ksd-ticket-post-body #titlediv {
+    border-right: 4px solid #00a0d2;
+}
+
 .ksd-ticket-post-body #ksd-edit-slug-box {
   font-size: 0.8em;
   line-height: 24px;
@@ -774,7 +779,7 @@ ul#ksd-ticket-replies li {
   padding: 0 10px;
   color: #666;
 }
-#ksd-ticket-messages h3.hndle.ui-sortable-handle{
+#ksd-ticket-messages h3.hndle.ui-sortable-handle,#ksd-ticket-messages h2.hndle.ui-sortable-handle,#ksd-ticket-messages button.handlediv.button-link{
     display: none;
 }
 div.replies-more:hover{
