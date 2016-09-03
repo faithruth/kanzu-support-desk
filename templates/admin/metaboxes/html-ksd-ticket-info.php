@@ -32,7 +32,7 @@
     <a href="#assign-to" class="edit-assign-to"><?php _e( 'Edit','kanzu-support-desk' ); ?></a>
     <div class="ksd_tkt_info_assigned_to ksd_tkt_info_wrapper hidden">    
         <select name="_ksd_tkt_info_assigned_to">
-            <?php foreach ( get_users() as $agent ) { ?>
+            <?php foreach ( get_users( array( 'role__in' => array('ksd_agent','ksd_supervisor','administrator' ) ) ) as $agent ) { ?>
             <option value="<?php echo $agent->ID; ?>" 
                 <?php selected( $agent->ID, get_post_meta( $post->ID, '_ksd_tkt_info_assigned_to', true ) ); ?>> 
                 <?php echo $agent->display_name; ?>  

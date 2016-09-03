@@ -51,13 +51,13 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                     <label for="auto_assign_user"><?php _e ( 'Auto-assign new tickets to', 'kanzu-support-desk' ); ?></label>
                     <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If set, new tickets are automatically assigned to this user.', 'kanzu-support-desk' ); ?>"/>
                     <select name="auto_assign_user">
-                        <?php foreach ( get_users ( ) as $agent ) { ?>
+                        <?php foreach ( get_users ( array( 'role__in' => array('ksd_agent','ksd_supervisor','administrator' ) ) ) as $agent ) { ?>
                             <option value="<?php echo $agent->ID; ?>" 
                                     <?php selected ( $agent->ID, $settings['auto_assign_user']); ?>> 
                                         <?php echo $agent->display_name; ?>  
                             </option>
                         <?php } ?>
-                        <option value=""><?php _e ( 'No One', 'kanzu-support-desk' ); ?></option>
+                        <option value=""><?php _e( 'No One', 'kanzu-support-desk' ); ?></option>
                     </select>                    
                 </div> 
 <!--              <div class="setting">
