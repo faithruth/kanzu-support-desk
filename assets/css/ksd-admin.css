@@ -2264,3 +2264,9 @@ ul.ksd-nps-score {
     text-align: center;
     width: 150px;
 }
+a.ksd-customer-ticket-link.button.button-primary{
+    width: 30%;
+    padding-top: 12px;
+    padding-left: 9%;
+    padding-bottom: 40px;
+}

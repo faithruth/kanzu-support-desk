@@ -153,6 +153,9 @@ class KSD_Admin {
         //Send tracking data
         add_action( 'admin_head', array( $this, 'send_tracking_data' ) );
         
+        //Add 'My tickets' button to 'My profile' page
+        add_action( 'personal_options', array( $this, 'add_my_tickets_link') );        
+        
     }
     
 
@@ -362,6 +365,20 @@ class KSD_Admin {
 
 	wp_die( wp_json_encode( $return ) );        
     }
+    
+        
+    /**
+     * Add a 'My Tickets' link to the Profile page
+     * that's displayed when a ksd_customer logs in
+     */
+    public function add_my_tickets_link(){
+        global $current_user;
+        if ( isset( $current_user->roles ) && is_array( $current_user->roles ) && in_array( 'ksd_customer', $current_user->roles ) ) {
+            $current_settings   = Kanzu_Support_Desk::get_settings();//Get current settings      
+            $link_label         = __( 'View My Tickets', 'kanzu-support-desk' );
+            echo '<a href="'.get_permalink( $current_settings['page_my_tickets'] ).'" class="ksd-customer-ticket-link button button-primary">'.$link_label.'</a>';
+        }
+    }    
 
      /**
       * Disable display of notifications

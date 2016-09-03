@@ -82,6 +82,7 @@ class KSD_Public {
         
         //Filter ksd-public-grecaptcha script tags
         add_filter( 'script_loader_tag', array( $this, 'add_async_defer_attributes' ), 10, 2 );
+
     }   
     
     public function add_async_defer_attributes( $tag, $handle ){
@@ -610,7 +611,9 @@ class KSD_Public {
                 }  
             return $redirect_to;                        
         }        
-        
+
+
+
         /**
          * Add an extra column header to the WooCommerce Orders table
          * @param array $table_headers
