@@ -652,11 +652,9 @@ class KSD_Admin {
         if ( 'auto-draft' == $data['post_status'] ) {//Stop processing if it is a new ticket                
             return $data;
         }
-        //Noticed another parameter to pick up auto-drafts
-        if ( isset ( $postarr['auto_draft'] ) ) {
-            if ( $postarr['auto_draft'] ) {
-                return $data;
-            }
+        //Check another parameter that picks up auto-drafts
+        if ( isset ( $postarr['auto_draft'] ) && $postarr['auto_draft'] ) {
+            return $data;
         }
         if ( wp_is_post_revision( $postarr['ID'] ) ) {
             return $data;                
