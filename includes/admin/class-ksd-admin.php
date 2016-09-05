@@ -649,19 +649,15 @@ class KSD_Admin {
         if ( 'ksd_ticket' !== $data['post_type'] ) {//Only handle our tickets
             return $data;
         }
-        if ( 'auto-draft' == $data['post_status'] ) {//Stop processing if it is a new ticket                
+        //Stop processing if it is a new ticket    
+        if ( 'auto-draft' == $data['post_status'] || ( isset ( $postarr['auto_draft'] ) && $postarr['auto_draft'] )) {            
             return $data;
         }
-        //Check another parameter that picks up auto-drafts
-        if ( isset ( $postarr['auto_draft'] ) && $postarr['auto_draft'] ) {
-            return $data;
-        }
-        if ( wp_is_post_revision( $postarr['ID'] ) ) {
+
+        if ( wp_is_post_revision( $postarr['ID'] ) || wp_is_post_autosave( $postarr['ID'] ) ) {
             return $data;                
         }
-        if ( wp_is_post_autosave( $postarr['ID'] ) ) { 
-            return $data;
-        }      
+            
         //Set post_author to customer
         if ( isset( $postarr['_ksd_tkt_info_customer'] ) ) {
                 $data['post_author'] = $postarr['_ksd_tkt_info_customer']; 
@@ -680,19 +676,20 @@ class KSD_Admin {
      * Save a ticket's meta information. This includes severity, assignee, etc
      * @param int $tkt_id The ticket ID
      * @param string $tkt_title The ticket title
+     * @param Array $meta_array The ticket meta information
      * @since 2.0.0
      * 
      */
     private function save_ticket_meta_info( $tkt_id, $tkt_title, $meta_array ) {
-        $ksd_dynamic_meta_keys = array (
-            '_ksd_tkt_info_severity'    => 'low',
-            '_ksd_tkt_info_assigned_to' => 0,
-            '_ksd_tkt_info_channel'     => 'admin-form',
-            '_ksd_tkt_info_cc'          => '',
-            '_ksd_tkt_info_woo_order_id'=> '',
-            '_ksd_tkt_info_post_id'          => ''
-        );
-        
+        $ksd_dynamic_meta_keys = apply_filters( 'ksd_ticket_info_keys', array(
+                '_ksd_tkt_info_severity'        => 'low',
+                '_ksd_tkt_info_assigned_to'     => 0,
+                '_ksd_tkt_info_channel'         => 'admin-form',
+                '_ksd_tkt_info_cc'              => '',
+                '_ksd_tkt_info_woo_order_id'    => '',
+                '_ksd_tkt_info_post_id'         => ''
+            ));
+
         $ksd_static_meta_keys = array(
             '_ksd_tkt_info_hash_url',
             '_ksd_tkt_info_referer'
@@ -708,7 +705,7 @@ class KSD_Admin {
 
         //Update the dynamic meta information  
         foreach ( $ksd_dynamic_meta_keys as $tkt_info_meta_key => $tkt_info_default_value ) {
-            if ( !isset( $meta_array[$tkt_info_meta_key] ) ) {
+            if ( ! isset( $meta_array[$tkt_info_meta_key] ) ) {
                 continue;//Only do this if the value exists
             }
 
@@ -1167,7 +1164,7 @@ class KSD_Admin {
         if ( ! empty( $query_params ) ){
             $my_ticket_args = array_merge( $my_ticket_args,$query_params );
         }
-        return get_posts( $my_ticket_args ); 
+        return get_posts( apply_filters( 'ksd_my_tickets_args', $my_ticket_args ) ); 
     }
 
     /**
