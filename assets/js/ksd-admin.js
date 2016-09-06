@@ -225,13 +225,10 @@ jQuery(document).ready(function () {
     /*---------------------------------------------------------------*/
     KSDSettings = function () {
         _this = this;
-        this.init = function () {
-            //Submit the settings
-            this.submitSettingsForm();
-            //Show/Hide some settings when some checkboxes are checked
-            this.toggleViewsToHide();
-            //Use an accordion in case we have multiple setting blocks
-            this.enableAccordion();
+        this.init = function () {            
+            this.submitSettingsForm();//Submit the settings            
+            this.toggleViewsToHide();//Show/Hide some settings when some checkboxes are checked           
+            this.enableAccordion(); //Use an accordion in case we have multiple setting blocks
             this.autocompleteUsers();
             this.changeSubmitBtnVal();
             this.modifyLicense();
@@ -257,18 +254,32 @@ jQuery(document).ready(function () {
             });
         };
         
-        this.changeUserRole = function( userId, newRole ){
+        /**
+         * Add/Remove a role from a user
+         * @param {int} userId The user ID affected
+         * @param {string} newRole The new role
+         * @param {string} change The type of change to make to the user. Can be add_role or remove_role
+         * @returns {NA}
+         */
+        changeUserRole = function( userId, newRole, change, responseElement ){
             jQuery.post(
                     ksd_admin.ajax_url,
                     {   action: 'ksd_change_user_role',
-                        user_id: ui.item.ID,
-                        role: assignRole
+                        user_id: userId,
+                        role: newRole,
+                        change: change
                     },
             function (response) {
                 var respObj = {};
                 try {
                     respObj = JSON.parse(response);
+                     if ('undefined' !== typeof (respObj.error)) {
+                        responseElement.addClass('ksd-error').html( respObj.error.message );
+                        return;
+                     }
+                     responseElement.html('Success');//@RODO Internationalize
                 } catch (err) {
+                    responseElement.addClass('ksd-error').html( ksd_admin.ksd_labels.msg_error_refresh );
                     return;
                 }
             });   
@@ -290,17 +301,24 @@ jQuery(document).ready(function () {
                             },
                             select: function( event, ui ) {
                                 event.preventDefault();
-                                jQuery( this ).parent().find('.ksd-user-list').append('<li><a tabindex="-1" class="ksd-search-choice-close" href="#" data-ksd-user-id="'+ui.item.ID+'"></a>'+ui.item.value+'</li>');
-                                _this.changeUserRole( ui.item.ID, assignRole );
+                                var targetItem  =   jQuery( this ).parent().find('.ksd-user-list');
+                                var responseElement = targetItem.find('.ksd-user-agent-response');
+                                targetItem.append('<li><a tabindex="-1" class="ksd-search-choice-close" href="#" data-ksd-user-id="'+ui.item.ID+'"></a>'+ui.item.value+'</li>');
+                                responseElement.removeClass('hidden').html( 'Adding '+ui.item.value+'...' );//@TODO Internationalize
+                                changeUserRole( ui.item.ID, assignRole,'add_role', responseElement );
+                                jQuery( this ).val('');
                             }                                 
                     });
             });
             
             jQuery('.ksd-user-list').on('click', '.ksd-search-choice-close', function (event) {
                 event.preventDefault();
-                var assignRole  = jQuery( this ).parents('.ksd-user-list').hasClass('ksd-agent-list') ? 'agent' : 'supervisor' ;
+                var targetItem  =   jQuery( this ).parents('.ksd-user-list');
+                var responseElement = targetItem.find('.ksd-user-agent-response');
+                var assignRole  = targetItem.hasClass('ksd-agent-list') ? 'agent' : 'supervisor' ;
                 jQuery( this ).parent().remove();
-                 _this.changeUserRole( jQuery( this ).data( "ksdUserId" ), assignRole );
+                responseElement.removeClass('hidden').html( 'Removing...' );//@TODO Internationalize
+                changeUserRole( jQuery( this ).data( "ksdUserId" ), assignRole,'remove_role', responseElement );
             });
         };        
         

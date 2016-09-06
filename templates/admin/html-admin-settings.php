@@ -59,7 +59,7 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <?php } ?>
                         <option value=""><?php _e( 'No One', 'kanzu-support-desk' ); ?></option>
                     </select>                    
-                </div> 
+                </div>          
 <!--              <div class="setting">
                    <label for="onboarding_changes"><?php _e ( 'Enable tour mode', 'kanzu-support-desk' ); ?></label>                
                    <input name="onboarding_changes"  type="checkbox" <?php checked ( $settings['tour_mode'], "yes") ?> value="yes"  />

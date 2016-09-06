@@ -55,3 +55,4 @@
 <?php endif; ?>
 <input type="hidden" value="<?php echo $post->post_status; ?>" id="hidden_ksd_post_status" name="hidden_ksd_post_status"><!--On change, save the ticket status-->
 <input type="hidden" value="admin-form" id="_ksd_tkt_info_channel" name="_ksd_tkt_info_channel"><!--On change, save the ticket status-->
+<?php do_action( 'ksd_after_ticket_info_metabox', $post ); ?>
