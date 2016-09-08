@@ -4,14 +4,14 @@
  *      1. The one that slides in and out when the public support button is clicked
  *      2. The one that's displayed on pages/posts that have the [ksd_my_tickets] shortcode WHEN a user isn't logged in
  *         Note that in this second scenario, if the user is logged in, templates/default/list-my-tickets.php is used
- * These two forms are differentiated using class $form_position_class. In case 1, the value is ksd-form-hidden-tab and it is ksd-form-short-code in case 2
+ * These two forms are differentiated using class $form_classes. In case 1, the value is ksd-form-hidden-tab and it is ksd-form-short-code in case 2
  * 
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
  * @since 2.0.0
  */
 ?>
-<div class="ksd-new-ticket-form-wrap ksd-register-form-wrap <?php echo $form_position_class; ?> hidden">
+<div class="ksd-new-ticket-form-wrap ksd-register-form-wrap <?php echo $form_wrapper_classes; ?>">
     <?php $settings = Kanzu_Support_Desk::get_settings();?>
     <div class="ksd-close-form-wrapper">
         <span class="ksd_close_button">
@@ -19,7 +19,7 @@
             <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>"  width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />        
         </span>     
     </div>
-    <form method="POST" class="ksd-register-public <?php echo $form_position_class; ?>-form">
+    <form method="POST" class="ksd-register-public <?php echo $form_classes; ?>-form">
         <div class="ksd-register-description">
             <p><?php _e( 'Before you submit a ticket, you need to be logged in.', 'kanzu-support-desk' );  ?></p>
             <p><?php printf( __( 'If you already have an account, please %1$s login here %2$s. If you do not, register below.', 'kanzu-support-desk' ), '<a href="' . get_admin_url() . '" class="button">', '</a>' );  ?></p>
@@ -58,5 +58,5 @@
         <input name="ksd_tkt_channel" type="hidden" value="support_tab" />
         <?php wp_nonce_field( 'ksd-register', 'register-nonce' );?>
     </form>
-    <div class="<?php echo $form_position_class; ?>-form-response ksd-register-public-response ksd-support-form-response"></div>
+    <div class="ksd-register-public-response ksd-support-form-response"></div>
 </div>

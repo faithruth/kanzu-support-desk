@@ -237,17 +237,14 @@ class KSD_Public {
      */
     public function generate_new_ticket_form() {
         $settings = Kanzu_Support_Desk::get_settings();
-        if( "yes" == $settings['show_support_tab'] ) {    
-        ?>
-
-                <button id="ksd-new-ticket-public"><?php echo $settings['support_button_text']; ?></button><?php
-                if ( "no" == $settings['enable_customer_signup'] || is_user_logged_in() ) {//If we don't require registration or the user's logged in              
-                    include( KSD_PLUGIN_DIR .  'templates/default/html-public-new-ticket.php' ); //Note that this isn't an include_once since you can have multiple forms on the same page (In the content using a shortcode and as a hidden slide-in,slide-out element)
-                }
-                else{
-                    $form_position_class = 'ksd-form-hidden-tab';
-                    include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' ); 
-                }
+        if( "yes" == $settings['show_support_tab'] ) {?>
+           <button id="ksd-new-ticket-public"><?php echo $settings['support_button_text']; ?></button><?php           
+           $close_image = KSD_PLUGIN_URL."assets/images/icons/close.png";
+           $before_form             = '<div class="ksd-close-form-wrapper"><span class="ksd_close_button">'.__( 'Close', 'kanzu-support-desk' ).' <img src="'.$close_image.'"  width="32" height="32" Alt="'.__('Close', 'kanzu-support-desk').'" /></span></div>';
+           $form_wrapper_classes    = 'ksd-form-hidden-tab hidden';
+           $form_classes            = 'ksd-form-hidden-tab-form';
+           $show_onboarding         = FALSE;
+           echo self::generate_support_form( $before_form, $form_wrapper_classes, $form_classes, $show_onboarding );
         }
     }
    
@@ -262,14 +259,13 @@ class KSD_Public {
     * Generate a public-facing support form
     * @TODO Use this to generate all support forms. Replace the need for html-public-new-ticket.php
     */
-   public static function generate_support_form() {
+   public static function generate_support_form( $before_form='', $form_wrapper_classes='ksd-form-short-code', $form_classes='ksd-form-short-code-form', $show_onboarding=true ) {
         $settings = Kanzu_Support_Desk::get_settings();
         //Include the templating and admin classes
         include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
-        if ( "yes" == $settings['enable_customer_signup'] && !is_user_logged_in() ) { 
+        if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) { 
             ob_start();
-            $form_position_class = 'ksd-form-short-code';
             include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' ); 
             return ob_get_clean();
         } else{
@@ -307,7 +303,8 @@ class KSD_Public {
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
         $settings = Kanzu_Support_Desk::get_settings();
         if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) { 
-            $form_position_class = 'ksd-form-short-code';
+            $form_wrapper_classes   = 'ksd-form-short-code';
+            $form_classes           = 'ksd-form-short-code-form';
             include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' );   
         } else{
             $ksd_template = new KSD_Templates();
@@ -394,7 +391,8 @@ class KSD_Public {
                 $settings = Kanzu_Support_Desk::get_settings();
                 if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) {  //@TODO Send the current URL as the redirect URL for the 'login' and 'Register' action
                     include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-admin.php");
-                    $form_position_class = 'ksd-form-short-code';
+                    $form_wrapper_classes   = 'ksd-form-short-code';
+                    $form_classes           = 'ksd-form-short-code-form';                    
                     include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' ); 
                     return;
                 } 

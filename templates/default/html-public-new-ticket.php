@@ -17,12 +17,6 @@ if( isset( $_GET['ksd_tkt_submitted'] ) ):
     echo "<div class='ksd-support-form-response' >{$settings[$response_key[0]]}</div>";
 endif;
 ?>    
-    <div class="ksd-close-form-wrapper">
-        <span class="ksd_close_button">
-            <?php _e( 'Close', 'kanzu-support-desk' ); ?>
-            <img src="<?php echo KSD_PLUGIN_URL.'assets/images/icons/close.png'; ?>"  width="32" height="32" Alt="<?php __('Close', 'kanzu-support-desk'); ?>" />        
-        </span>        
-    </div>
     <form method="POST" class="ksd-new-ticket-public ksd-form-hidden-tab-form" enctype="multipart/form-data">
         <ul>   
             <?php if( "no" == $settings['enable_customer_signup'] && ! is_user_logged_in() ): ?>

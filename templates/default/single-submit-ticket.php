@@ -1,16 +1,14 @@
 <?php 
 $settings = kanzu_support_desk::get_settings();
-if ( 'yes' === $settings['onboarding_enabled'] ):
+if ( 'yes' === $settings['onboarding_enabled'] && $show_onboarding ):
     do_action( 'ksd_show_onboarding_progress' ); 
 elseif( isset( $_GET['ksd_tkt_submitted'] ) ):    
     $response_key = KSD()->session->get( 'ksd_notice' );
     echo "<div class='ksd-support-form-response' >{$settings[$response_key[0]]}</div>";
 endif;?>
-<div class="ksd-new-ticket-form-wrap ksd-form-short-code">
-        <div class="ksd-close-form-wrapper">
-            <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/icons/close.png'; ?>" class="ksd_close_button" width="32" height="32" Alt="<?php __('Close','kanzu-support-desk'); ?>" />
-        </div>
-        <form method="POST" class="ksd-new-ticket-public" enctype="multipart/form-data">
+<div class="ksd-new-ticket-form-wrap <?php echo $form_wrapper_classes; ?>">
+        <?php echo $before_form; ?>
+        <form method="POST" class="ksd-new-ticket-public <?php echo $form_classes; ?>" enctype="multipart/form-data">
             <ul>      
             <?php if( "no" == $settings['enable_customer_signup'] && ! is_user_logged_in() ): ?>
                 <li class="ksd-cust-fullname">       
@@ -79,7 +77,7 @@ endif;?>
              do_action('ksd_add_custom_fields');
              ?>
               <li class="ksd-message">     
-                  <textarea value="<?php _e( 'Message','kanzu-support-desk' ); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" id="ksd-ticket-message" required></textarea>
+                  <textarea value="<?php _e( 'Message','kanzu-support-desk' ); ?>" rows="5" class="ksd-message" name="ksd_tkt_message" id="ksd-ticket-message" placeholder="<?php _e('Message', 'kanzu-support-desk'); ?>"  required></textarea>
               </li>
             <!--Add Google reCAPTCHA-->
             <?php if( "yes" == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ): ?>
@@ -100,5 +98,5 @@ endif;?>
             <input name="ksd_tkt_channel" type="hidden" value="support-tab" />
             <?php wp_nonce_field( 'ksd-new-ticket', 'new-ticket-nonce' ); ?>
         </form>
-        <div class="ksd-form-short-code-form-response ksd-support-form-response"></div>
+        <div class="ksd-support-form-response"></div>
     </div>
