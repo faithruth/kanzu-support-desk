@@ -1225,6 +1225,12 @@ span.feedback_note{
 .ksd-debug {
     margin-top: 35px;
 }
+.ksd-debug-email{
+   margin-top: 12px;
+}
+#update-settings .ksd-debug-email input{
+    padding: 5px;
+}
 /*Newsletter forms*/ 
 .admin-ksd-content #mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px; border: 1px solid #e5e5e5;background-color: #FFF;}
 .admin-ksd-content #mc_embed_signup h2 {font-weight:bold; padding:0; margin:15px 0; font-size:1.4em;}

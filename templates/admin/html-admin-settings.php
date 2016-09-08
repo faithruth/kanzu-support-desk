@@ -34,10 +34,6 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <input type="text" value="<?php echo $settings['ticket_mail_from_email']; ?>" size="30" name="ticket_mail_from_email" />                        
                     </div>
                     <div class="setting">
-                        <label for="ticket_mail_subject"><?php _e ( 'Subject', 'kanzu-support-desk' ); ?></label>
-                        <input type="text" value="<?php echo $settings['ticket_mail_subject']; ?>" size="60" name="ticket_mail_subject" />
-                    </div>
-                    <div class="setting">
                         <label for="ticket_mail_message"><?php _e ( 'Message', 'kanzu-support-desk' ); ?></label>
                         <textarea cols="60" rows="4" name="ticket_mail_message"><?php echo $settings['ticket_mail_message']; ?></textarea>
                     </div>
@@ -88,12 +84,19 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e ( 'View Customers' ); ?></a>
                     </div>
                     <div class="ksd-section ksd-debug">
+                        <div class="ksd-customer-header">
+                            <h3><?php _e ( 'Debug', 'kanzu-support-desk' ); ?></h3>
+                        </div>                        
                         <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
-                        <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>                        
+                        <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>   
+                        <div class="ksd-debug-email">
+                            <input type="text" value="" placeholder="<?php _e( 'Send test email to...', 'kanzu-support-desk' ); ?>" size="30" name="debug_test_email" /><a class="button button-secondary" href="#" id="ksd-send-test-email"><?php _e( 'Send test email', 'kanzu-support-desk' ); ?></a>
+                            <div id="ksd-debug-email-response"></div>
+                        </div>
                     </div>
                 </div>                
             </div> 
-        </div><!--//fragment-1 -->
+        </div><!--//fragment-1 --> 
 
 
 

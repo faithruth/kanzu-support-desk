@@ -235,6 +235,7 @@ jQuery(document).ready(function () {
             this.handleAddons();
             this.enableUsageStats();
             this.notifications();
+            this.sendDebugEmail();
             
         };
         
@@ -284,6 +285,28 @@ jQuery(document).ready(function () {
                 }
             });   
         };
+        
+        this.sendDebugEmail = function(){
+            jQuery('#ksd-send-test-email').click(function (e) {
+                e.preventDefault();
+                var responseElement = jQuery('#ksd-debug-email-response');
+                responseElement.html( ksd_admin.ksd_labels.msg_loading );
+                jQuery.post(
+                        ksd_admin.ajax_url,
+                        {
+                            action: 'ksd_send_debug_email',
+                            email: jQuery('input[name=debug_test_email]').val()
+                        },
+                        function (response) {                            
+                            if ( response.success ) {
+                                responseElement.html( response.data ).addClass('ksd-success');
+                            } else {
+                                responseElement.html( response.data ).addClass('ksd-error');
+                            }
+                        }
+                );
+            });
+        }
         
         this.autocompleteUsers = function () {
             jQuery( '.ksd-suggest-user' ).each( function(){

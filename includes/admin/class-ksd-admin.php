@@ -78,8 +78,9 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_deletetables_v2', array( $this, 'deletetables_v2' ) );
         add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
         add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
-        add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );
-        add_action( 'wp_ajax_ksd_autocomplete_user', array( $this, 'autocomplete_user' ) );
+        add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );       
+        add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
+        
         
 
       
@@ -2552,6 +2553,18 @@ class KSD_Admin {
         return $form;
      }         
 
+     public function send_debug_email(){
+          $email = sanitize_email( $_POST['email'] );
+          if ( ! is_email( $email ) ){
+            wp_send_json_error( __( 'Error | Invalid email address specified','kanzu-support-desk' ) );  
+          }
+          $message = __( 'This is the test message you requested for. Signed. Sealed. Delivered.', 'kanzu-support-desk' );
+          if( $this->send_email( $email, $message ) ){
+             wp_send_json_success( __( 'Email sent successfully','kanzu-support-desk' ) );
+          }else{
+             wp_send_json_error( sprintf( __( 'Error | Email sending failed. Please <a href="%s" target="_blank">read our guide on this</a>', 'kanzu-support-desk' ), 'https://kanzucode.com/knowledge_base/troubleshooting-wordpress-email-delivery/' ) );
+          }
+     }
 
      /**
       * Send the KSD team feedback
