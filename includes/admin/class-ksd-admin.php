@@ -1920,14 +1920,12 @@ class KSD_Admin {
                do_action( 'ksd_new_ticket_imported', array( $new_ticket_raw['ksd_tkt_imported_id'], $new_ticket_id ) );
                return;
             }
+            
+            $cc = isset( $new_ticket_raw['ksd_tkt_cc'] ) && __( 'CC', 'kanzu-support-desk' ) !== $new_ticket_raw['ksd_tkt_cc']  ? $new_ticket_raw['ksd_tkt_cc'] : null;
 
            //Notify the customer that their ticket has been logged. CC is only used for tickets logged by admin-form 
-            if ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "support-tab" ) {                    
-                $cc = null;
-                if ( isset( $new_ticket_raw['ksd_tkt_cc'] ) && $new_ticket_raw['ksd_tkt_cc'] !== __( 'CC', 'kanzu-support-desk' ) ) { 
-                    $cc = $new_ticket_raw['ksd_tkt_cc'];
-                }                   
-                $this->send_email( $cust_email , $cc );    
+            if ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "support-tab" ) {            
+                $this->send_email( $cust_email , "new_ticket", $new_ticket['post_title'], $cc, array(), $new_ticket['post_author'] );     
             }
 
             //For add-ons to do something after new ticket is added. We share the ID and the final status
@@ -1942,7 +1940,7 @@ class KSD_Admin {
             }
             //If this was initiated by the email add-on, end the party here
             if ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "email") {
-                 $this->send_email( $cust_email );//Send an auto-reply to the customer                     
+                 $this->send_email( $cust_email, "new_ticket", $new_ticket['post_title'], $cc, array(), $new_ticket['post_author'] );//Send an auto-reply to the customer                     
                  return;
             }
 
@@ -2615,13 +2613,17 @@ class KSD_Admin {
       * @param string $subject The message subject
       * @param string $cc  A comma-separated list of email addresses to cc   
       * @param Array $attachments Array of attachment filenames
+      * @param int $customer_ID The customer's user ID
       */
-     public function send_email( $to, $message="new_ticket", $subject=null, $cc=null,  $attachments= array() ) {
+     public function send_email( $to, $message="new_ticket", $subject=null, $cc=null,  $attachments= array(), $customer_ID=0 ) {
          $settings = Kanzu_Support_Desk::get_settings();             
          switch ( $message ):
              case 'new_ticket'://For new ticket auto-replies
-                 $subject   = $settings['ticket_mail_subject'];
-                 $message   = $settings['ticket_mail_message'];                     
+                 $message   = $settings['ticket_mail_message'];     
+                 if( 0 !== $customer_ID ){
+                    $customer = get_userdata( $customer_ID );
+                    $message  =  preg_replace( '/{customer_display_name}/', $customer->display_name, $message ); 
+                 }
          endswitch;
                  $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';
                  $headers[] = 'Content-Type: text/html; charset=UTF-8'; //@since 1.6.4 Support HTML emails
