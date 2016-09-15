@@ -86,13 +86,13 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                     <div class="ksd-section ksd-debug">
                         <div class="ksd-customer-header">
                             <h3><?php _e ( 'Debug', 'kanzu-support-desk' ); ?></h3>
-                        </div>                        
-                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
-                        <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>   
+                        </div>   
                         <div class="ksd-debug-email">
                             <input type="text" value="" placeholder="<?php _e( 'Send test email to...', 'kanzu-support-desk' ); ?>" size="30" name="debug_test_email" /><a class="button button-secondary" href="#" id="ksd-send-test-email"><?php _e( 'Send test email', 'kanzu-support-desk' ); ?></a>
                             <div id="ksd-debug-email-response"></div>
                         </div>
+                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
+                        <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>   
                     </div>
                 </div>                
             </div> 
