@@ -13,7 +13,7 @@
         ?>            
  
         <br />
-        <a class="button-primary ksd-start-intro" href="<?php echo admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard&ksd-intro=1&ksd-onboarding=1' ); ?>"><?php _e( 'Get Started!', 'kanzu-support-desk'); ?> </a>
+        <a class="button-primary ksd-start-intro" href="<?php echo get_permalink( $settings['page_submit_ticket'] ).'?ksd-onboarding=create-ticket'; ?>"><?php _e( 'Get Started!', 'kanzu-support-desk'); ?> </a>
         <p><?php _e( 'PS: If you do run into any issues (or have any feedback whatsoever), get in touch on ', 'kanzu-support-desk'); ?><a href="mailto:feedback@kanzucode.com">feedback@kanzucode.com</a></p>
     </div>
 </div>

@@ -32,16 +32,10 @@ class KSD_Onboarding {
         
         
         /**
-         * Onboarding stage options. Used to track progress
-         * @var array
-         */
-        private $ksd_current_stage_details = array();  
-        
-        /**
          * Onboarding current stage
          * @var array
          */
-        private $ksd_current_stage;         
+        private $ksd_current_stage_key;         
         
         /**
          * Onboarding stage details
@@ -81,7 +75,7 @@ class KSD_Onboarding {
         
         /**
          * Show the onboarding progress
-         * @param int $this->ksd_current_stage String value of the stage to show. e.g. two
+         * @param int $this->ksd_current_stage_key String value of the stage to show. e.g. two
          * @since 2.2.0
          */
         public function show_onboarding_progress(){
@@ -90,15 +84,22 @@ class KSD_Onboarding {
                 return;
             } 
 
-            if( ! isset( $_GET[ 'ksd-onboarding' ] ) ){
+            if( ! isset( $_GET[ 'ksd-onboarding' ] ) && ! get_option( $this->ksd_current_stage_option_key ) ){
                 return;
             }
             
-            $this->ksd_current_stage    = sanitize_key( $_GET[ 'ksd-onboarding' ] );
+            if( isset( $_GET[ 'ksd-onboarding' ]  ) ){
+                $this->ksd_current_stage_key    = sanitize_key( $_GET[ 'ksd-onboarding' ] );
+            }else{
+                $this->ksd_current_stage_key    = get_option( $this->ksd_current_stage_option_key );
+            }
+            
             $this->ksd_stage_details    = $this->get_stage_details();
             $is_last_stage              = $this->is_the_last_stage();
              
             echo $this->generate_onboarding_html( $is_last_stage );
+            
+            $this->save_current_stage();
             
             if ( $is_last_stage ){//If we are at the last stage, let's end the party
                 do_action( 'ksd_onboarding_complete' );   
@@ -129,7 +130,7 @@ class KSD_Onboarding {
                     'next_url'      =>  get_permalink( $this->ksd_settings['page_submit_ticket'] ),
                     'stage_notes'   => "Ready? Let's go! Click next to proceed..."
                 ),
-               ' create-ticket'   => array(
+               'create-ticket'   => array(
                     'title'         => __( 'Create ticket', 'kanzu-support-desk' ),
                     'next_url'      => admin_url('edit.php?post_type=ksd_ticket'),
                     'stage_notes'   => sprintf( '<p>%1$s </p><p><strong>%2$s</strong></p>',
@@ -198,13 +199,13 @@ class KSD_Onboarding {
         private function generate_onboarding_html( $is_last_stage ){
             $this->ksd_stage_details     = $this->get_stage_details();
             
-            if ( isset( $this->ksd_stage_details[$this->ksd_current_stage] ) ){
-                $current_item   = $this->ksd_stage_details[$this->ksd_current_stage];
+            if ( isset( $this->ksd_stage_details[$this->ksd_current_stage_key] ) ){
+                $current_item   = $this->ksd_stage_details[$this->ksd_current_stage_key];
                 if( $is_last_stage ){
                     $next_url_html = $this->get_last_stage_url();
                 }else{
                     $next_item_key      = $this->get_next_onboarding_stage_key();  
-                    $next_url_html      = $this->get_stage_url( $next_item_key );
+                    $next_url_html      =  '<a href="' .add_query_arg( 'ksd-onboarding', $current_item['next_url'] , $next_item_key ). '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
                 }                
             }else{
                 $current_item  = $this->get_invalid_stage_details();
@@ -216,7 +217,7 @@ class KSD_Onboarding {
             $notes                      = $current_item['stage_notes'];
             $mark_stages_incomplete     = false;
             foreach ( $this->ksd_stage_details as $stage_key => $stage_details ){
-                if( $stage_key == $this->ksd_current_stage  ){
+                if( $stage_key == $this->ksd_current_stage_key  ){
                     $stage_class            = 'class="active"';
                     $mark_stages_incomplete = true;
                 }                
@@ -250,20 +251,21 @@ class KSD_Onboarding {
          * @return string URL to the first stage
          */
         private function get_first_stage_url(){
-            return esc_url( add_query_arg( 'ksd-onboarding', admin_url('edit.php?post_type=ksd_ticket') , 'create-ticket' ) );
+            return '<a href="' .esc_url( add_query_arg( 'ksd-onboarding', admin_url('edit.php?post_type=ksd_ticket') , 'create-ticket' ) ). '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
         }
-        
+ 
+ 
         /**
          * Iterate through all the stages and return the key
          * for the stage AFTER the current stage
          * 
-         * @param string $this->ksd_current_stage The key of the current stage
-         * @return string The next stage's key or null if $this->ksd_current_stage doesn't exist or is the last stage
+         * @param string $this->ksd_current_stage_key The key of the current stage
+         * @return string The next stage's key or null if $this->ksd_current_stage_key doesn't exist or is the last stage
          */
         private function get_next_onboarding_stage_key() {
             $this->ksd_stage_details     = $this->get_stage_details();
             $current_key    = key( $this->ksd_stage_details );
-            while ( $current_key !== null && $current_key != $this->ksd_current_stage ) {//Move to the next item till we have the current stage
+            while ( $current_key !== null && $current_key != $this->ksd_current_stage_key ) {//Move to the next item till we have the current stage
                 next( $this->ksd_stage_details );
                 $current_key = key( $this->ksd_stage_details );
             }
@@ -275,28 +277,35 @@ class KSD_Onboarding {
 
         /**
          * Check if this is the last onboarding stage
-         * @param String $this->ksd_current_stage
+         * @param String $this->ksd_current_stage_key
          */
         private function is_the_last_stage(){
             $is_last_stage = false;
             end( $this->ksd_stage_details );
             $last_key = key( $this->ksd_stage_details );
-            if( $this->ksd_current_stage == $last_key ){
+            if( $this->ksd_current_stage_key == $last_key ){
                 $is_last_stage = true;
             }
             reset( $this->ksd_stage_details );
             return $is_last_stage;
         }
+        
+        /**
+         * Save the current onboarding stage
+         * @param int $current_stage
+         */
+        private function save_current_stage(){
+            update_option( $this->ksd_current_stage_option_key, $this->ksd_current_stage_key );
+        }        
 
         
         /**
-         * Mark a stage as complete
+         * Mark a stage as complete. We do this by saving the next stage as the current stage
          */
         public function mark_stage_complete( $completed_stage ){
-            $this->ksd_current_stage_details = get_option( $this->ksd_current_stage_option_key );
-            $this->ksd_current_stage_details['previous_stage'] = $completed_stage;
-            $this->ksd_current_stage_details['is_previous_stage_complete'] = "yes";
-            $this->save_current_stage();
+           $this->ksd_current_stage_key = $completed_stage;           
+           $this->ksd_current_stage_key = $this->get_next_onboarding_stage_key();
+           $this->save_current_stage();
         }
                               
  
