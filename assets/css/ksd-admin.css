@@ -779,6 +779,9 @@ ul#ksd-ticket-replies li {
   padding: 0 10px;
   color: #666;
 }
+#ksd-ticket-messages{
+    border-left: 1px solid #00a0d2;
+}
 #ksd-ticket-messages h3.hndle.ui-sortable-handle,#ksd-ticket-messages h2.hndle.ui-sortable-handle,#ksd-ticket-messages button.handlediv.button-link{
     display: none;
 }

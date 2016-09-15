@@ -197,10 +197,7 @@ jQuery(document).ready(function () {
                         }
                     });            
         };
-
-        /*
-         * Submit Feedback form.
-         */
+ 
         this.assignTicket = function () {
             jQuery('.ksd-onboarding .ksd-misc-assign-to a.edit-assign-to').click( function(){
                 KSDUpdateOnboardingStage( 3 );
@@ -209,12 +206,12 @@ jQuery(document).ready(function () {
         };
         this.replyTicket = function () {            
             jQuery( '.ksd-onboarding input[name=ksd_reply_ticket]' ).click( function(){
-                KSDUpdateOnboardingStage( 4, true );  
+                KSDUpdateOnboardingStage( 'reply-ticket', true );  
             });             
         };
         this.resolveTicket = function () {
             jQuery('.ksd-onboarding .misc-pub-post-status a.edit-post-status').click( function(){
-                 KSDUpdateOnboardingStage( 5 );
+                 KSDUpdateOnboardingStage( 'resolve-ticket' );
             }); 
         } ;     
     };

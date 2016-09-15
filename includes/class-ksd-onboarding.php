@@ -92,8 +92,13 @@ class KSD_Onboarding {
                 $this->ksd_current_stage_key    = sanitize_key( $_GET[ 'ksd-onboarding' ] );
             }else{
                 $this->ksd_current_stage_key    = get_option( $this->ksd_current_stage_option_key );
+                //For the 'view-ticket-list' stage, manually move it to the next stage since there's no 'Next' button
+                if ( 'view-ticket-list' == $this->ksd_current_stage_key ){
+                    $this->ksd_current_stage_key = 'reply-ticket';
+                }
             }
             
+           
             $this->ksd_stage_details    = $this->get_stage_details();
             $is_last_stage              = $this->is_the_last_stage();
              
@@ -125,12 +130,7 @@ class KSD_Onboarding {
          */
         private function get_stage_details(){
             return array(
-                'start-tour'   => array(
-                    'title'         => __( 'Start tour', 'kanzu-support-desk' ),
-                    'next_url'      =>  get_permalink( $this->ksd_settings['page_submit_ticket'] ),
-                    'stage_notes'   => "Ready? Let's go! Click next to proceed..."
-                ),
-               'create-ticket'   => array(
+               'create-ticket'      => array(
                     'title'         => __( 'Create ticket', 'kanzu-support-desk' ),
                     'next_url'      => admin_url('edit.php?post_type=ksd_ticket'),
                     'stage_notes'   => sprintf( '<p>%1$s </p><p><strong>%2$s</strong></p>',
@@ -138,30 +138,26 @@ class KSD_Onboarding {
                                                 __( "Create a ticket now by entering a subject, a message and clicking 'Send Message'. Then, click 'Next' to proceed", 'kanzu-support-desk') 
                                                 )
                 ),            
-                'assign-ticket'   => array(
-                    'title'         => __( 'Assign ticket', 'kanzu-support-desk' ),
+                'view-ticket-list'  => array(
+                    'title'         => __( 'View ticket', 'kanzu-support-desk' ),
                     'next_url'      => '',
-                    'stage_notes'   => array(
-                                        sprintf( '<p>%1$s <strong>%2$s</strong></p>',
+                    'stage_notes'   => sprintf( '<p>%1$s <strong>%2$s</strong></p>',
                                             __('You and your agents view all tickets here. Your customer\'s waiting; Go ahead and','kanzu-support-desk'),
                                             __( 'select the ticket you\'d like to make changes to', 'kanzu-support-desk') 
-                                                ),
-                                        sprintf( '<p>%1$s</p><p>%2$s</p><p><strong>%3$s</strong></p>',
-                                            __('In this view, you or an agent can make changes to a ticket.','kanzu-support-desk'),
-                                            __( 'From the ticket information box to the right, the ticket can be assigned to an agent, the status can be changed and the severity set appropriately.', 'kanzu-support-desk'),
-                                            __('Assign the ticket to someone else and click Update to proceed','kanzu-support-desk')
-                                                )    
-                                        )
-                    ),  
-                'reply-ticket'   => array(
+                                                ) 
+                    ),            
+                'reply-ticket'      => array(
                     'title'         => __( 'Reply ticket', 'kanzu-support-desk' ),
                     'next_url'      => '',
-                    'stage_notes'   => sprintf( '<p>%1$s</p><p><strong>%2$s</strong></p>',
-                                            __('Great! Now you need to respond to the customer. You can send a response or choose to type a private note for another agent; private notes are NOT sent to your customer.','kanzu-support-desk'),
+                    'stage_notes'   =>  sprintf( '<p>%1$s</p><p>%2$s</p><p>%3$s</p><p>%4$s</p>',
+                                            __('In this view, you or an agent can make changes to a ticket.','kanzu-support-desk'),
+                                            __( 'From the ticket information box to the right, the ticket can be assigned to an agent, the status can be changed and the severity set appropriately.', 'kanzu-support-desk'),
+                                            __('This is also where you respond to your customer or type a private note for another agent. Private notes ARE NOT sent to customers.','kanzu-support-desk'),
                                             __( 'At the bottom of your screen is a textbox; type your response and click Send to proceed.', 'kanzu-support-desk')
-                                              )
-                ),                
-                'resolve-ticket'   => array(
+                                                )    
+                                         
+                    ),                
+                'resolve-ticket'    => array(
                     'title'         => __( 'Resolve ticket', 'kanzu-support-desk' ),
                     'next_url'      => '',
                     'stage_notes'   => sprintf( '<p>%1$s</p><p><strong>%2$s</strong></p>',
@@ -169,13 +165,11 @@ class KSD_Onboarding {
                                         __( 'In the ticket information box, change ticket status from Open to Resolved and click Update to complete', 'kanzu-support-desk')
                                                 ) 
                 ),               
-                'end-tour'   => array(
+                'end-tour'          => array(
                     'title'         => __( 'Ready!', 'kanzu-support-desk' ) ,
                     'next_url'      => admin_url( 'edit.php?post_type=ksd_ticket' ),
-                    'stage_notes'   => sprintf( '<p>%1$s<strong>%2$s<a target="blank" href="http://kanzucode.com/contact">kanzucode.com</a></strong></p>',
-                                        __('That\'s it! Now that\'s how you handle customer care like a rockstar. To see full documentation & share feedback/feature requests, ','kanzu-support-desk'),
-                                        __( 'get in touch at ', 'kanzu-support-desk')
-                                        )
+                    'stage_notes'   => __('That\'s it! Now that\'s how you handle customer care like a rockstar. To see full documentation or to customize your installation, click the buttons below','kanzu-support-desk'),
+                                      
                 )                
             );
         }
@@ -187,7 +181,7 @@ class KSD_Onboarding {
         private function get_invalid_stage_details(){
             return array(
                 'title'         =>  __("404 | Stage does not exist", "kanzu-support-desk" ),
-               'stage_notes'    =>  __( "You have uncovered an onboarding stage that doesn't exist! Please click 'Next' to restart the tour", "kanzu-support-desk" ) 
+               'stage_notes'    =>  __( "404! You have uncovered an onboarding stage that doesn't exist! Please click 'Next' to restart the tour", "kanzu-support-desk" ) 
             );
         }      
         
@@ -203,9 +197,11 @@ class KSD_Onboarding {
                 $current_item   = $this->ksd_stage_details[$this->ksd_current_stage_key];
                 if( $is_last_stage ){
                     $next_url_html = $this->get_last_stage_url();
+                }elseif( empty( $current_item['next_url'] ) ){
+                    $next_url_html = '';
                 }else{
                     $next_item_key      = $this->get_next_onboarding_stage_key();  
-                    $next_url_html      =  '<a href="' .add_query_arg( 'ksd-onboarding', $current_item['next_url'] , $next_item_key ). '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
+                    $next_url_html      =  '<a href="' .add_query_arg( 'ksd-onboarding', $next_item_key, $current_item['next_url'] ). '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Next', 'kanzu-support-desk' ).'</a>';
                 }                
             }else{
                 $current_item  = $this->get_invalid_stage_details();
@@ -241,7 +237,9 @@ class KSD_Onboarding {
          * @return string URL to the last stage
          */
         private function get_last_stage_url(){
-            return '<a href="' . admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-settings' ). '" class="button-large button button-primary ksd-onboarding-next">'.__( 'Customize your KSD', 'kanzu-support-desk' ).'</a>';
+            $cheatsheet_link        = '<a href="https://kanzucode.com/blog/7-things-to-look…help-desk-plugin/" class="button-large button button-primary ksd-onboarding-last">'.__( 'Get Help Desk Score Card', 'kanzu-support-desk' ).'</a>';
+            $knowledge_base_link    = '<a href="https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/" class="button-large button button-primary ksd-onboarding-last-right" target="_blank">'.__( 'KSD Documentation', 'kanzu-support-desk' ).'</a>';
+            return $cheatsheet_link.$knowledge_base_link;
         }
         
         /**
