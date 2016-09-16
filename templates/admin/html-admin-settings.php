@@ -34,19 +34,10 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <input type="text" value="<?php echo $settings['ticket_mail_from_email']; ?>" size="30" name="ticket_mail_from_email" />                        
                     </div>
                     <div class="setting">
-                        <label for="ticket_mail_subject"><?php _e ( 'Subject', 'kanzu-support-desk' ); ?></label>
-                        <input type="text" value="<?php echo $settings['ticket_mail_subject']; ?>" size="60" name="ticket_mail_subject" />
-                    </div>
-                    <div class="setting">
                         <label for="ticket_mail_message"><?php _e ( 'Message', 'kanzu-support-desk' ); ?></label>
                         <textarea cols="60" rows="4" name="ticket_mail_message"><?php echo $settings['ticket_mail_message']; ?></textarea>
                     </div>
                 </div><!--.enable_new_tkt_notifxns-->
-                <div class="setting">
-                    <label for="enable_notify_on_new_ticket"><?php _e ( 'Enable new ticket notifications', 'kanzu-support-desk' ); ?></label>
-                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "If enabled, an email is sent to the ticket assignee whenever a new ticket is logged. If there's no assignee, the notification is sent to the primary administrator", 'kanzu-support-desk' ); ?>"/>
-                    <input name="enable_notify_on_new_ticket"  type="checkbox" <?php checked ( $settings['enable_notify_on_new_ticket'], "yes") ?> value="yes"  />                    
-                </div>
                 <!--<div class="setting enable_notify_on_new_ticket">
                       <label for="notify_email"><?php _e ( 'Send notifications to', 'kanzu-support-desk' ); ?></label>
                       <input type="text" value="<?php echo $settings['notify_email']; ?>" size="30" name="notify_email" />
@@ -56,15 +47,15 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                     <label for="auto_assign_user"><?php _e ( 'Auto-assign new tickets to', 'kanzu-support-desk' ); ?></label>
                     <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If set, new tickets are automatically assigned to this user.', 'kanzu-support-desk' ); ?>"/>
                     <select name="auto_assign_user">
-                        <?php foreach ( get_users ( ) as $agent ) { ?>
+                        <?php foreach ( get_users ( array( 'role__in' => array('ksd_agent','ksd_supervisor','administrator' ) ) ) as $agent ) { ?>
                             <option value="<?php echo $agent->ID; ?>" 
                                     <?php selected ( $agent->ID, $settings['auto_assign_user']); ?>> 
                                         <?php echo $agent->display_name; ?>  
                             </option>
                         <?php } ?>
-                        <option value=""><?php _e ( 'No One', 'kanzu-support-desk' ); ?></option>
+                        <option value=""><?php _e( 'No One', 'kanzu-support-desk' ); ?></option>
                     </select>                    
-                </div> 
+                </div>          
 <!--              <div class="setting">
                    <label for="onboarding_changes"><?php _e ( 'Enable tour mode', 'kanzu-support-desk' ); ?></label>                
                    <input name="onboarding_changes"  type="checkbox" <?php checked ( $settings['tour_mode'], "yes") ?> value="yes"  />
@@ -93,12 +84,19 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e ( 'View Customers' ); ?></a>
                     </div>
                     <div class="ksd-section ksd-debug">
+                        <div class="ksd-customer-header">
+                            <h3><?php _e ( 'Debug', 'kanzu-support-desk' ); ?></h3>
+                        </div>   
+                        <div class="ksd-debug-email">
+                            <input type="text" value="" placeholder="<?php _e( 'Send test email to...', 'kanzu-support-desk' ); ?>" size="30" name="debug_test_email" /><a class="button button-secondary" href="#" id="ksd-send-test-email"><?php _e( 'Send test email', 'kanzu-support-desk' ); ?></a>
+                            <div id="ksd-debug-email-response"></div>
+                        </div>
                         <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
-                        <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>                        
+                        <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>   
                     </div>
                 </div>                
             </div> 
-        </div><!--//fragment-1 -->
+        </div><!--//fragment-1 --> 
 
 
 

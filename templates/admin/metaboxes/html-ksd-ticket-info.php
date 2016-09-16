@@ -32,7 +32,7 @@
     <a href="#assign-to" class="edit-assign-to"><?php _e( 'Edit','kanzu-support-desk' ); ?></a>
     <div class="ksd_tkt_info_assigned_to ksd_tkt_info_wrapper hidden">    
         <select name="_ksd_tkt_info_assigned_to">
-            <?php foreach ( get_users() as $agent ) { ?>
+            <?php foreach ( get_users( array( 'role__in' => array('ksd_agent','ksd_supervisor','administrator' ) ) ) as $agent ) { ?>
             <option value="<?php echo $agent->ID; ?>" 
                 <?php selected( $agent->ID, get_post_meta( $post->ID, '_ksd_tkt_info_assigned_to', true ) ); ?>> 
                 <?php echo $agent->display_name; ?>  
@@ -55,3 +55,4 @@
 <?php endif; ?>
 <input type="hidden" value="<?php echo $post->post_status; ?>" id="hidden_ksd_post_status" name="hidden_ksd_post_status"><!--On change, save the ticket status-->
 <input type="hidden" value="admin-form" id="_ksd_tkt_info_channel" name="_ksd_tkt_info_channel"><!--On change, save the ticket status-->
+<?php do_action( 'ksd_after_ticket_info_metabox', $post ); ?>

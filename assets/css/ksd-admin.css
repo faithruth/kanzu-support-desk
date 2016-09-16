@@ -765,11 +765,24 @@ ul#ksd-ticket-replies li {
     color: #00a0d2;
     margin-bottom: 0;
     padding: 8px 12px 0;
+    font-size: 18px;
 }
-.ksd-ticket-post-body #edit-slug-box {
+.ksd-ticket-post-body #titlediv {
+    border-right: 4px solid #00a0d2;
+}
+
+.ksd-ticket-post-body #ksd-edit-slug-box {
   font-size: 0.8em;
+  line-height: 24px;
+  min-height: 25px;
+  margin-top: 5px;
+  padding: 0 10px;
+  color: #666;
 }
-#ksd-ticket-messages h3.hndle.ui-sortable-handle{
+#ksd-ticket-messages{
+    border-left: 1px solid #00a0d2;
+}
+#ksd-ticket-messages h3.hndle.ui-sortable-handle,#ksd-ticket-messages h2.hndle.ui-sortable-handle,#ksd-ticket-messages button.handlediv.button-link{
     display: none;
 }
 div.replies-more:hover{
@@ -1214,6 +1227,12 @@ span.feedback_note{
 }
 .ksd-debug {
     margin-top: 35px;
+}
+.ksd-debug-email{
+   margin-top: 12px;
+}
+#update-settings .ksd-debug-email input{
+    padding: 5px;
 }
 /*Newsletter forms*/ 
 .admin-ksd-content #mc_embed_signup form {display:block; position:relative; text-align:left; padding:10px; border: 1px solid #e5e5e5;background-color: #FFF;}
@@ -2253,4 +2272,13 @@ ul.ksd-nps-score {
     line-height: 35px;
     text-align: center;
     width: 150px;
+}
+.wp-core-ui .button-primary.ksd-onboarding-last{
+    margin-right: 12px;
+}
+a.ksd-customer-ticket-link.button.button-primary{
+    width: 30%;
+    padding-top: 12px;
+    padding-left: 9%;
+    padding-bottom: 40px;
 }

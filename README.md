@@ -106,6 +106,21 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 ## Changelog ##
+### 2.2.11, September 16, 2016 ###
+ * BUG FIX | Rename reCAPTCHA callback to eliminate clash with Contact form 7
+ * Remove 'enable ticket notifications' setting
+ * BUG FIX | Allow saving of enable/disable products
+ * Remove deprecated getTickets method
+ * Restrict all ticket assignments to ksd_agents,ksd_supervisors & administrators
+ * In single ticket view, replace permalink with hashURL for tickets with hash URLs
+ * Add 'My Tickets' link to customer personal profile
+ * Mask the reCAPTCHA secret key
+ * Add filters and actions to support making select tickets public
+ * In auto-reply, support {customer_display_name} and use original subject
+ * Add Send debug email setting
+ * Replace template html-public-new-ticket; use single-submit-ticket instead
+ * Re-do onboarding to use keys, not digits and add knowledge base links at the end
+
 ### 2.2.10, August 27, 2016 ###
  * BUG FIX | Autofix new roles and capabilities for any user who's update didn't do it
 

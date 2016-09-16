@@ -19,21 +19,34 @@ jQuery( document ).ready(function() {
         jQuery('img.ksd_loading_dialog').hide();
     }  
     
-    //Ensure that the Google reCAPTCHA checkbox was checked 
-    isGoogleReCaptchaValid = function(){
-        if ( 'undefined' !== typeof(grecaptcha) ){            
-            var grecaptchaFormId = jQuery( 'div.ksd-support-form-submitted' ).find('.g-recaptcha').attr('id');
-            if (!grecaptcha.getResponse(grecaptchaWidgetIds[grecaptchaFormId])){
-                jQuery( "div.ksd-support-form-submitted form span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
-                return false;
-            } 
+    /**
+     * Ensure that the Google reCAPTCHA checkbox was checked      * 
+     * Always returns true unless the form has a reCAPTCHA field. 
+     * If ksd_grecaptcha exists, then the form has a reCAPTCHA field
+     * @returns {boolean}
+     */
+    ksdIsGoogleReCaptchaValid = function(){
+        if ( 'undefined' !== typeof(ksd_grecaptcha) ){   
+            var grecaptchaFormId    = jQuery( 'div.ksd-support-form-submitted' ).find('.g-recaptcha').attr('id');
+            var grecaptchaResponse  = '';
+            try{
+                grecaptchaResponse = grecaptcha.getResponse(grecaptchaWidgetIds[grecaptchaFormId]);
+                if ( grecaptchaResponse === "" || grecaptchaResponse === undefined || grecaptchaResponse.length === 0 || ! grecaptchaResponse ){
+                    jQuery( "div.ksd-support-form-submitted form span.ksd-g-recaptcha-error").html( ksd_public.ksd_public_labels.msg_grecaptcha_error );
+                    return false;
+                } 
+            }catch(err){
+                    jQuery( "div.ksd-support-form-submitted form span.ksd-g-recaptcha-error").html( err );
+                    return false;
+            }
+
         }      
         return true;
     };
     
     //Explicitly render Google reCAPTCHA forms
-    var grecaptchaWidgetIds = [];//Store the widget IDs. Used by isGoogleReCaptchaValid() to validate response
-    recaptchaCallback = function(){
+    var grecaptchaWidgetIds = [];//Store the widget IDs. Used by ksdIsGoogleReCaptchaValid() to validate response
+    ksdRecaptchaCallback = function(){
     jQuery('[id^=g-recaptcha-field-]').each(function () {
            widgetId = grecaptcha.render(this.id, {'sitekey': ksd_grecaptcha.site_key});
            grecaptchaWidgetIds[this.id] = widgetId;
@@ -83,8 +96,7 @@ jQuery( document ).ready(function() {
     jQuery( '.ksd-new-ticket-public input.ksd-submit,.ksd-register-public input.ksd-submit' ).click( function( e ){
         var supportForm    = jQuery( this ).parents( 'form' );                 
         jQuery( supportForm ).parent().addClass( 'ksd-support-form-submitted' );//Tag the submitted form
-        
-        if( ! jQuery( supportForm ).valid() || ! isGoogleReCaptchaValid() ){
+        if( ! jQuery( supportForm ).valid() || ! ksdIsGoogleReCaptchaValid() ){
            e.preventDefault(); 
            return;
         }        

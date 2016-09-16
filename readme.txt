@@ -1,14 +1,14 @@
-=== Kanzu Support Desk - A WordPress Helpdesk  Plugin ===
+=== Kanzu Support Desk - WordPress Helpdesk  Plugin ===
 Contributors: kanzucode
 Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
-Tested up to: 4.5
-Stable tag: 2.2.10
+Tested up to: 4.6
+Stable tag: 2.2.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer interactions fast & personal.
+Kanzu Support Desk (KSD) is a simple help desk solution that keeps your customer interactions fast & personal.
 
 == Description ==
 
@@ -112,6 +112,21 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+= 2.2.11, September 16, 2016 =
+ * BUG FIX | Rename reCAPTCHA callback to eliminate clash with Contact form 7
+ * Remove 'enable ticket notifications' setting
+ * BUG FIX | Allow saving of enable/disable products
+ * Remove deprecated getTickets method
+ * Restrict all ticket assignments to ksd_agents,ksd_supervisors & administrators
+ * In single ticket view, replace permalink with hashURL for tickets with hash URLs
+ * Add 'My Tickets' link to customer personal profile
+ * Mask the reCAPTCHA secret key
+ * Add filters and actions to support making select tickets public
+ * In auto-reply, support {customer_display_name} and use original subject
+ * Add Send debug email setting
+ * Replace template html-public-new-ticket; use single-submit-ticket instead
+ * Re-do onboarding to use keys, not digits and add knowledge base links at the end
+
 = 2.2.10, August 27, 2016 =
  * BUG FIX | Autofix new roles and capabilities for any user who's update didn't do it
 
