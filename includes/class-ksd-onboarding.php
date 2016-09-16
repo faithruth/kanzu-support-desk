@@ -237,7 +237,7 @@ class KSD_Onboarding {
          * @return string URL to the last stage
          */
         private function get_last_stage_url(){
-            $cheatsheet_link        = '<a href="https://kanzucode.com/blog/7-things-to-look…help-desk-plugin/" class="button-large button button-primary ksd-onboarding-last">'.__( 'Get Help Desk Score Card', 'kanzu-support-desk' ).'</a>';
+            $cheatsheet_link        = '<a href="https://kanzucode.com/blog/7-things-to-look-out-for-in-a-wordpress-help-desk-plugin/" class="button-large button button-primary ksd-onboarding-last" target="_blank">'.__( 'Get Help Desk Tips', 'kanzu-support-desk' ).'</a>';
             $knowledge_base_link    = '<a href="https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/" class="button-large button button-primary ksd-onboarding-last-right" target="_blank">'.__( 'KSD Documentation', 'kanzu-support-desk' ).'</a>';
             return $cheatsheet_link.$knowledge_base_link;
         }

@@ -2273,6 +2273,9 @@ ul.ksd-nps-score {
     text-align: center;
     width: 150px;
 }
+.wp-core-ui .button-primary.ksd-onboarding-last{
+    margin-right: 12px;
+}
 a.ksd-customer-ticket-link.button.button-primary{
     width: 30%;
     padding-top: 12px;
