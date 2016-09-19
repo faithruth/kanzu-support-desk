@@ -38,7 +38,7 @@ class KSD_Support_Form_Widget extends WP_Widget {
 		if ( ! empty( $instance['title'] ) ) {
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 		}
-                KSD_Public::generate_support_form();
+                echo KSD_Public::generate_support_form();
 		echo $args['after_widget'];
 	}
 
