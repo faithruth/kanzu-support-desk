@@ -1579,19 +1579,19 @@ class KSD_Admin {
                         
             $new_ticket['ksd_tkt_cust_id'] = $customer_details->ID;
             $disable_ticket_author_check   = $this->is_user_staff( $customer_details );
-            $previous_ticket_id            = $this->check_if_ticket_exists( $new_ticket, $disable_ticket_author_check );
             
-            if ( $previous_ticket_id > 0  ) {//This is a reply
+            $parent_ticket_post = $this->get_parent_ticket( $new_ticket );
+            
+            if ( ! is_null( $parent_ticket_post ) ) { //This is a reply
                 //Create the array the reply function expects
-                $new_ticket['tkt_id']                       = $previous_ticket_id;
+                $new_ticket['tkt_id']                       = $parent_ticket_post->ID;
                 $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
                 $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
                 $new_ticket['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
                 $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
                 $this->reply_ticket( $new_ticket ); 
                 return; //die removed because it was triggering a fatal error in add-ons
-           }
-
+            }
         }
         //Handle Facebook channel replies
         if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
@@ -1647,6 +1647,36 @@ class KSD_Admin {
             }
         }      
         return $ticket_id;
+    }
+    
+    /**
+     * Returns the parent ticket if the message is a reply, else returns null.
+     * 
+     * 
+     * @since 2.2.12
+     * 
+     * @return int parent ticket ID;
+     */
+    public function get_parent_ticket( $new_ticket ) { 
+
+        //For ticket/reply from email, check the references header against the 
+        //
+        
+        $args = array(
+            'posts_per_page'   => 5,
+            'meta_key'         => '_ksd_tkt_info_mail_message_id',
+            'meta_value'       => $new_ticket['ksd_mail_message_id'],
+            'post_type'        => 'ksd_ticket'
+        );
+        $posts_array = get_posts( $args );
+        
+        error_log( print_r( $args,true) );
+        
+        if ( count( $posts_array ) > 0 ){
+            return $posts_array[0];
+        } else {
+            return null;
+        }  
     }
     
     /**
@@ -1891,7 +1921,13 @@ class KSD_Admin {
             if ( isset( $new_ticket_raw['ksd_woo_order_id'] ) ) {
                 $meta_array['_ksd_tkt_info_woo_order_id']           = $new_ticket_raw['ksd_woo_order_id'];
             }
-
+            error_log( 'ksd_mail_message_id ----------------------' ); 
+            error_log( print_r( $new_ticket_raw, true ) );
+            if ( isset( $new_ticket_raw['ksd_mail_message_id'] ) ) {//For email tickets save the message ID of the email
+                $meta_array['_ksd_tkt_info_mail_message_id']        = $new_ticket_raw['ksd_mail_message_id'];
+                update_post_meta( $new_ticket_id, '_ksd_tkt_info_mail_message_id', $new_ticket_raw['ksd_mail_message_id'] ); 
+            }
+            
             //Whom to we notify. Defaults to admin if ticket doesn't have an assignee
             $notify_user_id = ( isset( $meta_array['_ksd_tkt_info_assigned_to'] )? $meta_array['_ksd_tkt_info_assigned_to'] : 1 );
             $notify_user    = get_userdata(  $notify_user_id );
@@ -1939,9 +1975,12 @@ class KSD_Admin {
                 $ksd_attachments = ( isset ( $new_ticket_raw['ksd_attachments'] ) ? $this->convert_attachments_for_mail( $new_ticket_raw['ksd_attachments'] ) : array() );
                 $this->do_notify_new_ticket( $notify_user->user_email, $new_ticket_id, $cust_email, $new_ticket['post_title'], $new_ticket['post_content'], $ksd_attachments );
             }
+            
             //If this was initiated by the email add-on, end the party here
             if ( "yes" == $settings['enable_new_tkt_notifxns'] &&  $tkt_channel  ==  "email") {
-                 $this->send_email( $cust_email, "new_ticket", $new_ticket['post_title'], $cc, array(), $new_ticket['post_author'] );//Send an auto-reply to the customer                     
+                 $email_subject = $new_ticket['post_title'] . " ~ {$new_ticket_id}";
+                 $this->send_email( $cust_email, "new_ticket", $email_subject, $cc, array(), $new_ticket['post_author'] );//Send an auto-reply to the customer                     
+                 
                  return;
             }
 
@@ -2627,22 +2666,26 @@ class KSD_Admin {
       * @param string $cc  A comma-separated list of email addresses to cc   
       * @param Array $attachments Array of attachment filenames
       * @param int $customer_ID The customer's user ID
+      * @param Array $extra_headers Extra email header fields @since 2.2.12
       */
-     public function send_email( $to, $message="new_ticket", $subject=null, $cc=null,  $attachments= array(), $customer_ID=0 ) {
-         $settings = Kanzu_Support_Desk::get_settings();             
-         switch ( $message ):
-             case 'new_ticket'://For new ticket auto-replies
-                 $message   = $settings['ticket_mail_message'];     
-                 if( 0 !== $customer_ID ){
-                    $customer = get_userdata( $customer_ID );
-                    $message  =  preg_replace( '/{customer_display_name}/', $customer->display_name, $message ); 
-                 }
-         endswitch;
-                 $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';
-                 $headers[] = 'Content-Type: text/html; charset=UTF-8'; //@since 1.6.4 Support HTML emails
-                 if ( !is_null( $cc ) ) {
-                     $headers[] = "Cc: $cc";
-                 }
+     public function send_email( $to, $message="new_ticket", $subject=null, $cc=null,  $attachments= array(), $customer_ID=0, $extra_headers = array() ) {
+        $settings = Kanzu_Support_Desk::get_settings();             
+        switch ( $message ):
+            case 'new_ticket'://For new ticket auto-replies
+                $message   = $settings['ticket_mail_message'];     
+                if( 0 !== $customer_ID ){
+                   $customer = get_userdata( $customer_ID );
+                   $message  =  preg_replace( '/{customer_display_name}/', $customer->display_name, $message ); 
+                }
+        endswitch;
+        $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';
+        $headers[] = 'Content-Type: text/html; charset=UTF-8'; //@since 1.6.4 Support HTML emails
+        if ( !is_null( $cc ) ) {
+            $headers[] = "Cc: $cc";
+        }
+                 
+        $headers = array_merge( $headers, $extra_headers );    
+       
          return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
      }
 
