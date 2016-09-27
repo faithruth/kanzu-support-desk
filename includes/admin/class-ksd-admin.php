@@ -1495,7 +1495,16 @@ class KSD_Admin {
                 
                 $ticket_reply = apply_filters( 'ksd_reply_content_send_pre', $new_reply['post_content'], $parent_ticket_ID );
                 $ticket_reply .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID, false );
-                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . $parent_ticket->post_title, $cc );//NOTE: Prefix the reply subject with Re:    
+				
+                //Check if the parent ticket has an email message id $parent_ticket_ID
+                $mail_message_id = get_post_meta( $parent_ticket_ID, '_ksd_tkt_info_mail_message_id', true );  
+                $extra_headers = array();
+
+                if ( false !== $mail_message_id ) {
+                        $extra_headers['In-Reply-To'] = $mail_message_id;
+                        $extra_headers['References']  = $mail_message_id;
+                }
+                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . $parent_ticket->post_title, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
 
                 if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
                    do_action( 'ksd_new_reply_logged', $_POST['ksd_addon_tkt_id'], $new_reply_id );
@@ -1580,7 +1589,7 @@ class KSD_Admin {
             $new_ticket['ksd_tkt_cust_id'] = $customer_details->ID;
             $disable_ticket_author_check   = $this->is_user_staff( $customer_details );
             
-            $parent_ticket_post = $this->get_parent_ticket( $new_ticket );
+            $parent_ticket_post = $this->get_parent_ticket_for_email_channel( $new_ticket );
             
             if ( ! is_null( $parent_ticket_post ) ) { //This is a reply
                 //Create the array the reply function expects
@@ -1657,20 +1666,25 @@ class KSD_Admin {
      * 
      * @return int parent ticket ID;
      */
-    public function get_parent_ticket( $new_ticket ) { 
+    public function get_parent_ticket_for_email_channel( $new_ticket ) { 
 
         //For ticket/reply from email, check the references header against the 
-        //
+        //Mesagge-ID
+        $references         = explode( " ", $new_ticket['ksd_mail_references'] );
+        $parent_message_id  = 'mail-message-id';
         
+        if ( count( references ) > 0 ) {
+            $parent_message_id = $references[0];
+        }
+		
         $args = array(
-            'posts_per_page'   => 5,
+            'posts_per_page'   => 2,
             'meta_key'         => '_ksd_tkt_info_mail_message_id',
-            'meta_value'       => $new_ticket['ksd_mail_message_id'],
-            'post_type'        => 'ksd_ticket'
+            'meta_value'       => $parent_message_id,
+            'post_type'        => 'ksd_ticket',
+			'post_status'	   => array ( 'private', 'publish', 'close', 'open', 'draft','pending','resolved' )
         );
         $posts_array = get_posts( $args );
-        
-        error_log( print_r( $args,true) );
         
         if ( count( $posts_array ) > 0 ){
             return $posts_array[0];
@@ -1921,8 +1935,7 @@ class KSD_Admin {
             if ( isset( $new_ticket_raw['ksd_woo_order_id'] ) ) {
                 $meta_array['_ksd_tkt_info_woo_order_id']           = $new_ticket_raw['ksd_woo_order_id'];
             }
-            error_log( 'ksd_mail_message_id ----------------------' ); 
-            error_log( print_r( $new_ticket_raw, true ) );
+
             if ( isset( $new_ticket_raw['ksd_mail_message_id'] ) ) {//For email tickets save the message ID of the email
                 $meta_array['_ksd_tkt_info_mail_message_id']        = $new_ticket_raw['ksd_mail_message_id'];
                 update_post_meta( $new_ticket_id, '_ksd_tkt_info_mail_message_id', $new_ticket_raw['ksd_mail_message_id'] ); 
