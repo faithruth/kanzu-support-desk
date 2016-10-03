@@ -34,12 +34,12 @@ class KSD_Support_Form_Widget extends WP_Widget {
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
-		echo $args['before_widget'];
+		$widget_content = $args['before_widget'];
 		if ( ! empty( $instance['title'] ) ) {
-			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
+                    $widget_content.= $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ). $args['after_title'];
 		}
-                KSD_Public::generate_support_form();
-		echo $args['after_widget'];
+                $widget_content.= KSD_Public::generate_support_form();
+		echo $widget_content.$args['after_widget'];
 	}
 
 	/**

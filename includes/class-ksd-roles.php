@@ -20,18 +20,18 @@ class KSD_Roles {
      * @since 1.5.0
      */
     public function create_roles() {
-        add_role(       'ksd_customer', __( 'KSD Customer', 'kanzu-support-desk' ), array(
+        add_role(       'ksd_customer', __( 'Customer', 'kanzu-support-desk' ), array(
                         'read' 		=> true,
                         'edit_posts' 	=> false,
                         'delete_posts' 	=> false
                 ) ); 
-        add_role(       'ksd_agent', __( 'KSD Agent', 'kanzu-support-desk' ), array(
+        add_role(       'ksd_agent', __( 'Agent', 'kanzu-support-desk' ), array(
                         'read' 		=> true,
                         'edit_posts' 	=> false,
                         'upload_files'  => true,
                         'delete_posts' 	=> false
                 ) );   
-        add_role( 'ksd_supervisor', __( 'KSD Supervisor', 'kanzu-support-desk' ), $this->default_supervisor_caps() );        
+        add_role( 'ksd_supervisor', __( 'Supervisor', 'kanzu-support-desk' ), $this->default_supervisor_caps() );        
     }    
     
 
