@@ -106,6 +106,12 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 ## Changelog ##
+### 2.2.12, October 4, 2016 ###
+ * Add KSD()->support_form() call
+ * Add ksd_my_tickets_array filter
+ * BUG FIX | Display widget content
+ * Remove KSD from role names
+
 ### 2.2.11, September 16, 2016 ###
  * BUG FIX | Rename reCAPTCHA callback to eliminate clash with Contact form 7
  * Remove 'enable ticket notifications' setting
@@ -368,6 +374,12 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 ## Upgrade Notice ##
+### 2.2.12, October 4, 2016 ###
+ * Use KSD()->support_form() call
+ * Use ksd_my_tickets_array filter
+ * BUG FIX | Display widget content
+ * Remove KSD from role names
+
 ### 2.2.9 ###
  * Add custom KSD roles
 
