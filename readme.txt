@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.6
-Stable tag: 2.2.11
+Stable tag: 2.2.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,12 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+= 2.2.12, October 4, 2016 =
+ * Add KSD()->support_form() call
+ * Add ksd_my_tickets_array filter
+ * BUG FIX | Display widget content
+ * Remove KSD from role names
+
 = 2.2.11, September 16, 2016 =
  * BUG FIX | Rename reCAPTCHA callback to eliminate clash with Contact form 7
  * Remove 'enable ticket notifications' setting
@@ -375,6 +381,12 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.12 =
+ * Use KSD()->support_form() call
+ * Use ksd_my_tickets_array filter
+ * BUG FIX | Display widget content
+ * Remove KSD from role names
+
 = 2.2.9 =
  * Add custom KSD roles
 
