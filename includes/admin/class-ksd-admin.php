@@ -3048,8 +3048,8 @@ class KSD_Admin {
             echo  '' == $ticket_severity ? 'low' : $ticket_severity ;
         }
         if ( $column_name == 'assigned_to' ) {
-            $ticket_assignee = get_post_meta( $post_id, '_ksd_tkt_info_assigned_to', true );                
-            echo  '' == $ticket_assignee || 0 == $ticket_assignee ? __( 'No one', 'kanzu-support-desk' ) : get_userdata( $ticket_assignee )->display_name;
+            $ticket_assignee_id = get_post_meta( $post_id, '_ksd_tkt_info_assigned_to', true );    
+            echo $this->get_ticket_assignee_display_name( $ticket_assignee_id );
         }   
         if ( $column_name == 'status' ) {
             global $post;
@@ -3067,6 +3067,24 @@ class KSD_Admin {
                     );
             echo   $reply_count;
         } 
+    }
+    
+    /**
+     * Get a ticket assignee display name used in the 'All Tickets' list
+     * 
+     * @param int $ticket_assignee_id
+     * @return string The ticket assignee name 
+     */
+    private function get_ticket_assignee_display_name( $ticket_assignee_id ){
+        if( '' == $ticket_assignee_id || 0 == $ticket_assignee_id ){
+            return __( 'No one', 'kanzu-support-desk' );
+        }else{
+            $ticket_assignee    = get_userdata( $ticket_assignee_id );
+            if( false !== $ticket_assignee ){
+                return $ticket_assignee->display_name;
+            }
+            return __( 'No one', 'kanzu-support-desk' );
+        }        
     }
 
     /**
