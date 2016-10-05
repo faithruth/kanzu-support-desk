@@ -133,6 +133,7 @@ No. Only supervisors and administrators can delete tickets
 = 2.2.9, August 27, 2016 =
  * Add custom KSD roles
  * Restore Analytics
+ * Support multiple Google reCAPTCHA forms
 
 = 2.2.8, May 31, 2016 =
  * BUG FIX | Remove lingering UA Analytics

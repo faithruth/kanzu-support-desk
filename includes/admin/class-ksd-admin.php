@@ -1173,7 +1173,7 @@ class KSD_Admin {
         if ( ! empty( $query_params ) ){
             $my_ticket_args = array_merge( $my_ticket_args,$query_params );
         }
-        return get_posts( apply_filters( 'ksd_my_tickets_args', $my_ticket_args ) ); 
+        return apply_filters( 'ksd_my_tickets_array', get_posts( apply_filters( 'ksd_my_tickets_args', $my_ticket_args ) ) ); 
     }
 
     /**
