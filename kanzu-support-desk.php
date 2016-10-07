@@ -108,7 +108,6 @@ final class Kanzu_Support_Desk {
         //Set-up actions and filters
         $this->setup_actions();        
 
-
         /*
          * Register hooks that are fired when the plugin is activated  
          * When the plugin is deleted, the uninstall.php file is loaded.
@@ -117,7 +116,6 @@ final class Kanzu_Support_Desk {
 
         //Register a de-activation hook
         register_deactivation_hook( __FILE__, array( 'KSD_Install', 'deactivate' ) );
-
     }
 
     /**
@@ -225,7 +223,7 @@ final class Kanzu_Support_Desk {
         // Load plugin text domain
         add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
         
-        add_action( 'init', array( $this, 'init' ), 0 );
+        add_action( 'init', array( $this, 'init' ), 0 ); 
 
         //Load scripts used in both the front and back ends
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
@@ -234,10 +232,13 @@ final class Kanzu_Support_Desk {
         //Share the plugin's settings with add-ons
         add_filter( 'ksd_get_settings', array( $this, 'get_settings' ) );
 
-       //Handle logging of new tickets & replies initiated by add-ons.   
+        //Handle logging of new tickets initiated by add-ons.   
         add_action( 'ksd_log_new_ticket', array( $this, 'do_log_new_ticket' ) );
+      
+        //Handle logging of replies initiated by add-ons.   
+        add_action( 'ksd_reply_ticket', array( $this, 'do_reply_ticket' ) );
         
-        do_action( 'ksd_loaded' );
+        do_action( 'ksd_loaded' ); 
     }
     
     /**
@@ -254,10 +255,23 @@ final class Kanzu_Support_Desk {
      * all the functions needed to do this smoothly
      * @param Object $new_ticket The new ticket or reply object
      */
-    public function do_log_new_ticket( $new_ticket ){
+    public function do_log_new_ticket( $new_ticket ){ 
         require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
         $ksd_admin =  KSD_Admin::get_instance();
         $ksd_admin->do_log_new_ticket( $new_ticket );
+    }
+    
+    /**
+     * Log ticket replies initiated by add-ons
+     * 
+     * @since 2.2.12
+     * 
+     * @param Object $new_ticket The reply object
+     */
+    public function do_reply_ticket( $ticket_reply ){
+        require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
+        $ksd_admin =  KSD_Admin::get_instance();
+        $ksd_admin->do_reply_ticket( $ticket_reply );
     }
 
     /**

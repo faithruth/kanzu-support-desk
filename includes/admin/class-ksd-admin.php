@@ -37,10 +37,10 @@ class KSD_Admin {
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 
         // Add the options page and menu item.
-        add_action( 'admin_menu', array( $this, 'add_menu_pages' ) );
+        add_action( 'admin_menu', array( $this, 'add_menu_pages' ) ); 
 
         //Add the attachments button
-        add_action('media_buttons', array( $this, 'add_attachments_button' ), 15 );
+        add_action( 'media_buttons', array( $this, 'add_attachments_button' ), 15 );
         
         //Load add-ons
         add_action( 'ksd_load_addons', array( $this, 'load_ksd_addons' ) );
@@ -127,7 +127,7 @@ class KSD_Admin {
         $this->add_tinymce_cc_button();
 
         //Add headers to the tickets grid
-        add_filter('manage_ksd_ticket_posts_columns', array( $this, 'add_tickets_headers' ) );
+        add_filter( 'manage_ksd_ticket_posts_columns', array( $this, 'add_tickets_headers' ) );
         //Populate the new columns
         add_action( 'manage_ksd_ticket_posts_custom_column', array( $this, 'populate_ticket_columns' ), 10, 2 );
         //Add sorting to the new columns
@@ -247,9 +247,9 @@ class KSD_Admin {
         if ( isset( $_POST['ksd_action'] ) ) {
             do_action( $_POST['ksd_action'], $_POST );
         }
-        if ( isset($_GET['ksd_action'] ) ) {
+        if ( isset( $_GET['ksd_action'] ) ) {
             do_action( $_GET['ksd_action'], $_GET );
-        }   
+        }
     }
 
     /**
@@ -258,41 +258,41 @@ class KSD_Admin {
      */
     private function get_admin_labels(){
         $admin_labels_array = array();
-        $admin_labels_array['dashboard_chart_title']        = __('Incoming Tickets', 'kanzu-support-desk' );
-        $admin_labels_array['dashboard_open_tickets']       = __('Total Open Tickets', 'kanzu-support-desk' );
-        $admin_labels_array['dashboard_unassigned_tickets'] = __('Unassigned Tickets', 'kanzu-support-desk' );
-        $admin_labels_array['dashboard_avg_response_time']  = __('Avg. Response Time', 'kanzu-support-desk' );
+        $admin_labels_array['dashboard_chart_title']        = __( 'Incoming Tickets', 'kanzu-support-desk' );
+        $admin_labels_array['dashboard_open_tickets']       = __( 'Total Open Tickets', 'kanzu-support-desk' );
+        $admin_labels_array['dashboard_unassigned_tickets'] = __( 'Unassigned Tickets', 'kanzu-support-desk' );
+        $admin_labels_array['dashboard_avg_response_time']  = __( 'Avg. Response Time', 'kanzu-support-desk' );
 //      $admin_labels_array['tkt_trash']                    = __('Trash', 'kanzu-support-desk' );
 //      $admin_labels_array['tkt_assign_to']                = __('Assign To', 'kanzu-support-desk' );
 //      $admin_labels_array['tkt_change_status']            = __('Change Status', 'kanzu-support-desk' );
 //      $admin_labels_array['tkt_change_severity']          = __('Change Severity', 'kanzu-support-desk' );
 //      $admin_labels_array['tkt_mark_read']                = __('Mark as Read', 'kanzu-support-desk' );
 //      $admin_labels_array['tkt_mark_unread']              = __('Mark as Unread', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_subject']                  = __('Subject', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_cust_fullname']            = __('Customer Name', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_cust_email']               = __('Customer Email', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_reply']                    = __('Send', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_forward']                  = __('Forward', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_update_note']              = __('Add Note', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_attach_file']              = __('Attach File', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_attach']                   = __('Attach', 'kanzu-support-desk' );                
-        $admin_labels_array['tkt_status_open']              = __('OPEN', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_status_pending']           = __('PENDING', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_status_resolved']          = __('RESOLVED', 'kanzu-support-desk' );                
-        $admin_labels_array['tkt_severity_low']             = __('LOW', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_severity_medium']          = __('MEDIUM', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_severity_high']            = __('HIGH', 'kanzu-support-desk' );
-        $admin_labels_array['tkt_severity_urgent']          = __('URGENT', 'kanzu-support-desk' );              
-        $admin_labels_array['msg_still_loading']            = __('Loading Replies...', 'kanzu-support-desk' );
-        $admin_labels_array['msg_loading']                  = __('Loading...', 'kanzu-support-desk' );
-        $admin_labels_array['msg_sending']                  = __('Sending...', 'kanzu-support-desk' );
-        $admin_labels_array['msg_reply_sent']               = __('Reply Sent!', 'kanzu-support-desk' );
-        $admin_labels_array['msg_error']                    = __('Sorry, an unexpected error occurred. Kindly retry. Thank you.', 'kanzu-support-desk' );
-        $admin_labels_array['msg_error_refresh']            = __('Sorry, but something went wrong. Please try again or reload the page.', 'kanzu-support-desk' );
-        $admin_labels_array['pointer_next']                 = __('Next', 'kanzu-support-desk' );
-        $admin_labels_array['lbl_toggle_trimmed_content']   = __('Toggle Trimmed Content', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_subject']                  = __( 'Subject', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_cust_fullname']            = __( 'Customer Name', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_cust_email']               = __( 'Customer Email', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_reply']                    = __( 'Send', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_forward']                  = __( 'Forward', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_update_note']              = __( 'Add Note', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_attach_file']              = __( 'Attach File', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_attach']                   = __( 'Attach', 'kanzu-support-desk' );                
+        $admin_labels_array['tkt_status_open']              = __( 'OPEN', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_status_pending']           = __( 'PENDING', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_status_resolved']          = __( 'RESOLVED', 'kanzu-support-desk' );                
+        $admin_labels_array['tkt_severity_low']             = __( 'LOW', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_severity_medium']          = __( 'MEDIUM', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_severity_high']            = __( 'HIGH', 'kanzu-support-desk' );
+        $admin_labels_array['tkt_severity_urgent']          = __( 'URGENT', 'kanzu-support-desk' );              
+        $admin_labels_array['msg_still_loading']            = __( 'Loading Replies...', 'kanzu-support-desk' );
+        $admin_labels_array['msg_loading']                  = __( 'Loading...', 'kanzu-support-desk' );
+        $admin_labels_array['msg_sending']                  = __( 'Sending...', 'kanzu-support-desk' );
+        $admin_labels_array['msg_reply_sent']               = __( 'Reply Sent!', 'kanzu-support-desk' );
+        $admin_labels_array['msg_error']                    = __( 'Sorry, an unexpected error occurred. Kindly retry. Thank you.', 'kanzu-support-desk' );
+        $admin_labels_array['msg_error_refresh']            = __( 'Sorry, but something went wrong. Please try again or reload the page.', 'kanzu-support-desk' );
+        $admin_labels_array['pointer_next']                 = __( 'Next', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_toggle_trimmed_content']   = __( 'Toggle Trimmed Content', 'kanzu-support-desk' );
         $admin_labels_array['lbl_tickets']                  = __( 'Tickets', 'kanzu-support-desk' );
-        $admin_labels_array['lbl_CC']                       = __( 'CC', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_CC']                       = __( 'CC', 'kanzu-support-desk' ); 
         $admin_labels_array['lbl_reply_to_all']             = __( 'Reply to all', 'kanzu-support-desk' );
         $admin_labels_array['lbl_populate_cc']              = __( 'Populate CC field', 'kanzu-support-desk' );
         $admin_labels_array['lbl_save']                     = __( 'Save', 'kanzu-support-desk' );
@@ -389,8 +389,8 @@ class KSD_Admin {
      public function disable_notifications() {
         $ksd_settings = Kanzu_Support_Desk::get_settings();
         $ksd_settings['notifications_enabled'] = "no";
-        Kanzu_Support_Desk::update_settings($ksd_settings );
-        echo json_encode( __('Thanks for your time. If you ever have any feedback, please get in touch - feedback@kanzucode.com', 'kanzu-support-desk') );
+        Kanzu_Support_Desk::update_settings( $ksd_settings );
+        echo json_encode( __( 'Thanks for your time. If you ever have any feedback, please get in touch - feedback@kanzucode.com', 'kanzu-support-desk') );
         die();
     }        
 
@@ -406,7 +406,7 @@ class KSD_Admin {
         global $post, $post_ID;
         $messages['ksd_ticket'] = array(
             0   => '',
-            1   => sprintf( __('Ticket updated. <a href="%s">View ticket</a>' ), esc_url( get_permalink( $post_ID ) ) ),
+            1   => sprintf( __( 'Ticket updated. <a href="%s">View ticket</a>' ), esc_url( get_permalink( $post_ID ) ) ),
             2   => __( 'Custom field updated.' ),
             3   => __( 'Custom field deleted.' ),
             4   => __( 'Ticket updated.' ),
@@ -991,7 +991,7 @@ class KSD_Admin {
      */
     public function filter_totals() {
         if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
-              die ( __('Busted!', 'kanzu-support-desk') );                         
+              die ( __( 'Busted!', 'kanzu-support-desk') );                         
         }          
         try{
             $this->do_admin_includes();                
@@ -1016,7 +1016,7 @@ class KSD_Admin {
      */
     public function filter_tickets() {		 
       if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
-            die ( __('Busted!', 'kanzu-support-desk') );                         
+            die ( __( 'Busted!', 'kanzu-support-desk') );                         
       }
 
             try{
@@ -1083,7 +1083,7 @@ class KSD_Admin {
 
                 }
 
-                echo json_encode($response );
+                echo json_encode( $response );
                 die();// IMPORTANT: don't leave this out
 
 
@@ -1091,7 +1091,7 @@ class KSD_Admin {
                 $response = array(
                     'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
                 );
-                echo json_encode($response );	
+                echo json_encode( $response );	
                 die();// IMPORTANT: don't leave this out
             }    
     }
@@ -1116,8 +1116,8 @@ class KSD_Admin {
      */
     public function get_single_ticket() {
 
-        if (!wp_verify_nonce($_POST['ksd_admin_nonce'], 'ksd-admin-nonce') ) {
-            die( __('Busted!', 'kanzu-support-desk') ); //@TODO Change this to check referrer
+        if (!wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce') ) {
+            die( __( 'Busted!', 'kanzu-support-desk' ) ); //@TODO Change this to check referrer
         }
         $this->do_admin_includes();
         try {
@@ -1126,7 +1126,7 @@ class KSD_Admin {
             $this->do_change_read_status( $_POST['tkt_id'] );
         } catch ( Exception $e ) {
             $response = array(
-                'error' => array('message' => $e->getMessage(), 'code' => $e->getCode() )
+                'error' => array( 'message' => $e->getMessage(), 'code' => $e->getCode() )
             );
         }
         echo json_encode( $response );
@@ -1140,7 +1140,7 @@ class KSD_Admin {
      */
     public function get_ticket_replies_and_notes() {
         if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce') ) {
-            die( __('Busted!', 'kanzu-support-desk') );
+            die( __( 'Busted!', 'kanzu-support-desk' ) );
         }
         $this->do_admin_includes();
         try {                
@@ -1251,11 +1251,11 @@ class KSD_Admin {
                 $this->do_admin_includes();
             $tickets = new KSD_Tickets_Controller();
 
-            if (!is_array($_POST['tkt_id']) ) {
-                if ( $tickets->delete_ticket($_POST['tkt_id']) ) {
-                    echo json_encode( __('Deleted', 'kanzu-support-desk') );
+            if ( !is_array( $_POST['tkt_id'] ) ) {
+                if ( $tickets->delete_ticket( $_POST['tkt_id'] ) ) {
+                    echo json_encode( __( 'Deleted', 'kanzu-support-desk' ) );
                 } else {
-                    throw new Exception( __('Failed', 'kanzu-support-desk'), -1 );
+                    throw new Exception( __( 'Failed', 'kanzu-support-desk' ), -1 );
                 }
             } else {
             if ( is_array( $tickets->bulk_delete_tickets( $_POST['tkt_id'] ) ) ) {
@@ -1269,7 +1269,7 @@ class KSD_Admin {
             $response = array(
                 'error'=> array( 'message' => $e->getMessage() , 'code'=>$e->getCode() )
             );
-            echo json_encode($response );	
+            echo json_encode( $response );	
             die();// IMPORTANT: don't leave this out
         }  
     }
@@ -1279,7 +1279,7 @@ class KSD_Admin {
      */
     public function change_status() {
         if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
-                die ( __('Busted!', 'kanzu-support-desk') );
+                die ( __( 'Busted!', 'kanzu-support-desk' ) );
         }
 
         try{
@@ -1310,7 +1310,7 @@ class KSD_Admin {
             $response = array( 
                 'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
             );
-            echo json_encode($response );	
+            echo json_encode( $response );	
             die();// IMPORTANT: don't leave this out
         }  
     }
@@ -1322,7 +1322,7 @@ class KSD_Admin {
      */
     public function change_severity() {
         if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
-                die ( __('Busted!', 'kanzu-support-desk') );
+                die ( __( 'Busted!', 'kanzu-support-desk' ) );
         }
 
         try{
@@ -1343,7 +1343,7 @@ class KSD_Admin {
             $response = array( 
                 'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
             );
-            echo json_encode($response );	
+            echo json_encode( $response );	
             die();// IMPORTANT: don't leave this out
         }  
     }
@@ -1358,31 +1358,31 @@ class KSD_Admin {
        try{
            $this->do_admin_includes();
             $assign_ticket = new KSD_Tickets_Controller();
-            if (!is_array($_POST['tkt_id']) ) {//Single ticket re-assignment
+            if ( !is_array( $_POST['tkt_id'] ) ) {//Single ticket re-assignment
                 $updated_ticket = new stdClass();
                 $updated_ticket->tkt_id = $_POST['tkt_id'];
                 $updated_ticket->new_tkt_assigned_to = $_POST['tkt_assign_assigned_to'];
                 $updated_ticket->new_tkt_assigned_by = $_POST['ksd_current_user_id'];
-                if ($assign_ticket->update_ticket($updated_ticket ) ) {
+                if ( $assign_ticket->update_ticket( $updated_ticket ) ) {
                     //Add the event to the assignments table
-                    $this->do_ticket_assignment($updated_ticket->tkt_id, $updated_ticket->new_tkt_assigned_to, $updated_ticket->new_tkt_assigned_by );
-                    echo json_encode( __('Re-assigned', 'kanzu-support-desk') );
+                    $this->do_ticket_assignment( $updated_ticket->tkt_id, $updated_ticket->new_tkt_assigned_to, $updated_ticket->new_tkt_assigned_by );
+                    echo json_encode( __( 'Re-assigned', 'kanzu-support-desk' ) );
                 } else {
-                    throw new Exception( __('Failed', 'kanzu-support-desk'), -1 );
+                    throw new Exception( __( 'Failed', 'kanzu-support-desk'), -1 );
                 }
             } else {//Bulk re-assignment
                 $update_array = array ( 
                     'tkt_assigned_to' => $_POST['tkt_assign_assigned_to'],
                     'tkt_assigned_by' => $_POST['ksd_current_user_id']
                         );
-               if ( is_array( $assign_ticket->bulk_update_ticket($_POST['tkt_id'], $update_array ) ) ) {
+               if ( is_array( $assign_ticket->bulk_update_ticket( $_POST['tkt_id'], $update_array ) ) ) {
                    //Add event to assignments table
                    foreach ( $_POST['tkt_id'] as $tktID ) {
                     $this->do_ticket_assignment( $tktID, $update_array['tkt_assigned_to'], $update_array['tkt_assigned_by'] );
                    }
-                   echo json_encode( __('Tickets Re-assigned', 'kanzu-support-desk') );
+                   echo json_encode( __( 'Tickets Re-assigned', 'kanzu-support-desk') );
                 } else {
-                    throw new Exception( __('Ticket Re-assignment Failed', 'kanzu-support-desk'), -1 );
+                    throw new Exception( __( 'Ticket Re-assignment Failed', 'kanzu-support-desk'), -1 );
                 }                    
             }
             die();// IMPORTANT: don't leave this out
@@ -1390,7 +1390,7 @@ class KSD_Admin {
            $response = array(
                'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
            );
-           echo json_encode($response );	
+           echo json_encode( $response );	
            die();// IMPORTANT: don't leave this out
        }  
     }
@@ -1407,18 +1407,17 @@ class KSD_Admin {
         //In add-on mode, this function was called by an add-on
         $add_on_mode = ( is_array( $ticket_reply_array ) ? true : false );
 
-
         if ( ! $add_on_mode ) {//Check for NONCE if not in add-on mode    
             if ( isset( $_POST['ksd_admin_nonce'] ) || isset( $_POST['ksd_new_reply_nonce'] ) ) {
                 if ( isset( $_POST['ksd_admin_nonce'] ) &&  ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
-                    die ( __('Busted!', 'kanzu-support-desk') );  
+                    die ( __( 'Busted!', 'kanzu-support-desk') );  
                 }
                 //Front end reply nonce check
                 if ( isset( $_POST['ksd_new_reply_nonce'] ) &&  ! wp_verify_nonce( $_POST['ksd_new_reply_nonce'], 'ksd-add-new-reply' ) ) {
-                    die ( __('Busted!', 'kanzu-support-desk') ); 
+                    die ( __( 'Busted!', 'kanzu-support-desk') ); 
                 } 
             }else{
-                die ( __('Busted!', 'kanzu-support-desk') );
+                die ( __( 'Busted!', 'kanzu-support-desk') );
             }
         }
 
@@ -1448,6 +1447,7 @@ class KSD_Admin {
                 else{
                      $new_reply['post_author'] = get_current_user_id();
                 }
+                
                 $parent_ticket_ID = sanitize_text_field( $_POST['tkt_id'] );                    
                 $new_reply['post_title']      = wp_strip_all_tags( $_POST['ksd_reply_title'] );               
                 $new_reply['post_parent']     = $parent_ticket_ID;    
@@ -1457,7 +1457,7 @@ class KSD_Admin {
                 $new_reply['comment_status']  = 'closed ';      
 
                 $cc = null;
-                if ( isset($_POST['ksd_tkt_cc']) && $_POST['ksd_tkt_cc'] != __( 'CC', 'kanzu-support-desk' ) ) {
+                if ( isset( $_POST['ksd_tkt_cc'] ) && $_POST['ksd_tkt_cc'] != __( 'CC', 'kanzu-support-desk' ) ) {
                     $new_reply['rep_cc']       = sanitize_text_field( $_POST['ksd_tkt_cc'] );
                     $cc = $_POST['ksd_tkt_cc'];
                 }
@@ -1468,8 +1468,9 @@ class KSD_Admin {
 
                 $new_reply['post_content']	 = wp_kses_post( stripslashes( $_POST['ksd_ticket_reply'] )  );
                 if ( strlen( $new_reply['post_content'] ) < 2 && ! $add_on_mode ) {//If the response sent it too short
-                   throw new Exception( __("Error | Reply too short", 'kanzu-support-desk'), -1 );
+                   throw new Exception( __( "Error | Reply too short", 'kanzu-support-desk' ), -1 );
                 }
+                
                 //Add the reply to the replies table                         
                 $new_reply_id = wp_insert_post( $new_reply );
                 
@@ -1482,7 +1483,7 @@ class KSD_Admin {
 
                 //Update the main ticket's tkt_time_updated field.  
                 $parent_ticket = get_post( $parent_ticket_ID );
-                $parent_ticket->post_modified = current_time('mysql');
+                $parent_ticket->post_modified = current_time( 'mysql' );
                 wp_update_post( $parent_ticket );
 
                 //Do notifications
@@ -1516,14 +1517,14 @@ class KSD_Admin {
                    $new_reply['post_author'] = get_userdata ( $new_reply['post_author'] )->display_name;
                   echo json_encode(  $new_reply  );
                }else{
-                   throw new Exception( __("Error", 'kanzu-support-desk'), -1 );
+                   throw new Exception( __( "Error", 'kanzu-support-desk' ), -1 );
                }
                die();// IMPORTANT: don't leave this out
             }catch( Exception $e ) {
                 $response = array(
                     'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
                 );
-                echo json_encode($response );	
+                echo json_encode( $response );	
                 die();// IMPORTANT: don't leave this out
             }  
 
@@ -1570,7 +1571,9 @@ class KSD_Admin {
      * Generally, this is called whenever a new ticket is logged
      * using the action ksd_log_new_ticket [and not the AJAX version
      * of the same action]
+     * 
      * @param Array $new_ticket New ticket array. Can also be a reply array
+     * 
      * @since 1.0.1
      */
     public function do_log_new_ticket( $new_ticket ) {      
@@ -1582,26 +1585,7 @@ class KSD_Admin {
         if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
             $agent_initiated_ticket = true;
         }
-        //First check if the ticket initiator exists in our users table. 
-        $customer_details = get_user_by ( 'email', $new_ticket['ksd_cust_email'] );
-        if (  $customer_details && $new_ticket['ksd_tkt_channel'] !== 'facebook' ) {//Customer's already in the Db, get their customer ID 
-                        
-            $new_ticket['ksd_tkt_cust_id'] = $customer_details->ID;
-            $disable_ticket_author_check   = $this->is_user_staff( $customer_details );
-            
-            $parent_ticket_post = $this->get_parent_ticket_for_email_channel( $new_ticket );
-            
-            if ( ! is_null( $parent_ticket_post ) ) { //This is a reply
-                //Create the array the reply function expects
-                $new_ticket['tkt_id']                       = $parent_ticket_post->ID;
-                $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
-                $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
-                $new_ticket['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
-                $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
-                $this->reply_ticket( $new_ticket ); 
-                return; //die removed because it was triggering a fatal error in add-ons
-            }
-        }
+
         //Handle Facebook channel replies
         if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
             $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
@@ -1616,6 +1600,52 @@ class KSD_Admin {
         //This is a new ticket
         $this->log_new_ticket( $new_ticket, true );                        
     }
+    
+    /**
+     * Log new ticket reply 
+     * 
+     * @sine 2.2.12 
+     * 
+     * @param type $new_ticket The reply to the ticket
+     */
+    public function do_reply_ticket ( $new_ticket ) {
+        $this->do_admin_includes();
+ 
+        $customer_details = get_user_by ( 'email', $new_ticket['ksd_cust_email'] );
+        $new_ticket['ksd_tkt_cust_id']                = $customer_details->ID;
+        
+        if ( false === $customer_details ) { //Customer does not exist       
+            $cust_email           = sanitize_email( $new_ticket_raw['ksd_cust_email'] );//Get the provided email address
+            //Check that it is a valid email address. Don't do this check in add-on mode
+            if ( !is_email( $cust_email ) ) {
+                 throw new Exception( __('Error | Invalid email address specified', 'kanzu-support-desk') , -1 );
+            } 
+            $new_customer = new stdClass();
+            $new_customer->user_email           = $cust_email;
+            //Check whether one or more than one customer name was provided
+            if ( false === strpos( trim( sanitize_text_field( $new_ticket_raw['ksd_cust_fullname'] ) ), ' ') ) {//Only one customer name was provided
+               $new_customer->first_name   =   sanitize_text_field( $new_ticket_raw['ksd_cust_fullname'] );
+            }
+            else{
+               preg_match('/(\w+)\s+([\w\s]+)/', sanitize_text_field( $new_ticket_raw['ksd_cust_fullname'] ), $new_customer_fullname );
+                $new_customer->first_name   = $new_customer_fullname[1];
+                $new_customer->last_name    = $new_customer_fullname[2];//We store everything besides the first name in the last name field
+            }
+            //Add the customer to the user table and get the customer ID
+            $new_ticket['post_author']    =  $this->create_new_customer( $new_customer ); 
+        }
+
+        $new_ticket['ksd_tkt_cust_id'] = $customer_details->ID;
+        
+        $ticket_reply['tkt_id']                       = $new_ticket['ksd_tkt_id'];
+        $ticket_reply['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
+        $ticket_reply['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
+        $ticket_reply['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
+        $ticket_reply['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
+        
+        $this->reply_ticket( $ticket_reply );
+    }
+    
     
     /**
      * Check whether a new ticket already exists. If it does, return its current ID
@@ -1658,40 +1688,7 @@ class KSD_Admin {
         return $ticket_id;
     }
     
-    /**
-     * Returns the parent ticket if the message is a reply, else returns null.
-     * 
-     * 
-     * @since 2.2.12
-     * 
-     * @return int parent ticket ID;
-     */
-    public function get_parent_ticket_for_email_channel( $new_ticket ) { 
 
-        //For ticket/reply from email, check the references header against the 
-        //Mesagge-ID
-        $references         = explode( " ", $new_ticket['ksd_mail_references'] );
-        $parent_message_id  = 'mail-message-id';
-        
-        if ( count( references ) > 0 ) {
-            $parent_message_id = $references[0];
-        }
-		
-        $args = array(
-            'posts_per_page'   => 2,
-            'meta_key'         => '_ksd_tkt_info_mail_message_id',
-            'meta_value'       => $parent_message_id,
-            'post_type'        => 'ksd_ticket',
-			'post_status'	   => array ( 'private', 'publish', 'close', 'open', 'draft','pending','resolved' )
-        );
-        $posts_array = get_posts( $args );
-        
-        if ( count( $posts_array ) > 0 ){
-            return $posts_array[0];
-        } else {
-            return null;
-        }  
-    }
     
     /**
      * Check if the user's a member of staff. The only users  considered as staff
@@ -1935,11 +1932,6 @@ class KSD_Admin {
             if ( isset( $new_ticket_raw['ksd_woo_order_id'] ) ) {
                 $meta_array['_ksd_tkt_info_woo_order_id']           = $new_ticket_raw['ksd_woo_order_id'];
             }
-
-            if ( isset( $new_ticket_raw['ksd_mail_message_id'] ) ) {//For email tickets save the message ID of the email
-                $meta_array['_ksd_tkt_info_mail_message_id']        = $new_ticket_raw['ksd_mail_message_id'];
-                update_post_meta( $new_ticket_id, '_ksd_tkt_info_mail_message_id', $new_ticket_raw['ksd_mail_message_id'] ); 
-            }
             
             //Whom to we notify. Defaults to admin if ticket doesn't have an assignee
             $notify_user_id = ( isset( $meta_array['_ksd_tkt_info_assigned_to'] )? $meta_array['_ksd_tkt_info_assigned_to'] : 1 );
@@ -1950,7 +1942,7 @@ class KSD_Admin {
                 include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-hash-urls.php" );
                 $hash_urls = new KSD_Hash_Urls();                    
                 $meta_array[ '_ksd_tkt_info_hash_url' ] = $hash_urls->create_hash_url( $new_ticket_id );
-            }   
+            }
 
             //Save ticket meta info
             $this->save_ticket_meta_info( $new_ticket_id, $new_ticket['post_title'], $meta_array );
@@ -1979,9 +1971,10 @@ class KSD_Admin {
             }
 
             //For add-ons to do something after new ticket is added. We share the ID and the final status
-            if ( isset( $new_ticket_raw['ksd_addon_tkt_id'] ) ) {                    
+            if ( isset( $new_ticket_raw['ksd_addon_tkt_id'] ) ) {
                 do_action( 'ksd_new_ticket_logged', $new_ticket_raw['ksd_addon_tkt_id'], $new_ticket_id );
             }
+            
             //@TODO If $tkt_channel  ==  "admin-form", notify the customer
             //@TODO If agent logs new ticket by addon, notify the customer
             if ( $tkt_channel  !==  "admin-form" && $tkt_channel  !==  "sample-ticket" ) {//Notify the agent  
