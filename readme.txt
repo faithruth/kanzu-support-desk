@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.6
-Stable tag: 2.2.11
+Stable tag: 2.2.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,6 +110,10 @@ No. Only supervisors and administrators can delete tickets
 5. The details of a single ticket and its corresponding replies
 6. Changing a ticket's status
 7. Private note support
+
+== Changelog ==
+= 2.2.12, October 07, 2016 =
+ * Add ksd_reply_ticket action hook to addons to log replies
 
 == Changelog ==
 = 2.2.11, September 16, 2016 =
@@ -375,6 +379,9 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+= 2.2.12, October 07, 2016 =
+ * Add ksd_reply_ticket action hook to addons to log replies
+
 = 2.2.9 =
  * Add custom KSD roles
 
