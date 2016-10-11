@@ -81,9 +81,6 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );       
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
         
-        
-
-      
         //Generate a debug file
         add_action( 'ksd_generate_debug_file', array( $this, 'generate_debug_file' ) );                  
 
@@ -158,6 +155,15 @@ class KSD_Admin {
         //Add 'My tickets' button to 'My profile' page
         add_action( 'personal_options', array( $this, 'add_my_tickets_link') );        
         
+        //Show a bubble of the number of open tickets next to the menu
+        add_action( 'admin_menu', array( $this, 'show_open_tickets_bubble' ), 999 );
+        
+        //Updaate _ksd_tkt_info_is_read flag
+        add_action( 'admin_init', array( $this, 'mark_ticket_as_read' ) );
+        
+        //
+        add_filter( 'manage_ksd_ticket_posts_custom_column', array( $this, 'bold_titles_of_unread_posts' ) );
+
     }
     
 
@@ -1933,6 +1939,11 @@ class KSD_Admin {
                 $meta_array['_ksd_tkt_info_woo_order_id']           = $new_ticket_raw['ksd_woo_order_id'];
             }
             
+            //Mark ticket as not read 
+            if ( ! add_post_meta( $new_ticket_id, '_ksd_tkt_info_is_read', 'no', true ) ) { 
+                update_post_meta( $new_ticket_id, '_ksd_tkt_info_is_read', 'no' ); 
+            }
+            
             //Whom to we notify. Defaults to admin if ticket doesn't have an assignee
             $notify_user_id = ( isset( $meta_array['_ksd_tkt_info_assigned_to'] )? $meta_array['_ksd_tkt_info_assigned_to'] : 1 );
             $notify_user    = get_userdata(  $notify_user_id );
@@ -3282,6 +3293,84 @@ class KSD_Admin {
             
         return $translation;
     }    
+    
+    
+    /**
+     * Show a bubble of the number of open tickets next to the menu
+     * 
+     * @since 2.X.0
+     * 
+     * @return void
+     */
+    public function show_open_tickets_bubble () {
+        global $menu;
+        $pt 	   = 'ksd_ticket';
+        
+        $args = array(
+            'post_type' => $pt,
+            'meta_key'=> '_ksd_tkt_info_is_read',
+            'meta_value'=> 'no'
+        );
+        $the_query = new WP_Query( $args );
+        $count = $the_query->found_posts;
+
+        if ( $count ) {
+            
+            // Menu link suffix, Post is different from the rest
+            $suffix = ( 'post' == $pt ) ? '' : "?post_type=$pt";
+            
+            $key = $this->recursive_array_search( "edit.php$suffix", $menu );
+            
+            // Not found, just in case 
+            if( !$key )
+                return;
+            
+            // Modify menu item
+            $menu[$key][0] .= sprintf(
+                    '<span class="update-plugins count-%1$s" '
+                    . 'style="background-color:white;color:black"><span '
+                    . 'class="plugin-count">%1$s</span></span>',
+                    $count
+            );
+        }
+    }
+    
+    /**
+     * 
+     */
+    // http://www.php.net/manual/en/function.array-search.php#91365
+    public function recursive_array_search ( $needle, $haystack ) {
+        foreach ( $haystack as $key => $value ) {
+            $current_key = $key;
+            if( $needle === $value OR ( is_array( $value ) && 
+                    $this->recursive_array_search ( $needle, $value ) !== false ) ) {
+                return $current_key;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Make ticket as read 
+     * 
+     */
+    public function mark_ticket_as_read () {
+        global $pagenow;        
+        if (  'ksd_ticket' === get_post_type( $_GET['post'] ) && 
+            'post.php' === $pagenow && 'edit' === $_GET['action'] ){
+            $post_id = $_GET['post'];
+            update_post_meta( $post_id, '_ksd_tkt_info_is_read', 'yes' );
+        }
+    }
+    
+    
+    /**
+     * Make the titkes of un read tickets posts in the ticket list table
+     * 
+     */
+    public function bold_titles_of_unread_posts( $column_name, $post_id ){
+
+    }
 }   
         
 endif;
