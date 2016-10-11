@@ -161,8 +161,8 @@ class KSD_Admin {
         //Updaate _ksd_tkt_info_is_read flag
         add_action( 'admin_init', array( $this, 'mark_ticket_as_read' ) );
         
-        //
-        add_filter( 'manage_ksd_ticket_posts_custom_column', array( $this, 'bold_titles_of_unread_posts' ) );
+        //Make titles of unread messages bold
+        add_filter( 'admin_head', array( $this, 'bold_titles_of_unread_posts' ) );
 
     }
     
@@ -1447,7 +1447,6 @@ class KSD_Admin {
                             $new_customer->user_email   = $customer_email;
                             $new_reply['post_author']   = $this->create_new_customer( $new_customer );
                         }
-
                     }                        
                 }
                 else{
@@ -1487,6 +1486,9 @@ class KSD_Admin {
                     add_post_meta( $new_reply_id , '_ksd_tkt_info_cc', $cc, true );
                 }
 
+                //Mark ticket as unread
+                update_post_meta( $parent_ticket_ID, '_ksd_tkt_info_is_read', 'no' );
+                
                 //Update the main ticket's tkt_time_updated field.  
                 $parent_ticket = get_post( $parent_ticket_ID );
                 $parent_ticket->post_modified = current_time( 'mysql' );
@@ -3332,6 +3334,8 @@ class KSD_Admin {
                     . 'class="plugin-count">%1$s</span></span>',
                     $count
             );
+            
+
         }
     }
     
@@ -3365,10 +3369,35 @@ class KSD_Admin {
     
     
     /**
-     * Make the titkes of un read tickets posts in the ticket list table
+     * Add styles to make unread tickets bold
      * 
      */
-    public function bold_titles_of_unread_posts( $column_name, $post_id ){
+    public function bold_titles_of_unread_posts() {
+        
+        if ( isset( $_GET['post_type'] )  && 'ksd_ticket' == $_GET['post_type'] ) {
+
+            $args = array(
+                'post_type' => 'ksd_ticket',
+                'meta_key'  => '_ksd_tkt_info_is_read',
+                'meta_value'=> 'no'
+            );
+            $the_query = new WP_Query( $args );
+
+            if ( $the_query->found_posts ) {
+                //Add styles for the unseen tickets
+
+                $css_rules = '<style>';
+
+                while ( $the_query->have_posts() ) {
+                    $the_query->the_post();
+                    $post_id = $the_query->post->ID;
+                    $css_rules .= "#post-{$post_id},#post-{$post_id} .row-title { font-weight: bold; }";               
+                }
+
+                $css_rules .=  '</style>';
+                echo $css_rules; 
+            }
+        }
 
     }
 }   
