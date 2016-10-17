@@ -359,7 +359,7 @@ class KSD_Admin {
 	foreach ( $users as $user ) {
 		$return[] = array(
 			/* translators: 1: user_login, 2: user_email */
-			'label' => sprintf( __( '%1$s (%2$s)' ), $user->user_login, $user->user_email ),
+			'label' => sprintf( __( '%1$s (%2$s)','kanzu-support-desk' ), $user->user_login, $user->user_email ),
 			'value' => $user->user_login,
                         'ID'    => $user->ID
 		);
@@ -404,18 +404,55 @@ class KSD_Admin {
      */
     public function ticket_updated_messages( $messages ) {
         global $post, $post_ID;
+        
+        $message_1 = sprintf( '%s <a href="%s">%s</a>', 
+                    __( 'Ticket updated.', 'kanzu-support-desk' ) , 
+                    esc_url( get_permalink( $post_ID ) ), 
+                    __( 'View ticket', 'kanzu-support-desk' ) );
+        
+        $message_5 = isset( $_GET['revision'] ) ? 
+                    sprintf( 
+                       '%s %s', 
+                       __( 'Ticket restored to revision from', 'kanzu-support-desk' ),
+                       wp_post_revision_title( ( int ) $_GET['revision'], false ) 
+                    ) : false;
+        
+        $message_6 = sprintf( '%s <a href="%s">%s</a>' , 
+                __( 'Ticket published.', 'kanzu-support-desk' ),
+                __( 'View ticket.', 'kanzu-support-desk' ),
+                esc_url( get_permalink( $post_ID ) ) );
+        
+        $message_8 = sprintf( '$s <a target="_blank" href="%s">%s</a>', 
+                    __( 'Ticket submitted.', 'kanzu-support-desk' ),
+                    esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ),
+                    __( 'Preview ticket', 'kanzu-support-desk' )
+                );
+        
+        $message_9 = sprintf( '%s <strong>%1$s</strong>. <a target="_blank" href="%2$s">%s</a>', 
+                    __( 'Ticket scheduled for:','kanzu-support-desk' ),
+                    date_i18n( 'M j, Y @ G:i', strtotime( $post->post_date ) ), 
+                    esc_url( get_permalink( $post_ID ) ) ,
+                    __( 'Preview ticket', 'kanzu-support-desk' )
+                );
+        
+        $message_10 = sprintf( '%s <a target="_blank" href="%s">%s</a>', 
+                __( 'Ticket draft updated.', 'kanzu-support-desk' ),
+                esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ,
+                __( 'Preview ticket', 'kanzu-support-desk' )
+                );
+        
         $messages['ksd_ticket'] = array(
             0   => '',
-            1   => sprintf( __( 'Ticket updated. <a href="%s">View ticket</a>' ), esc_url( get_permalink( $post_ID ) ) ),
-            2   => __( 'Custom field updated.' ),
-            3   => __( 'Custom field deleted.' ),
-            4   => __( 'Ticket updated.' ),
-            5   => isset( $_GET['revision']) ? sprintf( __( 'Ticket restored to revision from %s' ), wp_post_revision_title( ( int ) $_GET['revision'], false ) ) : false,
-            6   => sprintf( __( 'Ticket published. <a href="%s">View ticket</a>' ), esc_url( get_permalink( $post_ID ) ) ),
-            7   => __( 'Ticket saved.' ),
-            8   => sprintf( __( 'Ticket submitted. <a target="_blank" href="%s">Preview ticket</a>' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-            9   => sprintf( __( 'Ticket scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview ticket</a>' ), date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
-            10  => sprintf( __( 'Ticket draft updated. <a target="_blank" href="%s">Preview ticket</a>' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
+            1   => $message_1,
+            2   => __( 'Custom field updated.', 'kanzu-support-desk' ),
+            3   => __( 'Custom field deleted.', 'kanzu-support-desk' ),
+            4   => __( 'Ticket updated.' , 'kanzu-support-desk' ),
+            5   => $message_5,
+            6   => $message_6,
+            7   => __( 'Ticket saved.', 'kanzu-support-desk' ),
+            8   => $message_8,
+            9   => $message_9,
+            10  => $message_10
         );
         return $messages;
     }
@@ -426,8 +463,8 @@ class KSD_Admin {
      */
     public function ticket_bulk_update_messages( $bulk_messages, $bulk_counts ) {
         $bulk_messages['ksd_ticket'] = array(
-                'updated'   => _n( '%s ticket updated.', '%s tickets updated.', $bulk_counts['updated'] ),
-                'locked'    => ( 1 == $bulk_counts['locked'] ) ? __( '1 ticket not updated, somebody is editing it.' ) :
+                'updated'   => sprintf( _n( '%s ticket updated.', '%s tickets updated.', $bulk_counts['updated'], 'kanzu-support-desk' ), $bulk_counts['updated'] ),
+                'locked'    => ( 1 == $bulk_counts['locked'] ) ? __( '1 ticket not updated, somebody is editing it.', 'kanzu-support-desk' ) : 
                                    _n( '%s ticket not updated, somebody is editing it.', '%s tickets not updated, somebody is editing them.', $bulk_counts['locked'] ),
                 'deleted'   => _n( '%s ticket permanently deleted.', '%s tickets permanently deleted.', $bulk_counts['deleted'] ),
                 'trashed'   => _n( '%s ticket moved to the Trash.', '%s tickets moved to the Trash.', $bulk_counts['trashed'] ),
@@ -572,7 +609,7 @@ class KSD_Admin {
         }
         //Add a custom submitdiv
         $publish_callback_args = array( 'revisions_count' => 0, 'revision_id' => NULL   );   
-        add_meta_box( 'submitdiv', __( 'Ticket Information' ), 'post_submit_meta_box', null, 'side', 'high', $publish_callback_args );
+        add_meta_box( 'submitdiv', __( 'Ticket Information', 'kanzu-support-desk' ), 'post_submit_meta_box', null, 'side', 'high', $publish_callback_args );
 
         //Customer information        
         add_meta_box(
@@ -2540,18 +2577,18 @@ class KSD_Admin {
         // The blogname option is escaped with esc_html on the way into the database in sanitize_option
         // we want to reverse this for the plain text arena of emails.
         $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
-        $notify_new_tkt_message  = sprintf( __('New customer support ticket on your site %s:', 'kanzu-support-desk'), $blog_name ) . "\r\n\r\n";
+        $notify_new_tkt_message  = sprintf( __( 'New customer support ticket on your site %s:', 'kanzu-support-desk'), $blog_name ) . "\r\n\r\n";
         if ( !is_null( $customer_email ) ) {
-            $notify_new_tkt_message .= sprintf( __('Customer E-mail: %s', 'kanzu-support-desk'), $customer_email ) . "\r\n\r\n";   
+            $notify_new_tkt_message .= sprintf( __( 'Customer E-mail: %s', 'kanzu-support-desk'), $customer_email ) . "\r\n\r\n";   
         }
         if ( !is_null( $ticket_subject ) ) {
-            $notify_new_tkt_message .= sprintf( __('Ticket Subject: %s', 'kanzu-support-desk'), $ticket_subject ) . "\r\n\r\n";   
+            $notify_new_tkt_message .= sprintf( __( 'Ticket Subject: %s', 'kanzu-support-desk'), $ticket_subject ) . "\r\n\r\n";   
         }
         if ( !is_null( $ticket_message ) ) {
-            $notify_new_tkt_message .= sprintf( __('Ticket Message: %s', 'kanzu-support-desk'), $ticket_message ) . "\r\n\r\n";   
+            $notify_new_tkt_message .= sprintf( __( 'Ticket Message: %s', 'kanzu-support-desk'), $ticket_message ) . "\r\n\r\n";   
         }
         $notify_new_tkt_message .= Kanzu_Support_Desk::output_ksd_signature( $tkt_id );
-        $notify_new_tkt_subject = sprintf( __('[%s] New Support Ticket'), $blog_name );
+        $notify_new_tkt_subject = sprintf( __( '[%s] New Support Ticket', 'kanzu-support-desk' ), $blog_name );
 
         //Use two filters, ksd_new_ticket_notifxn_message and ksd_new_ticket_notifxn_subject, to make changes to the
         //the notification message and subject by add-ons
@@ -2576,7 +2613,7 @@ class KSD_Admin {
         $blog_name = wp_specialchars_decode( get_option('blogname'), ENT_QUOTES );
         $notify_tkt_reassign_message  = sprintf( __('Hi %1$s, A support ticket has been reassigned to you on %2$s:', 'kanzu-support-desk'), $agent_name, $blog_name ) . "\r\n\r\n";             
         $notify_tkt_reassign_message .= Kanzu_Support_Desk::output_ksd_signature( $tkt_id );
-        $notify_tkt_reassign_subject = sprintf( __('[%s] Support Ticket Reassigned to you'), $blog_name );
+        $notify_tkt_reassign_subject = sprintf( __('[%s] Support Ticket Reassigned to you', 'kanzu-support-desk' ), $blog_name );
         $this->send_email( $notify_email, $notify_tkt_reassign_message, $notify_tkt_reassign_subject );
      }
 
@@ -2753,7 +2790,7 @@ class KSD_Admin {
     public  function add_importer_to_toolbox() { 
         echo '
             <div class="tool-box">
-                <h3 class="title"> ' . __('KSD Importer') . '</h3>
+                <h3 class="title"> ' . __( 'KSD Importer', 'kanzu-support-desk' ) . '</h3>
                  <p>
                  Import tickets into Kanzu Support Desk. Use the  <a href="?import=ksdimporter">KSD Importer </a>
                  </p>
