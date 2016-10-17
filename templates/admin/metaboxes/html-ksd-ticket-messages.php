@@ -14,9 +14,11 @@
             <input type="text" value="<?php _e('CC', 'kanzu-support-desk'); ?>" maxlength="255" name="ksd_tkt_cc" label="<?php _e('CC', 'kanzu-support-desk'); ?>" class="ksd-cc" minlength="2" style="display:none;" data-rule-ccRule /> 
             <?php wp_editor('', 'ksd_ticket_reply', array("media_buttons" => true, "textarea_rows" => 5)); ?> 
         </div>
+        <!-- private notes -->
         <div id="update_private_note" class="single-ticket-textarea">
-            <textarea name="tkt_private_note" rows="5" cols="100"></textarea> 
+            <?php echo wp_editor( '', 'tkt_private_note'); ?>
         </div>
+        <!--/ private notes -->
     </div> 
     <?php wp_nonce_field( 'ksd-add-new-reply', 'ksd_new_reply_nonce' ); ?>
     <div class="ksd-reply-submit-wrapper">
