@@ -24,6 +24,7 @@ class KSD_Admin {
      */
     protected static $instance = null;   
     
+    
     /**
      * Initialize the plugin by loading admin scripts & styles and adding a
      * settings page and menu. Also define the AJAX callbacks
@@ -158,6 +159,8 @@ class KSD_Admin {
         //Add 'My tickets' button to 'My profile' page
         add_action( 'personal_options', array( $this, 'add_my_tickets_link') );        
         
+        //Tag 'read' tickets in the ticket grid
+        add_filter( 'post_class', array( $this, 'append_classes_to_ticket_grid' ), 10, 3 );
     }
     
 
@@ -3276,6 +3279,17 @@ class KSD_Admin {
         
         return $data;
     }    
+    
+    public function append_classes_to_ticket_grid( $classes, $class, $post_ID ){
+        global $current_screen, $current_user;
+        if ( ! isset( $current_screen->id ) && 'edit-ksd_ticket' == $current_screen->id ){
+            return $classes;
+        }
+        if( 'yes' == get_post_meta( $post_ID, '_ksd_tkt_info_is_read_by_'.$current_user->ID, true ) ){
+           $classes[] = 'read'; 
+        }
+        return $classes;
+    }
     
     /**
      * Change the Publish button to update
