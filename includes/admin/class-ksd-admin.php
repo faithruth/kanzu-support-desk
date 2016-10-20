@@ -612,7 +612,16 @@ class KSD_Admin {
                 'side',  
                 'high'          
             );         
-        }            
+        }       
+        //Mark ticket as read by current user
+        global $current_user;
+        update_post_meta( $post->ID, '_ksd_tkt_info_is_read_by_'.$current_user->ID, 'yes' );
+        $new_ticket_activity = array();
+        $new_ticket_activity['post_author']    = 0;
+        $new_ticket_activity['post_title']     = $post->post_title;
+        $new_ticket_activity['post_parent']    = $post->ID;   
+        $new_ticket_activity['post_content']   = sprintf( __( 'Ticket read by %s','kanzu-support-desk' ),  '<a href="' . admin_url( "user-edit. php?user_id={$current_user->ID}").'">' . $current_user->display_name.'</a>' );
+        do_action( 'ksd_insert_new_ticket_activity', $new_ticket_activity );
     }
 
     /**
@@ -1224,7 +1233,7 @@ class KSD_Admin {
             if ( count( $ticket_activities ) > 0 && !empty ( $_POST['tkt_id'] ) ) {
                 //Replace the post_author IDs with names
                 foreach ( $ticket_activities as $activity ) {
-                    $activity->post_author = get_userdata( $activity->post_author )->display_name;
+                    $activity->post_author = ( 0 == $activity->post_author ? '' :  get_userdata( $activity->post_author )->display_name );
                     $activity->post_date = date_i18n( __( 'M j, Y @ H:i' ), strtotime( $activity->post_date ) );
                 }
             }
