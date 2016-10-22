@@ -1,3 +1,7 @@
+#the-list tr.read{
+  font-weight: bold;
+  background-color: #555;
+}
 #admin-kanzu-support-desk{
     position: relative;
 }

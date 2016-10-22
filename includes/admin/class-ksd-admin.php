@@ -24,6 +24,7 @@ class KSD_Admin {
      */
     protected static $instance = null;   
     
+    
     /**
      * Initialize the plugin by loading admin scripts & styles and adding a
      * settings page and menu. Also define the AJAX callbacks
@@ -158,15 +159,8 @@ class KSD_Admin {
         //Add 'My tickets' button to 'My profile' page
         add_action( 'personal_options', array( $this, 'add_my_tickets_link') );        
         
-        //Show a bubble of the number of open tickets next to the menu
-        add_action( 'admin_menu', array( $this, 'show_open_tickets_bubble' ), 999 );
-        
-        //Updaate _ksd_tkt_info_is_read flag
-        add_action( 'admin_init', array( $this, 'mark_ticket_as_read' ) );
-        
-        //Make titles of unread messages bold
-        add_filter( 'admin_head', array( $this, 'bold_titles_of_unread_posts' ) );
-
+        //Tag 'read' tickets in the ticket grid
+        add_filter( 'post_class', array( $this, 'append_classes_to_ticket_grid' ), 10, 3 );
     }
     
 
@@ -658,7 +652,16 @@ class KSD_Admin {
                 'side',  
                 'high'          
             );         
-        }            
+        }       
+        //Mark ticket as read by current user
+        global $current_user;
+        update_post_meta( $post->ID, '_ksd_tkt_info_is_read_by_'.$current_user->ID, 'yes' );
+        $new_ticket_activity = array();
+        $new_ticket_activity['post_author']    = 0;
+        $new_ticket_activity['post_title']     = $post->post_title;
+        $new_ticket_activity['post_parent']    = $post->ID;   
+        $new_ticket_activity['post_content']   = sprintf( __( 'Ticket read by %s','kanzu-support-desk' ),  '<a href="' . admin_url( "user-edit. php?user_id={$current_user->ID}").'">' . $current_user->display_name.'</a>' );
+        do_action( 'ksd_insert_new_ticket_activity', $new_ticket_activity );
     }
 
     /**
@@ -963,7 +966,6 @@ class KSD_Admin {
         } 
         //Remove ticket tags
         remove_submenu_page( 'edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket' ); 
-        $this->reset_user_rights();
         
     }
 
@@ -1270,7 +1272,7 @@ class KSD_Admin {
             if ( count( $ticket_activities ) > 0 && !empty ( $_POST['tkt_id'] ) ) {
                 //Replace the post_author IDs with names
                 foreach ( $ticket_activities as $activity ) {
-                    $activity->post_author = get_userdata( $activity->post_author )->display_name;
+                    $activity->post_author = ( 0 == $activity->post_author ? '' :  get_userdata( $activity->post_author )->display_name );
                     $activity->post_date = date_i18n( __( 'M j, Y @ H:i' ), strtotime( $activity->post_date ) );
                 }
             }
@@ -3326,6 +3328,17 @@ class KSD_Admin {
         return $data;
     }    
     
+    public function append_classes_to_ticket_grid( $classes, $class, $post_ID ){
+        global $current_screen, $current_user;
+        if ( ! isset( $current_screen->id ) && 'edit-ksd_ticket' == $current_screen->id ){
+            return $classes;
+        }
+        if( 'yes' == get_post_meta( $post_ID, '_ksd_tkt_info_is_read_by_'.$current_user->ID, true ) ){
+           $classes[] = 'read'; 
+        }
+        return $classes;
+    }
+    
     /**
      * Change the Publish button to update
      * @param string $translation
@@ -3398,53 +3411,7 @@ class KSD_Admin {
         }
         return false;
     }
-    
-    /**
-     * Make ticket as read 
-     * 
-     */
-    public function mark_ticket_as_read () {
-        global $pagenow;        
-        if (  'ksd_ticket' === get_post_type( $_GET['post'] ) && 
-            'post.php' === $pagenow && 'edit' === $_GET['action'] ){
-            $post_id = $_GET['post'];
-            update_post_meta( $post_id, '_ksd_tkt_info_is_read', 'yes' );
-        }
-    }
-    
-    
-    /**
-     * Add styles to make unread tickets bold
-     * 
-     */
-    public function bold_titles_of_unread_posts() {
-        
-        if ( isset( $_GET['post_type'] )  && 'ksd_ticket' == $_GET['post_type'] ) {
 
-            $args = array(
-                'post_type' => 'ksd_ticket',
-                'meta_key'  => '_ksd_tkt_info_is_read',
-                'meta_value'=> 'no'
-            );
-            $the_query = new WP_Query( $args );
-
-            if ( $the_query->found_posts ) {
-                //Add styles for the unseen tickets
-
-                $css_rules = '<style>';
-
-                while ( $the_query->have_posts() ) {
-                    $the_query->the_post();
-                    $post_id = $the_query->post->ID;
-                    $css_rules .= "#post-{$post_id},#post-{$post_id} .row-title { font-weight: bold; }";               
-                }
-
-                $css_rules .=  '</style>';
-                echo $css_rules; 
-            }
-        }
-
-    }
 }   
         
 endif;

@@ -263,6 +263,9 @@ final class Kanzu_Support_Desk {
 
         //Handle logging of new tickets initiated by add-ons.   
         add_action( 'ksd_log_new_ticket', array( $this, 'do_log_new_ticket' ) );
+        
+        //Handle logging of new ticket activities
+        add_action( 'ksd_insert_new_ticket_activity', array( $this, 'insert_new_ticket_activity' ) );
       
         //Handle logging of replies initiated by add-ons.   
         add_action( 'ksd_reply_ticket', array( $this, 'do_reply_ticket' ) );
@@ -362,6 +365,25 @@ final class Kanzu_Support_Desk {
         }else{
             return KSD_Public::generate_support_form();;
         }
+    }
+    
+    /**
+     * Insert a new activity related to a ticket
+     * 
+     * @param Array $new_ticket_activity The new activity to insert. Note that one of the keys must be post_parent and 
+     *                                   it should be a valid ID of a ksd_ticket
+     * @return int|WP_Error The activity ID on success. The value 0 or WP_Error on failure.
+     * @since 2.2.12
+     */
+    public function insert_new_ticket_activity( $new_ticket_activity ){
+        //Check whether the ticket this is being attached to is valid
+        if ( 'ksd_ticket' !== get_post_type ( $new_ticket_activity['post_parent'] ) ) { 
+            return 0;
+        }
+        $new_ticket_activity['post_type']      = 'ksd_ticket_activity';
+        $new_ticket_activity['post_status']    = 'private';
+        $new_ticket_activity['comment_status'] = 'closed ';
+        return wp_insert_post( $new_ticket_activity ); 
     }
 
 
