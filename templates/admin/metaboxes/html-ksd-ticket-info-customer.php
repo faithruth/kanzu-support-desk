@@ -41,7 +41,7 @@ if ( $ksd_user_avatar ):  ?>
 </div>
 <div class="ksd-misc-customer-email misc-pub-section">
     <span><?php _e( 'Customer Email','kanzu-support-desk' ); ?>:</span>
-    <span class="ksd-misc-value" id="ksd-misc-customer-email"><?php echo $ksd_current_customer->user_email; ?></span>
+    <span class="ksd-misc-value" id="ksd-misc-customer-email"><?php echo apply_filters( 'ksd_ticket_info_customer_email', $ksd_current_customer->user_email ); ?></span>
 </div>
 <div class="ksd-misc-customer-since misc-pub-section">
     <span><?php _e( 'Customer Since','kanzu-support-desk' ); ?>:</span>
