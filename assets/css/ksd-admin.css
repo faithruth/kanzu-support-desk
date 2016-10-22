@@ -1,6 +1,14 @@
-#the-list tr.read{
-  font-weight: bold;
-  background-color: #555;
+#the-list tr.type-ksd_ticket.read{
+  background-color: #f9f9f9;
+}
+#the-list tr.type-ksd_ticket.read a.row-title{
+    font-weight: normal;    
+    color: #555;    
+}
+ 
+
+.striped > tbody > tr.type-ksd_ticket:nth-child(odd) {
+    background-color: #FFF;
 }
 #admin-kanzu-support-desk{
     position: relative;

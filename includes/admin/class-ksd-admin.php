@@ -82,6 +82,7 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );       
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
         add_action( 'wp_ajax_ksd_reset_role_caps', array( $this, 'reset_role_caps' ) );
+        add_action( 'wp_ajax_ksd_get_unread_ticket_count', array( $this, 'get_unread_ticket_count' ) );
         
         
         
@@ -2671,6 +2672,25 @@ class KSD_Admin {
         KSD()->roles->modify_all_role_caps( 'add' );  
         wp_send_json_success( __( 'Roles reset. All should be well now','kanzu-support-desk' ) );          
      }
+     
+
+     public function get_unread_ticket_count(){
+        global $current_user;
+        $args = array(
+                    'post_type'     => 'ksd_ticket',
+                    'posts_per_page'=>-1,
+                    'post_status'   => array('new','open','pending'),
+                    'meta_key'      => '_ksd_tkt_info_is_read_by_' . $current_user->ID,
+                    'meta_compare'  => 'NOT EXISTS'
+                );
+        $query = new WP_Query( $args ); 
+        if( $query->found_posts > 0 ){
+            wp_send_json_success( $query->found_posts );        
+        }else{
+            wp_send_json_error();
+        }
+     }     
+     
      /**
       * Send the KSD team feedback
       * @since 1.1.0
@@ -3354,63 +3374,8 @@ class KSD_Admin {
         return $translation;
     }    
     
-    
-    /**
-     * Show a bubble of the number of open tickets next to the menu
-     * 
-     * @since 2.X.0
-     * 
-     * @return void
-     */
-    public function show_open_tickets_bubble () {
-        global $menu;
-        $pt 	   = 'ksd_ticket';
-        
-        $args = array(
-            'post_type' => $pt,
-            'meta_key'=> '_ksd_tkt_info_is_read',
-            'meta_value'=> 'no'
-        );
-        $the_query = new WP_Query( $args );
-        $count = $the_query->found_posts;
 
-        if ( $count ) {
-            
-            // Menu link suffix, Post is different from the rest
-            $suffix = ( 'post' == $pt ) ? '' : "?post_type=$pt";
-            
-            $key = $this->recursive_array_search( "edit.php$suffix", $menu );
-            
-            // Not found, just in case 
-            if( !$key )
-                return;
-            
-            // Modify menu item
-            $menu[$key][0] .= sprintf(
-                    '<span class="update-plugins count-%1$s" '
-                    . 'style="background-color:white;color:black"><span '
-                    . 'class="plugin-count">%1$s</span></span>',
-                    $count
-            );
-            
-
-        }
-    }
-    
-    /**
-     * 
-     */
-    // http://www.php.net/manual/en/function.array-search.php#91365
-    public function recursive_array_search ( $needle, $haystack ) {
-        foreach ( $haystack as $key => $value ) {
-            $current_key = $key;
-            if( $needle === $value OR ( is_array( $value ) && 
-                    $this->recursive_array_search ( $needle, $value ) !== false ) ) {
-                return $current_key;
-            }
-        }
-        return false;
-    }
+                   
 
 }   
         

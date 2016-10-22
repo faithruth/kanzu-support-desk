@@ -851,7 +851,7 @@ jQuery(document).ready(function () {
     KSDTickets = function () {
         _this = this;
         this.init = function () {
-
+            this.addUnreadTicketCount();
             //this.uiTabs();
             this.uiListTickets();
             //this.bulkTicketActions();
@@ -870,7 +870,24 @@ jQuery(document).ready(function () {
             this.ticketInfo();
             
              //Page Refresh
-            this.attachRefreshTicketsPage();
+            this.attachRefreshTicketsPage();           
+            
+        };
+        
+        this.addUnreadTicketCount = function(){
+            jQuery('#menu-posts-ksd_ticket > a div.wp-menu-name').append('<span class="unread-display update-plugins count-0"><span class="unread-count"></span></span>');
+            jQuery.post(
+                    ksd_admin.ajax_url,
+                    {
+                        action: 'ksd_get_unread_ticket_count'
+                    },
+                    function (response) {                            
+                        if ( response.success ) {
+                            jQuery('#menu-posts-ksd_ticket span.unread-display span').html( response.data ).parent().removeClass( 'count-0' ).addClass( 'count-'+response.data );
+                        } 
+                    }
+            );               
+ 
         };
         
         /*
