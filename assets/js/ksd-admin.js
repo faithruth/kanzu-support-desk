@@ -8,243 +8,243 @@ var ksd_hooks = {
 }
 var KSDHooks = KSDHooks || {};
 
+(function($) {
+    $(document).ready(function () {
+        //KSD Notifications
+        $( "#ksd-notifications" ).slideToggle( "slow" );
 
-jQuery(document).ready(function () {
-    //KSD Notifications
-    jQuery( "#ksd-notifications" ).slideToggle( "slow" );
-    
-    //Added to remove/hide distortion of UI that shows up during initial load of the plugin.
-    jQuery("#admin-kanzu-support-desk").css({visibility: 'visible'});
+        //Added to remove/hide distortion of UI that shows up during initial load of the plugin.
+        $("#admin-kanzu-support-desk").css({visibility: 'visible'});
 
-    /**For the general navigation tabs**/
-    jQuery("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
-    jQuery("#tabs > ul > li").removeClass("ui-corner-top").addClass("ui-corner-left");
+        /**For the general navigation tabs**/
+        $("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
+        $("#tabs > ul > li").removeClass("ui-corner-top").addClass("ui-corner-left");
 
-    /*Get URL parameters*/
-    jQuery.urlParam = function (name) {
-        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-        if (results === null) {
-            return null;
-        }
-        else {
-            return results[1] || 0;
-        }
-    };
-    
-    
-    /*
-     * Jquery plugin enhancements 
-     * //@TODO Are we sure this rule isn't called whenever we use the validator
-     * on any form? - Yes, it's only appended to specifiy forms.
-     * //@TODO cc appears also on Ticket reply forms. Check how it performs on all forms
-     */
-    //Validation Rule for CC field
-    jQuery.validator.addMethod("ccRule", function(value, element, options){
-        if( jQuery(element).val() ==ksd_admin.ksd_labels.lbl_CC ) return true;
-
-        emails = jQuery(element).val().split(",");
-        cnt    = emails.length;
-        for( i = 0; i < cnt; i++){
-            _status = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@(?:\S{1,63})$/.test(  emails[i] );
-            if( _status === false ){
-                return false;
+        /*Get URL parameters*/
+        $.urlParam = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            if (results === null) {
+                return null;
             }
-        }
-        return true;
+            else {
+                return results[1] || 0;
+            }
+        };
 
-    },ksd_admin.ksd_labels.validator_cc );
-    
-    //jQuery validator messages internationalization
-    jQuery.validator.messages.required  = ksd_admin.ksd_labels.validator_required;
-    jQuery.validator.messages.email     = ksd_admin.ksd_labels.validator_email;
-    jQuery.validator.messages.minlength = jQuery.validator.format( ksd_admin.ksd_labels.validator_minlength );
 
-    //Change default error placement ( errorPlacement ) for jquery form validator
-    //TODO: jQuery error " TypeError: e[d].call is not a function" during validation.
-    jQuery.validator.setDefaults({
-      errorPlacement: function(error, element){
-        jQuery(element).css(  "border-color", "red" );
-        
-         jQuery(element).attr('title', jQuery(error).html());
-        var tooltips = jQuery(element).tooltip({
-          position: {
-            my: "top bottom-10",
-            at: "left+120 top"
-          }
-        });
-        tooltips.tooltip( "open" );
-      },
-      success: function(label, element){
-          jQuery(element).css(  "border-color", "" );
-          jQuery(element).tooltip( "destroy" );
-      },
-      onfocusout: true,
-      ignoreTitle: true
-    });
-    
-    
-    
-    
-    /*---------------------------------------------------------------*/
-    /***************************UTILITIES: Used by all the rest*******/
-    /*---------------------------------------------------------------*/
-    KSDUtils = function () {
-        _this = this;
-    };
+        /*
+         * Jquery plugin enhancements 
+         * //@TODO Are we sure this rule isn't called whenever we use the validator
+         * on any form? - Yes, it's only appended to specifiy forms.
+         * //@TODO cc appears also on Ticket reply forms. Check how it performs on all forms
+         */
+        //Validation Rule for CC field
+        $.validator.addMethod("ccRule", function(value, element, options){
+            if( $(element).val() ==ksd_admin.ksd_labels.lbl_CC ) return true;
 
-    KSDUtils.showDialog = function (dialog_type, message) {
-        /**Show update/error/Loading dialog while performing AJAX calls and on completion*/
-        message = message || ksd_admin.ksd_labels.msg_loading;//Set default message
-        //First hide all other dialogs
-        jQuery('.ksd-dialog').hide();
-        jQuery('.' + dialog_type).html(message);//Set the message
-        jQuery('.' + dialog_type).fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
-    };
-
-    KSDUtils.ajaxResponseErrorCheck = function (ajaxResponse) {
-        //To catch cases when the ajax response is not json
-        try {
-            //to reduce cost of recalling parse
-            respObj = JSON.parse(ajaxResponse);
-        } catch (err) {
-            this.showDialog("error", ksd_admin.ksd_labels.msg_error_refresh );
-            return true;
-        }
-        //Check for error in request.
-        if ('undefined' !== typeof (respObj.error)) {
-            this.showDialog("error", respObj.error.message);
-            return true;
-        }
-        return false;
-    };
-
-    KSDUtils.isNumber = function () {
-        return typeof n === "number" && isFinite(n) && n % 1 === 0;
-    };
-
-    /**
-     * Capitalize the first letter in a string
-     * @param {string} theString String to capitalize e.g. hello or HELLO
-     * @returns string capitalizedString e.g. Hello (all other letters are switched to lowercase, the first to uppercase
-     */
-    KSDUtils.capitalizeFirstLetter = function (theString) {
-        return theString.toLowerCase().replace(/\b[a-z]/g, function (letter) {
-            return letter.toUpperCase();
-        });
-    };
-    
-    /**
-     * Convert text to a slug. 
-     * Replaces all spaces with hyphens, removes anything not alphanumeric, underscore, or hyphen
-     * @param {String} Text
-     * @returns {String}
-     */
-    KSDUtils.slugify = function (Text) {
-        return Text
-            .toLowerCase()
-            .replace(/ /g,'-')
-            .replace(/[^\w-]+/g,'')
-            ;
-    };
-   
-
-    /*---------------------------------------------------------------*/
-    /***************************JS HOOKS: Callback functions defined by addons *******/
-    /*---------------------------------------------------------------*/
-    KSDHooks.add = function(hookName, callback){
-        ksd_hooks[hookName].push(callback);
-    }
-    
-    KSDHooks.execute = function(hookName, status, data ){
-        for ( f in ksd_hooks[hookName]) {
-            try{
-            ksd_hooks[hookName][f](status,data);
-                }catch(ex){
-                    //Do something
-                    //console.log(ex)
+            emails = $(element).val().split(",");
+            cnt    = emails.length;
+            for( i = 0; i < cnt; i++){
+                _status = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@(?:\S{1,63})$/.test(  emails[i] );
+                if( _status === false ){
+                    return false;
                 }
-        }
-    }
-    
-    
-    /*---------------------------------------------------------------*/
-    /***************************On boarding *******/
-    /*---------------------------------------------------------------*/
-    KSDOnBoarding = function () {
-        this.init = function () {
-            if ( 'yes' !== ksd_admin.ksd_onboarding_enabled ){ 
-                return;
             }
-            jQuery( '#wpbody' ).addClass( 'ksd-onboarding' );
-            this.assignTicket();
-            this.replyTicket();
-            this.resolveTicket();
-        };
-        
-        KSDUpdateOnboardingStage = function( completedStage,reloadPage ){
-            if ( typeof ( reloadPage ) === 'undefined'){
-                reloadPage = false;
-            }
-            jQuery.post( ksd_admin.ajax_url,
-                    {   action: 'ksd_update_onboarding_stage',
-                        ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                        stage: completedStage,
-                    },
-                    function ( response ) {
-                        //@TODO We currently don't do a thing with the response
-                        if( reloadPage ){
-                            location.reload();
-                        }
-                    });            
-        };
- 
-        this.assignTicket = function () {
-            jQuery('.ksd-onboarding .ksd-misc-assign-to a.edit-assign-to').click( function(){
-                KSDUpdateOnboardingStage( 3 );
-            }); 
-            
-        };
-        this.replyTicket = function () {            
-            jQuery( '.ksd-onboarding input[name=ksd_reply_ticket]' ).click( function(){
-                KSDUpdateOnboardingStage( 'reply-ticket', true );  
-            });             
-        };
-        this.resolveTicket = function () {
-            jQuery('.ksd-onboarding .misc-pub-post-status a.edit-post-status').click( function(){
-                 KSDUpdateOnboardingStage( 'resolve-ticket' );
-            }); 
-        } ;     
-    };
-   
+            return true;
 
-    /*---------------------------------------------------------------*/
-    /****************************SETTINGS****************************/
-    /*---------------------------------------------------------------*/
-    KSDSettings = function () {
-        _this = this;
-        this.init = function () {            
-            this.submitSettingsForm();//Submit the settings            
-            this.toggleViewsToHide();//Show/Hide some settings when some checkboxes are checked           
-            this.enableAccordion(); //Use an accordion in case we have multiple setting blocks
-            this.autocompleteUsers();
-            this.changeSubmitBtnVal();
-            this.modifyLicense();
-            this.handleAddons();
-            this.enableUsageStats();
-            this.notifications();
-            this.sendDebugEmail();
-            this.resetRoleCapabilities();
-            
+        },ksd_admin.ksd_labels.validator_cc );
+
+        //$ validator messages internationalization
+        $.validator.messages.required  = ksd_admin.ksd_labels.validator_required;
+        $.validator.messages.email     = ksd_admin.ksd_labels.validator_email;
+        $.validator.messages.minlength = $.validator.format( ksd_admin.ksd_labels.validator_minlength );
+
+        //Change default error placement ( errorPlacement ) for jquery form validator
+        //TODO: $ error " TypeError: e[d].call is not a function" during validation.
+        $.validator.setDefaults({
+          errorPlacement: function(error, element){
+            $(element).css(  "border-color", "red" );
+
+             $(element).attr('title', $(error).html());
+            var tooltips = $(element).tooltip({
+              position: {
+                my: "top bottom-10",
+                at: "left+120 top"
+              }
+            });
+            tooltips.tooltip( "open" );
+          },
+          success: function(label, element){
+              $(element).css(  "border-color", "" );
+              $(element).tooltip( "destroy" );
+          },
+          onfocusout: true,
+          ignoreTitle: true
+        });
+
+
+
+
+        /*---------------------------------------------------------------*/
+        /***************************UTILITIES: Used by all the rest*******/
+        /*---------------------------------------------------------------*/
+        KSDUtils = function () {
+            _this = this;
         };
+
+        KSDUtils.showDialog = function (dialog_type, message) {
+            /**Show update/error/Loading dialog while performing AJAX calls and on completion*/
+            message = message || ksd_admin.ksd_labels.msg_loading;//Set default message
+            //First hide all other dialogs
+            $('.ksd-dialog').hide();
+            $('.' + dialog_type).html(message);//Set the message
+            $('.' + dialog_type).fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
+        };
+
+        KSDUtils.ajaxResponseErrorCheck = function (ajaxResponse) {
+            //To catch cases when the ajax response is not json
+            try {
+                //to reduce cost of recalling parse
+                respObj = JSON.parse(ajaxResponse);
+            } catch (err) {
+                this.showDialog("error", ksd_admin.ksd_labels.msg_error_refresh );
+                return true;
+            }
+            //Check for error in request.
+            if ('undefined' !== typeof (respObj.error)) {
+                this.showDialog("error", respObj.error.message);
+                return true;
+            }
+            return false;
+        };
+
+        KSDUtils.isNumber = function () {
+            return typeof n === "number" && isFinite(n) && n % 1 === 0;
+        };
+
+        /**
+         * Capitalize the first letter in a string
+         * @param {string} theString String to capitalize e.g. hello or HELLO
+         * @returns string capitalizedString e.g. Hello (all other letters are switched to lowercase, the first to uppercase
+         */
+        KSDUtils.capitalizeFirstLetter = function (theString) {
+            return theString.toLowerCase().replace(/\b[a-z]/g, function (letter) {
+                return letter.toUpperCase();
+            });
+        };
+
+        /**
+         * Convert text to a slug. 
+         * Replaces all spaces with hyphens, removes anything not alphanumeric, underscore, or hyphen
+         * @param {String} Text
+         * @returns {String}
+         */
+        KSDUtils.slugify = function (Text) {
+            return Text
+                .toLowerCase()
+                .replace(/ /g,'-')
+                .replace(/[^\w-]+/g,'')
+                ;
+        };
+
+
+        /*---------------------------------------------------------------*/
+        /***************************JS HOOKS: Callback functions defined by addons *******/
+        /*---------------------------------------------------------------*/
+        KSDHooks.add = function(hookName, callback){
+            ksd_hooks[hookName].push(callback);
+        }
+
+        KSDHooks.execute = function(hookName, status, data ){
+            for ( f in ksd_hooks[hookName]) {
+                try{
+                ksd_hooks[hookName][f](status,data);
+                    }catch(ex){
+                        //Do something
+                        //console.log(ex)
+                    }
+            }
+        }
+
+
+        /*---------------------------------------------------------------*/
+        /***************************On boarding *******/
+        /*---------------------------------------------------------------*/
+        KSDOnBoarding = function () {
+            this.init = function () {
+                if ( 'yes' !== ksd_admin.ksd_onboarding_enabled ){ 
+                    return;
+                }
+                $( '#wpbody' ).addClass( 'ksd-onboarding' );
+                this.assignTicket();
+                this.replyTicket();
+                this.resolveTicket();
+            };
+
+            KSDUpdateOnboardingStage = function( completedStage,reloadPage ){
+                if ( typeof ( reloadPage ) === 'undefined'){
+                    reloadPage = false;
+                }
+                $.post( ksd_admin.ajax_url,
+                        {   action: 'ksd_update_onboarding_stage',
+                            ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
+                            stage: completedStage,
+                        },
+                        function ( response ) {
+                            //@TODO We currently don't do a thing with the response
+                            if( reloadPage ){
+                                location.reload();
+                            }
+                        });            
+            };
+
+            this.assignTicket = function () {
+                $('.ksd-onboarding .ksd-misc-assign-to a.edit-assign-to').click( function(){
+                    KSDUpdateOnboardingStage( 3 );
+                }); 
+
+            };
+            this.replyTicket = function () {            
+                $( '.ksd-onboarding input[name=ksd_reply_ticket]' ).click( function(){
+                    KSDUpdateOnboardingStage( 'reply-ticket', true );  
+                });             
+            };
+            this.resolveTicket = function () {
+                $('.ksd-onboarding .misc-pub-post-status a.edit-post-status').click( function(){
+                     KSDUpdateOnboardingStage( 'resolve-ticket' );
+                }); 
+            } ;     
+        };
+
+
+        /*---------------------------------------------------------------*/
+        /****************************SETTINGS****************************/
+        /*---------------------------------------------------------------*/
+        KSDSettings = function () {
+            _this = this;
+            this.init = function () {            
+                this.submitSettingsForm();//Submit the settings            
+                this.toggleViewsToHide();//Show/Hide some settings when some checkboxes are checked           
+                this.enableAccordion(); //Use an accordion in case we have multiple setting blocks
+                this.autocompleteUsers();
+                this.changeSubmitBtnVal();
+                this.modifyLicense();
+                this.handleAddons();
+                this.enableUsageStats();
+                this.notifications();
+                this.sendDebugEmail();
+                this.resetRoleCapabilities();
+
+            };
         
 
         /*
          * 
          */
         this.changeSubmitBtnVal = function () {
-            jQuery('.ksd-send-email :checkbox').click(function () {
-                var $this = jQuery(this);
-                var $that = jQuery('[name=ksd-submit-admin-new-ticket]');
+            $('.ksd-send-email :checkbox').click(function () {
+                var $this = $(this);
+                var $that = $('[name=ksd-submit-admin-new-ticket]');
                 if ($this.is(':checked')) {
                     $that.val('Send')
                 } else {
@@ -261,7 +261,7 @@ jQuery(document).ready(function () {
          * @returns {NA}
          */
         changeUserRole = function( userId, newRole, change, responseElement ){
-            jQuery.post(
+            $.post(
                     ksd_admin.ajax_url,
                     {   action: 'ksd_change_user_role',
                         user_id: userId,
@@ -285,15 +285,15 @@ jQuery(document).ready(function () {
         };
         
         this.sendDebugEmail = function(){
-            jQuery('#ksd-send-test-email').click(function (e) {
+            $('#ksd-send-test-email').click(function (e) {
                 e.preventDefault();
-                var responseElement = jQuery('#ksd-debug-email-response');
+                var responseElement = $('#ksd-debug-email-response');
                 responseElement.html( ksd_admin.ksd_labels.msg_loading );
-                jQuery.post(
+                $.post(
                         ksd_admin.ajax_url,
                         {
                             action: 'ksd_send_debug_email',
-                            email: jQuery('input[name=debug_test_email]').val()
+                            email: $('input[name=debug_test_email]').val()
                         },
                         function (response) {                            
                             if ( response.success ) {
@@ -307,11 +307,11 @@ jQuery(document).ready(function () {
         }
         
         this.resetRoleCapabilities = function(){
-            jQuery('#ksd-reset-role-caps').click(function(e){
+            $('#ksd-reset-role-caps').click(function(e){
                 e.preventDefault(); 
-                var responseElement = jQuery('#ksd-debug-reset-role-caps-response');
+                var responseElement = $('#ksd-debug-reset-role-caps-response');
                 responseElement.html( ksd_admin.ksd_labels.msg_loading );                
-                jQuery.post(
+                $.post(
                         ksd_admin.ajax_url,
                         {
                             action: 'ksd_reset_role_caps'
@@ -328,44 +328,44 @@ jQuery(document).ready(function () {
         }
         
         this.autocompleteUsers = function () {
-            jQuery( '.ksd-suggest-user' ).each( function(){
-                    var $this       = jQuery( this );
+            $( '.ksd-suggest-user' ).each( function(){
+                    var $this       = $( this );
                     var assignRole  = $this.hasClass('ksd-agent-list') ? 'agent' : 'supervisor' ;
                     $this.autocomplete({
                             source:    ksd_admin.ajax_url + '?action=ksd_autocomplete_user',
                             delay:     500,
                             minLength: 2,
                             open: function() {
-                                    jQuery( this ).addClass( 'open' );
+                                    $( this ).addClass( 'open' );
                             },
                             close: function() {
-                                    jQuery( this ).removeClass( 'open' );
+                                    $( this ).removeClass( 'open' );
                             },
                             select: function( event, ui ) {
                                 event.preventDefault();
-                                var targetItem  =   jQuery( this ).parent().find('.ksd-user-list');
+                                var targetItem  =   $( this ).parent().find('.ksd-user-list');
                                 var responseElement = targetItem.find('.ksd-user-agent-response');
                                 targetItem.append('<li><a tabindex="-1" class="ksd-search-choice-close" href="#" data-ksd-user-id="'+ui.item.ID+'"></a>'+ui.item.value+'</li>');
                                 responseElement.removeClass('hidden').html( 'Adding '+ui.item.value+'...' );//@TODO Internationalize
                                 changeUserRole( ui.item.ID, assignRole,'add_role', responseElement );
-                                jQuery( this ).val('');
+                                $( this ).val('');
                             }                                 
                     });
             });
             
-            jQuery('.ksd-user-list').on('click', '.ksd-search-choice-close', function (event) {
+            $('.ksd-user-list').on('click', '.ksd-search-choice-close', function (event) {
                 event.preventDefault();
-                var targetItem  =   jQuery( this ).parents('.ksd-user-list');
+                var targetItem  =   $( this ).parents('.ksd-user-list');
                 var responseElement = targetItem.find('.ksd-user-agent-response');
                 var assignRole  = targetItem.hasClass('ksd-agent-list') ? 'agent' : 'supervisor' ;
-                jQuery( this ).parent().remove();
+                $( this ).parent().remove();
                 responseElement.removeClass('hidden').html( 'Removing...' );//@TODO Internationalize
-                changeUserRole( jQuery( this ).data( "ksdUserId" ), assignRole,'remove_role', responseElement );
+                changeUserRole( $( this ).data( "ksdUserId" ), assignRole,'remove_role', responseElement );
             });
         };        
         
         __submitNotificationFeedback = function( data ){
-            jQuery.post(ksd_admin.ajax_url,
+            $.post(ksd_admin.ajax_url,
                     data,
             function (response) {
                 var respObj = {};
@@ -375,72 +375,72 @@ jQuery(document).ready(function () {
                 } catch (err) {                    
                     return;
                 }
-                jQuery('#ksd-notifications').html( '<div class="ksd-notifications-response">'+respObj+ '</div>' ).delay(3000).slideToggle( "slow" );
+                $('#ksd-notifications').html( '<div class="ksd-notifications-response">'+respObj+ '</div>' ).delay(3000).slideToggle( "slow" );
             });            
         };
         
         this.notifications = function () {
-            var notificationID = jQuery('#ksd-notifications').data("notificationId");//NOTE: This doesn't work in IE
-            jQuery('.ksd-notification-close img').click(function () {
-                jQuery( "#ksd-notifications" ).slideToggle( "slow" );
+            var notificationID = $('#ksd-notifications').data("notificationId");//NOTE: This doesn't work in IE
+            $('.ksd-notification-close img').click(function () {
+                $( "#ksd-notifications" ).slideToggle( "slow" );
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'close' };
                 __submitNotificationFeedback( data );   
                 //KSDAnalytics.sendEvent( 'Feedback', 'General', 'close-'+notificationID );
             });   
             //Leave me alone!!!!
-            jQuery('.ksd-notification-cancel').click(function () {
+            $('.ksd-notification-cancel').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'no' };
                 __submitNotificationFeedback( data );
                 //KSDAnalytics.sendEvent( 'Feedback', 'General', 'leave-me-'+notificationID );
             });    
             //Disable all notifications 
-            jQuery( 'a.ksd-notifications-disable' ).click(function () {
+            $( 'a.ksd-notifications-disable' ).click(function () {
                 var data = { action: 'ksd_notifications_disable' };
                 __submitNotificationFeedback( data );
                 //KSDAnalytics.sendEvent( 'Feedback', 'General', 'disable-all-'+notificationID );
             });              
             //Quick call
-            jQuery('#ksd-notification-quick-call').click(function () {
+            $('#ksd-notification-quick-call').click(function () {
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: 'yes' };
                 __submitNotificationFeedback( data );
                 //KSDAnalytics.sendEvent( 'Feedback', 'Quick Call', 'quick_call' );
             });
             //KSD content
-           jQuery('#ksd-notification-content-topic').click(function () {
+           $('#ksd-notification-content-topic').click(function () {
                 var ksdTopics = '';
-                jQuery('.ksd-content-topics input:checked').each(function(){
-                   // KSDAnalytics.sendEvent( 'Feedback', 'KSD Content', jQuery(this).val() );
-                    ksdTopics+=jQuery(this).val()+' ';
+                $('.ksd-content-topics input:checked').each(function(){
+                   // KSDAnalytics.sendEvent( 'Feedback', 'KSD Content', $(this).val() );
+                    ksdTopics+=$(this).val()+' ';
                 });
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: ksdTopics };
                 __submitNotificationFeedback( data );
            });       
            //Enable usage 
-           jQuery('#ksd-notification-enable-usage').click(function () {
+           $('#ksd-notification-enable-usage').click(function () {
                 var data = { action: 'ksd_enable_usage_stats' };
                 __submitNotificationFeedback( data );               
            });
            //Leave a review
-           jQuery('a.ksd-notification-review').click(function () {
-               jQuery( "#ksd-notifications" ).slideToggle( "slow" );
+           $('a.ksd-notification-review').click(function () {
+               $( "#ksd-notifications" ).slideToggle( "slow" );
            });
            //One feature...
-           jQuery('#ksd-notification-one-feature').click(function () {
-                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: jQuery('textarea.ksd-notifications-one-feature').val() };
+           $('#ksd-notification-one-feature').click(function () {
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: $('textarea.ksd-notifications-one-feature').val() };
                 __submitNotificationFeedback( data );
                 //KSDAnalytics.sendEvent( 'Feedback', 'General', 'one_feature' );
            });    
            //NPS 
-           jQuery('ul.ksd-nps-score li').click(function () {
-               jQuery('ul.ksd-nps-score li').removeClass('active');
-               jQuery(this).addClass('active');
+           $('ul.ksd-nps-score li').click(function () {
+               $('ul.ksd-nps-score li').removeClass('active');
+               $(this).addClass('active');
            });
-           jQuery('#ksd-notification-nps').click(function () {
-               if ( ! jQuery('ul.ksd-nps-score li.active').length ){
-                   jQuery('div.ksd-notification-nps-error').html( ksd_admin.ksd_labels.lbl_notification_nps_error );
+           $('#ksd-notification-nps').click(function () {
+               if ( ! $('ul.ksd-nps-score li.active').length ){
+                   $('div.ksd-notification-nps-error').html( ksd_admin.ksd_labels.lbl_notification_nps_error );
                    return;
                }
-                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: jQuery('ul.ksd-nps-score li.active').text() };
+                var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: $('ul.ksd-nps-score li.active').text() };
                 __submitNotificationFeedback( data );
            });   
                      
@@ -451,8 +451,8 @@ jQuery(document).ready(function () {
          * @returns {NULL}
          */
         this.enableUsageStats = function () {
-            jQuery('button.ksd_enable_usage_stats').click(function () {
-                jQuery.post(ksd_admin.ajax_url,
+            $('button.ksd_enable_usage_stats').click(function () {
+                $.post(ksd_admin.ajax_url,
                         {   action: 'ksd_enable_usage_stats'
                         },
                 function (response) {
@@ -476,18 +476,18 @@ jQuery(document).ready(function () {
          */
         this.handleAddons = function(){
             //Move the dummy addons, add them to the real addons list
-            jQuery('span.ksd-dummy-addons li').appendTo('ul.add-ons');
+            $('span.ksd-dummy-addons li').appendTo('ul.add-ons');
             //Show dialog when one is clicked
-            jQuery('li.ksd-dummy a').click(function(e){ 
+            $('li.ksd-dummy a').click(function(e){ 
                 e.preventDefault();
-                var addonName = jQuery(this).parents('li.ksd-dummy').find('h3').text();
-                jQuery('#ksd-dummy-plugin-dialog span.ksd-addon-name').text(addonName);
-            jQuery('#ksd-dummy-plugin-dialog').dialog({
+                var addonName = $(this).parents('li.ksd-dummy').find('h3').text();
+                $('#ksd-dummy-plugin-dialog span.ksd-addon-name').text(addonName);
+            $('#ksd-dummy-plugin-dialog').dialog({
                 modal: true,
                 buttons: {
                     "Yes, add me to the waiting list": function () {
-                        jQuery(this).dialog("close");                       
-                        jQuery.post(ksd_admin.ajax_url,
+                        $(this).dialog("close");                       
+                        $.post(ksd_admin.ajax_url,
                                 {   action: 'ksd_send_feedback',
                                     ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                                     feedback_type: 'waiting_list',
@@ -507,7 +507,7 @@ jQuery(document).ready(function () {
                         });
                     },
                     "It's interesting": function () {
-                        jQuery(this).dialog("close");
+                        $(this).dialog("close");
                         //Enable Google Analytics temporarily and send this event to Google Analytics
                         window['ga-disable-UA-48956820-3'] = false;
                         ga('send', 'event', 'button', 'click', addonName.toLowerCase() );
@@ -522,14 +522,14 @@ jQuery(document).ready(function () {
          */
         this.submitSettingsForm = function () {
             /**AJAX: Update settings**/
-            jQuery('form#update-settings').submit(function (e) {
+            $('form#update-settings').submit(function (e) {
                 e.preventDefault();
             });
 
-            jQuery('input[name=ksd-settings-reset]').click(function(e){ 
+            $('input[name=ksd-settings-reset]').click(function(e){ 
                 var data = {action: 'ksd_reset_settings', ksd_admin_nonce: ksd_admin.ksd_admin_nonce}
                 KSDUtils.showDialog("loading");
-                jQuery.post(ksd_admin.ajax_url,
+                $.post(ksd_admin.ajax_url,
                         data,
                         function (response) {
                             if (KSDUtils.ajaxResponseErrorCheck(response)) {
@@ -540,11 +540,11 @@ jQuery(document).ready(function () {
 
             });
             
-            jQuery('input[name=ksd-settings-submit]').click(function(e){     
-                var data = jQuery('form#update-settings').serialize();//The action and nonce are hidden fields in the form
+            $('input[name=ksd-settings-submit]').click(function(e){     
+                var data = $('form#update-settings').serialize();//The action and nonce are hidden fields in the form
                 
                 KSDUtils.showDialog("loading");
-                jQuery.post(ksd_admin.ajax_url,
+                $.post(ksd_admin.ajax_url,
                         data,
                         function (response) {
                             if (KSDUtils.ajaxResponseErrorCheck(response)) {
@@ -558,8 +558,8 @@ jQuery(document).ready(function () {
             });
 
             //Add Tooltips for the settings panel
-            jQuery(".help_tip").tooltip();
-            jQuery("span.ksd-tkt-status a").tooltip();
+            $(".help_tip").tooltip();
+            $("span.ksd-tkt-status a").tooltip();
 
         }//eof:submitSettingsForm
 
@@ -569,27 +569,27 @@ jQuery(document).ready(function () {
          */
         this.toggleViewsToHide = function () {
             var parentFieldsToToggle = ['show_support_tab', 'enable_new_tkt_notifxns', 'enable_recaptcha','enable_customer_signup'];
-            jQuery.each(parentFieldsToToggle, function (i, field) {
+            $.each(parentFieldsToToggle, function (i, field) {
                 //Toggle the view on click    
-                jQuery('input[name=' + field + ']').click(function () {
-                    jQuery("." + field).toggle("slide");
+                $('input[name=' + field + ']').click(function () {
+                    $("." + field).toggle("slide");
                 });
                 //Make sure the fields are hidden if the field's not checked
-                if (!jQuery('input[name=' + field + ']').is(":checked")) {
-                    jQuery("." + field).hide();
+                if (!$('input[name=' + field + ']').is(":checked")) {
+                    $("." + field).hide();
                 }
             });
         };
         this.enableAccordion = function () {
             //Only use the accordion if more than one section exists
-            if (jQuery('div.ksd-settings-accordion h3').length > 1) {
-                jQuery('div.ksd-settings-accordion').accordion({
+            if ($('div.ksd-settings-accordion h3').length > 1) {
+                $('div.ksd-settings-accordion').accordion({
                     collapsible: true,
                     heightStyle: "content"
                 });
             }
             else {//Otherwise, remove the label 'General'
-                jQuery('div.ksd-settings-accordion h3').remove();
+                $('div.ksd-settings-accordion h3').remove();
             }
 
         };
@@ -600,14 +600,14 @@ jQuery(document).ready(function () {
          */
         this.modifyLicense = function () {
             //Activate/Deactivate license button. Match all buttons that end with _license_status (Basically all license buttons)
-            jQuery("form.ksd-settings input[name$='_license_status']").click(function () {
-                var targetLicenseSetting = jQuery(this).parents('div.setting');
+            $("form.ksd-settings input[name$='_license_status']").click(function () {
+                var targetLicenseSetting = $(this).parents('div.setting');
                 //Add a 'Loading button' next to the clicked button
                 var targetLicenseStatusSpan = targetLicenseSetting.find('span.license_status');
                 targetLicenseStatusSpan.html('');
                 targetLicenseStatusSpan.addClass('loading');
                 var licenseAction;
-                if (jQuery(this).hasClass('ksd-activate_license')) {
+                if ($(this).hasClass('ksd-activate_license')) {
                     licenseAction = 'activate_license';
                 }
                 else {
@@ -621,7 +621,7 @@ jQuery(document).ready(function () {
                 var licenseStatusKey = targetLicenseSetting.find('input[type=submit]').attr('name');
                 var theLicense = targetLicenseSetting.find("input[name$='_license_key']").val();
                 //Send the request. The variables are from the Kanzu Support Desk Js localization
-                jQuery.post(ksd_admin.ajax_url,
+                $.post(ksd_admin.ajax_url,
                         {action: 'ksd_modify_license',
                             ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                             license_action: licenseAction,
@@ -669,12 +669,12 @@ jQuery(document).ready(function () {
         _addClickEventToSummaries = function () {
 
             //Total Open Tickets
-            jQuery("#admin-kanzu-support-desk ul.dashboard-statistics-summary li.open").click(function () {
+            $("#admin-kanzu-support-desk ul.dashboard-statistics-summary li.open").click(function () {
                 window.location.href = "?post_status=all&post_type=ksd_ticket&ksd_statuses_filter=open";                
             });
 
             //Unassigned Tickets
-            jQuery("#admin-kanzu-support-desk ul.dashboard-statistics-summary li.unassigned").click(function () {
+            $("#admin-kanzu-support-desk ul.dashboard-statistics-summary li.unassigned").click(function () {
                 window.location.href = "?post_type=ksd_ticket&ksd_view=unassigned"; 
             });
             
@@ -684,21 +684,21 @@ jQuery(document).ready(function () {
          */
         this.statistics = function () {
             /**AJAX: Retrieve summary statistics for the dashboard**/
-            if (jQuery("ul.dashboard-statistics-summary").hasClass("pending")) {
-                jQuery.post(ksd_admin.ajax_url,
+            if ($("ul.dashboard-statistics-summary").hasClass("pending")) {
+                $.post(ksd_admin.ajax_url,
                         {   action: 'ksd_get_dashboard_summary_stats',
                             ksd_admin_nonce: ksd_admin.ksd_admin_nonce
                         },
                 function (response) {
-                    jQuery("ul.dashboard-statistics-summary").removeClass("pending");
+                    $("ul.dashboard-statistics-summary").removeClass("pending");
                     try {
                         var raw_response = JSON.parse(response);
                     } catch (err) {
-                        jQuery('ul.dashboard-statistics-summary').html(ksd_admin.ksd_labels.msg_error);
+                        $('ul.dashboard-statistics-summary').html(ksd_admin.ksd_labels.msg_error);
                         return;
                     }
                     if ('undefined' !== typeof (raw_response.error)) {
-                        jQuery('ul.dashboard-statistics-summary').html(raw_response.error.message);
+                        $('ul.dashboard-statistics-summary').html(raw_response.error.message);
                         return;
                     }
                     var unassignedTickets = ('undefined' !== typeof raw_response.unassigned_tickets ? raw_response.unassigned_tickets : 0);
@@ -708,7 +708,7 @@ jQuery(document).ready(function () {
                     the_summary_stats += "<li class='open ksd-dash-click'><span>" + ksd_admin.ksd_labels.dashboard_open_tickets + "</span>" + openTickets + "</li>";
                     the_summary_stats += "<li class='unassigned ksd-dash-click'><span>" + ksd_admin.ksd_labels.dashboard_unassigned_tickets + "</span>" + unassignedTickets + "</li>";
                     the_summary_stats += "<li><span>" + ksd_admin.ksd_labels.dashboard_avg_response_time + "</span>" + averageResponseTime + "</li>";
-                    jQuery("ul.dashboard-statistics-summary").html(the_summary_stats);
+                    $("ul.dashboard-statistics-summary").html(the_summary_stats);
 
                     //Add click events
                     _addClickEventToSummaries();
@@ -719,19 +719,19 @@ jQuery(document).ready(function () {
         /*Initialise charts*/
         this.charts = function () {
             try {
-                /**The dashboard charts. These have their own onLoad method so they can't be run inside jQuery( document ).ready({});**/
+                /**The dashboard charts. These have their own onLoad method so they can't be run inside $( document ).ready({});**/
                 function ksdDrawDashboardGraph() {
                     if ( 'ksd-dashboard' !== ksd_admin.ksd_current_screen ){
                         return;
                     }
-                    jQuery.post(ksd_admin.ajax_url,
+                    $.post(ksd_admin.ajax_url,
                             {   action: 'ksd_dashboard_ticket_volume',
                                 ksd_admin_nonce: ksd_admin.ksd_admin_nonce
                             },
                     function ( response ) {
                         var respObj = JSON.parse(response);
                         if ('undefined' !== typeof (respObj.error)) {
-                            jQuery('#ksd_dashboard_chart').html(respObj.error.message);
+                            $('#ksd_dashboard_chart').html(respObj.error.message);
                             return;
                         }
                         var ksdData = google.visualization.arrayToDataTable(respObj);
@@ -741,46 +741,46 @@ jQuery(document).ready(function () {
                         var ksdDashboardChart = new google.visualization.LineChart(document.getElementById('ksd_dashboard_chart'));
                         //Add a listener to know when drawing the chart is complete.                     
                         google.visualization.events.addListener(ksdDashboardChart, 'ready', function () {
-                            if (!jQuery('ul.ksd-main-nav li:first').hasClass("ui-tabs-active")) {
+                            if (!$('ul.ksd-main-nav li:first').hasClass("ui-tabs-active")) {
                                 //ksdChartContainer.style.display = 'none'; //If our dashboard tab isn't the selected one, we hide it. 
                             }
                         });
                         ksdDashboardChart.draw(ksdData, ksdOptions);
-                    });//eof: jQuery.port
+                    });//eof: $.port
                 }
                 google.setOnLoadCallback(ksdDrawDashboardGraph);
             } catch (err) {
-                jQuery('#ksd_dashboard_chart').html(err);
+                $('#ksd_dashboard_chart').html(err);
             }
         };//eof:charts
         this.blogNotifications = function () {
             //Show/Hide the notifications panel
-            jQuery('.admin-ksd-title span.more_nav img').click(function (e) {
+            $('.admin-ksd-title span.more_nav img').click(function (e) {
                 e.preventDefault();
-                jQuery(this).toggleClass("active");
-                jQuery("#ksd-blog-notifications").toggle("slide");
+                $(this).toggleClass("active");
+                $("#ksd-blog-notifications").toggle("slide");
             });
             //Retrieve the blog notifications
             try {
                 if ( 'ksd-dashboard' !== ksd_admin.ksd_current_screen && 'ksd-addons' !== ksd_admin.ksd_current_screen && 'ksd-settings' !== ksd_admin.ksd_current_screen ){
                     return;
                 }
-                jQuery.post(ksd_admin.ajax_url,
+                $.post(ksd_admin.ajax_url,
                         {   action: 'ksd_get_notifications',
                             ksd_admin_nonce: ksd_admin.ksd_admin_nonce
                         },
                 function (response) {
                     var respObj = JSON.parse(response);
                     if ('undefined' !== typeof (respObj.error)) {
-                        jQuery('#ksd-blog-notifications').html(respObj.error);
+                        $('#ksd-blog-notifications').html(respObj.error);
                         return;
                     }
                     //Parse the XML. We chose to do it here, rather than in the PHP (at the server end)
                     //for better performance (no impact on the server)
-                    notificationsXML = jQuery.parseXML(respObj);
+                    notificationsXML = $.parseXML(respObj);
                     notificationData = '<ul>';
-                    jQuery(notificationsXML).find("item").each(function (i, item) {
-                        blogPost = jQuery(this);
+                    $(notificationsXML).find("item").each(function (i, item) {
+                        blogPost = $(this);
                         notificationData += '<li>';
                         notificationData += '<a href="' + blogPost.find('link').text() + '" target="_blank" class="post-title">' + blogPost.find('title').text() + '</a>';
                         notificationData += '<span class="date-published">' + blogPost.find('pubDate').text() + '</span>';
@@ -790,10 +790,10 @@ jQuery(document).ready(function () {
                     });
                     notificationData += '</ul>';
                     //Add the entries to the div*/
-                    jQuery("#ksd-blog-notifications").html(notificationData);
+                    $("#ksd-blog-notifications").html(notificationData);
                 });
             } catch (err) {
-                jQuery('#ksd-blog-notifications').html(err);
+                $('#ksd-blog-notifications').html(err);
             }
         };//eof:notifications
     };//eof:Dashboard
@@ -813,11 +813,11 @@ jQuery(document).ready(function () {
          */
         this.submitFeedbackForm = function () {
             /**AJAX: Send Feedback**/
-            jQuery('form#ksd-feedback').submit(function (e) {
+            $('form#ksd-feedback').submit(function (e) {
                 e.preventDefault();
                 KSDUtils.showDialog("loading", ksd_admin.ksd_labels.msg_sending);
-                jQuery.post(ksd_admin.ajax_url,
-                        jQuery(this).serialize(), //The action and nonce are hidden fields in the form, 
+                $.post(ksd_admin.ajax_url,
+                        $(this).serialize(), //The action and nonce are hidden fields in the form, 
                         function (response) {
                             if (KSDUtils.ajaxResponseErrorCheck(response)) {
                                 return;
@@ -826,19 +826,19 @@ jQuery(document).ready(function () {
                         });
             });
             //All other feedback forms. They start with class ksd-feedback-
-            jQuery("form[class^='ksd-feedback-']").submit(function (e) {
+            $("form[class^='ksd-feedback-']").submit(function (e) {
                 e.preventDefault();
-                var form = jQuery(this);
+                var form = $(this);
                 KSDUtils.showDialog("loading", ksd_admin.ksd_labels.msg_sending);
-                jQuery.post(ksd_admin.ajax_url,
-                        jQuery(this).serialize(), //The action and nonce are hidden fields in the form, 
+                $.post(ksd_admin.ajax_url,
+                        $(this).serialize(), //The action and nonce are hidden fields in the form, 
                         function (response) {
                             if (KSDUtils.ajaxResponseErrorCheck(response)) {
                                 return;
                             }
                             KSDUtils.showDialog("success", JSON.parse(response));
                             form.remove();//Remove the form
-                            jQuery('.ksd-feedback-response').html( JSON.parse(response) ).fadeIn(400).delay(2000).fadeOut(400);
+                            $('.ksd-feedback-response').html( JSON.parse(response) ).fadeIn(400).delay(2000).fadeOut(400);
                         });
             });
         };
@@ -854,7 +854,6 @@ jQuery(document).ready(function () {
             this.addUnreadTicketCount();
             //this.uiTabs();
             this.uiListTickets();
-            //this.bulkTicketActions();
             this.newTicket();
             this.replyTicketForm();
 
@@ -875,15 +874,15 @@ jQuery(document).ready(function () {
         };
         
         this.addUnreadTicketCount = function(){
-            jQuery('#menu-posts-ksd_ticket > a div.wp-menu-name').append('<span class="unread-display update-plugins count-0"><span class="unread-count"></span></span>');
-            jQuery.post(
+            $('#menu-posts-ksd_ticket > a div.wp-menu-name').append('<span class="unread-display update-plugins count-0"><span class="unread-count"></span></span>');
+            $.post(
                     ksd_admin.ajax_url,
                     {
                         action: 'ksd_get_unread_ticket_count'
                     },
                     function (response) {                            
                         if ( response.success ) {
-                            jQuery('#menu-posts-ksd_ticket span.unread-display span').html( response.data ).parent().removeClass( 'count-0' ).addClass( 'count-'+response.data );
+                            $('#menu-posts-ksd_ticket span.unread-display span').html( response.data ).parent().removeClass( 'count-0' ).addClass( 'count-'+response.data );
                         } 
                     }
             );               
@@ -903,7 +902,7 @@ jQuery(document).ready(function () {
                 ksd_admin_nonce: ksd_admin.ksd_admin_nonce
             };
 
-            jQuery.post(ksd_admin.ajax_url, data, function (response) {
+            $.post(ksd_admin.ajax_url, data, function (response) {
                 var respObj = {};
 
                 //To catch cases when the ajax response is not json
@@ -915,9 +914,9 @@ jQuery(document).ready(function () {
                     return;
                 }
 
-                if ( jQuery.isArray(respObj) ) {
-                    jQuery.each(respObj[0], function ( key, value) {
-                        jQuery( 'ul.subsubsub li.'+key+' a' ).append( '<span class="count"> ('+value+') </span>' );
+                if ( $.isArray(respObj) ) {
+                    $.each(respObj[0], function ( key, value) {
+                        $( 'ul.subsubsub li.'+key+' a' ).append( '<span class="count"> ('+value+') </span>' );
                     });
                 }
 
@@ -930,8 +929,8 @@ jQuery(document).ready(function () {
          * @returns {undefined}
          */
         _addSeverityClassToTicketGrid = function(){        
-            jQuery("tbody#the-list tr").each(function() {
-              $this = jQuery(this);
+            $("tbody#the-list tr").each(function() {
+              $this = $(this);
               var severity = $this.find("td.column-severity").html();
               $this.addClass( severity );
             });
@@ -943,20 +942,20 @@ jQuery(document).ready(function () {
          */
         this.uiListTickets = function () {
             //Add counts to custom views
-            if ( jQuery ( 'ul.subsubsub li.mine' ) ){//If we are on the ticket grid and the custom views are shown
+            if ( $ ( 'ul.subsubsub li.mine' ) ){//If we are on the ticket grid and the custom views are shown
                 _totalTicketsPerFilter();
                 _addSeverityClassToTicketGrid();
             }
             //If we are displaying the ticket list view
-            if( jQuery('select[name=_status]').length && 'ksd-ticket-list' === ksd_admin.ksd_current_screen ){
-                jQuery('option[value=publish],option[value=pending]').remove();
-                jQuery('select[name=_status]').append( ksd_admin.ksd_statuses );
+            if( $('select[name=_status]').length && 'ksd-ticket-list' === ksd_admin.ksd_current_screen ){
+                $('option[value=publish],option[value=pending]').remove();
+                $('select[name=_status]').append( ksd_admin.ksd_statuses );
             }
             //Set current active view for our custom views
-            if( jQuery.urlParam('ksd_view') ) {
-                var currentView = jQuery.urlParam('ksd_view');
+            if( $.urlParam('ksd_view') ) {
+                var currentView = $.urlParam('ksd_view');
                 if( 'mine' === currentView || 'unassigned' === currentView ) {
-                    jQuery( 'li.'+currentView+' a' ).addClass( 'current' );
+                    $( 'li.'+currentView+' a' ).addClass( 'current' );
                 }
             }
         };//eof:
@@ -967,26 +966,26 @@ jQuery(document).ready(function () {
          */
         this.ticketInfo = function(){
             //Remove the default WP permalink for tickets with hash URLs
-            if( jQuery('#ksd-edit-slug-wrapper').length){
-                jQuery('#edit-slug-box').remove();
+            if( $('#ksd-edit-slug-wrapper').length){
+                $('#edit-slug-box').remove();
             }
                 
-            jQuery('input#ksd-update-ticket-info').click(function(){
-                jQuery('#ksd-ticket-info-action span.spinner').addClass('is-active');
-                var post_title = jQuery('input[name=post_title]').val();
+            $('input#ksd-update-ticket-info').click(function(){
+                $('#ksd-ticket-info-action span.spinner').addClass('is-active');
+                var post_title = $('input[name=post_title]').val();
                 if ( undefined === post_title ){
-                    post_title = jQuery( '#titlewrap h2.post_title' );
+                    post_title = $( '#titlewrap h2.post_title' );
                 }
                 var data = {
                     action: 'ksd_update_ticket_info',
                     ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                    tkt_id: jQuery.urlParam('post'),
+                    tkt_id: $.urlParam('post'),
                     ksd_reply_title: post_title, 
-                    ksd_tkt_info: jQuery("select[name^='_ksd_tkt_info_']").serialize()
+                    ksd_tkt_info: $("select[name^='_ksd_tkt_info_']").serialize()
                 };
-            jQuery.post( ksd_admin.ajax_url, data, function (response) {
+            $.post( ksd_admin.ajax_url, data, function (response) {
                 var respObj = {};
-                 jQuery('#ksd-ticket-info-action span.spinner').removeClass('is-active');
+                 $('#ksd-ticket-info-action span.spinner').removeClass('is-active');
                 //To catch cases when the ajax response is not json
                 try {
                     //To reduce cost of recalling parse
@@ -1001,103 +1000,7 @@ jQuery(document).ready(function () {
             });
             
         }
-
-        /*
-         * Make changes to tickets in bulk
-         * @returns {undefined}
-         */
-        this.bulkTicketActions = function () {
-            //Show bulk update menu
-            jQuery("#ticket-tabs").on('change', 'input[name="ticket_ids[]"]', function () {
-                if (jQuery('input[name="ticket_ids[]"]:checkbox:checked').length > 0) {//If any ticket is checked
-                    if (jQuery('.ticket-actions-top-menu').hasClass('hidden')) {
-                        jQuery('.ticket-actions-top-menu').removeClass('hidden');
-                    }
-                }
-                else {//No checkbox is checked
-                    if (!jQuery('.ticket-actions-top-menu').hasClass('hidden')) {
-                        jQuery('.ticket-actions-top-menu').addClass('hidden');
-                    }
-                }
-            });
-            //Toggle Bulk update sub-menu visibility
-            jQuery('div.ticket-actions-top-menu a.change_status').click(function (e) {
-                e.preventDefault();
-                jQuery('div.ticket-actions-top-menu ul.status').toggleClass('hidden');
-                jQuery('div.ticket-actions-top-menu ul.ksd_agent_list').addClass('hidden');
-            });
-            jQuery('div.ticket-actions-top-menu a.assign_to').click(function (e) {
-                e.preventDefault();
-                jQuery('div.ticket-actions-top-menu ul.ksd_agent_list').toggleClass('hidden');
-                jQuery('div.ticket-actions-top-menu ul.status').addClass('hidden');
-            });
-            //Hide the bulk update sub-menus when they lose focus
-            jQuery("div.ticket-actions-top-menu ul.status").bind("mouseleave", function () {
-                jQuery(this).addClass('hidden');
-            });
-            jQuery("div.ticket-actions-top-menu ul.ksd_agent_list").bind("mouseleave", function () {
-                jQuery(this).addClass('hidden');
-            });
-            //AJAX: Bulk actions
-            //            //Get checked ticket IDs
-            _getCheckedTicketIDs = function () {
-                var tkt_IDs = [];
-                jQuery('#ticket-tabs    input[name="ticket_ids[]"]:checkbox:checked').each(function () {
-                    tkt_ID = jQuery(this).parent().parent().attr("id").replace("ksd_tkt_id_", "");
-                    if ('undefined' !== typeof (tkt_ID)) {
-                        tkt_IDs.push(tkt_ID);
-                    }
-                });
-                return tkt_IDs;
-            };
-            //Bulk Change status
-            jQuery('div.ticket-actions-top-menu ul.status li').click(function () {
-                var tkt_IDs = _getCheckedTicketIDs();
-                tktStatus = jQuery(this).attr("class");//We use the class so that the text can be internationalized
-                _this.changeTicketStatus(tkt_IDs, tktStatus);
-                jQuery('div.ticket-actions-top-menu').addClass('hidden');
-            });
-            //Bulk assign to
-            jQuery('div.ticket-actions-top-menu ul.ksd_agent_list li').click(function () {
-                var tkt_IDs = _getCheckedTicketIDs();
-                assignTo = jQuery(this).attr("id");//The new assignee
-                _this.reassignTicket(tkt_IDs, assignTo);
-                jQuery('div.ticket-actions-top-menu').addClass('hidden');
-            });
-            //Bulk delete
-            jQuery('div.ticket-actions-top-menu a.trash').click(function (e) {
-                e.preventDefault();
-                var tkt_IDs = _getCheckedTicketIDs();
-                _this.deleteTicket(tkt_IDs);
-                jQuery('div.ticket-actions-top-menu').addClass('hidden');
-            });
-
-            //---------------------------------------------------------------------------------
-            /*All check box.
-             * control_id: tkt_chkbx_all
-             */
-            jQuery("#ticket-tabs .tkt_chkbx_all").on("click", function () {
-                //TODO:Show all options
-                if (jQuery(this).prop('checked') === true) {
-                    jQuery("#tkt_all_options").removeClass("ticket-actions");
-                    jQuery('input:checkbox').not(this).prop('checked', this.checked);
-
-                    //
-                    tab_id = jQuery(this).attr("id").replace("tkt_chkbx_all_", "");
-                    jQuery("#ksd_row_all_" + tab_id).removeClass('ksd-row-all-hide').addClass("ksd-row-all-show");
-
-
-                } else {
-                    jQuery("#tkt_all_options").addClass("ticket-actions");
-                    jQuery('input:checkbox').not(this).prop('checked', this.checked);
-
-                    tab_id = jQuery(this).attr("id").replace("tkt_chkbx_all_", "");
-                    jQuery("#ksd_row_all_" + tab_id).removeClass('ksd-row-all-show').addClass("ksd-row-all-hide");
-                }
-
-            });
-
-        };//eof
+ 
 
         /**
          * AJAX: Send an AJAX request to re-assign a ticket
@@ -1107,7 +1010,7 @@ jQuery(document).ready(function () {
         this.reassignTicket = function (tkt_id, assign_assigned_to, singleTicketView) {
             singleTicketView = ( 'undefined' === typeof singleTicketView ? false : true );
             KSDUtils.showDialog("loading");
-            jQuery.post(ksd_admin.ajax_url,
+            $.post(ksd_admin.ajax_url,
                     {action: 'ksd_assign_to',
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                         tkt_id: tkt_id,
@@ -1148,7 +1051,7 @@ jQuery(document).ready(function () {
         this.markTicketReadUnread = function (tkt_id, markAsRead, singleTicketView ) {
             singleTicketView = ( 'undefined' === typeof singleTicketView ? false : true );
             KSDUtils.showDialog("loading");
-            jQuery.post(ksd_admin.ajax_url,
+            $.post(ksd_admin.ajax_url,
                     {action: 'ksd_change_read_status',
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                         tkt_id: tkt_id,
@@ -1185,7 +1088,7 @@ jQuery(document).ready(function () {
         this.changeTicketSeverity = function (tkt_id, tkt_severity, singleTicketView ) {
             singleTicketView = ( 'undefined' === typeof singleTicketView ? false : true );
             KSDUtils.showDialog("loading");
-            jQuery.post(ksd_admin.ajax_url,
+            $.post(ksd_admin.ajax_url,
                     {action: 'ksd_change_severity',
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                         tkt_id: tkt_id,
@@ -1220,9 +1123,9 @@ jQuery(document).ready(function () {
          * @returns {undefined}
          */
         this.attachDeleteTicketEvent = function () {
-            jQuery("#ticket-tabs").on('click', '.ticket-actions a.trash', function (event) {
+            $("#ticket-tabs").on('click', '.ticket-actions a.trash', function (event) {
                 event.preventDefault();
-                var tkt_id = jQuery(this).attr('id').replace("tkt_", ""); //Get the ticket ID
+                var tkt_id = $(this).attr('id').replace("tkt_", ""); //Get the ticket ID
                 _this.deleteTicket(tkt_id);
             });
         };
@@ -1230,16 +1133,16 @@ jQuery(document).ready(function () {
         /**AJAX: Delete a ticket **/
         this.deleteTicket = function (tkt_id) {
             displayDialog = '#delete-dialog';
-            if (jQuery.isArray(tkt_id)) {
+            if ($.isArray(tkt_id)) {
                 displayDialog += '-bulk';
             }
-            jQuery(displayDialog).dialog({
+            $(displayDialog).dialog({
                 modal: true,
                 buttons: {
                     Yes: function () {
-                        jQuery(this).dialog("close");
+                        $(this).dialog("close");
                         KSDUtils.showDialog("loading");
-                        jQuery.post(ksd_admin.ajax_url,
+                        $.post(ksd_admin.ajax_url,
                                 {action: 'ksd_delete_ticket',
                                     ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                                     tkt_id: tkt_id
@@ -1259,23 +1162,23 @@ jQuery(document).ready(function () {
                                 KSDUtils.showDialog("error", respObj.error.message);
                                 return;
                             }
-                            if (!jQuery.isArray(tkt_id)) {//Signle ticket deletion
-                                jQuery('.ticket-list div#ksd_tkt_id_' + tkt_id).remove();
+                            if (!$.isArray(tkt_id)) {//Signle ticket deletion
+                                $('.ticket-list div#ksd_tkt_id_' + tkt_id).remove();
                             }
                             else {//Delete tickets in bulk
-                                jQuery.each(tkt_id, function (index, the_ID) {
-                                    jQuery('.ticket-list div#ksd_tkt_id_' + the_ID).remove();
+                                $.each(tkt_id, function (index, the_ID) {
+                                    $('.ticket-list div#ksd_tkt_id_' + the_ID).remove();
                                 });
                             }
                             KSDUtils.showDialog("success", respObj);
                         });
                     },
                     No: function () {
-                        jQuery(this).dialog("close");
+                        $(this).dialog("close");
                     }
                 }
             });
-            jQuery("div.ui-widget-overlay").remove();
+            $("div.ui-widget-overlay").remove();
         };
 
         //--------------------------------------------------------------------------------------
@@ -1283,47 +1186,47 @@ jQuery(document).ready(function () {
         //Also, update the private note when 'Update Note' is clicked  
         this.replyTicketAndUpdateNote = function () {
             var isTinyMCEActive = false;
-            var action = jQuery("input#ksd-reply-ticket-submit").attr("name");//ksd_reply_ticket or ksd_update_private_note
-            jQuery('.ksd-reply-spinner').removeClass('hidden').addClass('is-active');
-            var post_title = jQuery('input[name=post_title]').val();//Our JS replaces this field with an h2 field. We keep this here just as a fallbback
+            var action = $("input#ksd-reply-ticket-submit").attr("name");//ksd_reply_ticket or ksd_update_private_note
+            $('.ksd-reply-spinner').removeClass('hidden').addClass('is-active');
+            var post_title = $('input[name=post_title]').val();//Our JS replaces this field with an h2 field. We keep this here just as a fallbback
             if ( 'undefined' === typeof ( post_title ) ){
-                post_title = jQuery( '#titlewrap h2.post_title' ).text();//This is the title we expect to get always
+                post_title = $( '#titlewrap h2.post_title' ).text();//This is the title we expect to get always
             }
             //Validate CC when action is ksd_reply_ticket and indicate that there is validation error
-            jQuery('#ksd-cc-field').attr('title','');
-            jQuery('#ksd-cc-field').removeClass('ksd-cc-field-error');
-            if( jQuery('#ksd-cc-field').val() && 'none' !== jQuery('#ksd-cc-field').css("display") ){
-                var ccArr = jQuery('#ksd-cc-field').val().split(',');
+            $('#ksd-cc-field').attr('title','');
+            $('#ksd-cc-field').removeClass('ksd-cc-field-error');
+            if( $('#ksd-cc-field').val() && 'none' !== $('#ksd-cc-field').css("display") ){
+                var ccArr = $('#ksd-cc-field').val().split(',');
                 var ccLen = ccArr.length;
                 for( i=0; i < ccLen; i++ ){
                     if( ! ccArr[i].match(/@/) ){
-                        jQuery('#ksd-cc-field').attr('title', ksd_admin.ksd_labels.validator_cc ); 
-                        jQuery('#ksd-cc-field').addClass('ksd-cc-field-error');
-                        jQuery('.ksd-reply-spinner').removeClass('is-active').addClass('hidden');
+                        $('#ksd-cc-field').attr('title', ksd_admin.ksd_labels.validator_cc ); 
+                        $('#ksd-cc-field').addClass('ksd-cc-field-error');
+                        $('.ksd-reply-spinner').removeClass('is-active').addClass('hidden');
                         return false;
                     }
                 }
             }
-            var ticketReply = jQuery('textarea[name=ksd_ticket_reply]').val();
+            var ticketReply = $('textarea[name=ksd_ticket_reply]').val();
             if ( 'undefined' !== typeof( tinyMCE ) && tinyMCE.activeEditor && !tinyMCE.activeEditor.isHidden() ){
                 tinyMCE.triggerSave(); //Required for the tinyMCE.activeEditor.getContent() below to work
                 ticketReply = tinyMCE.activeEditor.getContent();
                 isTinyMCEActive = true;
             }
-            jQuery.post(    ksd_admin.ajax_url,
+            $.post(    ksd_admin.ajax_url,
                     {   action: action,
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                         ksd_ticket_reply: ticketReply,
                         ksd_reply_title: post_title,
-                        tkt_private_note: jQuery('textarea[name=tkt_private_note]').val(),
-                        tkt_id: jQuery.urlParam('post'),
-                        ksd_tkt_cc: jQuery("#ksd-cc-field").val()
+                        tkt_private_note: $('textarea[name=tkt_private_note]').val(),
+                        tkt_id: $.urlParam('post'),
+                        ksd_tkt_cc: $("#ksd-cc-field").val()
                     },
                     function (response) {
                         var respObj = {};
                         //To catch cases when the ajax response is not json
                         try {
-                            jQuery('.ksd-reply-spinner').removeClass('is-active').addClass('hidden');
+                            $('.ksd-reply-spinner').removeClass('is-active').addClass('hidden');
                             //to reduce cost of recalling parse
                             respObj = JSON.parse(response);
                         } catch (err) {
@@ -1350,8 +1253,8 @@ jQuery(document).ready(function () {
                         switch ( action ) {
                             case "ksd_update_private_note":
                                 KSDUtils.showDialog("success", respObj);
-                                replyData += jQuery('textarea[name=tkt_private_note]').val();//Get the content                          
-                                jQuery('textarea[name=tkt_private_note]').val('');//Clear the field
+                                replyData += $('textarea[name=tkt_private_note]').val();//Get the content                          
+                                $('textarea[name=tkt_private_note]').val('');//Clear the field
                                 break;
                             default:
                                 KSDUtils.showDialog( "success", ksd_admin.ksd_labels.msg_reply_sent );
@@ -1360,12 +1263,12 @@ jQuery(document).ready(function () {
                                     tinyMCE.activeEditor.setContent(''); //Clear the reply field
                                 }
                                 else{
-                                    jQuery('textarea[name=ksd_ticket_reply]').val('');
+                                    $('textarea[name=ksd_ticket_reply]').val('');
                                 }
                         }
                         replyData += "</div>";
                         replyData += "</li>";
-                        jQuery("ul#ksd-ticket-replies").append( replyData );
+                        $("ul#ksd-ticket-replies").append( replyData );
                     });
         };
         
@@ -1394,32 +1297,32 @@ jQuery(document).ready(function () {
              based on knowing that content's structure. Currently matches Gmail (Android and Desktop) & Outlook. To be expanded
              -------------------------------------------------------------------------------------------*/
             //Match Outlook 2013 extra content  @TODO Add mobile outlook, outlook 2007 and 2010
-            jQuery('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="ksd_extra"></div>');
+            $('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="ksd_extra"></div>');
             //Match Gmail ( Android and Desktop ) clients
-            jQuery('div.gmail_quote,blockquote.gmail_quote').addClass('ksd_extra');
+            $('div.gmail_quote,blockquote.gmail_quote').addClass('ksd_extra');
             //Match Yahoo desktop clients. Written separately from the rest merely for legibility
-            jQuery('div.yahoo_quoted').addClass('ksd_extra');
+            $('div.yahoo_quoted').addClass('ksd_extra');
             //@TODO Add more mail clients, IOS particularly
             
             /* #2 To the content we've wrapped in class 'ksd_extra' in #1 above, append the icon that'll be used to toggle the extra content*/
-            jQuery('#ksd-single-ticket .ksd_extra').before('<div class="replies-more" title="' + ksd_admin.ksd_labels.lbl_toggle_trimmed_content + '"></div>');
+            $('#ksd-single-ticket .ksd_extra').before('<div class="replies-more" title="' + ksd_admin.ksd_labels.lbl_toggle_trimmed_content + '"></div>');
 
             // #3 Add an event to that icon we appended
-            jQuery('#ksd-single-ticket').on('click', '.replies-more', function () {
-                jQuery(this).parents('.ticket-reply').find('.ksd_extra').toggle('slide');//Go up the DOM, find the ticket reply then find the extra content in it
+            $('#ksd-single-ticket').on('click', '.replies-more', function () {
+                $(this).parents('.ticket-reply').find('.ksd_extra').toggle('slide');//Go up the DOM, find the ticket reply then find the extra content in it
             });
 
             //#4 Initially, hide all the extra content
-            jQuery('.ksd_extra').toggle();
+            $('.ksd_extra').toggle();
         };
 
         this.replyTicketForm = function () {
-            jQuery("form#edit-ticket").validate({//@TODO Might have to remove this validation altogether
+            $("form#edit-ticket").validate({//@TODO Might have to remove this validation altogether
                 submitHandler: function (form) {
                     _this.replyTicketAndUpdateNote(form);
                 }
             });
-            jQuery('input#ksd-reply-ticket-submit').click(function ( e ) {
+            $('input#ksd-reply-ticket-submit').click(function ( e ) {
                 e.preventDefault();
                 _this.replyTicketAndUpdateNote();
             });    
@@ -1429,8 +1332,8 @@ jQuery(document).ready(function () {
              */
             ksdLogNewTicketAdmin = function (form) {
                 KSDUtils.showDialog("loading");//Show a dialog message
-                jQuery.post(ksd_admin.ajax_url,
-                        jQuery(form).serialize(), //The action and nonce are hidden fields in the form
+                $.post(ksd_admin.ajax_url,
+                        $(form).serialize(), //The action and nonce are hidden fields in the form
                         function (response) {
                             var respObj = {};
                             //To catch cases when the ajax response is not json
@@ -1450,7 +1353,7 @@ jQuery(document).ready(function () {
                             KSDUtils.showDialog("success", respObj);
                             //We send an email to the admin telling them about the new ticket. We do this by AJAX
                             //because our tests showed that wp_mail took in some cases 5 seconds to return a response
-                            jQuery.post(ksd_admin.ajax_url,
+                            $.post(ksd_admin.ajax_url,
                                     {   action: 'ksd_notify_new_ticket',
                                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce
                                     },
@@ -1474,9 +1377,9 @@ jQuery(document).ready(function () {
             /**While working on a single ticket, switch between reply/forward and Add note modes
              * We define the action (used by AJAX) and change the submit button's text
              */
-            jQuery('ul.edit-ticket-options li a').click(function (e) {
+            $('ul.edit-ticket-options li a').click(function (e) {
                 e.preventDefault();
-                action = jQuery(this).attr("href").replace("#", "");
+                action = $(this).attr("href").replace("#", "");
                 switch (action) {
                     case "forward_ticket":
                         submitButtonText = ksd_admin.ksd_labels.tkt_forward;
@@ -1487,13 +1390,13 @@ jQuery(document).ready(function () {
                     default:
                         submitButtonText = ksd_admin.ksd_labels.tkt_reply;
                 }
-                jQuery("input#ksd-reply-ticket-submit").attr("value", submitButtonText).attr("name",  "ksd_" + action );
+                $("input#ksd-reply-ticket-submit").attr("value", submitButtonText).attr("name",  "ksd_" + action );
             });
 
             /**For the Reply/Forward/Private Note tabs that appear when viewing a single ticket.*/
             //First check if the element exists
-            if (jQuery("ul.edit-ticket-options").length) {
-                jQuery("#edit-ticket-tabs").tabs();
+            if ($("ul.edit-ticket-options").length) {
+                $("#edit-ticket-tabs").tabs();
             }
         }
 
@@ -1504,20 +1407,20 @@ jQuery(document).ready(function () {
             /*On focus, Toggle customer name, email and subject */
             _toggleFieldValues();
             //This mousedown event is very important; without it, the wp_editor value isn't sent by AJAX
-            jQuery('form.ksd-new-ticket-admin :submit').mousedown(function () {
+            $('form.ksd-new-ticket-admin :submit').mousedown(function () {
                 tinyMCE.triggerSave();
             });
             
             /**Validate New Tickets before submitting the form by AJAX**/
-            jQuery("form.ksd-new-ticket-admin").validate({
+            $("form.ksd-new-ticket-admin").validate({
                 submitHandler: function (form) {
                     ksdLogNewTicketAdmin(form);
                 }
             });
             //Add Attachments
-            jQuery('[id^="ksd-add-attachment-"]').click(function () {
+            $('[id^="ksd-add-attachment-"]').click(function () {
                 var targetUL = 'ksd_attachments';
-                if (jQuery(this).hasClass('ksd_ticket_reply')) {//This is an attachment in single ticket view
+                if ($(this).hasClass('ksd_ticket_reply')) {//This is an attachment in single ticket view
                     targetUL = 'ksd_attachments-single-ticket';
                 }
                 if (this.window === undefined) {
@@ -1529,14 +1432,14 @@ jQuery(document).ready(function () {
                     var self = this; // Needed to retrieve our variable in the anonymous function below                    
                     this.window.on('select', function () {
                         var files = self.window.state().get('selection').toArray();
-                        jQuery.each(files, function (key, attachmentRaw) {
+                        $.each(files, function (key, attachmentRaw) {
                             attachment = attachmentRaw.toJSON();
                             attachmentLink = '<a href="' + attachment.url + '">' + attachment.filename + ' <span="ksd-attach-filesize"> ( ' + attachment.filesizeHumanReadable + ' )</span></a>';
                             attachmentFormInputUrl = '<input type="hidden" name="ksd_attachments[url][]" value="' + attachment.url + '" />';
                             attachmentFormInputTitle = '<input type="hidden" name="ksd_attachments[size][]" value="' + attachment.filesizeHumanReadable + '" />';
                             attachmentFormInputSize = '<input type="hidden" name="ksd_attachments[filename][]" value="' + attachment.filename + '" />';
                             attachmentFormInput = attachmentFormInputUrl + attachmentFormInputTitle + attachmentFormInputSize;
-                            jQuery('ul#' + targetUL).append('<li>' + attachmentLink + '<span class="ksd-close-dialog"></span>' + attachmentFormInput + '</li>');
+                            $('ul#' + targetUL).append('<li>' + attachmentLink + '<span class="ksd-close-dialog"></span>' + attachmentFormInput + '</li>');
                         });
                     });
                 }
@@ -1544,8 +1447,8 @@ jQuery(document).ready(function () {
                 return false;
             });
             //On clicking close, delete the attachment
-            jQuery('#admin-kanzu-support-desk').on('click', '.ksd-close-dialog', function () {
-                jQuery(this).parent().remove();
+            $('#admin-kanzu-support-desk').on('click', '.ksd-close-dialog', function () {
+                $(this).parent().remove();
             });
         }//eof:newTicket()
 
@@ -1562,10 +1465,10 @@ jQuery(document).ready(function () {
             }
 
             /**Change the title onclick of a side navigation tab*/
-            jQuery("#tabs .ksd-main-nav li a").click(function () {
-                jQuery('.admin-ksd-title h2').html(jQuery(this).attr('href').replace("#", "").replace("_", " "));//Remove the hashtag, replace _ with a space
+            $("#tabs .ksd-main-nav li a").click(function () {
+                $('.admin-ksd-title h2').html($(this).attr('href').replace("#", "").replace("_", " "));//Remove the hashtag, replace _ with a space
                 if ("yes" === ksd_admin.enable_anonymous_tracking) { 
-                    //KSDAnalytics.sendPageView(jQuery(this).attr('href').replace("#", "ksd-").replace("_", "-"));//Make it match the admin_tab format e.g. ksd-dashboard, ksd-tickets, etc
+                    //KSDAnalytics.sendPageView($(this).attr('href').replace("#", "ksd-").replace("_", "-"));//Make it match the admin_tab format e.g. ksd-dashboard, ksd-tickets, etc
                 }
             });
 
@@ -1577,7 +1480,7 @@ jQuery(document).ready(function () {
         this.changeTicketStatus = function ( tkt_id, tkt_status, singleTicketView ) {
             singleTicketView = ( 'undefined' === typeof singleTicketView ? false : true );
             KSDUtils.showDialog("loading");
-            jQuery.post(ksd_admin.ajax_url,
+            $.post(ksd_admin.ajax_url,
                     {action: 'ksd_change_status',
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
                         tkt_id: tkt_id,
@@ -1611,24 +1514,24 @@ jQuery(document).ready(function () {
          *  Attach event on send as email check box to show cc field
          */
          this.attachCCFieldEvents = function () {
-            jQuery("form.ksd-new-ticket-admin input[name=ksd_tkt_cc]").css({"display":"none"});
-            jQuery('a.ksd-new-ticket-cc').click( function(){
-                jQuery("form.ksd-new-ticket-admin input[name=ksd_tkt_cc]").css({"display":"block"});
+            $("form.ksd-new-ticket-admin input[name=ksd_tkt_cc]").css({"display":"none"});
+            $('a.ksd-new-ticket-cc').click( function(){
+                $("form.ksd-new-ticket-admin input[name=ksd_tkt_cc]").css({"display":"block"});
             });
-            if ( jQuery( "form.ksd-new-ticket-admin input[name=ksd_send_email]" ).attr("checked") == "checked")
+            if ( $( "form.ksd-new-ticket-admin input[name=ksd_send_email]" ).attr("checked") == "checked")
             {
-                jQuery('a.ksd-new-ticket-cc').css({"display":"block"});
+                $('a.ksd-new-ticket-cc').css({"display":"block"});
             }else{
-                jQuery('a.ksd-new-ticket-cc').css({"display":"none"});
+                $('a.ksd-new-ticket-cc').css({"display":"none"});
             }
             
             //Attach event
-            jQuery( "form.ksd-new-ticket-admin input[name=ksd_send_email]" ).change(function() {
-                if( jQuery(this).attr("checked") == "checked"){
-                    jQuery('a.ksd-new-ticket-cc').css({"display":"block"});
+            $( "form.ksd-new-ticket-admin input[name=ksd_send_email]" ).change(function() {
+                if( $(this).attr("checked") == "checked"){
+                    $('a.ksd-new-ticket-cc').css({"display":"block"});
                 }else{
-                    jQuery('a.ksd-new-ticket-cc').css({"display":"none"});
-                    jQuery("form.ksd-new-ticket-admin input[name=ksd_tkt_cc]").css({"display":"none"});
+                    $('a.ksd-new-ticket-cc').css({"display":"none"});
+                    $("form.ksd-new-ticket-admin input[name=ksd_tkt_cc]").css({"display":"none"});
                 }
             });
             
@@ -1639,33 +1542,33 @@ jQuery(document).ready(function () {
          */
         this.attachChangeTicketStatusEvents = function () {
             /**AJAX: Send the AJAX request when a new status is chosen**/
-            jQuery("#ticket-tabs").on('click', '.ticket-actions ul.status li', function () {
-                var tkt_id = jQuery(this).parent().parent().attr("id").replace("tkt_", "");//Get the ticket ID
-                var tkt_status = jQuery(this).attr("class");
+            $("#ticket-tabs").on('click', '.ticket-actions ul.status li', function () {
+                var tkt_id = $(this).parent().parent().attr("id").replace("tkt_", "");//Get the ticket ID
+                var tkt_status = $(this).attr("class");
                 _this.changeTicketStatus(tkt_id, tkt_status);
             });
 
             /**Hide/Show the change ticket options on click of a ticket's 'change status' item**/
-            jQuery("#ticket-tabs").on('click', '.ticket-actions a.change_status', function (event) {
+            $("#ticket-tabs").on('click', '.ticket-actions a.change_status', function (event) {
                 event.preventDefault();//Important otherwise the page skips around
-                var tkt_id = jQuery(this).attr('id').replace("tkt_", ""); //Get the ticket ID
-                jQuery("#tkt_" + tkt_id + " ul.status").toggleClass("hidden");
-                jQuery(this).parent().find(".ksd_agent_list").addClass("hidden");
-                jQuery(this).parent().find("ul.severity").addClass("hidden");
+                var tkt_id = $(this).attr('id').replace("tkt_", ""); //Get the ticket ID
+                $("#tkt_" + tkt_id + " ul.status").toggleClass("hidden");
+                $(this).parent().find(".ksd_agent_list").addClass("hidden");
+                $(this).parent().find("ul.severity").addClass("hidden");
             });
 
             /**In single ticket view, Hide/Show the change status options*/
-            if (jQuery("#ksd-single-ticket").length) {
-                jQuery(".ksd-top-nav").on('click', 'a.change_status', function (event) {
+            if ($("#ksd-single-ticket").length) {
+                $(".ksd-top-nav").on('click', 'a.change_status', function (event) {
                     event.preventDefault();//Important otherwise the page skips around
-                    jQuery("ul.status").toggleClass("hidden");
+                    $("ul.status").toggleClass("hidden");
                 });
-                jQuery(".ksd-top-nav ul.status").bind("mouseleave", function () {
-                    jQuery(this).addClass('hidden');
+                $(".ksd-top-nav ul.status").bind("mouseleave", function () {
+                    $(this).addClass('hidden');
                 });
-                jQuery(".ksd-top-nav").on('click', 'ul.status li', function () {
-                    var tkt_id = jQuery.urlParam('ticket');
-                    var tkt_status = jQuery(this).attr("class");
+                $(".ksd-top-nav").on('click', 'ul.status li', function () {
+                    var tkt_id = $.urlParam('ticket');
+                    var tkt_status = $(this).attr("class");
                     _this.changeTicketStatus(tkt_id, tkt_status, true );
 
                 });
@@ -1674,33 +1577,33 @@ jQuery(document).ready(function () {
         this.attachAssignToEvents = function () {
             //---------------------------------------------------------------------------------
             /**Hide/Show the assign to options on click of a ticket's 'Assign To' item**/
-            jQuery("#ticket-tabs").on('click', '.ticket-actions a.assign_to', function (event) {
+            $("#ticket-tabs").on('click', '.ticket-actions a.assign_to', function (event) {
                 event.preventDefault();//Important otherwise the page skips around
-                //jQuery(".ticket-actions a.change_status'").hide();
-                var tkt_id = jQuery(this).parent().attr('id').replace("tkt_", ""); //Get the ticket ID
-                jQuery("#tkt_" + tkt_id + " ul.ksd_agent_list").toggleClass("hidden");
-                jQuery(this).parent().find(".status").addClass("hidden");
-                jQuery(this).parent().find(".severity").addClass("hidden");
+                //$(".ticket-actions a.change_status'").hide();
+                var tkt_id = $(this).parent().attr('id').replace("tkt_", ""); //Get the ticket ID
+                $("#tkt_" + tkt_id + " ul.ksd_agent_list").toggleClass("hidden");
+                $(this).parent().find(".status").addClass("hidden");
+                $(this).parent().find(".severity").addClass("hidden");
 
             });
             //Re-assign a ticket 
-            jQuery("#ticket-tabs").on('click', '.ticket-actions ul.ksd_agent_list li', function () {
-                var tkt_id = jQuery(this).parent().parent().attr("id").replace("tkt_", "");//Get the ticket ID
-                var assign_assigned_to = jQuery(this).attr("id");
+            $("#ticket-tabs").on('click', '.ticket-actions ul.ksd_agent_list li', function () {
+                var tkt_id = $(this).parent().parent().attr("id").replace("tkt_", "");//Get the ticket ID
+                var assign_assigned_to = $(this).attr("id");
                 _this.reassignTicket(tkt_id, assign_assigned_to);
             });
             /**In single ticket view, Hide/Show the agent list when 'Assign to' is clicked*/
-            if (jQuery("#ksd-single-ticket").length) {
-                jQuery(".ksd-top-nav").on('click', 'a.assign_to', function (event) {
+            if ($("#ksd-single-ticket").length) {
+                $(".ksd-top-nav").on('click', 'a.assign_to', function (event) {
                     event.preventDefault();//Important otherwise the page skips around
-                    jQuery("ul.ksd_agent_list").toggleClass("hidden");
+                    $("ul.ksd_agent_list").toggleClass("hidden");
                 });
-                jQuery(".ksd-top-nav ul.ksd_agent_list").bind("mouseleave", function () {
-                    jQuery(this).addClass('hidden');
+                $(".ksd-top-nav ul.ksd_agent_list").bind("mouseleave", function () {
+                    $(this).addClass('hidden');
                 });
-                jQuery(".ksd-top-nav").on('click', 'ul.ksd_agent_list li', function () {
-                    var tkt_id = jQuery.urlParam('ticket');
-                    var assign_assigned_to = jQuery(this).attr("id");
+                $(".ksd-top-nav").on('click', 'ul.ksd_agent_list li', function () {
+                    var tkt_id = $.urlParam('ticket');
+                    var assign_assigned_to = $(this).attr("id");
                     _this.reassignTicket(tkt_id, assign_assigned_to, true );
                 });
             }
@@ -1713,22 +1616,22 @@ jQuery(document).ready(function () {
          */
         this.attachMarkReadUnreadEvents = function () {
             //Mark ticket read 
-            jQuery("#ticket-tabs").on('click', '.ticket-actions a.mark_read', function (event) {
+            $("#ticket-tabs").on('click', '.ticket-actions a.mark_read', function (event) {
                 event.preventDefault();
-                var tkt_id = jQuery(this).attr('id').replace("tkt_", ""); //Get the ticket ID
+                var tkt_id = $(this).attr('id').replace("tkt_", ""); //Get the ticket ID
                 _this.markTicketReadUnread(tkt_id, 1);
             });
             //Mark ticket unread
-            jQuery("#ticket-tabs").on('click', '.ticket-actions a.mark_unread', function (event) {
+            $("#ticket-tabs").on('click', '.ticket-actions a.mark_unread', function (event) {
                 event.preventDefault();
-                var tkt_id = jQuery(this).attr('id').replace("tkt_", ""); //Get the ticket ID
+                var tkt_id = $(this).attr('id').replace("tkt_", ""); //Get the ticket ID
                 _this.markTicketReadUnread(tkt_id, 0);
             });
             //In single page view 
-            if (jQuery("#ksd-single-ticket").length) {
-                jQuery(".ksd-top-nav").on('click', 'a.mark_unread', function (event) {
+            if ($("#ksd-single-ticket").length) {
+                $(".ksd-top-nav").on('click', 'a.mark_unread', function (event) {
                     event.preventDefault();//Important otherwise the page skips around
-                    var tkt_id = jQuery.urlParam('ticket');
+                    var tkt_id = $.urlParam('ticket');
                     _this.markTicketReadUnread(tkt_id, 0, true );
                 });
             }
@@ -1740,32 +1643,32 @@ jQuery(document).ready(function () {
          */
         this.attachChangeSeverityEvents = function () {
             //Hide/Show the change severity menu in ticket grid
-            jQuery("#ticket-tabs").on('click', '.ticket-actions a.change_severity', function (event) {
+            $("#ticket-tabs").on('click', '.ticket-actions a.change_severity', function (event) {
                 event.preventDefault();//Important otherwise the page skips around
-                var tkt_id = jQuery(this).attr('id').replace("tkt_", ""); //Get the ticket ID
-                jQuery("#tkt_" + tkt_id + " ul.severity").toggleClass("hidden");
-                jQuery(this).parent().find(".ksd_agent_list").addClass("hidden");
-                jQuery(this).parent().find("ul.status").addClass("hidden");
+                var tkt_id = $(this).attr('id').replace("tkt_", ""); //Get the ticket ID
+                $("#tkt_" + tkt_id + " ul.severity").toggleClass("hidden");
+                $(this).parent().find(".ksd_agent_list").addClass("hidden");
+                $(this).parent().find("ul.status").addClass("hidden");
             });
             /**AJAX: In ticket grid, change severity on click of a single ticket**/
-            jQuery("#ticket-tabs").on('click', '.ticket-actions ul.severity li', function () {
-                var tkt_id = jQuery(this).parent().parent().attr("id").replace("tkt_", "");//Get the ticket ID
-                var tkt_severity = jQuery(this).attr("class");
+            $("#ticket-tabs").on('click', '.ticket-actions ul.severity li', function () {
+                var tkt_id = $(this).parent().parent().attr("id").replace("tkt_", "");//Get the ticket ID
+                var tkt_severity = $(this).attr("class");
                 _this.changeTicketSeverity(tkt_id, tkt_severity );
             });
 
             /**In single ticket view, Hide/Show the severity list when 'Change Severity' is clicked*/
-            if (jQuery("#ksd-single-ticket").length) {
-                jQuery(".ksd-top-nav").on('click', 'a.change_severity', function (event) {
+            if ($("#ksd-single-ticket").length) {
+                $(".ksd-top-nav").on('click', 'a.change_severity', function (event) {
                     event.preventDefault();//Important otherwise the page skips around
-                    jQuery("ul.severity").toggleClass("hidden");
+                    $("ul.severity").toggleClass("hidden");
                 });
-                jQuery(".ksd-top-nav ul.severity").bind("mouseleave", function () {
-                    jQuery(this).addClass('hidden');
+                $(".ksd-top-nav ul.severity").bind("mouseleave", function () {
+                    $(this).addClass('hidden');
                 });
-                jQuery(".ksd-top-nav").on('click', 'ul.severity li', function () {
-                    var tkt_id = jQuery.urlParam('ticket');
-                    var tkt_severity = jQuery(this).attr("class");
+                $(".ksd-top-nav").on('click', 'ul.severity li', function () {
+                    var tkt_id = $.urlParam('ticket');
+                    var tkt_severity = $(this).attr("class");
                     _this.changeTicketSeverity(tkt_id, tkt_severity, true );
                 });
             }
@@ -1774,23 +1677,23 @@ jQuery(document).ready(function () {
 
         this.uiSingleTicketView = function () {
             //Add a class ksd-ticket to all ticket single views
-            if( jQuery.urlParam('post') > 0 && jQuery( '.ksd-misc-customer' ).length ){
-                jQuery( '#post-body' ).addClass( 'ksd-ticket-post-body' );
+            if( $.urlParam('post') > 0 && $( '.ksd-misc-customer' ).length ){
+                $( '#post-body' ).addClass( 'ksd-ticket-post-body' );
                 //Replace the ticket title with an h2 item
-                jQuery( '#titlewrap label#title-prompt-text' ).remove();
-                jQuery( '#titlewrap' ).html ( '<h2 class="post_title">'+jQuery( '#titlewrap input#title').val() +'</h2>' );
+                $( '#titlewrap label#title-prompt-text' ).remove();
+                $( '#titlewrap' ).html ( '<h2 class="post_title">'+$( '#titlewrap input#title').val() +'</h2>' );
             }
             /**AJAX: In single ticket view mode, get the current ticket's replies*/
-            if ( jQuery( "#ksd-ticket-replies" ).hasClass( "pending" ) ) {
+            if ( $( "#ksd-ticket-replies" ).hasClass( "pending" ) ) {
                     //Now get the responses.  
-                    jQuery.post(ksd_admin.ajax_url,
+                    $.post(ksd_admin.ajax_url,
                             {   action: 'ksd_get_ticket_replies',
                                 ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                                tkt_id: jQuery.urlParam('post')//We get the ticket ID from the URL
+                                tkt_id: $.urlParam('post')//We get the ticket ID from the URL
                             },
                     function ( the_replies ) {
                         var respObj = {};    
-                        jQuery("ul#ksd-ticket-replies").removeClass('pending');
+                        $("ul#ksd-ticket-replies").removeClass('pending');
                         try {
                             respObj = JSON.parse(the_replies);
                         } catch (err) {
@@ -1804,7 +1707,7 @@ jQuery(document).ready(function () {
                         }
 
                         repliesData = "";
-                        jQuery.each(respObj, function ( key, value) {
+                        $.each(respObj, function ( key, value) {
                             repliesData += "<li class='ticket-reply " + value.post_type + "'>";
                             repliesData += "<span class='reply_author'>" + value.post_author + "</span>";
                             repliesData += "<span class='reply_date'>" + value.post_date + "</span>";
@@ -1815,9 +1718,9 @@ jQuery(document).ready(function () {
                             
                             repliesData += "<div class='reply_message'>" + _this.formatSingleReplyMessage(value.post_content) + "</div>";                            
                             //The Reply's Attachments //@TODO Update this to retrieve attachments
-                            if (!jQuery.isEmptyObject(value.attachments)) {
+                            if (!$.isEmptyObject(value.attachments)) {
                                 repliesData += '<ul id="ksd_attachments">';
-                                jQuery.each(value.attachments, function (key, attachment) {
+                                $.each(value.attachments, function (key, attachment) {
                                     repliesData += '<li><a href="' + attachment.attach_url + '">' + attachment.attach_filename + ' ( ' + attachment.attach_size + ' )</a></li>';
                                 });
                                 repliesData += '</ul>';
@@ -1825,24 +1728,24 @@ jQuery(document).ready(function () {
                             repliesData += "</li>";
                         });
                         
-                        jQuery("ul#ksd-ticket-replies").html(repliesData);
+                        $("ul#ksd-ticket-replies").html(repliesData);
                         //Toggle the color of the reply background
-                        // jQuery("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
+                        // $("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
                         //Clean-up the replies to make them more user-friendly
                         _this.formatTicketReplies();
                         //Scroll to the bottom @TODO Scroll
-                        //jQuery('html, body').animate({scrollTop: jQuery(".edit-ticket").offset().top}, 1400, "swing");
+                        //$('html, body').animate({scrollTop: $(".edit-ticket").offset().top}, 1400, "swing");
                     });
                     
                     //Add click event to the reply to all button.   //@TODO Update this                     
-                    jQuery("#edit-ticket #reply_toall_button").click(function(){
-                        jQuery("form#edit-ticket input[name=ksd_tkt_cc]").css({"display":"block"});
-                        jQuery("form#edit-ticket input[name=ksd_tkt_cc]").val( jQuery(this).attr("data"));
+                    $("#edit-ticket #reply_toall_button").click(function(){
+                        $("form#edit-ticket input[name=ksd_tkt_cc]").css({"display":"block"});
+                        $("form#edit-ticket input[name=ksd_tkt_cc]").val( $(this).attr("data"));
                     });
                     
             }
             
-            if ( jQuery("#ksd-activity-metabox").hasClass("pending")) {
+            if ( $("#ksd-activity-metabox").hasClass("pending")) {
                 _this.getTicketActivity();                
             }; 
             //Modify the submitdiv
@@ -1855,42 +1758,42 @@ jQuery(document).ready(function () {
          */
         this.modifySubmitDiv = function () {
             //Check if this is our (ticket) page
-            if( 'ksd_ticket' !== jQuery.urlParam('post_type') && !jQuery('#ksd-messages-metabox').length ) return;
+            if( 'ksd_ticket' !== $.urlParam('post_type') && !$('#ksd-messages-metabox').length ) return;
             //Manually move the submitdiv to ensure it is the first element
-            jQuery("#submitdiv.postbox").prependTo("#side-sortables.meta-box-sortables");
+            $("#submitdiv.postbox").prependTo("#side-sortables.meta-box-sortables");
             //Modify the post status options available
-            jQuery( 'select#post_status' ).html( ksd_admin.ksd_ticket_info.status_list );
+            $( 'select#post_status' ).html( ksd_admin.ksd_ticket_info.status_list );
             //Show the current status. Get it from #hidden_ksd_post_status. We add a class to capitalize the text
-            var currentStatus = jQuery( '#hidden_ksd_post_status').val();
+            var currentStatus = $( '#hidden_ksd_post_status').val();
             if ( 'auto-draft' === currentStatus ){
                 currentStatus = 'open';
             }
-            jQuery('#post-status-display').text( currentStatus  ).addClass('ksd-post-status-display').addClass( currentStatus );
-            jQuery( 'a.save-post-status' ).click( function( event ) {//On change status, add the new status to the hidden hidden_ksd_post_status field
+            $('#post-status-display').text( currentStatus  ).addClass('ksd-post-status-display').addClass( currentStatus );
+            $( 'a.save-post-status' ).click( function( event ) {//On change status, add the new status to the hidden hidden_ksd_post_status field
                 event.preventDefault();
-                var newStatus =  jQuery('option:selected', jQuery('#post_status') ).val();
-                jQuery( '#hidden_ksd_post_status' ).val( newStatus );
+                var newStatus =  $('option:selected', $('#post_status') ).val();
+                $( '#hidden_ksd_post_status' ).val( newStatus );
                 //Replace the classes wrapping the displayed status
-                jQuery('#post-status-display').removeClass().addClass('ksd-post-status-display').addClass( newStatus );                
+                $('#post-status-display').removeClass().addClass('ksd-post-status-display').addClass( newStatus );                
             });
            //Change the 'Save Draft' button text to just 'Save'
-           jQuery( '#save-action' ).remove();
-           jQuery('#preview-action').remove();
+           $( '#save-action' ).remove();
+           $('#preview-action').remove();
            //Cancel a change 'assign to' or 'severity'
-           jQuery( 'a.cancel-severity,a.cancel-assign-to,a.cancel-customer' ).click( function( event ){
+           $( 'a.cancel-severity,a.cancel-assign-to,a.cancel-customer' ).click( function( event ){
                event.preventDefault();
-               jQuery(this).parent().addClass('hidden');
+               $(this).parent().addClass('hidden');
            });
            //Edit 'assign to' or 'severity'
-           jQuery( 'a.edit-assign-to,a.edit-severity,a.edit-customer' ).click( function( event ){
+           $( 'a.edit-assign-to,a.edit-severity,a.edit-customer' ).click( function( event ){
                event.preventDefault();
-               jQuery(this).parent().find('div.ksd_tkt_info_wrapper').removeClass('hidden');
+               $(this).parent().find('div.ksd_tkt_info_wrapper').removeClass('hidden');
            });
            //Save 'Assign to' or 'severity'
-            jQuery( 'a.save-severity,a.save-assign-to,a.save-customer' ).click( function( event ){
+            $( 'a.save-severity,a.save-assign-to,a.save-customer' ).click( function( event ){
                event.preventDefault();
-               var theParent = jQuery(this).parent();
-               var newValue =  jQuery('option:selected', theParent.find('select') ).text();              
+               var theParent = $(this).parent();
+               var newValue =  $('option:selected', theParent.find('select') ).text();              
                //Add class for severity.
                if (  theParent.parent().hasClass( 'ksd-misc-severity') ){
                     theParent.parent().find( '.ksd-misc-value' ).text( newValue ).removeClass().addClass('ksd-misc-value').addClass( newValue.toLowerCase() );
@@ -1903,22 +1806,22 @@ jQuery(document).ready(function () {
                theParent.addClass('hidden');
            });
            //Change the 'Publish' button to 'Update'. Ensure that we are on a KSD ticket page
-           if( jQuery.urlParam('post') > 0 && jQuery( '.ksd-misc-customer' ) ){
-               jQuery( '#publish' ).val( ksd_admin.ksd_labels.lbl_update );               
+           if( $.urlParam('post') > 0 && $( '.ksd-misc-customer' ) ){
+               $( '#publish' ).val( ksd_admin.ksd_labels.lbl_update );               
            }
            
            //Hide Visibility for ksd_ticket post types
-           jQuery('#submitdiv #visibility').hide();
+           $('#submitdiv #visibility').hide();
            
            //Hide Publish Date for ksd_ticket post types
-           jQuery('#submitdiv #timestamp').parent().hide();
+           $('#submitdiv #timestamp').parent().hide();
            //Add a 'Created on' element if we are replying a ticket
-           if( jQuery.urlParam('post') > 0 ){
+           if( $.urlParam('post') > 0 ){
                 var  createdOn = '<div class="misc-pub-section curtime misc-pub-curtime" style="">';
                      createdOn+='<span id="timestamp">';
-                     createdOn+=ksd_admin.ksd_labels.lbl_created_on+': <b>'+jQuery('#submitdiv #timestamp b').text()+'</b></span>';	
+                     createdOn+=ksd_admin.ksd_labels.lbl_created_on+': <b>'+$('#submitdiv #timestamp b').text()+'</b></span>';	
                      createdOn+='</div>';
-                jQuery( createdOn ).insertAfter( '.ksd-misc-assign-to' );      
+                $( createdOn ).insertAfter( '.ksd-misc-assign-to' );      
             }
         };
 
@@ -1927,11 +1830,11 @@ jQuery(document).ready(function () {
          * @returns {undefined}
          */
         this.getTicketActivity = function () {
-            jQuery.post(ksd_admin.ajax_url,
+            $.post(ksd_admin.ajax_url,
                     {   action: 'ksd_get_ticket_activity',
                         ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                        ksd_reply_title: jQuery('input[name=post_title]').val(),
-                        tkt_id: jQuery.urlParam('post')//We get the ticket ID from the URL
+                        ksd_reply_title: $('input[name=post_title]').val(),
+                        tkt_id: $.urlParam('post')//We get the ticket ID from the URL
                     },
             function (response) {
                 var respObj = {};
@@ -1949,23 +1852,23 @@ jQuery(document).ready(function () {
                     KSDUtils.showDialog("error", respObj.error.message);
                     return;
                 }
-                if ( ! jQuery.isArray(respObj)) {
-                    jQuery("#ksd-activity-metabox").html(respObj);
+                if ( ! $.isArray(respObj)) {
+                    $("#ksd-activity-metabox").html(respObj);
                     return;
                 }
                 var ticketActivityData = '<ul>';
-                jQuery.each( respObj, function ( key, ticketActivity ) {
+                $.each( respObj, function ( key, ticketActivity ) {
                     ticketActivityData+='<li>'+ticketActivity.post_date+' '+ticketActivity.post_author+' '+ticketActivity.post_content+'</li>';
                 });
                 ticketActivityData+='</ul>';
-                jQuery("#ksd-activity-metabox").html(ticketActivityData);
+                $("#ksd-activity-metabox").html(ticketActivityData);
             });
         };
 
         /**Toggle the form field values for new tickets on click**/
         _toggle_form_field_input = function(event) {
-            if (jQuery(this).val() === event.data.old_value) {
-                jQuery(this).val(event.data.new_value);
+            if ($(this).val() === event.data.old_value) {
+                $(this).val(event.data.new_value);
             }
         }
 
@@ -1978,12 +1881,12 @@ jQuery(document).ready(function () {
                 "ksd_tkt_cc": ksd_admin.ksd_labels.lbl_CC
             };
             //Attach events to the fields  
-            jQuery.each(new_form_fields, function (field_name, form_value) {
-                jQuery('form.ksd-new-ticket-admin input[name=' + field_name + ']').on('focus', {
+            $.each(new_form_fields, function (field_name, form_value) {
+                $('form.ksd-new-ticket-admin input[name=' + field_name + ']').on('focus', {
                     old_value: form_value,
                     new_value: ""
                 }, _toggle_form_field_input);
-                jQuery('form.ksd-new-ticket-admin input[name=' + field_name + ']').on('blur', {
+                $('form.ksd-new-ticket-admin input[name=' + field_name + ']').on('blur', {
                     old_value: "",
                     new_value: form_value
                 }, _toggle_form_field_input);
@@ -1993,7 +1896,7 @@ jQuery(document).ready(function () {
  
 
         this.attachRefreshTicketsPage = function () {
-            jQuery('.ksd-ticket-refresh button').click(function () {
+            $('.ksd-ticket-refresh button').click(function () {
                 _this.ksdRefreshTicketsPage( );
             });
         };
@@ -2009,40 +1912,40 @@ jQuery(document).ready(function () {
          * */
         RowCtrlEffects = function () {
 
-            jQuery(".ksd-row-ctrl").bind("hover mouseover focus", function () {
+            $(".ksd-row-ctrl").bind("hover mouseover focus", function () {
 
-                var id = jQuery(this).attr("id");
-                var tkt_id = jQuery(this).attr("id").replace("ksd_tkt_ctrl_", "");
-                jQuery("#ksd_tkt_id_" + tkt_id).addClass("ksd-row-ctrl-hover");
+                var id = $(this).attr("id");
+                var tkt_id = $(this).attr("id").replace("ksd_tkt_ctrl_", "");
+                $("#ksd_tkt_id_" + tkt_id).addClass("ksd-row-ctrl-hover");
 
 
             });
 
-            jQuery(".ksd-row-ctrl").mouseout(function () {
-                var id = jQuery(this).attr("id");
-                var tkt_id = jQuery(this).attr("id").replace("ksd_tkt_ctrl_", "");
-                jQuery("#ksd_tkt_id_" + tkt_id).removeClass("ksd-row-ctrl-hover");
+            $(".ksd-row-ctrl").mouseout(function () {
+                var id = $(this).attr("id");
+                var tkt_id = $(this).attr("id").replace("ksd_tkt_ctrl_", "");
+                $("#ksd_tkt_id_" + tkt_id).removeClass("ksd-row-ctrl-hover");
             });
 
 
             /*All checkbox**/
-            jQuery("#ticket-tabs .tkt_chkbx_all").on("click", function () {
+            $("#ticket-tabs .tkt_chkbx_all").on("click", function () {
                 //TODO:Show all options
-                if (jQuery(this).prop('checked') === true) {
-                    jQuery("#tkt_all_options").removeClass("ticket-actions");
-                    jQuery('input:checkbox').not(this).prop('checked', this.checked);
+                if ($(this).prop('checked') === true) {
+                    $("#tkt_all_options").removeClass("ticket-actions");
+                    $('input:checkbox').not(this).prop('checked', this.checked);
 
                     //
-                    tab_id = jQuery(this).attr("id").replace("tkt_chkbx_all_", "");
-                    jQuery("#ksd_row_all_" + tab_id).removeClass('ksd-row-all-hide').addClass("ksd-row-all-show");
+                    tab_id = $(this).attr("id").replace("tkt_chkbx_all_", "");
+                    $("#ksd_row_all_" + tab_id).removeClass('ksd-row-all-hide').addClass("ksd-row-all-show");
 
 
                 } else {
-                    jQuery("#tkt_all_options").addClass("ticket-actions");
-                    jQuery('input:checkbox').not(this).prop('checked', this.checked);
+                    $("#tkt_all_options").addClass("ticket-actions");
+                    $('input:checkbox').not(this).prop('checked', this.checked);
 
-                    tab_id = jQuery(this).attr("id").replace("tkt_chkbx_all_", "");
-                    jQuery("#ksd_row_all_" + tab_id).removeClass('ksd-row-all-show').addClass("ksd-row-all-hide");
+                    tab_id = $(this).attr("id").replace("tkt_chkbx_all_", "");
+                    $("#ksd_row_all_" + tab_id).removeClass('ksd-row-all-show').addClass("ksd-row-all-hide");
                 }
 
             });
@@ -2056,14 +1959,14 @@ jQuery(document).ready(function () {
          * @returns {undefined}
          */
         _getCurrentPage = function (tab_id) {
-            var curpage = jQuery("#ksd_pagination_" + tab_id + " ul li .current-nav").html();
+            var curpage = $("#ksd_pagination_" + tab_id + " ul li .current-nav").html();
             //return (KSDUtils.isNumber(curpage)) ? curpage : 1;
             return parseInt(curpage);
         };
 
 
         _getPagLimt = function (tab_id) {
-            var limit = jQuery("#ksd_pagination_limit_" + tab_id).val();
+            var limit = $("#ksd_pagination_limit_" + tab_id).val();
             return limit;
         };
 
@@ -2071,25 +1974,26 @@ jQuery(document).ready(function () {
 
     };
 
-    //Settings
-    Settings = new KSDSettings();
-    Settings.init();
+        //Settings
+        Settings = new KSDSettings();
+        Settings.init();
 
-    //Dashboard
-    Dashboard = new KSDDashboard();
-    Dashboard.init();
+        //Dashboard
+        Dashboard = new KSDDashboard();
+        Dashboard.init();
 
-    //Help
-    KSDHelpObj = new KSDHelp();
-    KSDHelpObj.init();
+        //Help
+        KSDHelpObj = new KSDHelp();
+        KSDHelpObj.init();
 
-    //Tickets
-    Tickets = new KSDTickets();
-    Tickets.init();
-    
-    //Onboarding 
-    OnBoarding = new KSDOnBoarding();
-    OnBoarding.init();    
+        //Tickets
+        Tickets = new KSDTickets();
+        Tickets.init();
+
+        //Onboarding 
+        OnBoarding = new KSDOnBoarding();
+        OnBoarding.init();    
 
 
 });
+})(jQuery);
