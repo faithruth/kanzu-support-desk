@@ -3108,6 +3108,11 @@ class KSD_Admin {
                 $filter .= '<option ' .selected( $filter_severity_by , $value, false ) . ' value="' . $value.'">' . $name . '</option>';       
             }
             $filter .= '</select>';
+            $filter .= '<select name="ksd_unread_filter" id="filter-by-read-unread">';
+            $filter .= '<option value="0">' . _x( 'All states','Ticket read and unread states', 'kanzu-support-desk' ) . '</option>';
+            $filter .= '<option value="unread">' . _x( 'Unread', 'Ticket state', 'kanzu-support-desk' ) . '</option>';
+            $filter .= '<option value="read">' . _x( 'Read','Ticket state', 'kanzu-support-desk' ) . '</option>';
+            $filter .= '</select>';
             echo $filter;
          }            
     }
@@ -3136,6 +3141,9 @@ class KSD_Admin {
             if ( ! empty( $_GET['ksd_statuses_filter'] ) ) {
                 $qv['post_status'] =  sanitize_key( $_GET['ksd_statuses_filter'] );
             }
+            if ( ! empty( $_GET['ksd_unread_filter'] ) ) {
+                $qv['meta_query'][] = $this->get_ticket_state_meta_query( $_GET['ksd_unread_filter'] );
+            }            
             if ( ! empty( $_GET['ksd_view'] ) ) {  
                switch ( sanitize_key( $_GET['ksd_view'] ) ) {
                    case 'mine':      
@@ -3374,7 +3382,32 @@ class KSD_Admin {
         return $translation;
     }    
     
-
+   
+    /**
+     * Get meta query used in filtering read/unread tickets
+     * @global WP_User $current_user
+     * @param string $ticket_state read|unread
+     * @return array The meta query to use
+     */
+    private function get_ticket_state_meta_query( $ticket_state ){
+        $state_meta_query = array();
+        global $current_user;
+        if ( 'read' == $ticket_state ){
+            $state_meta_query =    array(
+              'key'     => '_ksd_tkt_info_is_read_by_'.$current_user->ID,
+              'value'   => 'yes',
+              'compare' => '=',
+              'type'    => 'CHAR'
+            );
+        }
+        if ( 'unread' == $ticket_state ){
+               $state_meta_query =    array(
+              'key'     => '_ksd_tkt_info_is_read_by_'.$current_user->ID,
+              'compare' => 'NOT EXISTS'
+            );
+        }        
+       return $state_meta_query; 
+    }
                    
 
 }   
