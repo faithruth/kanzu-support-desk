@@ -30,18 +30,18 @@ endif;?>
             ?>
             <li class="ksd-pdt-severity">  
                 <select class="ksd-severity" name="ksd_tkt_severity" >
-                    <option selected="selected" disabled="disabled"><?php _e( 'Severity' ); ?></option>
-                    <option value="low"><?php echo _e( 'Low', 'kanzu-sipport-desk' ); ?></option>
-                    <option value="medium"><?php echo _e( 'Medium', 'kanzu-sipport-desk' ); ?></option>
-                    <option value="high"><?php echo _e( 'High', 'kanzu-sipport-desk' ); ?></option>
-                    <option value="urgent"><?php echo _e( 'Urgent', 'kanzu-sipport-desk' ); ?></option>
+                    <option selected="selected" disabled="disabled"><?php _e( 'Severity', 'kanzu-support-desk' ); ?></option>
+                    <option value="low"><?php echo _e( 'Low', 'kanzu-support-desk' ); ?></option>
+                    <option value="medium"><?php echo _e( 'Medium', 'kanzu-support-desk' ); ?></option>
+                    <option value="high"><?php echo _e( 'High', 'kanzu-support-desk' ); ?></option>
+                    <option value="urgent"><?php echo _e( 'Urgent', 'kanzu-support-desk' ); ?></option>
                 </select>
             </li>  
             <?php endif; ?>        
             <?php if( 'yes' === $show_products ): ?>
             <li class="ksd_pdt-categories" >
                 <select  name="ksd_tkt_product_id" >
-                    <option selected="selected" disabled="disabled"><?php _e( 'Product' ); ?></option>    
+                    <option selected="selected" disabled="disabled"><?php _e( 'Product', 'kanzu-support-desk' ); ?></option>    
                     <?php
                         $products = get_categories( array( 'taxonomy' => 'product', 'hide_empty' => 0 ) );
                         foreach( $products  as $product ){
@@ -54,7 +54,7 @@ endif;?>
             <?php if( 'yes' === $show_categories ): ?>
             <li class="ksd-tkt-categories" >
                 <select  name="ksd_tkt_cat_id" >
-                    <option selected="selected" disabled="disabled"><?php _e( 'Category' ); ?></option>    
+                    <option selected="selected" disabled="disabled"><?php _e( 'Category', 'kanzu-support-desk' ); ?></option>    
                     <?php
                         $cats = get_categories( array(  'taxonomy' => 'ticket_category', 'hide_empty' => 0 ) );
                         foreach( $cats  as $cat ){

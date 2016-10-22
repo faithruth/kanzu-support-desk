@@ -1,3 +1,15 @@
+#the-list tr.type-ksd_ticket.read{
+  background-color: #f9f9f9;
+}
+#the-list tr.type-ksd_ticket.read a.row-title{
+    font-weight: normal;    
+    color: #555;    
+}
+ 
+
+.striped > tbody > tr.type-ksd_ticket:nth-child(odd) {
+    background-color: #FFF;
+}
 #admin-kanzu-support-desk{
     position: relative;
 }
@@ -716,7 +728,7 @@ ul.edit-ticket-options li.selected{
     padding-left: 0;
     width: 100%;
 }
-#update_private_note textarea{
+#update_private_note{
     background-color: #EFEFEF;
 }
 #edit-ticket-tabs textarea{

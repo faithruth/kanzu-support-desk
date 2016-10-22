@@ -26,8 +26,10 @@
 </div>
 <div class="ksd-misc-assign-to misc-pub-section">
     <span><?php _e('Assigned To:','kanzu-support-desk'); ?></span>
-    <span class="ksd-misc-value" id="ksd-misc-assign-to"><?php    $assigned_to_ID = get_post_meta( $post->ID, '_ksd_tkt_info_assigned_to', true ); 
-        $assigned_to = ( 0 == $assigned_to_ID || empty ( $assigned_to_ID ) ? __( 'No One', 'kanzu-support-desk' ) : get_userdata ( $assigned_to_ID )->display_name  );
+    <span class="ksd-misc-value" id="ksd-misc-assign-to"><?php
+        $assigned_to_ID     = get_post_meta( $post->ID, '_ksd_tkt_info_assigned_to', true ); 
+        $assigned_to_user   = get_userdata ( $assigned_to_ID );
+        $assigned_to        = ( false !==  $assigned_to_user ? $assigned_to_user->display_name :   __( 'No One', 'kanzu-support-desk' )  );
         echo    $assigned_to; ?></span>
     <a href="#assign-to" class="edit-assign-to"><?php _e( 'Edit','kanzu-support-desk' ); ?></a>
     <div class="ksd_tkt_info_assigned_to ksd_tkt_info_wrapper hidden">    
