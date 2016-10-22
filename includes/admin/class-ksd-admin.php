@@ -144,7 +144,6 @@ class KSD_Admin {
         //Display ticket status next to the ticket title
         add_filter( 'display_post_states', array( $this, 'display_ticket_statuses_next_to_title' ) );        
         //Bulk edit
-        add_action( 'wp_ajax_save_bulk_edit_ksd_ticket', array( $this, 'save_bulk_edit_ksd_ticket' ) );
         add_action( 'bulk_edit_custom_box', array( $this, 'quick_edit_custom_boxes' ), 10, 2 );
         add_action( 'quick_edit_custom_box', array( $this, 'quick_edit_custom_boxes' ), 10, 2 );
         
@@ -3249,31 +3248,7 @@ class KSD_Admin {
         } 
     }
     
-
-    /**
-     * In bulk edit mode, save changes to tickets
-     * @TODO Add these changes to ticket activities
-     */
-    public function save_bulk_edit_ksd_ticket() {
-        $post_ids           = ( ! empty( $_POST[ 'post_ids' ] ) ) ? $_POST[ 'post_ids' ] : array();
-        $update_columns     = array();        
-        $update_keys        = array( '_ksd_tkt_info_assigned_to', '_ksd_tkt_info_severity' );
-        
-        foreach( $update_keys as $key ){
-            if( ! empty( $_POST[ $key ] ) ){
-                $update_columns[$key] = wp_kses_post( $_POST[ $key ] );
-            }
-        }
-
-        if ( ! empty( $post_ids ) && is_array( $post_ids ) && ! empty( $update_columns ) ) {
-            foreach ( $post_ids as $post_id ) {
-                foreach ( $update_columns as $ksd_key => $new_value ) {
-                    update_post_meta( $post_id, $ksd_key, $new_value );
-                }
-            }
-        }
-        die();
-    }    
+                   
     
     /**
      * Get a ticket assignee display name used in the 'All Tickets' list
