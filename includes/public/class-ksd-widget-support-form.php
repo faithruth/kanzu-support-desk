@@ -51,7 +51,7 @@ class KSD_Support_Form_Widget extends WP_Widget {
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Contact Support', 'kanzu-support-desk' );
 		?>
 		<p>
-                    <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label> 
+                    <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'kanzu-support-desk' ); ?></label> 
                     <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 		</p>
 		<?php 

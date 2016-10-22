@@ -6,7 +6,7 @@
             <li class="ticket-reply">            
                 <span class="reply_author"><?php echo $reply->post_author; ?></span>
                 <span class="reply_date"><?php echo $reply->post_date; ?></span>
-                <?php if (! empty ( $reply->ksd_cc ) ) : ?><div class="ksd-reply-cc"><?php _e ( 'CC', 'ksd-support-desk' ) ; ?>:<span class="ksd-cc-emails"><?php echo $reply->ksd_cc; ?></span></div><?php endif; ?>
+                <?php if (! empty ( $reply->ksd_cc ) ) : ?><div class="ksd-reply-cc"><?php _e ( 'CC', 'kanzu-support-desk' ) ; ?>:<span class="ksd-cc-emails"><?php echo $reply->ksd_cc; ?></span></div><?php endif; ?>
                 <div class="reply_message">
                     <p><?php echo $reply->post_content; ?></p>
                     <?php do_action( 'ksd_after_reply'); ?>

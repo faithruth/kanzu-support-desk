@@ -108,7 +108,6 @@ final class Kanzu_Support_Desk {
         //Set-up actions and filters
         $this->setup_actions();        
 
-
         /*
          * Register hooks that are fired when the plugin is activated  
          * When the plugin is deleted, the uninstall.php file is loaded.
@@ -117,7 +116,6 @@ final class Kanzu_Support_Desk {
 
         //Register a de-activation hook
         register_deactivation_hook( __FILE__, array( 'KSD_Install', 'deactivate' ) );
-
     }
 
     /**
@@ -196,7 +194,36 @@ final class Kanzu_Support_Desk {
      */
     public function enqueue_general_scripts() {		
         //For form validation
-        wp_enqueue_script( KSD_SLUG . '-validate', KSD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' , array( "jquery"), "1.13.0" ); 
+        wp_enqueue_script( KSD_SLUG . '-validate', KSD_PLUGIN_URL . 'assets/js/jquery.validate.min.js' , array( "jquery"), "1.13.0" );
+        $validator_messages = $this->get_validator_localized_messages();
+        wp_enqueue_script( KSD_SLUG . '-validate-messages', KSD_PLUGIN_URL . 'assets/js/jquery.validate.messages.js' , array( KSD_SLUG . '-validate' ) );
+        wp_localize_script( KSD_SLUG . '-validate-messages', 'ksd_validate_messages', $validator_messages );
+    }
+    
+    /**
+     * Return localized messages used in the jQuery validation plugin
+     * @return array Localized validation messages
+     */
+    private function get_validator_localized_messages(){
+        return array(
+            'required'      => __( 'This field is required.', 'kanzu-support-desk' ),
+            'remote'        => __( 'Please fix this field.', 'kanzu-support-desk' ),
+            'email'         => __( 'Please enter a valid email address.', 'kanzu-support-desk' ),
+            'url'           => __( 'Please enter a valid URL.', 'kanzu-support-desk' ),
+            'date'          => __( 'Please enter a valid date.', 'kanzu-support-desk' ),
+            'dateISO'       => __( 'Please enter a valid date (ISO).', 'kanzu-support-desk' ),
+            'number'        => __( 'Please enter a valid number.', 'kanzu-support-desk' ),
+            'digits'        => __( 'Please enter only digits.', 'kanzu-support-desk' ),
+            'equalTo'       => __( 'Please enter the same value again.', 'kanzu-support-desk' ),
+            'creditcard'    => __( 'Please enter a valid credit card number.', 'kanzu-support-desk' ),
+            'maxlength'     => sprintf( __( 'Please enter no more than %s characters.', 'kanzu-support-desk' ), '{0}' ),
+            'minlength'     => sprintf( __( 'Please enter at least %s characters.', 'kanzu-support-desk' ), '{0}' ),
+            'rangelength'   => sprintf( __( 'Please enter a value between %1$s and %2$s characters long.', 'kanzu-support-desk' ), '{0}','{1}' ),
+            'range'         => sprintf( __( 'Please enter a value between %1$s and %2$s.', 'kanzu-support-desk' ), '{0}','{1}' ),
+            'max'           => sprintf( __( 'Please enter a value less than or equal to %s.', 'kanzu-support-desk' ), '{0}' ),
+            'min'           => sprintf( __( 'Please enter a value greater than or equal to %s.', 'kanzu-support-desk' ), '{0}' ),
+            'step'          => sprintf(  __( 'Please enter a multiple of %s.', 'kanzu-support-desk' ), '{0}' ),  
+        );        
     }
 
      /**
@@ -225,7 +252,7 @@ final class Kanzu_Support_Desk {
         // Load plugin text domain
         add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
         
-        add_action( 'init', array( $this, 'init' ), 0 );
+        add_action( 'init', array( $this, 'init' ), 0 ); 
 
         //Load scripts used in both the front and back ends
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
@@ -234,10 +261,13 @@ final class Kanzu_Support_Desk {
         //Share the plugin's settings with add-ons
         add_filter( 'ksd_get_settings', array( $this, 'get_settings' ) );
 
-       //Handle logging of new tickets & replies initiated by add-ons.   
+        //Handle logging of new tickets initiated by add-ons.   
         add_action( 'ksd_log_new_ticket', array( $this, 'do_log_new_ticket' ) );
+      
+        //Handle logging of replies initiated by add-ons.   
+        add_action( 'ksd_reply_ticket', array( $this, 'do_reply_ticket' ) );
         
-        do_action( 'ksd_loaded' );
+        do_action( 'ksd_loaded' ); 
     }
     
     /**
@@ -254,10 +284,23 @@ final class Kanzu_Support_Desk {
      * all the functions needed to do this smoothly
      * @param Object $new_ticket The new ticket or reply object
      */
-    public function do_log_new_ticket( $new_ticket ){
+    public function do_log_new_ticket( $new_ticket ){ 
         require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
         $ksd_admin =  KSD_Admin::get_instance();
         $ksd_admin->do_log_new_ticket( $new_ticket );
+    }
+    
+    /**
+     * Log ticket replies initiated by add-ons
+     * 
+     * @since 2.2.12
+     * 
+     * @param Object $new_ticket The reply object
+     */
+    public function do_reply_ticket( $ticket_reply ){
+        require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
+        $ksd_admin =  KSD_Admin::get_instance();
+        $ksd_admin->do_reply_ticket( $ticket_reply );
     }
 
     /**

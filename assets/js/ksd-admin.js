@@ -233,6 +233,7 @@ jQuery(document).ready(function () {
             this.enableUsageStats();
             this.notifications();
             this.sendDebugEmail();
+            this.resetRoleCapabilities();
             
         };
         
@@ -302,6 +303,27 @@ jQuery(document).ready(function () {
                             }
                         }
                 );
+            });
+        }
+        
+        this.resetRoleCapabilities = function(){
+            jQuery('#ksd-reset-role-caps').click(function(e){
+                e.preventDefault(); 
+                var responseElement = jQuery('#ksd-debug-reset-role-caps-response');
+                responseElement.html( ksd_admin.ksd_labels.msg_loading );                
+                jQuery.post(
+                        ksd_admin.ajax_url,
+                        {
+                            action: 'ksd_reset_role_caps'
+                        },
+                        function (response) {                            
+                            if ( response.success ) {
+                                responseElement.html( response.data ).addClass('ksd-success');
+                            } else {
+                                responseElement.html( response.data ).addClass('ksd-error');
+                            }
+                        }
+                );               
             });
         }
         

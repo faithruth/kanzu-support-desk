@@ -64,24 +64,24 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                 <div id="ksd-below-settings">
                     <div class="ksd-section">
                         <div class="ksd-customer-header">
-                            <h3><?php _e ( 'Your Agents', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __( 'Agents are stored as WordPress users with role %s' ), 'KSD Agent' ); ?>"/>
+                            <h3><?php _e ( 'Your Agents', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __( 'Agents are stored as WordPress users with role %s' , 'kanzu-support-desk' ), 'KSD Agent' ); ?>"/>
                         </div>
-                        <a href="user-new.php" class="button button-primary button-large"> <?php _e ( 'Add New Agent' ); ?></a>
-                        <a href="users.php?role=ksd_agent" class="button button-primary button-large"> <?php _e ( 'View Agents' ); ?></a>
+                        <a href="user-new.php" class="button button-primary button-large"> <?php _e ( 'Add New Agent', 'kanzu-support-desk' ); ?></a>
+                        <a href="users.php?role=ksd_agent" class="button button-primary button-large"> <?php _e ( 'View Agents', 'kanzu-support-desk' ); ?></a>
                     </div>
                     <div class="ksd-section">
                         <div class="ksd-customer-header">
-                            <h3><?php _e ( 'Your Supervisors', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Supervisors are stored as WordPress users with role %s' ), 'KSD Supervisor' ); ?>"/>
+                            <h3><?php _e ( 'Your Supervisors', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Supervisors are stored as WordPress users with role %s', 'kanzu-support-desk' ), 'KSD Supervisor' ); ?>"/>
                         </div>
-                        <a href="user-new.php" class="button button-primary button-large"> <?php _e ( 'Add New Supervisor' ); ?></a>
-                        <a href="users.php?role=ksd_supervisor" class="button button-primary button-large"> <?php _e ( 'View Supervisors' ); ?></a>
+                        <a href="user-new.php" class="button button-primary button-large"> <?php _e ( 'Add New Supervisor', 'kanzu-support-desk' ); ?></a>
+                        <a href="users.php?role=ksd_supervisor" class="button button-primary button-large"> <?php _e ( 'View Supervisors', 'kanzu-support-desk' ); ?></a>
                     </div>                    
                     <div class="ksd-section">
                         <div class="ksd-customer-header">
-                            <h3><?php _e ( 'Your Customers', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your customers are stored as WordPress users with role %s' ), 'KSD Customer' ); ?>"/>
+                            <h3><?php _e ( 'Your Customers', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your customers are stored as WordPress users with role %s' , 'kanzu-support-desk' ), 'KSD Customer' ); ?>"/>
                         </div>
-                        <a href="user-new.php" target="_blank" class="button button-primary button-large"> <?php _e ( 'Add New Customer' ); ?></a>
-                        <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e ( 'View Customers' ); ?></a>
+                        <a href="user-new.php" target="_blank" class="button button-primary button-large"> <?php _e ( 'Add New Customer', 'kanzu-support-desk' ); ?></a>
+                        <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e ( 'View Customers', 'kanzu-support-desk' ); ?></a>
                     </div>
                     <div class="ksd-section ksd-debug">
                         <div class="ksd-customer-header">
@@ -91,8 +91,15 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                             <input type="text" value="" placeholder="<?php _e( 'Send test email to...', 'kanzu-support-desk' ); ?>" size="30" name="debug_test_email" /><a class="button button-secondary" href="#" id="ksd-send-test-email"><?php _e( 'Send test email', 'kanzu-support-desk' ); ?></a>
                             <div id="ksd-debug-email-response"></div>
                         </div>
-                        <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
-                        <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File"); ?> </a>   
+                        <div class="ksd-debug-generate-file">
+                            <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If you contact our support team and you are asked for a debug file, use this button to generate one', 'kanzu-support-desk' ); ?>"/>
+                            <a class="button action button-large" id="ksd-debug" href="<?php echo admin_url ( 'admin.php?page=kanzu-support-desk&ksd_action=ksd_generate_debug_file' ); ?>"><?php _e ( "Generate Debug File", "kanzu-support-desk" ); ?> </a>   
+                        </div>
+                        <div class="ksd-debug-reset-role-caps">
+                            <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( 'If some agents do not have the Tickets menu or a role does not have capabilities it should have, use this to perform a reset', 'kanzu-support-desk' ); ?>"/>
+                           <button class="button action button-large" id="ksd-reset-role-caps"><?php _e ( "Reset role capabilities", "kanzu-support-desk" ); ?> </button>   
+                           <div id="ksd-debug-reset-role-caps-response"></div>                            
+                        </div>
                     </div>
                 </div>                
             </div> 
@@ -109,7 +116,7 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
 
         <?php if ( count ( $licenses ) > 0 ): ?>
             <div id="ksd-licences-opt-tab"><!--fragment-2 -->
-                <h3><?php _e ( 'Licence Management', 'ksd-replies' ); ?> </h3>
+                <h3><?php _e ( 'Licence Management', 'kanzu-support-desk' ); ?> </h3>
                 <div>                    
                     <?php
                     //Iterate through the licenses and display them
