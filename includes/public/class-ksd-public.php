@@ -267,7 +267,7 @@ class KSD_Public {
         if ( "yes" == $settings['enable_customer_signup'] && ! is_user_logged_in() ) { 
             ob_start();
             include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' ); 
-            return ob_get_clean();
+            return apply_filters( 'ksd_registration_form', ob_get_clean() );
         } else{
             ob_start();
             $ksd_template = new KSD_Templates();
