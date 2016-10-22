@@ -34,8 +34,6 @@ var KSDHooks = KSDHooks || {};
 
         /*
          * Jquery plugin enhancements 
-         * //@TODO Are we sure this rule isn't called whenever we use the validator
-         * on any form? - Yes, it's only appended to specifiy forms.
          * //@TODO cc appears also on Ticket reply forms. Check how it performs on all forms
          */
         //Validation Rule for CC field

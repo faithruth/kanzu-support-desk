@@ -16,7 +16,8 @@
         </div>
         <!-- private notes -->
         <div id="update_private_note" class="single-ticket-textarea">
-            <?php echo wp_editor( '', 'tkt_private_note'); ?>
+            <?php $private_note_settings = array( 'textarea_rows' => 5 );
+            echo wp_editor( '', 'tkt_private_note', $private_note_settings ); ?>
         </div>
         <!--/ private notes -->
     </div> 
