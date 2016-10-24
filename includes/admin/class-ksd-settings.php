@@ -84,6 +84,10 @@ class KSD_Settings {
             }
         }
         
+        
+        private function generate_raw_html( $addon_setting ){
+            return $addon_setting['raw_html'];
+        }
         /**
          * Generate HTML for form text field
          * 
