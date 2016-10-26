@@ -2338,8 +2338,17 @@ class KSD_Admin {
         }                
         try{
             $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
+                                    
             //Iterate through the new settings and save them. We skip all multiple checkboxes; those are handled later. As of 1.5.0, there's only one set of multiple checkboxes, ticket_management_roles
             foreach ( $updated_settings as $option_name => $current_value ) {
+                
+                //Unset recapcha secret if it contains ********* i.e. password has not been set or changed
+                if ( 'recaptcha_secret_key' === $option_name ) {
+                    if( false !== strpos( $_POST['recaptcha_secret_key'], '************************************' ) ) {
+                        continue;
+                    }
+                }
+                
                 if ( $option_name == 'ticket_management_roles' ) {
                     continue;//Don't handle multiple checkboxes in here @since 1.5.0
                 }
@@ -2362,12 +2371,12 @@ class KSD_Admin {
 
             //Apply the settings filter to get settings from add-ons
             $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );            
-                
+
             $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
                 
             if( true === $status){ 
                 do_action( 'ksd_settings_saved' );
-               echo json_encode(  __( 'Settings Updated', 'kanzu-support-desk') );
+               echo json_encode(  __( 'Settings Updated', 'kanzu-support-desk' ) );
             }else{
                 throw new Exception( __( 'Update failed. Please retry.', 'kanzu-support-desk'), -1 );
             }
