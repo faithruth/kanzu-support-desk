@@ -2970,7 +2970,7 @@ class KSD_Admin {
                 case 'check_license':
                     if ( $license_data && 'valid' == $license_data->license ) {
                         $plugin_settings[ $license_status_key ] = 'valid';
-                        $response_message = __('License successfully validated. Welcome to a super-charged Kanzu Support Desk!', 'kanzu-support-desk' );
+                        $response_message = __('License successfully validated. Welcome to a super-charged Kanzu Support Desk! Please reload the page.', 'kanzu-support-desk' );
                        }
                     else{//Invalid license
                         $plugin_settings[ $license_status_key ] = 'invalid';
