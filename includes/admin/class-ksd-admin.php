@@ -2336,9 +2336,18 @@ class KSD_Admin {
             die ( __('Busted!', 'kanzu-support-desk') );
         }                
         try{
-            $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
+            $old_settings = $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
+                                    
             //Iterate through the new settings and save them. We skip all multiple checkboxes; those are handled later. As of 1.5.0, there's only one set of multiple checkboxes, ticket_management_roles
             foreach ( $updated_settings as $option_name => $current_value ) {
+                
+                //Unset recapcha secret if it contains ********* i.e. password has not been set or changed
+                if ( 'recaptcha_secret_key' === $option_name ) {
+                    if( false !== strpos( $_POST['recaptcha_secret_key'], '************************************' ) ) {
+                        continue;
+                    }
+                }
+                
                 if ( $option_name == 'ticket_management_roles' ) {
                     continue;//Don't handle multiple checkboxes in here @since 1.5.0
                 }
@@ -2361,12 +2370,17 @@ class KSD_Admin {
 
             //Apply the settings filter to get settings from add-ons
             $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );            
-                
-            $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
+
+            $status = false;
+            if ( $old_settings === $updated_settings ){//update_option returns false when there is no change to the settings
+                $status = true;
+            }else{
+                $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
+            }
                 
             if( true === $status){ 
                 do_action( 'ksd_settings_saved' );
-               echo json_encode(  __( 'Settings Updated', 'kanzu-support-desk') );
+               echo json_encode(  __( 'Settings Updated', 'kanzu-support-desk' ) );
             }else{
                 throw new Exception( __( 'Update failed. Please retry.', 'kanzu-support-desk'), -1 );
             }
@@ -3224,7 +3238,8 @@ class KSD_Admin {
     public function populate_ticket_columns( $column_name, $post_id ) {
         if ( $column_name == 'severity' ) {
             $ticket_severity = get_post_meta( $post_id, '_ksd_tkt_info_severity', true );
-            echo  '' == $ticket_severity ? 'low' : $ticket_severity ;
+            echo  '' == $ticket_severity ? $this->get_ticket_severity_label( 'low' ) 
+                    : $this->get_ticket_severity_label( $ticket_severity ) ;
         }
         if ( $column_name == 'assigned_to' ) {
             $ticket_assignee_id = get_post_meta( $post_id, '_ksd_tkt_info_assigned_to', true );    
@@ -3232,7 +3247,7 @@ class KSD_Admin {
         }   
         if ( $column_name == 'status' ) {
             global $post;
-            echo   "<span class='{$post->post_status}'>{$post->post_status}</span>";
+            echo   "<span class='{$post->post_status}'>" . $this->get_ticket_status_label( $post->post_status ) . "</span>";
         }   
         if ( $column_name == 'customer' ) {
             global $post;
@@ -3248,7 +3263,84 @@ class KSD_Admin {
         } 
     }
     
-                   
+    /**
+     * Get post status label
+     * 
+     * @param string ticket status
+     */
+    public function get_ticket_status_label ( $post_status ) {
+        $label = __( 'Unknown', 'kanzu-support-desk' );
+        switch ( $post_status ){
+            case 'open':
+                $label = __( 'Open', 'kanzu-support-desk' );
+            break;
+            case 'pending':
+                $label = __( 'Pending', 'kanzu-support-desk' );
+            break;
+            case 'resolved':
+                $label = __( 'Resolved', 'kanzu-support-desk' );
+            break;
+            case 'new':
+                $label = __( 'New', 'kanzu-support-desk' );
+            break;
+            case 'draft':
+                $label = __( 'Draft', 'kanzu-support-desk' );
+            break;
+        }
+        
+        echo $label;
+    }
+    
+ 
+    /**
+     * Get ticket sererity label
+     * 
+     * @param string ticket severity
+     */
+    public function get_ticket_severity_label ( $ticket_severity ) {
+        $label = __( 'Unknown', 'kanzu-support-desk' );
+        switch ( $post_status ){
+            case 'low':
+                $label = __( 'Low', 'kanzu-support-desk' );
+            break;
+            case 'medium':
+                $label = __( 'Medium', 'kanzu-support-desk' );
+            break;
+            case 'high':
+                $label = __( 'High', 'kanzu-support-desk' );
+            break;
+            case 'urgent':
+                $label = __( 'Urgent', 'kanzu-support-desk' );
+            break;
+        }
+        
+        echo $label;
+    }
+
+    /**
+     * In bulk edit mode, save changes to tickets
+     * @TODO Add these changes to ticket activities
+     */
+    public function save_bulk_edit_ksd_ticket() {
+        $post_ids           = ( ! empty( $_POST[ 'post_ids' ] ) ) ? $_POST[ 'post_ids' ] : array();
+        $update_columns     = array();        
+        $update_keys        = array( '_ksd_tkt_info_assigned_to', '_ksd_tkt_info_severity' );
+        
+        foreach( $update_keys as $key ){
+            if( ! empty( $_POST[ $key ] ) ){
+                $update_columns[$key] = wp_kses_post( $_POST[ $key ] );
+            }
+        }
+
+        if ( ! empty( $post_ids ) && is_array( $post_ids ) && ! empty( $update_columns ) ) {
+            foreach ( $post_ids as $post_id ) {
+                foreach ( $update_columns as $ksd_key => $new_value ) {
+                    update_post_meta( $post_id, $ksd_key, $new_value );
+                }
+            }
+        }
+        die();
+    }    
     
     /**
      * Get a ticket assignee display name used in the 'All Tickets' list
@@ -3385,17 +3477,17 @@ class KSD_Admin {
         $active_plugins = get_option( 'active_plugins', array() );
 
         foreach ( $plugins as $key => $plugin ) {
-                if ( in_array( $plugin, $active_plugins ) ) {
-                        // Remove active plugins from list so we can show active and inactive separately
-                        unset( $plugins[ $key ] );
-                }
+            if ( in_array( $plugin, $active_plugins ) ) {
+                // Remove active plugins from list so we can show active and inactive separately
+                unset( $plugins[ $key ] );
+            }
         }
         
         //Load all options
         $data['options'] = wp_load_alloptions();
-        
-		$data['active_plugins']   = $active_plugins;
-		$data['inactive_plugins'] = $plugins;
+
+        $data['active_plugins']   = $active_plugins;
+        $data['inactive_plugins'] = $plugins;
         
         return $data;
     }    
@@ -3403,6 +3495,7 @@ class KSD_Admin {
     
     /**
      * Add custom boxes to quick edit
+     * 
      * @param string $column_name
      * @param string $post_type
      * @return null

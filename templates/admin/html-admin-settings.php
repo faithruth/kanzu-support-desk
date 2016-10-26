@@ -76,6 +76,7 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <a href="user-new.php" class="button button-primary button-large"> <?php _e ( 'Add New Supervisor', 'kanzu-support-desk' ); ?></a>
                         <a href="users.php?role=ksd_supervisor" class="button button-primary button-large"> <?php _e ( 'View Supervisors', 'kanzu-support-desk' ); ?></a>
                     </div>                    
+                    
                     <div class="ksd-section">
                         <div class="ksd-customer-header">
                             <h3><?php _e ( 'Your Customers', 'kanzu-support-desk' ); ?></h3><img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php printf ( __ ( 'Your customers are stored as WordPress users with role %s' , 'kanzu-support-desk' ), 'KSD Customer' ); ?>"/>
@@ -83,6 +84,7 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <a href="user-new.php" target="_blank" class="button button-primary button-large"> <?php _e ( 'Add New Customer', 'kanzu-support-desk' ); ?></a>
                         <a href="users.php?role=ksd_customer" target="_blank" class="button button-primary button-large"> <?php _e ( 'View Customers', 'kanzu-support-desk' ); ?></a>
                     </div>
+                    
                     <div class="ksd-section ksd-debug">
                         <div class="ksd-customer-header">
                             <h3><?php _e ( 'Debug', 'kanzu-support-desk' ); ?></h3>
