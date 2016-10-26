@@ -3225,7 +3225,8 @@ class KSD_Admin {
     public function populate_ticket_columns( $column_name, $post_id ) {
         if ( $column_name == 'severity' ) {
             $ticket_severity = get_post_meta( $post_id, '_ksd_tkt_info_severity', true );
-            echo  '' == $ticket_severity ? 'low' : $ticket_severity ;
+            echo  '' == $ticket_severity ? $this->get_ticket_severity_label( 'low' ) 
+                    : $this->get_ticket_severity_label( $ticket_severity ) ;
         }
         if ( $column_name == 'assigned_to' ) {
             $ticket_assignee_id = get_post_meta( $post_id, '_ksd_tkt_info_assigned_to', true );    
@@ -3233,7 +3234,7 @@ class KSD_Admin {
         }   
         if ( $column_name == 'status' ) {
             global $post;
-            echo   "<span class='{$post->post_status}'>{$post->post_status}</span>";
+            echo   "<span class='{$post->post_status}'>" . $this->get_ticket_status_label( $post->post_status ) . "</span>";
         }   
         if ( $column_name == 'customer' ) {
             global $post;
@@ -3249,6 +3250,59 @@ class KSD_Admin {
         } 
     }
     
+    /**
+     * Get post status label
+     * 
+     * @param string ticket status
+     */
+    public function get_ticket_status_label ( $post_status ) {
+        $label = __( 'Unknown', 'kanzu-support-desk' );
+        switch ( $post_status ){
+            case 'open':
+                $label = __( 'Open', 'kanzu-support-desk' );
+            break;
+            case 'pending':
+                $label = __( 'Pending', 'kanzu-support-desk' );
+            break;
+            case 'resolved':
+                $label = __( 'Resolved', 'kanzu-support-desk' );
+            break;
+            case 'new':
+                $label = __( 'New', 'kanzu-support-desk' );
+            break;
+            case 'draft':
+                $label = __( 'Draft', 'kanzu-support-desk' );
+            break;
+        }
+        
+        echo $label;
+    }
+    
+ 
+    /**
+     * Get ticket sererity label
+     * 
+     * @param string ticket severity
+     */
+    public function get_ticket_severity_label ( $ticket_severity ) {
+        $label = __( 'Unknown', 'kanzu-support-desk' );
+        switch ( $post_status ){
+            case 'low':
+                $label = __( 'Low', 'kanzu-support-desk' );
+            break;
+            case 'medium':
+                $label = __( 'Medium', 'kanzu-support-desk' );
+            break;
+            case 'high':
+                $label = __( 'High', 'kanzu-support-desk' );
+            break;
+            case 'urgent':
+                $label = __( 'Urgent', 'kanzu-support-desk' );
+            break;
+        }
+        
+        echo $label;
+    }
 
     /**
      * In bulk edit mode, save changes to tickets
@@ -3410,17 +3464,17 @@ class KSD_Admin {
         $active_plugins = get_option( 'active_plugins', array() );
 
         foreach ( $plugins as $key => $plugin ) {
-                if ( in_array( $plugin, $active_plugins ) ) {
-                        // Remove active plugins from list so we can show active and inactive separately
-                        unset( $plugins[ $key ] );
-                }
+            if ( in_array( $plugin, $active_plugins ) ) {
+                // Remove active plugins from list so we can show active and inactive separately
+                unset( $plugins[ $key ] );
+            }
         }
         
         //Load all options
         $data['options'] = wp_load_alloptions();
-        
-		$data['active_plugins']   = $active_plugins;
-		$data['inactive_plugins'] = $plugins;
+
+        $data['active_plugins']   = $active_plugins;
+        $data['inactive_plugins'] = $plugins;
         
         return $data;
     }    
@@ -3428,6 +3482,7 @@ class KSD_Admin {
     
     /**
      * Add custom boxes to quick edit
+     * 
      * @param string $column_name
      * @param string $post_type
      * @return null

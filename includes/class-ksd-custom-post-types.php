@@ -67,7 +67,7 @@ class KSD_Custom_Post_Types {
                 'exclude_from_search'       => true,
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
-                'label_count'               => _n_noop( 'Open <span class="count">(%s)</span>', 'Open <span class="count">(%s)</span>' )
+                'label_count'               => _n_noop( 'Open <span class="count">(%s)</span>', 'Open <span class="count">(%s)</span>', 'kanzu-support-desk' )
                 ) );
             register_post_status( 'pending', array(
                 'label'                     => _x( 'Pending', 'status of a ticket', 'kanzu-support-desk' ),
@@ -75,7 +75,7 @@ class KSD_Custom_Post_Types {
                 'exclude_from_search'       => true,
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
-                'label_count'               => _n_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>' )
+                'label_count'               => _n_noop( 'Pending <span class="count">(%s)</span>', 'Pending <span class="count">(%s)</span>', 'kanzu-support-desk' )
                 ) );
             register_post_status( 'resolved', array(
                 'label'                     => _x( 'Resolved', 'status of a ticket', 'kanzu-support-desk' ),
@@ -83,7 +83,7 @@ class KSD_Custom_Post_Types {
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
                 'exclude_from_search'       => true,
-                'label_count'               => _n_noop( 'Resolved <span class="count">(%s)</span>', 'Resolved <span class="count">(%s)</span>' )
+                'label_count'               => _n_noop( 'Resolved <span class="count">(%s)</span>', 'Resolved <span class="count">(%s)</span>', 'kanzu-support-desk' )
                 ) );
             register_post_status( 'new', array(  
                 'label'                     => _x( 'New', 'status of a ticket', 'kanzu-support-desk' ),
@@ -91,7 +91,7 @@ class KSD_Custom_Post_Types {
                 'show_in_admin_all_list'    => true,
                 'show_in_admin_status_list' => true,
                 'exclude_from_search'       => true,
-                'label_count'               => _n_noop( 'New <span class="count">(%s)</span>', 'New <span class="count">(%s)</span>' )
+                'label_count'               => _n_noop( 'New <span class="count">(%s)</span>', 'New <span class="count">(%s)</span>', 'kanzu-support-desk' )
                 ) );
         }                
         

@@ -2294,3 +2294,7 @@ a.ksd-customer-ticket-link.button.button-primary{
     padding-left: 9%;
     padding-bottom: 40px;
 }
+
+.ksd-new-ticket-public #ksd-ticket-message {
+    width: 100%;
+}
