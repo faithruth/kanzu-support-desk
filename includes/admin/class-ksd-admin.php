@@ -2337,7 +2337,7 @@ class KSD_Admin {
             die ( __('Busted!', 'kanzu-support-desk') );
         }                
         try{
-            $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
+            $old_settings = $updated_settings = Kanzu_Support_Desk::get_settings();//Get current settings
                                     
             //Iterate through the new settings and save them. We skip all multiple checkboxes; those are handled later. As of 1.5.0, there's only one set of multiple checkboxes, ticket_management_roles
             foreach ( $updated_settings as $option_name => $current_value ) {
@@ -2372,7 +2372,12 @@ class KSD_Admin {
             //Apply the settings filter to get settings from add-ons
             $updated_settings = apply_filters( 'ksd_settings', $updated_settings, $_POST );            
 
-            $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
+            $status = false;
+            if ( $old_settings === $updated_settings ){//update_option returns false when there is no change to the settings
+                $status = true;
+            }else{
+                $status = update_option( KSD_OPTIONS_KEY, $updated_settings );
+            }
                 
             if( true === $status){ 
                 do_action( 'ksd_settings_saved' );
