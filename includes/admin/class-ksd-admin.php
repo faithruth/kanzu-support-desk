@@ -1565,8 +1565,8 @@ class KSD_Admin {
                     add_post_meta( $new_reply_id , '_ksd_tkt_info_cc', $cc, true );
                 }
 
-                //Mark ticket as unread
-                update_post_meta( $parent_ticket_ID, '_ksd_tkt_info_is_read', 'no' );
+                //Mark ticket as unread @TODO Update this.
+                $this->mark_ticket_reply_unread( $parent_ticket_ID );
                 
                 //Update the main ticket's tkt_time_updated field.  
                 $parent_ticket = get_post( $parent_ticket_ID );
@@ -1615,6 +1615,19 @@ class KSD_Admin {
                 die();// IMPORTANT: don't leave this out
             }  
 
+    }
+    
+    /**
+     * Remove all 'Ticket read' meta values
+     * @param type $parent_ticket_id
+     */
+    private function mark_ticket_reply_unread( $parent_ticket_id ){
+       $post_meta = get_post_meta( $parent_ticket_id );
+       foreach( $post_meta as $meta_key ){
+           if( false !== strpos( $meta_key, '_ksd_tkt_info_is_read_by_' ) ){
+               delete_post_meta( $parent_ticket_id, $meta_key );
+           }
+       }
     }
 
     /**
@@ -2020,11 +2033,7 @@ class KSD_Admin {
                 $meta_array['_ksd_tkt_info_woo_order_id']           = $new_ticket_raw['ksd_woo_order_id'];
             }
             
-            //Mark ticket as not read 
-            if ( ! add_post_meta( $new_ticket_id, '_ksd_tkt_info_is_read', 'no', true ) ) { 
-                update_post_meta( $new_ticket_id, '_ksd_tkt_info_is_read', 'no' ); 
-            }
-            
+           
             //Whom to we notify. Defaults to admin if ticket doesn't have an assignee
             $notify_user_id = ( isset( $meta_array['_ksd_tkt_info_assigned_to'] )? $meta_array['_ksd_tkt_info_assigned_to'] : 1 );
             $notify_user    = get_userdata(  $notify_user_id );
