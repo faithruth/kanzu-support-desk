@@ -1623,7 +1623,7 @@ class KSD_Admin {
      */
     private function mark_ticket_reply_unread( $parent_ticket_id ){
        $post_meta = get_post_meta( $parent_ticket_id );
-       foreach( $post_meta as $meta_key ){
+       foreach( $post_meta as $meta_key => $meta_value ){
            if( false !== strpos( $meta_key, '_ksd_tkt_info_is_read_by_' ) ){
                delete_post_meta( $parent_ticket_id, $meta_key );
            }
