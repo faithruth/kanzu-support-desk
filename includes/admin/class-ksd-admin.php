@@ -3308,7 +3308,8 @@ class KSD_Admin {
      */
     public function get_ticket_severity_label ( $ticket_severity ) {
         $label = __( 'Unknown', 'kanzu-support-desk' );
-        switch ( $post_status ){
+        
+        switch ( $ticket_severity ){
             case 'low':
                 $label = __( 'Low', 'kanzu-support-desk' );
             break;
