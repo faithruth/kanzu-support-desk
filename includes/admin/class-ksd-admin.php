@@ -399,7 +399,7 @@ class KSD_Admin {
         $ksd_settings['notifications_enabled'] = "no";
         Kanzu_Support_Desk::update_settings( $ksd_settings );
         echo json_encode( __( 'Thanks for your time. If you ever have any feedback, please get in touch - feedback@kanzucode.com', 'kanzu-support-desk') );
-        die();
+        if ( !defined( 'PHPUNIT' ) ) die();
     }        
 
     /**
@@ -1077,7 +1077,7 @@ class KSD_Admin {
     public function filter_totals() {
         if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
               die ( __( 'Busted!', 'kanzu-support-desk') );                         
-        }          
+        }         
         try{
             $this->do_admin_includes();                
             $settings = Kanzu_Support_Desk::get_settings();
@@ -1089,8 +1089,8 @@ class KSD_Admin {
                 'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
             );
         } 
-            echo json_encode( $response );
-            die();// IMPORTANT: don't leave this out
+        echo json_encode( $response );
+        if ( !defined( 'PHPUNIT' ) ) die();// IMPORTANT: don't leave this out
     }
 
             
@@ -1741,7 +1741,12 @@ class KSD_Admin {
         $ticket_reply['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
         $ticket_reply['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
         $ticket_reply['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
-        $ticket_reply['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
+        $ticket_reply['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged']; 
+        
+        //Add addon ticket ID  
+        if( isset( $new_ticket['ksd_addon_tkt_id'] ) ){
+            $ticket_reply['ksd_addon_tkt_id']         = $new_ticket['ksd_addon_tkt_id'];
+        }
         
         $this->reply_ticket( $ticket_reply );
     }
@@ -3033,7 +3038,7 @@ class KSD_Admin {
         $ksd_debug =  KSD_Debug::get_instance();
 
         echo wp_strip_all_tags( $ksd_debug->retrieve_debug_info() );
-        die();
+        if ( !defined( 'PHPUNIT' ) ) die();
     }
 
     /**
@@ -3349,7 +3354,7 @@ class KSD_Admin {
                 }
             }
         }
-        die();
+        if ( !defined( 'PHPUNIT' ) ) die();
     }    
     
     /**
