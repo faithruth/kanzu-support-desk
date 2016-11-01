@@ -19,7 +19,11 @@
   font-size: 0.7em;
 }
 .ksd-new-ticket-form-wrap ul li label.error,.ksd-register-form-wrap ul li label.error{
-    color: red;
+    color: #ff0000;
+    display: block;
+    clear: both;
+    max-width: 100%;
+    font-weight: bold;
 }
 .ksd-new-ticket-form-wrap input,.ksd-new-ticket-form-wrap select,.ksd-new-ticket-form-wrap textarea,.ksd-register-form-wrap input,.ksd-register-form-wrap textarea {
   margin-bottom: 7px;
