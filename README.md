@@ -106,6 +106,12 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 ## Changelog ##
+### 2.3.1, November 1, 2016 ###
+ * Localize status and severity in ticket grid
+ * Position ticket error label
+ * BUG FIX | Correctly mark ticket as read on reply
+ * BUG FIX | Save reCAPTCHA key properly, don't let the xxxxx mess it up
+
 ### 2.3.0, October 22, 2016 ###
  * Add read/unread ticket indicator
  * Add unread count next to Tickets label
@@ -383,6 +389,10 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 ## Upgrade Notice ##
+### 2.3.1, November 1, 2016 ###
+ * BUG FIX | Correctly mark ticket as read on reply
+ * BUG FIX | Save reCAPTCHA key properly, don't let the xxxxx mess it up
+
 ### 2.3.0###
  * Add read/unread ticket indicator
  * Add unread count next to Tickets label

@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.6
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,12 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+= 2.3.1, November 1, 2016 =
+ * Localize status and severity in ticket grid
+ * Position ticket error label
+ * BUG FIX | Correctly mark ticket as read on reply
+ * BUG FIX | Save reCAPTCHA key properly, don't let the xxxxx mess it up
+
 = 2.3.0, October 22, 2016 =
  * Add read/unread ticket indicator
  * Add unread count next to Tickets label
@@ -390,6 +396,10 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+= 2.3.1 =
+ * BUG FIX | Correctly mark ticket as read on reply
+ * BUG FIX | Save reCAPTCHA key properly, don't let the xxxxx mess it up
+
 = 2.3.0 =
  * Add read/unread ticket indicator
  * Add unread count next to Tickets label
