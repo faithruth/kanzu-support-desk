@@ -1004,6 +1004,8 @@ class KSD_Admin {
         //Remove ticket tags
         remove_submenu_page( 'edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket' ); 
         
+        //Reset rights in case someone's updating from a very old version
+        $this->reset_user_rights();
     }
 
     /**
@@ -1020,6 +1022,7 @@ class KSD_Admin {
             return;
         }
         if( current_user_can( 'manage_options' ) && ! current_user_can( 'manage_ksd_settings' ) && ! current_user_can( 'edit_ksd_ticket' ) ){
+            include_once( KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php' );
             KSD()->roles->create_roles();
             KSD()->roles->modify_all_role_caps( 'add' );  
             //Make the current user a supervisor. They need to re-select supervisors and agents
@@ -1027,7 +1030,7 @@ class KSD_Admin {
             KSD()->roles->add_supervisor_caps_to_user( $current_user );
             $user = new WP_User( $current_user->ID );
             KSD()->roles->modify_default_owner_caps( $user, 'add_cap' );   
-            KSD_Admin_Notices::add_notice( 'update-roles' );//Inform the user of the changes they need to make            
+           // KSD_Admin_Notices::add_notice( 'update-roles' );//Inform the user of the changes they need to make            
         }
     }
     /**
