@@ -2101,14 +2101,14 @@ class KSD_Admin {
             }
 
             echo json_encode( $new_ticket_status );
-            die();// IMPORTANT: don't leave this out
+            if ( !defined( 'PHPUNIT' ) ) die();// IMPORTANT: don't leave this out
 
             }catch( Exception $e ) {
                 $response = array(
                     'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
                 );
                 echo json_encode($response );	
-                die();// IMPORTANT: don't leave this out
+                if ( !defined( 'PHPUNIT' ) ) die();// IMPORTANT: don't leave this out
             }  
     }
 
