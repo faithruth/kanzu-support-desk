@@ -472,13 +472,9 @@ class KSDAdminTests extends WP_UnitTestCase {
             $ksd_admin = KSD_Admin::get_instance();
             
             foreach( $expected as $post_status => $expect ){
-                $ksd_admin->get_ticket_status_label( $post_status );
+                $output = $ksd_admin->get_ticket_status_label( $post_status );
+                $this->assertEquals( $output, $expect );
             }
-            
-            
-            $expect = implode( '', array_map( 'ucfirst', array_keys( $expected ) ) );
-            $this->expectOutputString( $expect );
-   
         }
 
         /**
@@ -496,11 +492,9 @@ class KSDAdminTests extends WP_UnitTestCase {
             $ksd_admin = KSD_Admin::get_instance();
             
             foreach( $arr_expected as $ticket_severity => $expect ){
-                $ksd_admin->get_ticket_severity_label( $ticket_severity );
+                $output = $ksd_admin->get_ticket_severity_label( $ticket_severity );
+                $this->assertEquals( $output, $expect );
             }
-            
-            $expect = implode( '', array_map( 'ucfirst', array_keys( $arr_expected ) ) );
-            $this->expectOutputString( $expect );
         }
         
         /**
