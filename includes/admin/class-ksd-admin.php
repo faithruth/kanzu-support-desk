@@ -3252,8 +3252,7 @@ class KSD_Admin {
     public function populate_ticket_columns( $column_name, $post_id ) {
         if ( $column_name == 'severity' ) {
             $ticket_severity = get_post_meta( $post_id, '_ksd_tkt_info_severity', true );
-            echo  '' == $ticket_severity ? $this->get_ticket_severity_label( 'low' ) 
-                    : $this->get_ticket_severity_label( $ticket_severity ) ;
+            echo  '' == $ticket_severity ? $this->get_ticket_severity_label( 'low' ) : $this->get_ticket_severity_label( $ticket_severity ) ;
         }
         if ( $column_name == 'assigned_to' ) {
             $ticket_assignee_id = get_post_meta( $post_id, '_ksd_tkt_info_assigned_to', true );    
@@ -3302,18 +3301,18 @@ class KSD_Admin {
             break;
         }
         
-        echo $label;
+        return $label;
     }
     
  
     /**
      * Get ticket sererity label
      * 
-     * @param string ticket severity
+     * @param string $ticket_severity ticket severity
      */
     public function get_ticket_severity_label ( $ticket_severity ) {
         $label = __( 'Unknown', 'kanzu-support-desk' );
-        
+
         switch ( $ticket_severity ){
             case 'low':
                 $label = __( 'Low', 'kanzu-support-desk' );
@@ -3329,7 +3328,7 @@ class KSD_Admin {
             break;
         }
         
-        echo $label;
+        return $label;
     }
 
     /**
