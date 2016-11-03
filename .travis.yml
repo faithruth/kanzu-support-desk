@@ -21,5 +21,5 @@ script: phpunit
 notifications:
   email:
     - ssebaggala@kanzucode.com
-    - lema@example.com
+    - lema@kanzucode.com
     - kakoma@kanzucode.com
