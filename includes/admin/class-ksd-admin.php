@@ -1255,7 +1255,7 @@ class KSD_Admin {
                     'post__not_in'  => array( sanitize_key( $_POST['parent_tkt_ID'] ) )
                 );
         
-	if ( isset( $_GET['term'] ) ) {
+	if ( isset( $_POST['search'] ) ) {
 		$args['s'] = wp_unslash( $_POST['search'] );
 	}
                        

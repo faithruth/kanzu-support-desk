@@ -896,6 +896,7 @@ var KSDHooks = KSDHooks || {};
              $('#merge-tickets-button').click(function(e){
                 e.preventDefault();                
                 $('#ksd-merge-ticket-wrap').dialog({
+                    dialogClass: "ksd-merge-no-close",
                     modal: true,
                     buttons: {
                         "Cancel": function () {
@@ -921,16 +922,41 @@ var KSDHooks = KSDHooks || {};
                     $('.ksd-merge-spinner').removeClass('is-active').addClass('hidden');
                     var responseContainer = $('ul.ksd-merge-tickets-list');
                     responseContainer.html(''); 
-                    if ( $.isArray( response ) ) {                      
-                          $.each( response, function ( key, value ) {
-                              responseContainer.append('<li data-ksd-merge-tkt-id="'+value.ID+'">'+value.title+'</li>');
+                    try{
+                        respObj = JSON.parse( response );
+                        if ( $.isArray( respObj ) ) {                      
+                          $.each( respObj, function ( key, value ) {
+                             responseContainer.append('<li data-ksd-merge-tkt-id="'+value.ID+'" class="ksd-merge-do-merge"> #'+value.ID+' '+value.title+'</li>');
                           });                       
-                      }else{
-                         responseContainer.html('<li>No results found. Please search again</li>')
+                        }else{
+                            responseContainer.html('<li>No results found. Please search again</li>');
+                        }
+                    }catch(err){
+                        responseContainer.html('<li>An error occured. Please re-try</li>');
                     }
+
                 }
             );  
             });
+            
+             $("#ksd-merge-ticket-wrap").on('click', '.ksd-merge-do-merge', function (event) {
+                 event.preventDefault();
+                 var mergeID = $(this).data('ksdMergeTktId');
+                 $('#ksd-merge-merge-ticket-title').html( $(this).html() );
+                 $('input.ksd-merge-merge-ticket-id').val( mergeID );
+                 $('.ksd-merge-ticket-merge-wrap').removeClass('hidden');
+             });
+             
+             $('#ksd-merge-ticket-complete').click(function(e){
+                e.preventDefault();
+                $(this).fadeOut();
+                $('#ksd-merge-ticket-select').removeClass('hidden');
+             });
+             $('#ksd-merge-cancel').click(function(e){
+                e.preventDefault();
+                $('#ksd-merge-ticket-wrap').dialog("close");
+             });             
+             
 
         };
         

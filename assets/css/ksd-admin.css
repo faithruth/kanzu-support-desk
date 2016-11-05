@@ -389,6 +389,9 @@ a.ksd-new-ticket-cc:visited {
     width: 30%;
     border: 1px solid #d3d3d3;
 }
+.ksd-merge-no-close .ui-dialog-titlebar-close {
+  display: none;
+}
 ul#ksd_attachments, ul#ksd_attachments-single-ticket{
     width: 100%;
     float: left;
