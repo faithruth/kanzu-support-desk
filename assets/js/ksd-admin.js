@@ -867,7 +867,9 @@ var KSDHooks = KSDHooks || {};
             this.ticketInfo();
             
              //Page Refresh
-            this.attachRefreshTicketsPage();           
+            this.attachRefreshTicketsPage();     
+            //Merge tickets
+            this.mergeTickets();
             
         };
         
@@ -885,6 +887,51 @@ var KSDHooks = KSDHooks || {};
                     }
             );               
  
+        };
+        
+        this.mergeTickets = function(){
+            if( $('#ksd-merge-parent-ticket-title').length ){
+                $('#ksd-merge-parent-ticket-title').html( $('#titlediv h2.post_title').text() );
+            }
+             $('#merge-tickets-button').click(function(e){
+                e.preventDefault();                
+                $('#ksd-merge-ticket-wrap').dialog({
+                    modal: true,
+                    buttons: {
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });  
+            });
+ 
+           
+            $('#ksd-merge-ticket-search').click(function(e){
+                e.preventDefault();   
+                $('.ksd-merge-spinner').removeClass('hidden').addClass('is-active');
+                $.post(
+                ksd_admin.ajax_url,
+                {
+                    action: 'ksd_get_merge_tickets',
+                    parent_tkt_ID: $('input[name=ksd-merge-parent-ticket]').val(),
+                    _ajax_ksd_merging_nonce : $('#_ajax_ksd_merging_nonce').val(),
+                    search: $('#ksd-merge-ticket-search-text').val()
+                },
+                function ( response ) {          
+                    $('.ksd-merge-spinner').removeClass('is-active').addClass('hidden');
+                    var responseContainer = $('ul.ksd-merge-tickets-list');
+                    responseContainer.html(''); 
+                    if ( $.isArray( response ) ) {                      
+                          $.each( response, function ( key, value ) {
+                              responseContainer.append('<li data-ksd-merge-tkt-id="'+value.ID+'">'+value.title+'</li>');
+                          });                       
+                      }else{
+                         responseContainer.html('<li>No results found. Please search again</li>')
+                    }
+                }
+            );  
+            });
+
         };
         
         /*

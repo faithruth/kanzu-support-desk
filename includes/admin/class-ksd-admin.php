@@ -83,6 +83,7 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
         add_action( 'wp_ajax_ksd_reset_role_caps', array( $this, 'reset_role_caps' ) );
         add_action( 'wp_ajax_ksd_get_unread_ticket_count', array( $this, 'get_unread_ticket_count' ) );
+        add_action( 'wp_ajax_ksd_get_merge_tickets', array( $this, 'get_merge_tickets' ) );
         
         
         
@@ -1237,6 +1238,36 @@ class KSD_Admin {
         }
         echo json_encode( $replies );
         die(); // IMPORTANT: don't leave this out
+    }
+    
+    
+    /**
+     * Get tickets used in the merge tickets list
+     */
+    public function get_merge_tickets(){
+        check_ajax_referer( 'ksd-merging', '_ajax_ksd_merging_nonce' );
+        $results    = array();
+        $args       = array(
+                    'post_type'     => 'ksd_ticket',
+                    'posts_per_page'=> 12,
+                    'offset'        => 0,
+                    'post_status'   => array('new','open','pending','resolved','draft'),
+                    'post__not_in'  => array( sanitize_key( $_POST['parent_tkt_ID'] ) )
+                );
+        
+	if ( isset( $_GET['term'] ) ) {
+		$args['s'] = wp_unslash( $_POST['search'] );
+	}
+                       
+        
+        $merge_tickets = get_posts( $args );
+        foreach ( $merge_tickets as $ticket ) {
+            $results[] = array(
+                'ID'            => $ticket->ID,
+                'title'         => trim( esc_html( $ticket->post_title ) )
+            );
+        }
+        wp_die( wp_json_encode( $results ) );
     }
 
     /**

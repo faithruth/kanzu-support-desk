@@ -528,7 +528,7 @@ ul.ksd_attachments li{
 .ksd-reply-submit-wrapper .spinner {
     float: left;
 }
-.spinner.ksd-reply-spinner.hidden{
+.spinner.ksd-reply-spinner.hidden,.spinner.ksd-merge-spinner.hidden{
     display: none;    
 }
 .ksd-migration-spinner {
