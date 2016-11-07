@@ -392,6 +392,14 @@ a.ksd-new-ticket-cc:visited {
 .ksd-merge-no-close .ui-dialog-titlebar-close {
   display: none;
 }
+#ksd-merge-final-response{
+    padding: 7px;
+    background-color: #0085ba;
+    color: #FFF;
+}
+#ksd-merge-final-response.empty{
+    padding: 0;
+}
 ul#ksd_attachments, ul#ksd_attachments-single-ticket{
     width: 100%;
     float: left;

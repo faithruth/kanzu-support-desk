@@ -893,6 +893,7 @@ var KSDHooks = KSDHooks || {};
             if( $('#ksd-merge-parent-ticket-title').length ){
                 $('#ksd-merge-parent-ticket-title').html( $('#titlediv h2.post_title').text() );
             }
+            //Show the first 'Merge' dialog
              $('#merge-tickets-button').click(function(e){
                 e.preventDefault();                
                 $('#ksd-merge-ticket-wrap').dialog({
@@ -906,7 +907,7 @@ var KSDHooks = KSDHooks || {};
                 });  
             });
  
-           
+           //Get a list of possible tickets to merge
             $('#ksd-merge-ticket-search').click(function(e){
                 e.preventDefault();   
                 $('.ksd-merge-spinner').removeClass('hidden').addClass('is-active');
@@ -924,7 +925,7 @@ var KSDHooks = KSDHooks || {};
                     responseContainer.html(''); 
                     try{
                         respObj = JSON.parse( response );
-                        if ( $.isArray( respObj ) ) {                      
+                        if ( $.isArray( respObj ) && respObj.length > 0 ) {                      
                           $.each( respObj, function ( key, value ) {
                              responseContainer.append('<li data-ksd-merge-tkt-id="'+value.ID+'" class="ksd-merge-do-merge"> #'+value.ID+' '+value.title+'</li>');
                           });                       
@@ -939,25 +940,57 @@ var KSDHooks = KSDHooks || {};
             );  
             });
             
+            //On selecting one of the possible tickets as the merge candidate
              $("#ksd-merge-ticket-wrap").on('click', '.ksd-merge-do-merge', function (event) {
                  event.preventDefault();
                  var mergeID = $(this).data('ksdMergeTktId');
                  $('#ksd-merge-merge-ticket-title').html( $(this).html() );
-                 $('input.ksd-merge-merge-ticket-id').val( mergeID );
+                 $('#ksd-merge-merge-ticket-id').val( mergeID );
+                 $('#ksd-merge-ticket-merge-button').fadeIn();//In case this button's hidden
                  $('.ksd-merge-ticket-merge-wrap').removeClass('hidden');
              });
              
-             $('#ksd-merge-ticket-complete').click(function(e){
+             //The merge is imminent. On selecting to merge. One more step before the merge is sealed..
+             $('#ksd-merge-ticket-merge-button').click(function(e){
                 e.preventDefault();
                 $(this).fadeOut();
                 $('#ksd-merge-ticket-select').removeClass('hidden');
              });
+             
+             //On canceling the merger, boohoo!!
              $('#ksd-merge-cancel').click(function(e){
                 e.preventDefault();
+                $('#ksd-merge-merge-ticket-title').html( '' );
+                $('#ksd-merge-merge-ticket-id').val( 0 );
+                $('.ksd-merge-ticket-merge-wrap,#ksd-merge-ticket-select').addClass('hidden');
+                $(this).fadeOut();
                 $('#ksd-merge-ticket-wrap').dialog("close");
              });             
              
-
+             //On confirming the merger. The deal is sealed!!              
+             $('#ksd-merge-ticket-confirm').click(function(e){
+                e.preventDefault();
+                $('.ksd-merge-spinner').removeClass( 'hidden' ).addClass( 'is-active' );
+                $.post(
+                ksd_admin.ajax_url,
+                {
+                    action: 'ksd_merge_tickets',
+                    parent_tkt_ID: $('input[name=ksd-merge-parent-ticket]').val(),
+                    _ajax_ksd_merging_nonce : $('#_ajax_ksd_merging_nonce').val(),
+                    merge_tkt_ID: $('#ksd-merge-merge-ticket-id').val()
+                },
+                function ( response ) { 
+                   $('.ksd-merge-spinner').removeClass( 'is-active' ).addClass( 'hidden' );
+                   $('#ksd-merge-final-response').removeClass('empty');
+                   var responseContainer = $('#ksd-merge-final-response');
+                   if ( response.success ) {
+                       responseContainer.html( response.data.message );
+                        location.reload();
+                    }else{
+                         responseContainer.html( response.data.message );
+                    }
+                });
+             });  
         };
         
         /*
