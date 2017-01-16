@@ -1289,6 +1289,12 @@ class KSD_Admin {
 
             //Add reply's CC
             $reply->ksd_cc = get_post_meta( $reply->ID, '_ksd_tkt_info_cc', true );
+            
+            //Add reply's Facebook Comment ID
+            $reply_comment_id = get_post_meta( $reply->ID, '_ksd_rep_info_comment_id', true );
+            if( ! empty( $reply_comment_id ) ){
+                $reply->comment_id = $reply_comment_id;
+            }
         } 
         return $replies;
     }

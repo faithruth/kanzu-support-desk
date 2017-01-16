@@ -1706,7 +1706,11 @@ var KSDHooks = KSDHooks || {};
 
                         repliesData = "";
                         $.each(respObj, function ( key, value) {
-                            repliesData += "<li class='ticket-reply " + value.post_type + "'>";
+                            var replyID = '';
+                            if( 'undefined' !== typeof(value.comment_id) ){
+                                replyID = "id='ksd-reply-" + value.comment_id + "'";
+                            }
+                            repliesData += "<li class='ticket-reply " + value.post_type + "' " + replyID + " >";
                             repliesData += "<span class='reply_author'>" + value.post_author + "</span>";
                             repliesData += "<span class='reply_date'>" + value.post_date + "</span>";
                             
