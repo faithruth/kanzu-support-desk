@@ -106,6 +106,11 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 ## Changelog ##
+
+### 2.3.2, January 23, 2017 ###
+ * Add Facebook add-on support
+ * Run new discount offer
+
 ### 2.3.1, November 1, 2016 ###
  * Localize status and severity in ticket grid
  * Position ticket error label
@@ -389,7 +394,11 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 ## Upgrade Notice ##
-### 2.3.1, November 1, 2016 ###
+### 2.3.2 ###
+ * Add Facebook add-on support
+ * Run new discount offer
+
+### 2.3.1 ###
  * BUG FIX | Correctly mark ticket as read on reply
  * BUG FIX | Save reCAPTCHA key properly, don't let the xxxxx mess it up
 

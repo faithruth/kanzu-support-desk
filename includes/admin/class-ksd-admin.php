@@ -3667,7 +3667,7 @@ class KSD_Admin {
     public function disable_campaign_notice(){
         $current_user_id                = get_current_user_id();
         $current_user_campaign_meta_key = 'ksd_campaign_'.$current_user_id.'_90_discount_disabled';
-        update_user_meta( $current_user_id, $current_user_campaign_meta_key, yes );
+        update_user_meta( $current_user_id, $current_user_campaign_meta_key, 'yes' );
         echo json_encode( __('Success!', 'kanzu-support-desk' ) );
         die();
     }
