@@ -83,6 +83,7 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
         add_action( 'wp_ajax_ksd_reset_role_caps', array( $this, 'reset_role_caps' ) );
         add_action( 'wp_ajax_ksd_get_unread_ticket_count', array( $this, 'get_unread_ticket_count' ) );
+        add_action( 'wp_ajax_ksd_notifications_disable_campaign', array( $this, 'disable_campaign_notice' ) );
         
         
         
@@ -165,6 +166,9 @@ class KSD_Admin {
         
         //Tag 'read' tickets in the ticket grid
         add_filter( 'post_class', array( $this, 'append_classes_to_ticket_grid' ), 10, 3 );
+
+        //Display the first campaign's admin notice
+        add_action( 'admin_notices', array( $this, 'admin_notices_campaign_one' ) );
 
     }
     
@@ -3635,6 +3639,37 @@ class KSD_Admin {
         }
         $user = get_userdata( $user_id );
         return '<a href="' . admin_url( "user-edit.php?user_id={$user_id}").'">' . $user->display_name.'</a>';
+    }
+
+    public function admin_notices_campaign_one(){
+        $current_user_id                = get_current_user_id();
+        $current_user_campaign_meta_key = 'ksd_campaign_'.$current_user_id.'_90_discount_disabled';
+        if( 'yes' == get_user_meta( $current_user_id, $current_user_campaign_meta_key, true ) ){
+            return;
+        }
+    ?>
+    <div class="ksd-campaign-ninety-discount-notice notice notice-success is-dismissible">
+        <?php 
+        $offer_end_date     = Date('l j F,Y', strtotime("+3 days"));
+        $offer_cta_button   = '<a href="https://kanzucode.com/quick-chat" target="_blank">'.__( 'Click here', 'kanzu-support-desk' ).'</a>';
+        printf(  '<p>%1$s <strong>%2$s</strong> %3$s <strong>%4$s</strong>. %5$s %6$s</p>',
+            __( ' Kanzu Support Desk | Get a ','kanzu-support-desk' ),
+            '90%',
+            __( ' discount on ANY of our add-ons, including our popular email add-on that allows you to receive tickets by email! Offer runs till','kanzu-support-desk'  ),            
+            $offer_end_date,
+            $offer_cta_button,
+            __( 'to redeem & enhance your customer service', 'kanzu-support-desk' )
+            ); ?>
+    </div>
+    <?php        
+    }
+
+    public function disable_campaign_notice(){
+        $current_user_id                = get_current_user_id();
+        $current_user_campaign_meta_key = 'ksd_campaign_'.$current_user_id.'_90_discount_disabled';
+        update_user_meta( $current_user_id, $current_user_campaign_meta_key, yes );
+        echo json_encode( __('Success!', 'kanzu-support-desk' ) );
+        die();
     }
                    
 

@@ -168,7 +168,7 @@ class KSD_Onboarding {
                 'end-tour'          => array(
                     'title'         => __( 'Ready!', 'kanzu-support-desk' ) ,
                     'next_url'      => admin_url( 'edit.php?post_type=ksd_ticket' ),
-                    'stage_notes'   => __('That\'s it! Now that\'s how you handle customer care like a rockstar. To see full documentation or to customize your installation, click the buttons below','kanzu-support-desk'),
+                    'stage_notes'   => __('That\'s it! Now that\'s how you handle customer care like a rockstar. To see full documentation or to customize your installation, click the buttons below. To get a <strong>90% discount</strong> on ANY add-on (including including our popular email add-on that allows you to receive tickets by email), <a href="https://kanzucode.com/quick-chat/" target="_blank">click here.</a>','kanzu-support-desk'),
                                       
                 )                
             );

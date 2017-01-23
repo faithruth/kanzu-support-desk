@@ -441,7 +441,13 @@ var KSDHooks = KSDHooks || {};
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: $('ul.ksd-nps-score li.active').text() };
                 __submitNotificationFeedback( data );
            });   
-                     
+           
+           //Campaigns
+           $('#wpbody').on( 'click', '.ksd-campaign-ninety-discount-notice button,.ksd-campaign-ninety-discount-notice a', function(){
+                var data = { action: 'ksd_notifications_disable_campaign' };
+                __submitNotificationFeedback( data );   
+           });        
+
         };        
         
         /**
