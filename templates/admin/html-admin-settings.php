@@ -55,7 +55,12 @@ $licenses              = (  isset ( $settings_and_licenses['licenses'] ) ? $sett
                         <?php } ?>
                         <option value=""><?php _e( 'No One', 'kanzu-support-desk' ); ?></option>
                     </select>                    
-                </div>          
+                </div>
+                <div class="setting">
+                    <label for="show_woo_support_tickets_tab"><?php _e ( 'Show Support Tickets tab in WooCommerce', 'kanzu-support-desk' ); ?></label>
+                    <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . "/assets/images/help.png"; ?>" class="help_tip" title="<?php _e ( "If enabled, the support tickets associated with a WooCommerce product will be shown in the WooCommerce single product view.", 'kanzu-support-desk' ); ?>"/>
+                    <input name="show_woo_support_tickets_tab"  type="checkbox" <?php checked ( $settings['show_woo_support_tickets_tab'], "yes") ?> value="yes"  />                    
+                </div>
 <!--              <div class="setting">
                    <label for="onboarding_changes"><?php _e ( 'Enable tour mode', 'kanzu-support-desk' ); ?></label>                
                    <input name="onboarding_changes"  type="checkbox" <?php checked ( $settings['tour_mode'], "yes") ?> value="yes"  />

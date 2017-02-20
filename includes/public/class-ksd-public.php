@@ -82,8 +82,31 @@ class KSD_Public {
         
         //Filter ksd-public-grecaptcha script tags
         add_filter( 'script_loader_tag', array( $this, 'add_async_defer_attributes' ), 10, 2 );
+        
+        //Add support tickets tab to WooCommerce single product view
+        add_filter( 'woocommerce_product_tabs', array( $this, 'woo_support_tickets_tab' ), 999 );
 
-    }   
+    } 
+    
+    public function woo_support_tickets_tab( $tabs = array() ){
+        //Check WooCommerce show support tickets tab setting
+        $settings = Kanzu_Support_Desk::get_settings();
+        if( 'yes' == $settings['show_woo_support_tickets_tab'] ){
+            //Add Support Tickets tab
+            $tabs['support_tickets'] = array(
+                'title'     => __( 'Support Tickets', 'kanzu-support-desk' ),
+                'priority'  => 50,
+                'callback'  => array( $this, 'woocommerce_support_tickets_tab' )
+            );
+        }
+        return $tabs;
+    }
+    
+    public function woocommerce_support_tickets_tab(){
+        include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
+        $ksd_template = new KSD_Templates();
+        $ksd_template->get_template_part( 'woocommerce', 'support-tickets-tab', true );
+    }
     
     public function add_async_defer_attributes( $tag, $handle ){
         if( KSD_SLUG . '-public-grecaptcha' != $handle ){

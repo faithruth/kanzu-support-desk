@@ -287,7 +287,8 @@ class KSD_Install {
             'salt'                              => '',
             'onboarding_enabled'                => 'yes',
             'notifications_enabled'             => 'yes',
-            'ksd_owner'                         => $user_info->ID,   
+            'ksd_owner'                         => $user_info->ID,
+            'show_woo_support_tickets_tab'      => 'no',
 
             /**Support form settings**/
             'supportform_show_categories'       => 'no',
