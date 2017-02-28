@@ -304,7 +304,7 @@ class KSD_Admin {
         $admin_labels_array['lbl_reply_to_all']             = __( 'Reply to all', 'kanzu-support-desk' );
         $admin_labels_array['lbl_populate_cc']              = __( 'Populate CC field', 'kanzu-support-desk' );
         $admin_labels_array['lbl_save']                     = __( 'Save', 'kanzu-support-desk' );
-        $admin_labels_array['lbl_update']                   = __( 'Update', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_update']                   = __( 'Submit', 'kanzu-support-desk' );
         $admin_labels_array['lbl_created_on']               = __( 'Created on', 'kanzu-support-desk' );
         $admin_labels_array['lbl_notification_nps_error']   = __( 'Please select one of the values above (0 to 10)', 'kanzu-support-desk' );
         

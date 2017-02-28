@@ -1809,8 +1809,15 @@ var KSDHooks = KSDHooks || {};
            });
            //Change the 'Publish' button to 'Update'. Ensure that we are on a KSD ticket page
            if( $.urlParam('post') > 0 && $( '.ksd-misc-customer' ) ){
-               $( '#publish' ).val( ksd_admin.ksd_labels.lbl_update );               
+               $( '#publish' ).val( ksd_admin.ksd_labels.lbl_update );   
+
+               //Update the text even when it changes. Change WP's postL10n.publish variable
+                $( '#post-status-select a.save-post-status' ).click( function(){
+                    postL10n.publish = ksd_admin.ksd_labels.lbl_update ;   
+                });                           
            }
+
+
            
            //Hide Visibility for ksd_ticket post types
            $('#submitdiv #visibility').hide();
