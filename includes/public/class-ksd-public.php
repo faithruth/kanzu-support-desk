@@ -89,7 +89,31 @@ class KSD_Public {
         //Add admin bar menu
         add_action( 'admin_bar_menu', array( $this, 'ksd_admin_bar_menu' ), 999 );
 
+        add_filter( 'post_row_actions', array( $this, 'replace_edit_in_row_action' ), 10, 2 );
+
     } 
+
+    /**
+     * Change the 'edit' link displayed in the row actions of the ticket
+     * grid to 'reply'
+     * @param  array  $actions Row actions
+     * @param  object $post    WP_Post
+     * @return array         Modified row actions
+     */
+    public function replace_edit_in_row_action( $actions, $post ){
+        if ( 'ksd_ticket' == $post->post_type ){ 
+            $title = _draft_or_post_title();
+            $actions['edit'] = sprintf(
+                '<a href="%s" aria-label="%s">%s</a>',
+                get_edit_post_link( $post->ID ),
+                /* translators: %s: post title */
+                esc_attr( sprintf( __( 'Reply &#8220;%s&#8221;','kanzu-support-desk' ), $title ) ),
+                __( 'Reply', 'kanzu-support-desk' )
+            );       
+        }
+         
+        return $actions;
+    }    
     
     public function ksd_admin_bar_menu( $admin_bar ){
         $args = array(
