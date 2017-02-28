@@ -615,6 +615,9 @@ class KSD_Admin {
         foreach ( $metaboxes_to_remove as  $remove_metabox ) {
             remove_meta_box(  $remove_metabox, 'ksd_ticket', 'side' ); 
         }
+        //Remove post meta fields
+        remove_meta_box( 'postcustom', 'ksd_ticket', 'normal' );
+
         //Add a custom submitdiv
         $publish_callback_args = array( 'revisions_count' => 0, 'revision_id' => NULL   );   
         add_meta_box( 'submitdiv', __( 'Ticket Information', 'kanzu-support-desk' ), 'post_submit_meta_box', null, 'side', 'high', $publish_callback_args );
