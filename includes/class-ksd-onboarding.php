@@ -85,23 +85,54 @@ class KSD_Onboarding {
         public function render_getting_started_banner(){?>
             <div id="ksd-gs-tabs">
               <ul>
-                <li><a href="#ksd-gs-tabs-1">Nunc tincidunt</a></li>
-                <li><a href="#ksd-gs-tabs-2">Proin dolor</a></li>
-                <li><a href="#ksd-gs-tabs-3">Aenean lacinia</a></li>
+                <li><a href="#ksd-gs-tabs-1">Welcome to KSD</a></li>
+                <li><a href="#ksd-gs-tabs-2">Tickets - The Basics</a></li>
+                <li><a href="#ksd-gs-tabs-3">Tickets - Management</a></li>
+                <li><a href="#ksd-gs-tabs-4">Customizinig your set-up</a></li>
+                <li><a href="#ksd-gs-tabs-5">More Features</a></li>
               </ul>
               <div id="ksd-gs-tabs-1">
-                <h2>Content heading 1</h2>
-                <p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>
+                <h2>Firing up your customer service</h2>
+                <p>Kanzu Support Desk, or KSD, simplifies the process of offering amazing customer service to everyone who looks to you for it.</p>
+                <p>The plugin's built with your small business in mind; we know only too well how hard it is to manage multiple customer conversations while keeping all of them personal.</p>
+                <p>You get centralized management, ease of use, reports, multiple integrations and a responsive support team to look to in case you have any challenges. Let's start the tour, shall we?</p>
+                <a class="button button-primary">Start Tour</a>
+                <p>Team Kanzu Code</p>
               </div>
               <div id="ksd-gs-tabs-2">
-                <h2>Content heading 2</h2>
-                <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+                <h2>The basics...</h2>
+                <p>Let's take it from the top</p>
+                <p><strong>What is a ticket?</strong> Every conversation between you and your customer is called a ticket.</p>
+                <p><strong>Who creates a ticket?</strong>Usually, your customer creates a ticket by using a form on your website, sending an email to your support email address, sending a tweet to you among others. You or one of your staff (also known as agents) can also create a ticket on behalf of a customer.</p>
+ 				<p><strong>Who can view/manage a ticket?</strong>Management of tickets is restricted to certain WordPress roles. KSD comes with 3 custom roles: 
+ 					<ul>
+ 						<li><strong>KSD Customer:</strong> This is the role assigned to your customers. They can only view....</li>
+ 						<li><strong>KSD Agent</strong> This is a member of your team who can view & reply tickets</li>
+ 						<li><strong>KSD Supervisor</strong> This role has all the rights of a KSD Agent but also, they can delete tickets</li>
+ 					</ul>
+ 					Assign the right role to members of your team and they'll be able to easily manage tickets.
+ 					Note that anyone with the WordPress role of admin has unrestricted access to all functions. More on roles here
+ 				</p>                
               </div>
               <div id="ksd-gs-tabs-3">
-                <h2>Content heading 3</h2>
-                <p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-                <p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+                <h2>Managing a ticket</h2>
+                <p>All your tickets are listed under the <strong>Tickets</strong> menu. It is color-coded to display your unread tickets in white.</p>
+                <p>To manage a single ticket, click on it. And then the magic...</p>
+                Your ticket reply screen..
+                Ticket info: New, pending, resolved
+                </p>
+                <p>Adding order to your tickets: Categories and products</p>
+                <p>Public replies Vs Private notes</p>
               </div>
+              <div id="ksd-gs-tabs-4">
+                <h2>Customizing your setup</h2>
+                <p>Making changes to your settings</p>
+              </div>
+              <div id="ksd-gs-tabs-5">
+                <h2>Taking this further...</h2>
+                <p>Customer service can go through the roof if you try these things...</p>
+                <p>That's it!! In case you'd like to take this tour again, go to ...and click 'start tour' and we'll show you around this neck of the woods again.</p>
+              </div>              
             </div>
             <?php
         }        
