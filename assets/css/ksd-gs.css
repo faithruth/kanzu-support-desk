@@ -1349,3 +1349,17 @@ table {
 #ksd-gs-tabs .ui-state-active a:link{
 	font-weight: bold;
 }
+ul.ksd-gs-navigation li {
+  float: left;
+  margin-right: 1rem;
+  margin-top: 1rem;
+}
+ul.ksd-gs-navigation li a{
+	height: 32px;
+	line-height: 30px;
+}
+.ksd-gs-image {
+  border: 1px double #ccc;
+  border-radius: 5px;
+  padding: 4px;
+}

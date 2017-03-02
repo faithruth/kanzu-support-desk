@@ -85,53 +85,93 @@ class KSD_Onboarding {
         public function render_getting_started_banner(){?>
             <div id="ksd-gs-tabs">
               <ul>
-                <li><a href="#ksd-gs-tabs-1">Welcome to KSD</a></li>
-                <li><a href="#ksd-gs-tabs-2">Tickets - The Basics</a></li>
-                <li><a href="#ksd-gs-tabs-3">Tickets - Management</a></li>
-                <li><a href="#ksd-gs-tabs-4">Customizinig your set-up</a></li>
+                <li><a href="#ksd-gs-tabs-0">Welcome to KSD</a></li>
+                <li><a href="#ksd-gs-tabs-1">Tickets - The Basics</a></li>
+                <li><a href="#ksd-gs-tabs-2">Tickets - Management</a></li>
+                <li><a href="#ksd-gs-tabs-3">Tickets - Organization</a></li>
+                <li><a href="#ksd-gs-tabs-4">Customizing your set-up</a></li>
                 <li><a href="#ksd-gs-tabs-5">More Features</a></li>
               </ul>
-              <div id="ksd-gs-tabs-1">
+              <div id="ksd-gs-tabs-0">
                 <h2>Firing up your customer service</h2>
                 <p>Kanzu Support Desk, or KSD, simplifies the process of offering amazing customer service to everyone who looks to you for it.</p>
                 <p>The plugin's built with your small business in mind; we know only too well how hard it is to manage multiple customer conversations while keeping all of them personal.</p>
                 <p>You get centralized management, ease of use, reports, multiple integrations and a responsive support team to look to in case you have any challenges. Let's start the tour, shall we?</p>
-                <a class="button button-primary">Start Tour</a>
+                <a class="button button-primary ksd-gs-nav" href="#ksd-gs-tabs-1">Start Tour</a>
                 <p>Team Kanzu Code</p>
               </div>
-              <div id="ksd-gs-tabs-2">
+              <div id="ksd-gs-tabs-1">
                 <h2>The basics...</h2>
                 <p>Let's take it from the top</p>
                 <p><strong>What is a ticket?</strong> Every conversation between you and your customer is called a ticket.</p>
-                <p><strong>Who creates a ticket?</strong>Usually, your customer creates a ticket by using a form on your website, sending an email to your support email address, sending a tweet to you among others. You or one of your staff (also known as agents) can also create a ticket on behalf of a customer.</p>
- 				<p><strong>Who can view/manage a ticket?</strong>Management of tickets is restricted to certain WordPress roles. KSD comes with 3 custom roles: 
- 					<ul>
- 						<li><strong>KSD Customer:</strong> This is the role assigned to your customers. They can only view....</li>
- 						<li><strong>KSD Agent</strong> This is a member of your team who can view & reply tickets</li>
- 						<li><strong>KSD Supervisor</strong> This role has all the rights of a KSD Agent but also, they can delete tickets</li>
- 					</ul>
- 					Assign the right role to members of your team and they'll be able to easily manage tickets.
- 					Note that anyone with the WordPress role of admin has unrestricted access to all functions. More on roles here
- 				</p>                
+                <p><strong>Who creates a ticket?</strong> Usually, your customer creates a ticket by using a form on your website, sending an email to your support email address or getting in touch with you on social media. Also, you or one of your team can create a ticket on behalf of a customer.</p>
+ 				       <p><strong>Who can view/manage/reply to a ticket?</strong>Management of tickets is restricted to certain WordPress roles. KSD comes with 3 custom roles: 
+     					<ul class="ksd-gs-user-roles">
+       						<li><strong>KSD Customer:</strong> This is the default role assigned to everyone who submits a ticket. It is the equivalent of the <a href="https://codex.wordpress.org/Roles_and_Capabilities#Subscriber" target="_blank">WordPress subscriber role</a></li>
+       						<li><strong>KSD Agent</strong>This is a member of your team who can view, reply and make all changes to tickets apart from deleting them.</li>
+       						<li><strong>KSD Supervisor</strong> This role has all the rights of a KSD Agent but also, they can delete tickets</li>
+     					</ul>
+ 					    <p>Assign the right role to the members of your team and they'll be able to easily manage tickets.
+ 					      Note that anyone with the WordPress role of administrator has unrestricted access to all functions. <a href="https://kanzucode.com/knowledge_base/help-desk-user-roles/" target="_blank" class="button button-primary">More on roles here</a>
+ 				       </p>     
+                <ul class="ksd-gs-navigation">
+                  <li><a class="button button-secondary ksd-gs-nav ksd-gs-nav-prev" href="#ksd-gs-tabs-0">Previous</a> </li>
+                  <li><a class="button button-primary ksd-gs-nav" href="#ksd-gs-tabs-2">Next</a> </li>
+                </ul>                          
+              </div>
+              <div id="ksd-gs-tabs-2">
+                <h2>Managing a ticket</h2>
+                <p>All your tickets are listed under the <strong>Tickets</strong> menu. All tickets you have not yet read have a white background </p>
+                <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_tickets_read_unread.jpg"; ?>" class="ksd-gs-image" /> 
+                <p>Click on a ticket to manage it. This presents you a screen where you can change <strong>ticket status</strong>, <strong>ticket severity</strong> or who it is assigned to</p>
+                  <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_ticket_info.jpg"; ?>" class="ksd-gs-image" />
+                <p>Reply to your customer or to staff only</p>
+                  <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_reply_to_all.jpg"; ?>" class="ksd-gs-image" />
+                <p>View ticket activity and what other tickets have been logged by the customer</p>  
+                <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_other_tickets.jpg"; ?>" class="ksd-gs-image" />       
+                <ul class="ksd-gs-navigation">
+                  <li><a class="button button-secondary ksd-gs-nav ksd-gs-nav-prev" href="#ksd-gs-tabs-1">Previous</a> </li>
+                  <li><a class="button button-primary ksd-gs-nav" href="#ksd-gs-tabs-3">Next</a> </li>
+                </ul>   
               </div>
               <div id="ksd-gs-tabs-3">
-                <h2>Managing a ticket</h2>
-                <p>All your tickets are listed under the <strong>Tickets</strong> menu. It is color-coded to display your unread tickets in white.</p>
-                <p>To manage a single ticket, click on it. And then the magic...</p>
-                Your ticket reply screen..
-                Ticket info: New, pending, resolved
-                </p>
-                <p>Adding order to your tickets: Categories and products</p>
-                <p>Public replies Vs Private notes</p>
-              </div>
+                <h2>Organization is key</h2>
+                <p>For high efficiency, you'll need to organize your tickets. KSD allows two forms of categorization:</p>
+                  <ol>
+                    <li><strong>Categories</strong> Create multiple categories and subcategories to track tickets from particular clients (e.g. VIP), those from particular channels (e.g. email, facebook, website) or anything really.</li>
+                    <li><strong>Products</strong> Create products to track tickets related to your products.</li>
+                  </ol>
+                <ul class="ksd-gs-navigation">
+                  <li><a class="button button-secondary ksd-gs-nav ksd-gs-nav-prev" href="#ksd-gs-tabs-2">Previous</a> </li>
+                  <li><a class="button button-primary ksd-gs-nav" href="#ksd-gs-tabs-4">Next</a> </li>
+                </ul>                
+              </div>              
               <div id="ksd-gs-tabs-4">
-                <h2>Customizing your setup</h2>
-                <p>Making changes to your settings</p>
+                <h2>Reports & Customization</h2>
+                <p>Make changes to your set-up based on your needs. Set up replies to be sent automatically to your customer as soon as a ticket is created (auto-replies), select whom tickets should be automatically assigned to as soon as they are created and decide where your support page/form should be and what fields it should hold.</p>
+                <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_settings.jpg"; ?>" class="ksd-gs-image" /> 
+               <p>Also, keep an eye on some key metrics   </p>  
+                <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_dashboard.jpg"; ?>" class="ksd-gs-image" /> 
+                <p><a class="button button-seconday" href="https://kanzucode.com/knowledge_base/ksd-wordpress-helpdesk-plugin-settings/" target="_blank"> More on settings here</a></p>
+                <ul class="ksd-gs-navigation">
+                  <li><a class="button button-secondary ksd-gs-nav ksd-gs-nav-prev" href="#ksd-gs-tabs-3">Previous</a> </li>
+                  <li><a class="button button-primary ksd-gs-nav" href="#ksd-gs-tabs-5">Next</a> </li>
+                </ul>                   
               </div>
               <div id="ksd-gs-tabs-5">
                 <h2>Taking this further...</h2>
-                <p>Customer service can go through the roof if you try these things...</p>
-                <p>That's it!! In case you'd like to take this tour again, go to ...and click 'start tour' and we'll show you around this neck of the woods again.</p>
+                <p>It might seem that with all those features there surely cannot be more...but there are. Lots more actually.</p>
+                <p>We have optional add-ons that allow you to:
+                  <ul>
+                    <li><strong>Mail:</strong> Create tickets automatically from emails sent to your support email address</li>
+                    <li><strong>Chat:</strong> Set-up live chat and automatically create tickets from your conversations</li>
+                    <li><strong>Knowledge Base:</strong> Create a rich set of articles that your customers can refer to even without contacting you</li>
+                    <li><strong>Replies:</strong> Create message templates that you can use when replying a customer. </li>
+                  </ul>
+                  ...and a lot more....<a class="button button-seconday" href="<?php echo admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-addons' );?>" target="_blank"> More addons</a>
+                </p>
+                <p>That's it!! In case you'd like to take this tour again, go to ...and click 'Getting started Guide' and we'll show you around this neck of the woods again.</p>
+                <a href="https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/" target="_blank" class="button button-primary">Quick start guide</a>
               </div>              
             </div>
             <?php
