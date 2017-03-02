@@ -1371,3 +1371,18 @@ ul.ksd-gs-navigation li a{
 .ksd-gs-kc-signature{
 	color: #777;
 }
+#ksd-gs-tabs .promotion-message {
+  background-color: #fff;
+  border-left: 4px solid #ffba00;
+  border-right: 4px solid #ffba00;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  font-size: 14px;
+  line-height: 19px;
+  margin: 25px 20px 0 2px;
+  padding: 11px 15px;
+  text-align: left;
+}
+.ksd-gs-user-roles,.ksd-gs-addons {
+  margin-left: 2rem;
+}

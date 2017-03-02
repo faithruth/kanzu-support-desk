@@ -12,6 +12,8 @@
      			active++;
      		}
     		$( "#ksd-gs-tabs" ).tabs( "option", "active", active );
+    		var tabs_offset = $("#ksd-gs-tabs").offset();
+    		scrollTo(tabs_offset.left, tabs_offset.top);
 		});
 });
  })(jQuery);

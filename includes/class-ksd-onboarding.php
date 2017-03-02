@@ -83,8 +83,23 @@ class KSD_Onboarding {
          * @return string
          */
         public function render_getting_started_banner(){
+        	ob_start();
+        		$this->render_getting_started_nav_menu();
+        	$nav_menu = ob_get_clean();
 			include_once( KSD_PLUGIN_DIR .  "templates/admin/notices/getting-started.php");  
         }        
+
+        /**
+         * Render the navigation menu shown at the bottom of every section in the
+         * getting started walk-through
+         */
+        private function render_getting_started_nav_menu(){?>
+		  <ul class="ksd-gs-navigation">
+		      <li><button class="button button-secondary ksd-gs-nav ksd-gs-nav-prev"><?php _ex( 'Previous','navigation button to previous section', 'kanzu-support-desk' ); ?></button> </li>
+		      <li><button class="button button-primary ksd-gs-nav"><?php _ex( 'Next','navigation button to next section', 'kanzu-support-desk' ); ?></button> </li>
+		    </ul> 
+        <?php
+        }
 
         public function enqueue_getting_started_scripts(){
             wp_enqueue_script( KSD_SLUG . '-gs-js', KSD_PLUGIN_URL.'/assets/js/ksd-gs.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs' ), KSD_VERSION );
