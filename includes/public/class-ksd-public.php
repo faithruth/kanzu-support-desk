@@ -122,7 +122,7 @@ class KSD_Public {
             'parent'    => 'root-default',
         );
         $admin_bar->add_node( $args );  
-        $args = array();
+ 
         $args = array(
             'id'        => 'ksd-discount',
             'parent'    => 'ksd-admin-bar',
@@ -133,6 +133,14 @@ class KSD_Public {
             )
         );
         $admin_bar->add_node( $args );  
+       $args_child = array(
+            'id'        => 'ksd-gs-guide',
+            'parent'    => 'ksd-admin-bar',
+            'title'     => __( 'Getting Started Guide', 'kanzu-support-desk' ),
+            'href'      => admin_url('edit.php?post_type=ksd_ticket&ksd_getting_started=1')
+        );        
+        $admin_bar->add_node( $args_child );  
+
     }
     
     public function woo_support_tickets_tab( $tabs = array() ){

@@ -1328,8 +1328,11 @@ table {
 /* Vertical layout overides
 ----------------------------------*/
 #ksd-gs-tabs.ui-tabs-vertical { width: 98%; margin-top: 3rem; }
-#ksd-gs-tabs.ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: auto!important; border-radius: 0;}
-#ksd-gs-tabs.ui-tabs-vertical .ui-tabs-nav li { border-bottom: 1px solid #c5c5c5; clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
+#ksd-gs-tabs.ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 20%!important; border-radius: 0;}
+#ksd-gs-tabs.ui-tabs-vertical .ui-tabs-nav li { border-bottom: 1px solid #c5c5c5; clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; background-image: url('../images/gs-border.jpg');background-repeat: no-repeat;}
+#ksd-gs-tabs.ui-tabs-vertical .ui-tabs-nav li:first-child {
+  background-image: none;
+}
 #ksd-gs-tabs.ui-tabs-vertical .ui-tabs-nav li a { display:block; }
 #ksd-gs-tabs.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { border-left: 3px solid  #0073aa; background-color: #FFF; padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-radius: 0; }
 #ksd-gs-tabs.ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: left; width: 75%;}
@@ -1362,4 +1365,9 @@ ul.ksd-gs-navigation li a{
   border: 1px double #ccc;
   border-radius: 5px;
   padding: 4px;
+  max-width: 100%;
+  height: auto;
+}
+.ksd-gs-kc-signature{
+	color: #777;
 }
