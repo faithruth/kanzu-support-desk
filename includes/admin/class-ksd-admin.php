@@ -1955,7 +1955,7 @@ class KSD_Admin {
             $output_messages_by_channel['sample-ticket'] = __( 'Sample tickets logged.', 'kanzu-support-desk');
 
             global $current_user;
-            if ( $tkt_channel != 'facebook' && $current_user->ID > 0 ) {//If it is a valid user
+            if ( 'facebook' !=  $tkt_channel && 'sample-ticket' != $tkt_channel && $current_user->ID > 0 ) {//If it is a valid user
                 $new_ticket['post_author']  = $current_user->ID;
                 $cust_email                 = $current_user->user_email;
             }

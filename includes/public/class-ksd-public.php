@@ -134,12 +134,23 @@ class KSD_Public {
         );
         $admin_bar->add_node( $args );  
        $args_child = array(
-            'id'        => 'ksd-gs-guide',
+            'id'        => 'ksd-gs-tour',
             'parent'    => 'ksd-admin-bar',
-            'title'     => __( 'Getting Started Guide', 'kanzu-support-desk' ),
+            'title'     => __( 'Quick Tour', 'kanzu-support-desk' ),
             'href'      => admin_url('edit.php?post_type=ksd_ticket&ksd_getting_started=1')
         );        
         $admin_bar->add_node( $args_child );  
+
+       $args_child = array(
+            'id'        => 'ksd-docs',
+            'parent'    => 'ksd-admin-bar',
+            'title'     => __( 'Getting Started Guide', 'kanzu-support-desk' ),
+            'href'      => 'https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/',
+            'meta'  => array(
+                'target'     => '_blank'
+            )            
+        );        
+        $admin_bar->add_node( $args_child );          
 
     }
     
