@@ -164,57 +164,6 @@ var KSDHooks = KSDHooks || {};
             }
         }
 
-
-        /*---------------------------------------------------------------*/
-        /***************************On boarding *******/
-        /*---------------------------------------------------------------*/
-        KSDOnBoarding = function () {
-            this.init = function () {
-                if ( 'yes' !== ksd_admin.ksd_onboarding_enabled ){ 
-                    return;
-                }
-                $( '#wpbody' ).addClass( 'ksd-onboarding' );
-                this.assignTicket();
-                this.replyTicket();
-                this.resolveTicket();
-            };
-
-            KSDUpdateOnboardingStage = function( completedStage,reloadPage ){
-                if ( typeof ( reloadPage ) === 'undefined'){
-                    reloadPage = false;
-                }
-                $.post( ksd_admin.ajax_url,
-                        {   action: 'ksd_update_onboarding_stage',
-                            ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                            stage: completedStage,
-                        },
-                        function ( response ) {
-                            //@TODO We currently don't do a thing with the response
-                            if( reloadPage ){
-                                location.reload();
-                            }
-                        });            
-            };
-
-            this.assignTicket = function () {
-                $('.ksd-onboarding .ksd-misc-assign-to a.edit-assign-to').click( function(){
-                    KSDUpdateOnboardingStage( 3 );
-                }); 
-
-            };
-            this.replyTicket = function () {            
-                $( '.ksd-onboarding input[name=ksd_reply_ticket]' ).click( function(){
-                    KSDUpdateOnboardingStage( 'reply-ticket', true );  
-                });             
-            };
-            this.resolveTicket = function () {
-                $('.ksd-onboarding .misc-pub-post-status a.edit-post-status').click( function(){
-                     KSDUpdateOnboardingStage( 'resolve-ticket' );
-                }); 
-            } ;     
-        };
-
-
         /*---------------------------------------------------------------*/
         /****************************SETTINGS****************************/
         /*---------------------------------------------------------------*/
@@ -1998,11 +1947,7 @@ var KSDHooks = KSDHooks || {};
         //Tickets
         Tickets = new KSDTickets();
         Tickets.init();
-
-        //Onboarding 
-        OnBoarding = new KSDOnBoarding();
-        OnBoarding.init();    
-
+ 
 
 });
 })(jQuery);

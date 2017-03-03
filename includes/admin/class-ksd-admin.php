@@ -77,7 +77,6 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_get_ticket_activity', array( $this, 'get_ticket_activity' ) );           
         add_action( 'wp_ajax_ksd_migrate_to_v2', array( $this, 'migrate_to_v2' ) );
         add_action( 'wp_ajax_ksd_deletetables_v2', array( $this, 'deletetables_v2' ) );
-        add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
         add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
         add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );       
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
@@ -222,7 +221,6 @@ class KSD_Admin {
 
             //Get current settings
             $settings = Kanzu_Support_Desk::get_settings();
-            $onboarding_enabled = $settings['onboarding_enabled'];
 
             //Localization allows us to send variables to the JS script
             wp_localize_script( KSD_SLUG . '-admin-js',
@@ -238,7 +236,6 @@ class KSD_Admin {
                                         'ksd_ticket_info'           =>  $ticket_info,
                                         'ksd_current_screen'        =>  $this->get_current_ksd_screen(),
                                         'ksd_version'               =>  KSD_VERSION,
-                                        'ksd_onboarding_enabled'    => $onboarding_enabled,
                                         'ksd_statuses'              =>  $this->get_status_list_options()
                                     )
                                 );
@@ -321,19 +318,7 @@ class KSD_Admin {
         return $admin_labels_array;
     }
 
-    /**
-     * Update the next stage of the onboarding/tour process
-     * 
-     * @since 2.2.0
-     */
-    public function update_onboarding_stage() {
-        $completed_stage = $_POST['stage'];
-        include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
-        $ksd_onboarding = new KSD_Onboarding();
-        $ksd_onboarding->mark_stage_complete($completed_stage);
-        echo json_encode( "Ok" );
-        die();
-    }
+ 
 
     
     /**
@@ -343,8 +328,8 @@ class KSD_Admin {
      */
     public function process_notification_feedback() {
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
-        $ksd_onboarding = new KSD_Notifications();
-        $response = $ksd_onboarding->process_notification_feedback();
+        $ksd_notify = new KSD_Notifications();
+        $response = $ksd_notify->process_notification_feedback();
         echo json_encode( $response );
         die();
     }      
@@ -2382,7 +2367,7 @@ class KSD_Admin {
             }
             //For a checkbox, if it is unchecked then it won't be set in $_POST
             $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                    "supportform_show_categories","supportform_show_severity","supportform_show_products","onboarding_changes","show_woo_support_tickets_tab"
+                    "supportform_show_categories","supportform_show_severity","supportform_show_products","show_woo_support_tickets_tab"
             );
             //Iterate through the checkboxes and set the value to "no" for all that aren't set
             foreach ( $checkbox_names as $checkbox_name ) {
