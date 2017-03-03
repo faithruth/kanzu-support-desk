@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.6
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,16 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+= 2.3.3, March 3, 2017 =
+ * New on-boarding with welcome message in multiple tabs and single initial ticket
+ * Freemius Insights integration with opt-in
+ * Add new KSD Mail SAAS support
+ * Admin menu for discounts, getting started guide and quick tour
+ * WooCommerce support tab added
+ * 'Edit' in row actions changed to 'Reply'
+ * 'Update' and 'Publish' buttons changed to 'Submit'
+ * Remove custom meta fields below posts
+
 = 2.3.2, January 23, 2017 =
  * Add Facebook add-on support
  * Run new discount offer
@@ -400,6 +410,13 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+= 2.3.3 =
+ * Admin menu for discounts, getting started guide and quick tour
+ * WooCommerce support tab added
+ * 'Edit' in row actions changed to 'Reply'
+ * 'Update' and 'Publish' buttons changed to 'Submit'
+ * Remove custom meta fields below posts
+
 = 2.3.2 =
  * Add Facebook add-on support
  * Run new discount offer

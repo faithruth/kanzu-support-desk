@@ -164,57 +164,6 @@ var KSDHooks = KSDHooks || {};
             }
         }
 
-
-        /*---------------------------------------------------------------*/
-        /***************************On boarding *******/
-        /*---------------------------------------------------------------*/
-        KSDOnBoarding = function () {
-            this.init = function () {
-                if ( 'yes' !== ksd_admin.ksd_onboarding_enabled ){ 
-                    return;
-                }
-                $( '#wpbody' ).addClass( 'ksd-onboarding' );
-                this.assignTicket();
-                this.replyTicket();
-                this.resolveTicket();
-            };
-
-            KSDUpdateOnboardingStage = function( completedStage,reloadPage ){
-                if ( typeof ( reloadPage ) === 'undefined'){
-                    reloadPage = false;
-                }
-                $.post( ksd_admin.ajax_url,
-                        {   action: 'ksd_update_onboarding_stage',
-                            ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                            stage: completedStage,
-                        },
-                        function ( response ) {
-                            //@TODO We currently don't do a thing with the response
-                            if( reloadPage ){
-                                location.reload();
-                            }
-                        });            
-            };
-
-            this.assignTicket = function () {
-                $('.ksd-onboarding .ksd-misc-assign-to a.edit-assign-to').click( function(){
-                    KSDUpdateOnboardingStage( 3 );
-                }); 
-
-            };
-            this.replyTicket = function () {            
-                $( '.ksd-onboarding input[name=ksd_reply_ticket]' ).click( function(){
-                    KSDUpdateOnboardingStage( 'reply-ticket', true );  
-                });             
-            };
-            this.resolveTicket = function () {
-                $('.ksd-onboarding .misc-pub-post-status a.edit-post-status').click( function(){
-                     KSDUpdateOnboardingStage( 'resolve-ticket' );
-                }); 
-            } ;     
-        };
-
-
         /*---------------------------------------------------------------*/
         /****************************SETTINGS****************************/
         /*---------------------------------------------------------------*/
@@ -1712,10 +1661,9 @@ var KSDHooks = KSDHooks || {};
 
                         repliesData = "";
                         $.each(respObj, function ( key, value) {
-                            repliesData += "<li class='ticket-reply " + value.post_type + "'>";
                             var replyID = '';
                             if( 'undefined' !== typeof(value.comment_id) ){
-                                 replyID = "id='ksd-reply-" + value.comment_id + "'";
+                                replyID = "id='ksd-reply-" + value.comment_id + "'";
                             }
                             repliesData += "<li class='ticket-reply " + value.post_type + "' " + replyID + " >";
                             repliesData += "<span class='reply_author'>" + value.post_author + "</span>";
@@ -1816,8 +1764,15 @@ var KSDHooks = KSDHooks || {};
            });
            //Change the 'Publish' button to 'Update'. Ensure that we are on a KSD ticket page
            if( $.urlParam('post') > 0 && $( '.ksd-misc-customer' ) ){
-               $( '#publish' ).val( ksd_admin.ksd_labels.lbl_update );               
+               $( '#publish' ).val( ksd_admin.ksd_labels.lbl_update );   
+
+               //Update the text even when it changes. Change WP's postL10n.publish variable
+                $( '#post-status-select a.save-post-status' ).click( function(){
+                    postL10n.publish = ksd_admin.ksd_labels.lbl_update ;   
+                });                           
            }
+
+
            
            //Hide Visibility for ksd_ticket post types
            $('#submitdiv #visibility').hide();
@@ -1998,11 +1953,7 @@ var KSDHooks = KSDHooks || {};
         //Tickets
         Tickets = new KSDTickets();
         Tickets.init();
-
-        //Onboarding 
-        OnBoarding = new KSDOnBoarding();
-        OnBoarding.init();    
-
+ 
 
 });
 })(jQuery);

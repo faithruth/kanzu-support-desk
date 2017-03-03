@@ -1,6 +1,8 @@
 <?php
 /**
- * Fired when the plugin is uninstalled.
+ * Fired when the plugin is uninstalled. Hooks into the freemius after_uninstall event
+ * Doesn't hook directly into WP's uninstall.php because that would prevent
+ * freemius from working
  *
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
@@ -9,18 +11,14 @@
  * @copyright 2014 Kanzu Code
  */
  
-
-// If uninstall not called from WordPress, then exit
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit;
-}
+ 
 
 if ( ! class_exists( 'KSD_Uninstall' ) ) :
 
 class KSD_Uninstall {
     
     public function __construct(){
-        $this->do_uninstall();
+        add_action( 'after_uninstall', array( $this, 'do_uninstall' ) );
     }
     
     /**

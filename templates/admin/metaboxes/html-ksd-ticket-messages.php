@@ -7,8 +7,8 @@
     <ul id="ksd-ticket-replies" class="pending"><?php _e('Loading Replies...', 'kanzu-support-desk'); ?></ul>   
     <div id="edit-ticket-tabs"> 
         <ul class="edit-ticket-options">
-            <li><a href="#reply_ticket"><?php _e( 'Public Reply', 'kanzu-support-desk' ); ?></a></li>
-            <li><a href="#update_private_note"><?php _e('Private Note', 'kanzu-support-desk'); ?></a></li>
+            <li><a href="#reply_ticket"><?php _e( 'Reply to all', 'kanzu-support-desk' ); ?></a></li>
+            <li><a href="#update_private_note"><?php _e('Reply to staff only', 'kanzu-support-desk'); ?></a></li>
         </ul>
         <div class="edit-ticket-description" id="reply_ticket">
             <input type="text" value="<?php _e('CC', 'kanzu-support-desk'); ?>" maxlength="255" name="ksd_tkt_cc" label="<?php _e('CC', 'kanzu-support-desk'); ?>" class="ksd-cc" minlength="2" style="display:none;" data-rule-ccRule /> 

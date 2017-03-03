@@ -77,7 +77,6 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_get_ticket_activity', array( $this, 'get_ticket_activity' ) );           
         add_action( 'wp_ajax_ksd_migrate_to_v2', array( $this, 'migrate_to_v2' ) );
         add_action( 'wp_ajax_ksd_deletetables_v2', array( $this, 'deletetables_v2' ) );
-        add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
         add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
         add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );       
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
@@ -226,7 +225,6 @@ class KSD_Admin {
 
             //Get current settings
             $settings = Kanzu_Support_Desk::get_settings();
-            $onboarding_enabled = $settings['onboarding_enabled'];
 
             //Localization allows us to send variables to the JS script
             wp_localize_script( KSD_SLUG . '-admin-js',
@@ -242,7 +240,6 @@ class KSD_Admin {
                                         'ksd_ticket_info'           =>  $ticket_info,
                                         'ksd_current_screen'        =>  $this->get_current_ksd_screen(),
                                         'ksd_version'               =>  KSD_VERSION,
-                                        'ksd_onboarding_enabled'    => $onboarding_enabled,
                                         'ksd_statuses'              =>  $this->get_status_list_options()
                                     )
                                 );
@@ -308,7 +305,7 @@ class KSD_Admin {
         $admin_labels_array['lbl_reply_to_all']             = __( 'Reply to all', 'kanzu-support-desk' );
         $admin_labels_array['lbl_populate_cc']              = __( 'Populate CC field', 'kanzu-support-desk' );
         $admin_labels_array['lbl_save']                     = __( 'Save', 'kanzu-support-desk' );
-        $admin_labels_array['lbl_update']                   = __( 'Update', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_update']                   = __( 'Submit', 'kanzu-support-desk' );
         $admin_labels_array['lbl_created_on']               = __( 'Created on', 'kanzu-support-desk' );
         $admin_labels_array['lbl_notification_nps_error']   = __( 'Please select one of the values above (0 to 10)', 'kanzu-support-desk' );
         
@@ -325,19 +322,7 @@ class KSD_Admin {
         return $admin_labels_array;
     }
 
-    /**
-     * Update the next stage of the onboarding/tour process
-     * 
-     * @since 2.2.0
-     */
-    public function update_onboarding_stage() {
-        $completed_stage = $_POST['stage'];
-        include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
-        $ksd_onboarding = new KSD_Onboarding();
-        $ksd_onboarding->mark_stage_complete($completed_stage);
-        echo json_encode( "Ok" );
-        die();
-    }
+ 
 
     
     /**
@@ -347,8 +332,8 @@ class KSD_Admin {
      */
     public function process_notification_feedback() {
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
-        $ksd_onboarding = new KSD_Notifications();
-        $response = $ksd_onboarding->process_notification_feedback();
+        $ksd_notify = new KSD_Notifications();
+        $response = $ksd_notify->process_notification_feedback();
         echo json_encode( $response );
         die();
     }      
@@ -403,7 +388,7 @@ class KSD_Admin {
         $ksd_settings['notifications_enabled'] = "no";
         Kanzu_Support_Desk::update_settings( $ksd_settings );
         echo json_encode( __( 'Thanks for your time. If you ever have any feedback, please get in touch - feedback@kanzucode.com', 'kanzu-support-desk') );
-        die();
+        if ( !defined( 'PHPUNIT' ) ) die();
     }        
 
     /**
@@ -619,6 +604,9 @@ class KSD_Admin {
         foreach ( $metaboxes_to_remove as  $remove_metabox ) {
             remove_meta_box(  $remove_metabox, 'ksd_ticket', 'side' ); 
         }
+        //Remove post meta fields
+        remove_meta_box( 'postcustom', 'ksd_ticket', 'normal' );
+
         //Add a custom submitdiv
         $publish_callback_args = array( 'revisions_count' => 0, 'revision_id' => NULL   );   
         add_meta_box( 'submitdiv', __( 'Ticket Information', 'kanzu-support-desk' ), 'post_submit_meta_box', null, 'side', 'high', $publish_callback_args );
@@ -1084,7 +1072,7 @@ class KSD_Admin {
     public function filter_totals() {
         if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce' ) ) {
               die ( __( 'Busted!', 'kanzu-support-desk') );                         
-        }          
+        }         
         try{
             $this->do_admin_includes();                
             $settings = Kanzu_Support_Desk::get_settings();
@@ -1096,8 +1084,8 @@ class KSD_Admin {
                 'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
             );
         } 
-            echo json_encode( $response );
-            die();// IMPORTANT: don't leave this out
+        echo json_encode( $response );
+        if ( !defined( 'PHPUNIT' ) ) die();// IMPORTANT: don't leave this out
     }
 
             
@@ -1296,7 +1284,7 @@ class KSD_Admin {
 
             //Add reply's CC
             $reply->ksd_cc = get_post_meta( $reply->ID, '_ksd_tkt_info_cc', true );
-
+            
             //Add reply's Facebook Comment ID
             $reply_comment_id = get_post_meta( $reply->ID, '_ksd_rep_info_comment_id', true );
             if( ! empty( $reply_comment_id ) ){
@@ -1754,7 +1742,12 @@ class KSD_Admin {
         $ticket_reply['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
         $ticket_reply['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
         $ticket_reply['ksd_rep_created_by']           = $new_ticket['ksd_tkt_cust_id'];  
-        $ticket_reply['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
+        $ticket_reply['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged']; 
+        
+        //Add addon ticket ID  
+        if( isset( $new_ticket['ksd_addon_tkt_id'] ) ){
+            $ticket_reply['ksd_addon_tkt_id']         = $new_ticket['ksd_addon_tkt_id'];
+        }
         
         $this->reply_ticket( $ticket_reply );
     }
@@ -1954,7 +1947,7 @@ class KSD_Admin {
             $output_messages_by_channel['sample-ticket'] = __( 'Sample tickets logged.', 'kanzu-support-desk');
 
             global $current_user;
-            if ( $tkt_channel != 'facebook' && $current_user->ID > 0 ) {//If it is a valid user
+            if ( 'facebook' !=  $tkt_channel && 'sample-ticket' != $tkt_channel && $current_user->ID > 0 ) {//If it is a valid user
                 $new_ticket['post_author']  = $current_user->ID;
                 $cust_email                 = $current_user->user_email;
             }
@@ -2109,14 +2102,14 @@ class KSD_Admin {
             }
 
             echo json_encode( $new_ticket_status );
-            die();// IMPORTANT: don't leave this out
+            if ( !defined( 'PHPUNIT' ) ) die();// IMPORTANT: don't leave this out
 
             }catch( Exception $e ) {
                 $response = array(
                     'error'=> array( 'message' => $e->getMessage() , 'code'=> $e->getCode() )
                 );
                 echo json_encode($response );	
-                die();// IMPORTANT: don't leave this out
+                if ( !defined( 'PHPUNIT' ) ) die();// IMPORTANT: don't leave this out
             }  
     }
 
@@ -2381,7 +2374,7 @@ class KSD_Admin {
             }
             //For a checkbox, if it is unchecked then it won't be set in $_POST
             $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                    "supportform_show_categories","supportform_show_severity","supportform_show_products","onboarding_changes"
+                    "supportform_show_categories","supportform_show_severity","supportform_show_products","show_woo_support_tickets_tab"
             );
             //Iterate through the checkboxes and set the value to "no" for all that aren't set
             foreach ( $checkbox_names as $checkbox_name ) {
@@ -3007,7 +3000,14 @@ class KSD_Admin {
                     if ( $license_data && 'valid' == $license_data->license ) {
                         $plugin_settings[ $license_status_key ] = 'valid';
                         $response_message = __('License successfully validated. Welcome to a super-charged Kanzu Support Desk! Please reload the page.', 'kanzu-support-desk' );
-                       }
+                        if( 'ksd_mail' == $plugin_options_key ){
+                            $create_account_url = isset( $plugin_settings['ksd_mail_create_account'] )? $plugin_settings['ksd_mail_create_account'] : '';
+                            if( ! empty( $create_account_url ) ){
+                                $create_account_url .= '?url=' . site_url() . '&license=' . $license . '&plugin_name=' . $plugin_name;
+                            }
+                            $response_message .= sprintf( __( 'This plugin requires that you <a href="%s" target="_blank" >create a free Kanzu Mail account</a> to function properly.', 'kanzu-support-desk' ), $create_account_url );
+                        }
+                    }
                     else{//Invalid license
                         $plugin_settings[ $license_status_key ] = 'invalid';
                         $response_message = __( 'Invalid License. Please renew your license', 'kanzu-support-desk' );             
@@ -3046,7 +3046,7 @@ class KSD_Admin {
         $ksd_debug =  KSD_Debug::get_instance();
 
         echo wp_strip_all_tags( $ksd_debug->retrieve_debug_info() );
-        die();
+        if ( !defined( 'PHPUNIT' ) ) die();
     }
 
     /**
@@ -3320,6 +3320,7 @@ class KSD_Admin {
      */
     public function get_ticket_severity_label ( $ticket_severity ) {
         $label = __( 'Unknown', 'kanzu-support-desk' );
+
         switch ( $ticket_severity ){
             case 'low':
                 $label = __( 'Low', 'kanzu-support-desk' );
@@ -3360,7 +3361,7 @@ class KSD_Admin {
                 }
             }
         }
-        die();
+        if ( !defined( 'PHPUNIT' ) ) die();
     }    
     
     /**

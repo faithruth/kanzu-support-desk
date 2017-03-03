@@ -82,8 +82,97 @@ class KSD_Public {
         
         //Filter ksd-public-grecaptcha script tags
         add_filter( 'script_loader_tag', array( $this, 'add_async_defer_attributes' ), 10, 2 );
+        
+        //Add support tickets tab to WooCommerce single product view
+        add_filter( 'woocommerce_product_tabs', array( $this, 'woo_support_tickets_tab' ), 999 );
+        
+        //Add admin bar menu
+        add_action( 'admin_bar_menu', array( $this, 'ksd_admin_bar_menu' ), 999 );
 
-    }   
+        add_filter( 'post_row_actions', array( $this, 'replace_edit_in_row_action' ), 10, 2 );
+
+    } 
+
+    /**
+     * Change the 'edit' link displayed in the row actions of the ticket
+     * grid to 'reply'
+     * @param  array  $actions Row actions
+     * @param  object $post    WP_Post
+     * @return array         Modified row actions
+     */
+    public function replace_edit_in_row_action( $actions, $post ){
+        if ( 'ksd_ticket' == $post->post_type ){ 
+            $title = _draft_or_post_title();
+            $actions['edit'] = sprintf(
+                '<a href="%s" aria-label="%s">%s</a>',
+                get_edit_post_link( $post->ID ),
+                /* translators: %s: post title */
+                esc_attr( sprintf( __( 'Reply &#8220;%s&#8221;','kanzu-support-desk' ), $title ) ),
+                __( 'Reply', 'kanzu-support-desk' )
+            );       
+        }
+         
+        return $actions;
+    }    
+    
+    public function ksd_admin_bar_menu( $admin_bar ){
+        $args = array(
+            'id'        => 'ksd-admin-bar',
+            'title'     => '<span class="ksd-admin-icon" style="display:inline-block; margin: 2px 0;" ><img src="'. KSD_PLUGIN_URL .'assets/images/icons/kc_white_icon_25x25.png" /></span><span class="ksd-admin-bar-notice" style="display: inline-block;background: #d54e21;border-radius: 10px;padding: 0 6px;font-size: 9px;height: 20px;vertical-align: top;line-height: 20px;margin: 4px 4px;" >1</span>',
+            'parent'    => 'root-default',
+        );
+        $admin_bar->add_node( $args );  
+ 
+        $args = array(
+            'id'        => 'ksd-discount',
+            'parent'    => 'ksd-admin-bar',
+            'title'     => __( 'Get A Discount', 'kanzu-support-desk' ),
+            'href'      => 'https://kanzucode.com/quick-chat',
+            'meta'  => array(
+                'target'     => '_blank'
+            )
+        );
+        $admin_bar->add_node( $args );  
+       $args_child = array(
+            'id'        => 'ksd-gs-tour',
+            'parent'    => 'ksd-admin-bar',
+            'title'     => __( 'Quick Tour', 'kanzu-support-desk' ),
+            'href'      => admin_url('edit.php?post_type=ksd_ticket&ksd_getting_started=1')
+        );        
+        $admin_bar->add_node( $args_child );  
+
+       $args_child = array(
+            'id'        => 'ksd-docs',
+            'parent'    => 'ksd-admin-bar',
+            'title'     => __( 'Getting Started Guide', 'kanzu-support-desk' ),
+            'href'      => 'https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/',
+            'meta'  => array(
+                'target'     => '_blank'
+            )            
+        );        
+        $admin_bar->add_node( $args_child );          
+
+    }
+    
+    public function woo_support_tickets_tab( $tabs = array() ){
+        //Check WooCommerce show support tickets tab setting
+        $settings = Kanzu_Support_Desk::get_settings();
+        if( 'yes' == $settings['show_woo_support_tickets_tab'] ){
+            //Add Support Tickets tab
+            $tabs['support_tickets'] = array(
+                'title'     => __( 'Support Tickets', 'kanzu-support-desk' ),
+                'priority'  => 50,
+                'callback'  => array( $this, 'woocommerce_support_tickets_tab' )
+            );
+        }
+        return $tabs;
+    }
+    
+    public function woocommerce_support_tickets_tab(){
+        include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
+        $ksd_template = new KSD_Templates();
+        $ksd_template->get_template_part( 'woocommerce', 'support-tickets-tab', true );
+    }
     
     public function add_async_defer_attributes( $tag, $handle ){
         if( KSD_SLUG . '-public-grecaptcha' != $handle ){
