@@ -1584,71 +1584,12 @@ var KSDHooks = KSDHooks || {};
                 $( '#titlewrap label#title-prompt-text' ).remove();
                 $( '#titlewrap' ).html ( '<h2 class="post_title">'+$( '#titlewrap input#title').val() +'</h2>' );
             }
-            /**AJAX: In single ticket view mode, get the current ticket's replies*/
-            if ( $( "#ksd-ticket-replies" ).hasClass( "pending" ) ) {
-                    //Now get the responses.  
-                    $.post(ksd_admin.ajax_url,
-                            {   action: 'ksd_get_ticket_replies',
-                                ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                                tkt_id: $.urlParam('post')//We get the ticket ID from the URL
-                            },
-                    function ( the_replies ) {
-                        var respObj = {};    
-                        $("ul#ksd-ticket-replies").removeClass('pending');
-                        try {
-                            respObj = JSON.parse(the_replies);
-                        } catch (err) {
-                            KSDUtils.showDialog("error", ksd_admin.ksd_labels.msg_error_refresh );
-                            return;
-                        }
-                        //Check for error in request.
-                        if ( 'undefined' !== typeof ( respObj.error ) ) {
-                            KSDUtils.showDialog("error", respObj.error.message);
-                            return;
-                        }
 
-                        repliesData = "";
-                        $.each(respObj, function ( key, value) {
-                            var replyID = '';
-                            if( 'undefined' !== typeof(value.comment_id) ){
-                                replyID = "id='ksd-reply-" + value.comment_id + "'";
-                            }
-                            repliesData += "<li class='ticket-reply " + value.post_type + "' " + replyID + " >";
-                            repliesData += "<span class='reply_author'>" + value.post_author + "</span>";
-                            repliesData += "<span class='reply_date'>" + value.post_date + "</span>";
-                            
-                            if( value.ksd_cc !== null && value.ksd_cc.match(/@/)){
-                                repliesData += "<div class='ksd-reply-cc'>" + ksd_admin.ksd_labels.lbl_CC + ": <span class='ksd-cc-emails'>"+ value.ksd_cc + "</span></div>";
-                            }
-                            
-                            repliesData += "<div class='reply_message'>" + _this.formatSingleReplyMessage(value.post_content) + "</div>";                            
-                            //The Reply's Attachments //@TODO Update this to retrieve attachments
-                            if (!$.isEmptyObject(value.attachments)) {
-                                repliesData += '<ul id="ksd_attachments">';
-                                $.each(value.attachments, function (key, attachment) {
-                                    repliesData += '<li><a href="' + attachment.attach_url + '">' + attachment.attach_filename + ' ( ' + attachment.attach_size + ' )</a></li>';
-                                });
-                                repliesData += '</ul>';
-                            }
-                            repliesData += "</li>";
-                        });
-                        
-                        $("ul#ksd-ticket-replies").html(repliesData);
-                        //Toggle the color of the reply background
-                        // $("#ticket-replies div.ticket-reply").filter(':even').addClass("alternate");
-                        //Clean-up the replies to make them more user-friendly
-                        _this.formatTicketReplies();
-                        //Scroll to the bottom @TODO Scroll
-                        //$('html, body').animate({scrollTop: $(".edit-ticket").offset().top}, 1400, "swing");
-                    });
-                    
-                    //Add click event to the reply to all button.   //@TODO Update this                     
-                    $("#edit-ticket #reply_toall_button").click(function(){
-                        $("form#edit-ticket input[name=ksd_tkt_cc]").css({"display":"block"});
-                        $("form#edit-ticket input[name=ksd_tkt_cc]").val( $(this).attr("data"));
-                    });
-                    
-            }
+            //Add click event to the reply to all button.   //@TODO Update this                     
+            $("#edit-ticket #reply_toall_button").click(function(){
+                $("form#edit-ticket input[name=ksd_tkt_cc]").css({"display":"block"});
+                $("form#edit-ticket input[name=ksd_tkt_cc]").val( $(this).attr("data"));
+            });            
             
             if ( $("#ksd-activity-metabox").hasClass("pending")) {
                 _this.getTicketActivity();                

@@ -267,25 +267,26 @@ ul#ksd-ticket-replies li {
   color: #888;
   font-size: 0.9em;
 }
-.reply_message {
+ 
+.reply_content {
+  padding-top: 0.5rem;
   clear: both;
 }
-#ticket-replies .reply_date {
-    float: right;
-    text-align: right;
-    width: 50%;
-}
-.ticket-reply-author-avatar {
-  float: left;
-  width: 3rem;
-}
-.ticket-reply-author-avatar img{
+  
+.ticket-reply-meta img.avatar{
   border-radius: 50%;
+  vertical-align: middle;
 }
 .reply_author {
     width: 50%;
     font-weight: bold;
     padding-left: 1rem;
+}
+.reply_content img {
+    max-width: 90%;
+}
+.ticket-reply.ksd_private_note {
+    background-color: #efefef;
 }
 #wp-ksd-public-new-reply-wrap .wp-editor-container {
   border: 1px solid #CCC;

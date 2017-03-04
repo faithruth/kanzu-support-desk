@@ -24,7 +24,6 @@ class KSD_Templates {
     
    public function __construct( $ksd_template_data = array('test'=>'EDFECECFCFV') ) {
        $this->ksd_template_data = $ksd_template_data;
-       add_action( 'ksd_after_ticket_content', array( $this, 'append_ticket_replies') );
    }
      /**
       * Adds KSD theme support to any active WordPress theme
@@ -54,6 +53,7 @@ class KSD_Templates {
              $templates = apply_filters( 'ksd_get_template_part', $templates, $slug, $name );
 
              // Return the part that is found
+             $test = 'tthisdsd';
              return $this->locate_template( $templates, $load, false );
      }
 
@@ -74,37 +74,37 @@ class KSD_Templates {
       * @return string The template filename if one is located.
       */
      private function locate_template( $template_names, $load = false, $require_once = true ) {
-	// No file found yet
-	$located = false;
+        	// No file found yet
+        	$located = false;
 
-	// Try to find a template file
-	foreach ( (array) $template_names as $template_name ) {
+        	// Try to find a template file
+        	foreach ( (array) $template_names as $template_name ) {
 
-		// Continue if template is empty
-		if ( empty( $template_name ) )
-			continue;
+        		// Continue if template is empty
+        		if ( empty( $template_name ) )
+        			continue;
 
-		// Trim off any slashes from the template name
-		$template_name = ltrim( $template_name, '/' );
+        		// Trim off any slashes from the template name
+        		$template_name = ltrim( $template_name, '/' );
 
-		// try locating this template file by looping through the template paths
-		foreach( $this->get_theme_template_paths() as $template_path ) {
+        		// try locating this template file by looping through the template paths
+        		foreach( $this->get_theme_template_paths() as $template_path ) {
 
-			if( file_exists( $template_path . $template_name ) ) {
-				$located = $template_path . $template_name;
-				break;
-			}
-		}
+        			if( file_exists( $template_path . $template_name ) ) {
+        				$located = $template_path . $template_name;
+        				break;
+        			}
+        		}
 
-		if( $located ) {
-			break;
-		}
-	}
+        		if( $located ) {
+        			break;
+        		}
+        	}
 
-	if ( ( true == $load ) && ! empty( $located ) )
-		$this->load_template( $located, $require_once );
+        	if ( ( true == $load ) && ! empty( $located ) )
+        		$this->load_template( $located, $require_once );
 
-	return $located;
+        	return $located;
         }
         
         /**
@@ -156,16 +156,16 @@ class KSD_Templates {
          * @param bool $require_once Whether to require_once or require. Default true.
          */
         private function load_template( $_template_file, $require_once = true ) {
-                global $posts, $post, $wp_did_header, $wp_query, $wp_rewrite, $wpdb, $wp_version, $wp, $id, $comment, $user_ID;
- 
-                if ( is_array( $wp_query->query_vars ) )
-                        extract( $wp_query->query_vars, EXTR_SKIP );
+            global $posts, $post, $wp_did_header, $wp_query, $wp_rewrite, $wpdb, $wp_version, $wp, $id, $comment, $user_ID;
 
-                if ( $require_once )
-                        require_once( $_template_file );
-                else
-                        require( $_template_file );
-}        
+            if ( is_array( $wp_query->query_vars ) )
+                    extract( $wp_query->query_vars, EXTR_SKIP );
+
+            if ( $require_once )
+                    require_once( $_template_file );
+            else
+                    require( $_template_file );
+        }        
         
         /**
          * Get the active KSD theme
@@ -177,18 +177,6 @@ class KSD_Templates {
             return apply_filters( 'ksd_active_theme', 'default' );
         }
  
-        
-        /**
-         * Append content to a single ticket. We use this to append replies
-         * @param int $tkt_id The ticket's ID
-         * @TODO Move this to a more appropriate class
-         */
-        public function append_ticket_replies( $tkt_id ){
-            //Retrieve the replies
-            require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
-            $this->get_template_part( 'single', 'replies' );
-            $this->get_template_part( 'form', 'new-reply' );
-        }
 
 }
 

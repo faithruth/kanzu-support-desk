@@ -59,7 +59,6 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ) );
         add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ) );
         add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ) );   
-        add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies_and_notes' ) );   
         add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' ) ); 
         add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ) );  
         add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' ) ); 
@@ -1206,26 +1205,7 @@ class KSD_Admin {
         die(); // IMPORTANT: don't leave this out
     }
 
-    /**
-     * Retrieve a ticket's replies
-     * Called by AJAX
-     * @since 2.0.0
-     */
-    public function get_ticket_replies_and_notes() {
-        if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce') ) {
-            die( __( 'Busted!', 'kanzu-support-desk' ) );
-        }
-        $this->do_admin_includes();
-        try {                
-            $replies = $this->do_get_ticket_replies_and_notes( $_POST['tkt_id'] );
-        } catch ( Exception $e ) {
-            $replies = array(
-                'error' => array( 'message' => $e->getMessage(), 'code' => $e->getCode() )
-            );
-        }
-        echo json_encode( $replies );
-        die(); // IMPORTANT: don't leave this out
-    }
+ 
 
     /**
      * Get a customer's tickets
@@ -1258,7 +1238,7 @@ class KSD_Admin {
     public function do_get_ticket_replies_and_notes( $tkt_id, $get_notes = true ) {
          $args = array( 'post_type' => 'ksd_reply', 'post_parent' => $tkt_id, 'order' => 'ASC', 'posts_per_page' => -1, 'offset' => 0 );
 
-         if ( $get_notes ) {
+         if ( $get_notes || $this->current_user_can_view_private_notes() ) {
             $args['post_type']      = array ( 'ksd_reply', 'ksd_private_note' );
             $args['post_status']    = array ( 'private', 'publish' );
          }
@@ -3638,6 +3618,16 @@ class KSD_Admin {
         }
         $user = get_userdata( $user_id );
         return '<a href="' . admin_url( "user-edit.php?user_id={$user_id}").'">' . $user->display_name.'</a>';
+    }
+
+    private function current_user_can_view_private_notes(){
+        global $current_user;
+        if ( isset( $current_user->roles ) && is_array( $current_user->roles ) && ( in_array( 'ksd_agent', $current_user->roles ) || in_array( 'ksd_supervisor', $current_user->roles ) || in_array( 'administrator', $current_user->roles ) ) ){   
+
+                return true;  
+        }
+        return false;
+
     }
                    
 

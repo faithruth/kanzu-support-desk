@@ -4,7 +4,9 @@
         if ( ! empty ( $ksd_cc ) ) : ?><div class="ksd-ticket-cc"><?php _e ( 'CC', 'kanzu-support-desk' ) ; ?>:<span class="ksd-cc-emails"><?php echo $ksd_cc; ?></span></div><?php endif; ?>
         <div class="ksd-ticket-message-content"><?php echo apply_filters( 'ksd_the_ticket_content', $post->post_content, $post->ID ); ?></div>
     </div>
-    <ul id="ksd-ticket-replies" class="pending"><?php _e('Loading Replies...', 'kanzu-support-desk'); ?></ul>   
+
+    <?php KSD()->templates->get_template_part( 'single', 'replies' ); ?>
+
     <div id="edit-ticket-tabs"> 
         <ul class="edit-ticket-options">
             <li><a href="#reply_ticket"><?php _e( 'Reply to all', 'kanzu-support-desk' ); ?></a></li>

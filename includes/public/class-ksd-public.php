@@ -91,6 +91,8 @@ class KSD_Public {
 
         add_filter( 'post_row_actions', array( $this, 'replace_edit_in_row_action' ), 10, 2 );
 
+        add_action( 'ksd_after_ticket_content', array( $this, 'append_ticket_replies') );
+
     } 
 
     /**
@@ -485,27 +487,25 @@ class KSD_Public {
                     include( KSD_PLUGIN_DIR .  'templates/default/html-public-register.php' ); 
                     return;
                 } 
-                        global $current_user;   
-                        if ( in_array( 'ksd_customer', $current_user->roles ) && $current_user->ID != $post->post_author ) {//This is a customer
-                           return __( "Sorry, you do not have sufficient priviledges to view another customer's tickets", "kanzu-support-desk" );
-                        }
 
-                        //Include the templating class
-                        include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
-                        
-                        //Do actions before the ticket
-                        ob_start();
-                        do_action( 'ksd_before_ticket_content', $post->ID );
-                        $content = ob_get_clean() . $content;
-                        
-                        //Modify the ticket content
-                        $content = apply_filters( 'ksd_ticket_content', $content );
-                        
-                        //Do actions after the ticket
-                        ob_start();
-                        do_action( 'ksd_after_ticket_content', $post->ID );
-                        $content .= ob_get_clean();
+                global $current_user;   
+                if ( in_array( 'ksd_customer', $current_user->roles ) && $current_user->ID != $post->post_author ) {//This is a customer
+                   return __( "Sorry, you do not have sufficient priviledges to view another customer's tickets", "kanzu-support-desk" );
                 }
+                
+                //Do actions before the ticket
+                ob_start();
+                do_action( 'ksd_before_ticket_content', $post->ID );
+                $content = ob_get_clean() . $content;
+                
+                //Modify the ticket content
+                $content = apply_filters( 'ksd_ticket_content', $content );
+                
+                //Do actions after the ticket
+                ob_start();
+                do_action( 'ksd_after_ticket_content', $post->ID );
+                $content .= ob_get_clean();
+            }
             return $content;
         }
         
@@ -727,6 +727,19 @@ class KSD_Public {
             );
             return $actions;
         }
+
+        
+        /**
+         * Append content to a single ticket. We use this to append replies
+         * @param int $tkt_id The ticket's ID
+         * @TODO Move this to a more appropriate class
+         */
+        public function append_ticket_replies( $tkt_id ){
+            //Retrieve the replies
+            require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
+            KSD()->templates->get_template_part( 'single', 'replies' );
+            KSD()->templates->get_template_part( 'form', 'new-reply' );
+        }        
         
 }
 endif;
