@@ -176,7 +176,6 @@ var KSDHooks = KSDHooks || {};
                 this.autocompleteUsers();
                 this.changeSubmitBtnVal();
                 this.modifyLicense();
-                this.handleAddons();
                 this.enableUsageStats();
                 this.notifications();
                 this.sendDebugEmail();
@@ -417,52 +416,7 @@ var KSDHooks = KSDHooks || {};
         });            
         };
         
-        /**
-         * Handle add-ons
-         * @returns {undefined}
-         */
-        this.handleAddons = function(){
-            //Move the dummy addons, add them to the real addons list
-            $('span.ksd-dummy-addons li').appendTo('ul.add-ons');
-            //Show dialog when one is clicked
-            $('li.ksd-dummy a').click(function(e){ 
-                e.preventDefault();
-                var addonName = $(this).parents('li.ksd-dummy').find('h3').text();
-                $('#ksd-dummy-plugin-dialog span.ksd-addon-name').text(addonName);
-            $('#ksd-dummy-plugin-dialog').dialog({
-                modal: true,
-                buttons: {
-                    "Yes, add me to the waiting list": function () {
-                        $(this).dialog("close");                       
-                        $.post(ksd_admin.ajax_url,
-                                {   action: 'ksd_send_feedback',
-                                    ksd_admin_nonce: ksd_admin.ksd_admin_nonce,
-                                    feedback_type: 'waiting_list',
-                                    ksd_user_feedback: addonName
-                                },
-                        function (response) {
-                            var respObj = {};
-                            //To catch cases when the ajax response is not json
-                            try {
-                                //to reduce cost of recalling parse
-                                respObj = JSON.parse(response);
-                            } catch (err) {
-                                KSDUtils.showDialog("error", ksd_admin.ksd_labels.msg_error_refresh);
-                                return;
-                            }
-                            KSDUtils.showDialog("success", respObj);
-                        });
-                    },
-                    "It's interesting": function () {
-                        $(this).dialog("close");
-                        //Enable Google Analytics temporarily and send this event to Google Analytics
-                        window['ga-disable-UA-48956820-3'] = false;
-                        ga('send', 'event', 'button', 'click', addonName.toLowerCase() );
-                    }
-                }
-            });
-            });
-        };
+
 
         /*
          * Submit Settings form.
