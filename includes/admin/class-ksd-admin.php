@@ -1266,11 +1266,13 @@ class KSD_Admin {
         $replies = get_posts( $args );//@TODO Re-test this. Might need to change it to new WP_Query
         //Replace the reply author ID with the display name and get the reply's attachments
         foreach ( $replies as $reply ) {
-            $reply->post_author = get_userdata( $reply->post_author )->display_name;
+            $reply->post_author_display_name = get_userdata( $reply->post_author )->display_name;
             //@TODO Get the reply's attachments
+            
+            $reply->post_author_avatar = get_avatar( $reply->post_author, 46 );
 
             //Change the time to something more human-readable
-            $reply->post_date = date_i18n( __( 'M j, Y @ H:i' ), strtotime( $reply->post_date ) ); 
+            $reply->post_date = date_i18n( __( 'g:i A d M Y' ), strtotime( $reply->post_date ) ); 
 
             //Format the message for viewing
             $reply->post_content = $this->format_message_content_for_viewing( $reply->post_content );
