@@ -109,7 +109,8 @@ class KSD_Install {
             $ksd_install->set_default_notifications();            
             KSD()->roles->create_roles();  
             KSD()->roles->modify_all_role_caps( 'add' );  
-            $ksd_install->make_installer_ksd_owner();              
+            $ksd_install->make_installer_ksd_owner();  
+            $ksd_install->log_initial_ticket();            
             set_transient( '_ksd_activation_redirect', 1, 60 * 60 );// Redirect to welcome screen
         }
         flush_rewrite_rules();//Because of the custom post types    
@@ -148,7 +149,7 @@ class KSD_Install {
             wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard' ) );  
             exit;	
         }
-        wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-dashboard&ksd-intro=1' ) );  
+        wp_redirect( admin_url( 'edit.php?post_type=ksd_ticket&ksd_getting_started=1' ) );  
         exit;		
     }
 
@@ -207,33 +208,6 @@ class KSD_Install {
               }
         }
     }
-    
-    /**
-     * Make the user who installs KSD the owner
-     * 
-     * @since 2.2.9
-     */
-    private function make_installer_ksd_owner(){
-       global $current_user;
-       $user = new WP_User( $current_user->ID );
-       KSD()->roles->modify_default_owner_caps( $user, 'add_cap' );        
-    }
-
-
-
-    private function set_default_options() {              
-        add_option( KSD_OPTIONS_KEY, $this->get_default_options() );
-        add_option( 'ksd_activation_time', date( 'U' ) );//Log activation time
-        $this->set_default_notifications();
-    }
-
-    private function set_default_notifications(){
-        include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
-        $ksd_notifications      = new KSD_Notifications();
-        $notification_defaults  = $ksd_notifications->get_defaults();
-        add_option( 'ksd_notifications', $notification_defaults );                
-    }
-
 
 
 
@@ -253,6 +227,7 @@ class KSD_Install {
      * @since 2.2.0 notifications_enabled 
      * @since 2.2.1 Changed $user_info to current user, not primary admin 
      * @since 2.2.9 ksd_owner
+     * @since 2.3.3 show_woo_support_tickets_tab
      */
     public function get_default_options() {
         $user_info = wp_get_current_user();  
@@ -296,6 +271,32 @@ class KSD_Install {
             'supportform_show_products'         => 'no'
             
             );
+    }    
+    
+    /**
+     * Make the user who installs KSD the owner
+     * 
+     * @since 2.2.9
+     */
+    private function make_installer_ksd_owner(){
+       global $current_user;
+       $user = new WP_User( $current_user->ID );
+       KSD()->roles->modify_default_owner_caps( $user, 'add_cap' );        
+    }
+
+
+
+    private function set_default_options() {              
+        add_option( KSD_OPTIONS_KEY, $this->get_default_options() );
+        add_option( 'ksd_activation_time', date( 'U' ) );//Log activation time
+        $this->set_default_notifications();
+    }
+
+    private function set_default_notifications(){
+        include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
+        $ksd_notifications      = new KSD_Notifications();
+        $notification_defaults  = $ksd_notifications->get_defaults();
+        add_option( 'ksd_notifications', $notification_defaults );                
     }
 
 
@@ -337,6 +338,61 @@ class KSD_Install {
         $updated_settings['page_my_tickets']    = $my_tickets;
         $updated_settings['salt']               = $salt;
         update_option( KSD_OPTIONS_KEY, $updated_settings );
+    }
+
+    /**
+     * Log initial ticket
+     *
+     * @since 2.3.3
+     */
+    private function log_initial_ticket(){
+        
+        global $current_user;          
+
+        $display_name           = $current_user->display_name; 
+        $customer_ID            = $this->create_initial_ksd_customer_user();
+        $kc_logo                = '<img src="'.KSD_PLUGIN_URL . '/assets/images/kanzu_code_logo.png" />';
+        $first_ticket_message   = sprintf( '%s %s,<br/><p>%s</p><p>%s</p><div class="ksd-gs-kc-signature"><p>%s,<br/>%s Kanzu Code</p>%s</div>', __('Hi', 'kanzu-support-desk'), $display_name, __( 'Welcome to the Kanzu Support Desk (KSD) community *cue Happy Music and energetic dancers!*. Thanks for choosing us. We are all about making it simple for you to provide amazing customer support. We cannot wait for you to get started!', 'kanzu-support-desk' ), __( 'This is your first ticket. To see what happens when you reply, type a reply below and hit send. We will reply.', 'kanzu-support-desk'), __( 'Your friends', 'kanzu-support-desk' ), _x( 'Team','company team e.g. WordPress team', 'kanzu-support-desk' ), $kc_logo  );
+               
+    
+        $new_ticket = array(
+                'ksd_tkt_subject'       => __( "Welcome to Kanzu Support Desk","kanzu-support-desk" ),
+                'ksd_tkt_message'       => $first_ticket_message,
+                'ksd_tkt_channel'       => "sample-ticket",
+                'ksd_tkt_status'        => "new",
+                'ksd_tkt_severity'      => 'high',
+                'ksd_cust_email'        => 'ksdcare@kanzucode.com',
+                'ksd_tkt_logged_by'     => $customer_ID,
+                'ksd_tkt_assigned_to'   => $current_user->ID
+                );
+        
+
+        //Log the ticket
+        do_action( 'ksd_log_new_ticket', $new_ticket );         
+ 
+        
+    }    
+
+    private function create_initial_ksd_customer_user(){
+        $userdata = array(
+            'user_login'  => 'ksd_kanzu_code',
+            'user_email'  => 'ksdcare@kanzucode.com',
+            'user_url'    =>  "https://kanzucode.com",
+            'first_name'  => 'Kanzu',
+            'last_name'   => 'Code '.__( 'Helpdesk Customer', 'kanzu-support-desk' ),
+            'description' => __( 'The first customer in your helpdesk', 'kanzu-support-desk' ),
+            'user_pass'   =>  wp_generate_password(),
+            'role'        => 'ksd_customer'
+        );
+
+        $user_id = wp_insert_user( $userdata ) ;
+
+        //On success
+        if ( ! is_wp_error( $user_id ) ) {
+            return $user_id;
+        }
+
+        return 0;
     }
 
     /**

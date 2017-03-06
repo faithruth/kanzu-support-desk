@@ -79,7 +79,7 @@
       </ul>
       ...<?php _e( 'and a lot more', 'kanzu-support-desk' ); ?>....<a class="button button-seconday" href="<?php echo admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-addons' );?>" target="_blank"> <?php _e( 'More addons', 'kanzu-support-desk' ); ?></a>
     </p>
-    <p><?php _e( "That's it!! In case you'd like to take this tour again, go to the admin menu at the top, click 'Getting started Guide' and we'll show you around this neck of the woods again.", 'kanzu-support-desk' ); ?></p>
+    <p><?php _e( "That's it!! In case you'd like to take this tour again, go to the admin menu at the top, click 'Quick Tour' and we'll show you around this neck of the woods again.", 'kanzu-support-desk' ); ?></p>
     <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_admin_menu.jpg"; ?>" class="ksd-gs-image"/>  
     <p class="promotion-message"><?php _e( 'PS: We are running a crazy promotion on all our add-ons. Check it out', 'kanzu-support-desk' ); ?> <a href="https://kanzucode.com/quick-chat" target="_blank"><?php _e( 'here', 'kanzu-support-desk' ); ?></a></p>
   <ul class="ksd-gs-navigation">

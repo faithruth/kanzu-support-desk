@@ -59,7 +59,6 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_assign_to', array( $this, 'assign_to' ) );
         add_action( 'wp_ajax_ksd_reply_ticket', array( $this, 'reply_ticket' ) );
         add_action( 'wp_ajax_ksd_get_single_ticket', array( $this, 'get_single_ticket' ) );   
-        add_action( 'wp_ajax_ksd_get_ticket_replies', array( $this, 'get_ticket_replies_and_notes' ) );   
         add_action( 'wp_ajax_ksd_dashboard_ticket_volume', array( $this, 'get_dashboard_ticket_volume' ) ); 
         add_action( 'wp_ajax_ksd_get_dashboard_summary_stats', array( $this, 'get_dashboard_summary_stats' ) );  
         add_action( 'wp_ajax_ksd_update_settings', array( $this, 'update_settings' ) ); 
@@ -77,7 +76,6 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_get_ticket_activity', array( $this, 'get_ticket_activity' ) );           
         add_action( 'wp_ajax_ksd_migrate_to_v2', array( $this, 'migrate_to_v2' ) );
         add_action( 'wp_ajax_ksd_deletetables_v2', array( $this, 'deletetables_v2' ) );
-        add_action( 'wp_ajax_ksd_update_onboarding_stage', array( $this, 'update_onboarding_stage' ) );
         add_action( 'wp_ajax_ksd_notifications_user_feedback', array( $this, 'process_notification_feedback' ) );
         add_action( 'wp_ajax_ksd_notifications_disable', array( $this, 'disable_notifications' ) );       
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
@@ -222,7 +220,6 @@ class KSD_Admin {
 
             //Get current settings
             $settings = Kanzu_Support_Desk::get_settings();
-            $onboarding_enabled = $settings['onboarding_enabled'];
 
             //Localization allows us to send variables to the JS script
             wp_localize_script( KSD_SLUG . '-admin-js',
@@ -238,7 +235,6 @@ class KSD_Admin {
                                         'ksd_ticket_info'           =>  $ticket_info,
                                         'ksd_current_screen'        =>  $this->get_current_ksd_screen(),
                                         'ksd_version'               =>  KSD_VERSION,
-                                        'ksd_onboarding_enabled'    => $onboarding_enabled,
                                         'ksd_statuses'              =>  $this->get_status_list_options()
                                     )
                                 );
@@ -321,19 +317,7 @@ class KSD_Admin {
         return $admin_labels_array;
     }
 
-    /**
-     * Update the next stage of the onboarding/tour process
-     * 
-     * @since 2.2.0
-     */
-    public function update_onboarding_stage() {
-        $completed_stage = $_POST['stage'];
-        include_once( KSD_PLUGIN_DIR .  'includes/class-ksd-onboarding.php' );
-        $ksd_onboarding = new KSD_Onboarding();
-        $ksd_onboarding->mark_stage_complete($completed_stage);
-        echo json_encode( "Ok" );
-        die();
-    }
+ 
 
     
     /**
@@ -343,8 +327,8 @@ class KSD_Admin {
      */
     public function process_notification_feedback() {
         include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
-        $ksd_onboarding = new KSD_Notifications();
-        $response = $ksd_onboarding->process_notification_feedback();
+        $ksd_notify = new KSD_Notifications();
+        $response = $ksd_notify->process_notification_feedback();
         echo json_encode( $response );
         die();
     }      
@@ -1221,26 +1205,7 @@ class KSD_Admin {
         die(); // IMPORTANT: don't leave this out
     }
 
-    /**
-     * Retrieve a ticket's replies
-     * Called by AJAX
-     * @since 2.0.0
-     */
-    public function get_ticket_replies_and_notes() {
-        if ( ! wp_verify_nonce( $_POST['ksd_admin_nonce'], 'ksd-admin-nonce') ) {
-            die( __( 'Busted!', 'kanzu-support-desk' ) );
-        }
-        $this->do_admin_includes();
-        try {                
-            $replies = $this->do_get_ticket_replies_and_notes( $_POST['tkt_id'] );
-        } catch ( Exception $e ) {
-            $replies = array(
-                'error' => array( 'message' => $e->getMessage(), 'code' => $e->getCode() )
-            );
-        }
-        echo json_encode( $replies );
-        die(); // IMPORTANT: don't leave this out
-    }
+ 
 
     /**
      * Get a customer's tickets
@@ -1273,7 +1238,7 @@ class KSD_Admin {
     public function do_get_ticket_replies_and_notes( $tkt_id, $get_notes = true ) {
          $args = array( 'post_type' => 'ksd_reply', 'post_parent' => $tkt_id, 'order' => 'ASC', 'posts_per_page' => -1, 'offset' => 0 );
 
-         if ( $get_notes ) {
+         if ( $get_notes || $this->current_user_can_view_private_notes() ) {
             $args['post_type']      = array ( 'ksd_reply', 'ksd_private_note' );
             $args['post_status']    = array ( 'private', 'publish' );
          }
@@ -1281,11 +1246,13 @@ class KSD_Admin {
         $replies = get_posts( $args );//@TODO Re-test this. Might need to change it to new WP_Query
         //Replace the reply author ID with the display name and get the reply's attachments
         foreach ( $replies as $reply ) {
-            $reply->post_author = get_userdata( $reply->post_author )->display_name;
+            $reply->post_author_display_name = get_userdata( $reply->post_author )->display_name;
             //@TODO Get the reply's attachments
+            
+            $reply->post_author_avatar = get_avatar( $reply->post_author, 46 );
 
             //Change the time to something more human-readable
-            $reply->post_date = date_i18n( __( 'M j, Y @ H:i' ), strtotime( $reply->post_date ) ); 
+            $reply->post_date = date_i18n( __( 'g:i A d M Y' ), strtotime( $reply->post_date ) ); 
 
             //Format the message for viewing
             $reply->post_content = $this->format_message_content_for_viewing( $reply->post_content );
@@ -1955,7 +1922,7 @@ class KSD_Admin {
             $output_messages_by_channel['sample-ticket'] = __( 'Sample tickets logged.', 'kanzu-support-desk');
 
             global $current_user;
-            if ( $tkt_channel != 'facebook' && $current_user->ID > 0 ) {//If it is a valid user
+            if ( 'facebook' !=  $tkt_channel && 'sample-ticket' != $tkt_channel && $current_user->ID > 0 ) {//If it is a valid user
                 $new_ticket['post_author']  = $current_user->ID;
                 $cust_email                 = $current_user->user_email;
             }
@@ -2382,7 +2349,7 @@ class KSD_Admin {
             }
             //For a checkbox, if it is unchecked then it won't be set in $_POST
             $checkbox_names = array("show_support_tab","tour_mode","enable_new_tkt_notifxns","enable_recaptcha","enable_notify_on_new_ticket","enable_anonymous_tracking","enable_customer_signup",
-                    "supportform_show_categories","supportform_show_severity","supportform_show_products","onboarding_changes","show_woo_support_tickets_tab"
+                    "supportform_show_categories","supportform_show_severity","supportform_show_products","show_woo_support_tickets_tab"
             );
             //Iterate through the checkboxes and set the value to "no" for all that aren't set
             foreach ( $checkbox_names as $checkbox_name ) {
@@ -3651,6 +3618,16 @@ class KSD_Admin {
         }
         $user = get_userdata( $user_id );
         return '<a href="' . admin_url( "user-edit.php?user_id={$user_id}").'">' . $user->display_name.'</a>';
+    }
+
+    private function current_user_can_view_private_notes(){
+        global $current_user;
+        if ( isset( $current_user->roles ) && is_array( $current_user->roles ) && ( in_array( 'ksd_agent', $current_user->roles ) || in_array( 'ksd_supervisor', $current_user->roles ) || in_array( 'administrator', $current_user->roles ) ) ){   
+
+                return true;  
+        }
+        return false;
+
     }
                    
 

@@ -13,6 +13,8 @@
  *
  */
 
+ require_once dirname(__FILE__) . '/includes/libraries/freemius/init.php';
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -57,6 +59,14 @@ final class Kanzu_Support_Desk {
      * @since 2.2.9
      */
     public $roles = null;        
+
+    /**
+     * KSD Templates Object.
+     *
+     * @var object|KSD_Templates
+     * @since 2.3.4
+     */
+    public $templates = null;    
 
     /**
      * @var Kanzu_Support_Desk The single instance of the class
@@ -151,20 +161,26 @@ final class Kanzu_Support_Desk {
         //Do installation-related work
         include_once( KSD_PLUGIN_DIR .'includes/admin/class-ksd-admin-notices.php' );
         include_once( KSD_PLUGIN_DIR .'includes/class-ksd-install.php' );
+        include_once( KSD_PLUGIN_DIR .'includes/class-ksd-uninstall.php' );
+
+        //Others
         include_once( KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php' );
+        include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
+
+        //The front-end
+        require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );        
 
         //Dashboard and Administrative Functionality 
         if ( is_admin() ) {
-                require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
+            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
         }
-        //The front-end
-        require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );
 
        //Deliver plugin updates like pizza
         if ( ! class_exists( 'KSD_Plugin_Updater' ) ) {
             include_once( KSD_PLUGIN_DIR . '/includes/libraries/class-ksd-plugin-updater.php' );
         }
-        $this->roles    = new KSD_Roles();//Required in installation
+        $this->roles        = new KSD_Roles();//Required in installation
+        $this->templates    = new KSD_Templates();
     }
 
 
