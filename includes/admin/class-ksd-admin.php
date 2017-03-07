@@ -2975,13 +2975,6 @@ class KSD_Admin {
                     if ( $license_data && 'valid' == $license_data->license ) {
                         $plugin_settings[ $license_status_key ] = 'valid';
                         $response_message = apply_filters( 'ksd_message_succ_addon_lic_activation', __('License successfully validated. Welcome to a super-charged Kanzu Support Desk! Please reload the page.', 'kanzu-support-desk' ) );
-                        if( 'ksd_mail' == $plugin_options_key ){
-                            $create_account_url = isset( $plugin_settings['ksd_mail_create_account'] )? $plugin_settings['ksd_mail_create_account'] : '';
-                            if( ! empty( $create_account_url ) ){
-                                $create_account_url .= '?url=' . site_url() . '&license=' . $license . '&plugin_name=' . urlencode( $plugin_name );
-                            }
-                            $response_message .= sprintf( __( 'This plugin requires that you <a href="%s" target="_blank" >create a free Kanzu Mail account</a> to function properly.', 'kanzu-support-desk' ), $create_account_url );
-                        }
                     }
                     else{//Invalid license
                         $plugin_settings[ $license_status_key ] = 'invalid';
