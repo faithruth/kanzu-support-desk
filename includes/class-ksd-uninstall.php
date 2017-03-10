@@ -49,6 +49,9 @@ class KSD_Uninstall {
            $this->delete_tables();
            $this->delete_ticket_info();
         }
+        
+        //Send email to user on uninstall
+        $this->send_uninstall_email();
     }
     
     /**
@@ -116,6 +119,20 @@ class KSD_Uninstall {
 	public function remove_caps() {
             KSD()->roles->modify_all_role_caps( 'remove' );  
 	}    
+
+    public function send_uninstall_email(){
+        global $current_user;
+
+        $subject  = __( 'Can you kindly tell me what was wrong with the plugin?', 'kanzu-support-desk' );
+
+        $message  = __( 'Hi there,', 'kanzu-support-desk' ) . '\r\n' ;
+        $message .= __( 'My name is Kakoma. I’m the lead developer of Kanzu Support Desk-WordPress Helpdesk Plugin. I’ve noticed that you installed the plugin and then uninstalled it fairly quickly. I guess we did something wrong – sorry about that. Would you be so kind to tell me what was the reason for uninstalling the plugin? I want to make sure we fix that for our future users.', 'kanzu-support-desk' ) . '\r\n' ;
+        $message .= __( 'Sincerely,', 'kanzu-support-desk' ) . '\r\n' ;
+        $message .= __( 'Peter Kakoma', 'kanzu-support-desk' ) . '\r\n' ;
+        $message .= __( 'Kanzu Support Desk: WordPress Helpdesk Plugin', 'kanzu-support-desk' ) . '\r\n' ;
+
+        wp_mail( $current_user->user_email, $subject, $message );
+    }
 
 }
 endif;
