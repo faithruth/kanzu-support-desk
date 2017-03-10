@@ -29,6 +29,7 @@ class KSD_Public {
         add_action( 'wp_ajax_nopriv_ksd_log_new_ticket', array( $this, 'log_new_ticket' ) );
         add_action( 'wp_ajax_nopriv_ksd_register_user', array( $this, 'register_user' ) );        
         add_action( 'wp_ajax_nopriv_ksd_reply_ticket', array( $this, 'reply_ticket' ) );
+        add_action( 'wp_ajax_ksd_admin_bar_clicked', array( $this, 'admin_bar_clicked' ) );
                         
         //Add a shortcode for the public form
         add_shortcode( 'ksd_support_form', array( $this,'form_short_code' ) );
@@ -87,7 +88,7 @@ class KSD_Public {
         add_filter( 'woocommerce_product_tabs', array( $this, 'woo_support_tickets_tab' ), 999 );
         
         //Add admin bar menu
-        add_action( 'admin_bar_menu', array( $this, 'ksd_admin_bar_menu' ), 999 );
+        add_action( 'admin_bar_menu', array( $this, 'display_admin_bar_menu' ), 999 );
 
         add_filter( 'post_row_actions', array( $this, 'replace_edit_in_row_action' ), 10, 2 );
 
@@ -115,45 +116,110 @@ class KSD_Public {
         }
          
         return $actions;
-    }    
+    } 
     
-    public function ksd_admin_bar_menu( $admin_bar ){
+    /**
+     * Decrement notifications counter when KSD Admin Bar is clicked
+     */
+    public function admin_bar_clicked(){
+        $node_id = ltrim( sanitize_text_field( $_POST['node_id'] ), 'wp-admin-bar' );
+        //KSD Admin Bar clicked array map stored and fetched directly from DB to speed up queries
+        $admin_bar_clicked = get_option( 'admin_bar_clicked', array() );
+        $notifications = get_option( 'admin_bar_notifications', 0 );
+        $response = array();
+        if( ! isset( $admin_bar_clicked[$node_id] ) || ! $admin_bar_clicked[$node_id] ){
+            $admin_bar_clicked[$node_id] = true;
+            $notifications--;
+            update_option( 'admin_bar_clicked', $admin_bar_clicked );
+            update_option( 'admin_bar_notifications', $notifications );
+            $response['message'] = 'Success';
+        }
+        echo json_encode( $response );
+        die();
+    }
+    
+    /**
+     * Display KSD Admin Bar
+     * 
+     * @param WP_Admin_Bar $admin_bar
+     */
+    public function display_admin_bar_menu( $admin_bar ){
+        $this->add_ksd_admin_bar_node( array(
+            'id'        => 'ksd-discount',
+            'title'     => __( 'Get A Discount', 'kanzu-support-desk' ),
+            'href'      => 'https://kanzucode.com/quick-chat',
+        ) );
+        
+        $this->add_ksd_admin_bar_node( array(
+            'id'        => 'ksd-qs-tour',
+            'title'     => __( 'Quick Tour', 'kanzu-support-desk' ),
+            'href'      => admin_url('edit.php?post_type=ksd_ticket&ksd_getting_started=1')
+        ) );
+        
+        $this->add_ksd_admin_bar_node( array(
+            'id'        => 'ksd-docs',
+            'title'     => __( 'Getting Started Guide', 'kanzu-support-desk' ),
+            'href'      => 'https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/',
+        ) );
+        
+        $this->add_ksd_admin_bar_parent( $admin_bar );
+        
+        //Merge with default node so that each node maintains the same parent 
+        $default_node = array( 
+            'parent' => 'ksd-admin-bar',
+            'meta'  => array(
+                'target'     => '_blank' //Target is set to blank on all child nodes so that ajax call that decrements notifications counter has time to complete
+            )            
+        );
+        //KSD Admin Bar nodes stored and fetched directly from DB to speed up queries
+        $admin_bar_nodes = get_option( KSD()->ksd_admin_bar_nodes, array() );
+
+        foreach( $admin_bar_nodes as $admin_bar_node ){
+            $admin_bar_node = wp_parse_args( $default_node, $admin_bar_node );
+            $admin_bar->add_node( $admin_bar_node );  
+        }
+ 
+    }
+    
+    /**
+     * Add children nodes to KSD Admin Bar Menu
+     * 
+     * @param array $args
+     */
+    public function add_ksd_admin_bar_node( $args ){
+        //KSD Admin Bar notifications stored and fetched directly from DB to speed up queries
+        $notifications = get_option( 'admin_bar_notifications', 0 );
+        $admin_bar_nodes = get_option( KSD()->ksd_admin_bar_nodes, array() );
+        $node_id[] = $args['id'];
+        $node_ids = array();
+        foreach( $admin_bar_nodes as $admin_bar_node ){
+            $node_ids[] = $admin_bar_node['id'];
+        }
+        if( ! empty( array_diff( $node_id, $node_ids ) ) ){
+            $admin_bar_nodes[] = $args;
+            $notifications++;
+            update_option( KSD()->ksd_admin_bar_nodes, $admin_bar_nodes );
+            update_option( 'admin_bar_notifications', $notifications );
+        }
+    }
+    
+    /**
+     * Add KSD Admin Bar Menu parent node
+     * 
+     * @param WP_Admin_Bar $admin_bar
+     */
+    public function add_ksd_admin_bar_parent( $admin_bar ){
+        $notifications = get_option( 'admin_bar_notifications', 0 );
+        $parent_node_title = '<span class="ksd-admin-icon" style="display:inline-block; margin: 2px 0;" ><img src="'. KSD_PLUGIN_URL .'assets/images/icons/kc_white_icon_25x25.png" /></span>';
+        if( $notifications ){
+            $parent_node_title .= '<span class="ksd-admin-bar-notice" style="display: inline-block;background: #d54e21;border-radius: 10px;padding: 0 6px;font-size: 9px;height: 20px;vertical-align: top;line-height: 20px;margin: 4px 4px;" >'. $notifications .'</span>';
+        }
         $args = array(
             'id'        => 'ksd-admin-bar',
-            'title'     => '<span class="ksd-admin-icon" style="display:inline-block; margin: 2px 0;" ><img src="'. KSD_PLUGIN_URL .'assets/images/icons/kc_white_icon_25x25.png" /></span><span class="ksd-admin-bar-notice" style="display: inline-block;background: #d54e21;border-radius: 10px;padding: 0 6px;font-size: 9px;height: 20px;vertical-align: top;line-height: 20px;margin: 4px 4px;" >1</span>',
+            'title'     => $parent_node_title,
             'parent'    => 'root-default',
         );
         $admin_bar->add_node( $args );  
- 
-        $args = array(
-            'id'        => 'ksd-discount',
-            'parent'    => 'ksd-admin-bar',
-            'title'     => __( 'Get A Discount', 'kanzu-support-desk' ),
-            'href'      => 'https://kanzucode.com/quick-chat',
-            'meta'  => array(
-                'target'     => '_blank'
-            )
-        );
-        $admin_bar->add_node( $args );  
-       $args_child = array(
-            'id'        => 'ksd-gs-tour',
-            'parent'    => 'ksd-admin-bar',
-            'title'     => __( 'Quick Tour', 'kanzu-support-desk' ),
-            'href'      => admin_url('edit.php?post_type=ksd_ticket&ksd_getting_started=1')
-        );        
-        $admin_bar->add_node( $args_child );  
-
-       $args_child = array(
-            'id'        => 'ksd-docs',
-            'parent'    => 'ksd-admin-bar',
-            'title'     => __( 'Getting Started Guide', 'kanzu-support-desk' ),
-            'href'      => 'https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/',
-            'meta'  => array(
-                'target'     => '_blank'
-            )            
-        );        
-        $admin_bar->add_node( $args_child );          
-
     }
     
     public function woo_support_tickets_tab( $tabs = array() ){
@@ -432,7 +498,14 @@ class KSD_Public {
         public function enqueue_public_scripts() {	
             if( ! is_admin() ){
                  wp_enqueue_media();
-            }      
+            }
+            if( is_user_logged_in() ){
+                wp_enqueue_script( KSD_SLUG . '-admin-bar-js', KSD_PLUGIN_URL . 'assets/js/ksd-admin-bar.js', array( 'jquery' ), '1.0.0' );
+                wp_localize_script( KSD_SLUG . '-admin-bar-js', 'ksd_admin_bar', array(
+                    'ajax_url'  => admin_url( 'admin-ajax.php' )
+                ) );
+            }
+            
             wp_enqueue_script( 'media-upload' );
             wp_enqueue_script( 'thickbox' );
             wp_enqueue_script( KSD_SLUG . '-public-js', KSD_PLUGIN_URL .  'assets/js/ksd-public.js' , array( 'jquery', 'jquery-ui-core', 'jquery-ui-tooltip', 'media-upload', 'thickbox' ), KSD_VERSION );

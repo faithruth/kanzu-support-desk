@@ -43,7 +43,12 @@ final class Kanzu_Support_Desk {
     /**
      * The name used to store KSD admin notices in the Db
      */
-    public $ksd_admin_notices = "ksd_admin_notices";    
+    public $ksd_admin_notices = "ksd_admin_notices"; 
+    
+    /**
+     * The options key to store KSD admin bar nodes in the DB
+     */
+    public $ksd_admin_bar_nodes = 'ksd_admin_bar_nodes';
 
     /**
      * Session instance.

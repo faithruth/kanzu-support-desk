@@ -194,7 +194,7 @@ class KSD_Admin {
      *
      */
     public function enqueue_admin_styles() {	
-        wp_enqueue_style( KSD_SLUG .'-admin-css', KSD_PLUGIN_URL.'/assets/css/ksd-admin.css', array(), KSD_VERSION );
+        wp_enqueue_style( KSD_SLUG .'-admin-css', KSD_PLUGIN_URL.'assets/css/ksd-admin.css', array(), KSD_VERSION );
     }
 
     /**
@@ -205,9 +205,14 @@ class KSD_Admin {
      *
      */
     public function enqueue_admin_scripts() { 
+            wp_enqueue_script( KSD_SLUG . '-admin-bar-js', KSD_PLUGIN_URL . 'assets/js/ksd-admin-bar.js', array( 'jquery' ), '1.0.0' );
+            wp_localize_script( KSD_SLUG . '-admin-bar-js', 'ksd_admin_bar', array(
+                'ajax_url'  => admin_url( 'admin-ajax.php' )
+            ) );
+
             //Load the script for Google charts. Load this before the next script. 
             wp_enqueue_script( KSD_SLUG . '-admin-gcharts', '//www.google.com/jsapi', array(), KSD_VERSION ); 
-            wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'/assets/js/ksd-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'json2', 'jquery-ui-dialog', 'jquery-ui-tooltip', 'jquery-ui-accordion','jquery-ui-autocomplete' ), KSD_VERSION );
+            wp_enqueue_script( KSD_SLUG . '-admin-js', KSD_PLUGIN_URL.'assets/js/ksd-admin.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-tabs', 'json2', 'jquery-ui-dialog', 'jquery-ui-tooltip', 'jquery-ui-accordion','jquery-ui-autocomplete' ), KSD_VERSION );
 
 
             //Variables to send to the admin JS script
@@ -3035,7 +3040,7 @@ class KSD_Admin {
      * @return string
      */
     public function add_tinymce_cc_plugin( $plugin_array ) {
-        $plugin_array['KSDCC'] = KSD_PLUGIN_URL. '/assets/js/ksd-wp-editor-cc.js';                    
+        $plugin_array['KSDCC'] = KSD_PLUGIN_URL. 'assets/js/ksd-wp-editor-cc.js';                    
         return $plugin_array;
     }
 
