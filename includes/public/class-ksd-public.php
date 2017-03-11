@@ -96,7 +96,7 @@ class KSD_Public {
 
         //Contact form 7
         add_action( 'wpcf7_form_class_attr', array( $this, 'append_ksd_class_to_wpcf7' )  );
-
+  
     } 
 
     /**
