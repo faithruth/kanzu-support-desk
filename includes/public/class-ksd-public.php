@@ -94,6 +94,9 @@ class KSD_Public {
 
         add_action( 'ksd_after_ticket_content', array( $this, 'append_ticket_replies') );
 
+        //Contact form 7
+        add_action( 'wpcf7_form_class_attr', array( $this, 'append_ksd_class_to_wpcf7' )  );
+
     } 
 
     /**
@@ -813,6 +816,22 @@ class KSD_Public {
             KSD()->templates->get_template_part( 'single', 'replies' );
             KSD()->templates->get_template_part( 'form', 'new-reply' );
         }        
+
+        /**
+         * Append a KSD class to the WP contact form 7 form if the
+         * ksd_support_form setting is active
+         * //@todo while save is underway and ksd_support_form, check for required fields
+         * //when form is submitted, create ticket before 'feedback' entry is created
+         */
+        public function append_ksd_class_to_wpcf7( $class ){
+            if( class_exists( 'WPCF7_ContactForm' ) ):
+                $wpcf7 = WPCF7_ContactForm::get_current();
+                if( $wpcf7->is_true( 'ksd_support_form' ) ):
+                    return $class.' ksd-support-form';
+                endif;
+            endif;
+            return $class;
+        }
         
 }
 endif;
