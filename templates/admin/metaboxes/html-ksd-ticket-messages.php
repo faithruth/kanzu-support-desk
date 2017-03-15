@@ -9,7 +9,7 @@
 
     <div id="edit-ticket-tabs"> 
         <ul class="edit-ticket-options">
-            <li><a href="#reply_ticket"><?php _e( 'Reply to all', 'kanzu-support-desk' ); ?></a></li>
+            <li><a href="#reply_ticket"><?php _e( 'Reply', 'kanzu-support-desk' ); ?></a></li>
             <li><a href="#update_private_note"><?php _e('Reply to staff only', 'kanzu-support-desk'); ?></a></li>
         </ul>
         <div class="edit-ticket-description" id="reply_ticket">

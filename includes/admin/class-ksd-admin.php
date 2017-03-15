@@ -305,7 +305,7 @@ class KSD_Admin {
         $admin_labels_array['lbl_toggle_trimmed_content']   = __( 'Toggle Trimmed Content', 'kanzu-support-desk' );
         $admin_labels_array['lbl_tickets']                  = __( 'Tickets', 'kanzu-support-desk' );
         $admin_labels_array['lbl_CC']                       = __( 'CC', 'kanzu-support-desk' ); 
-        $admin_labels_array['lbl_reply_to_all']             = __( 'Reply to all', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_reply_to_all']             = __( 'Reply', 'kanzu-support-desk' );
         $admin_labels_array['lbl_populate_cc']              = __( 'Populate CC field', 'kanzu-support-desk' );
         $admin_labels_array['lbl_save']                     = __( 'Save', 'kanzu-support-desk' );
         $admin_labels_array['lbl_update']                   = __( 'Submit', 'kanzu-support-desk' );
