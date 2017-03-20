@@ -1576,7 +1576,7 @@ class KSD_Admin {
                         $extra_headers['In-Reply-To'] = $mail_message_id;
                         $extra_headers['References']  = $mail_message_id;
                 }
-                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . $parent_ticket->post_title, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
+                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . trim( $parent_ticket->post_title ) . '-KSD-Ticket-' . $parent_ticket_ID, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
 
                 if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
                    do_action( 'ksd_new_reply_logged', $_POST['ksd_addon_tkt_id'], $new_reply_id );
