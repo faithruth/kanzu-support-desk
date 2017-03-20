@@ -1664,11 +1664,11 @@ class KSD_Admin {
         $this->do_admin_includes();
 
         //Check if this was initiated from our notify_email, in which case it is a reply/new ticket from an agent  
-        $ksd_settings = Kanzu_Support_Desk::get_settings();
-        $agent_initiated_ticket = false;
-        if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
-            $agent_initiated_ticket = true;
-        }
+//        $ksd_settings = Kanzu_Support_Desk::get_settings();
+//        $agent_initiated_ticket = false;
+//        if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
+//            $agent_initiated_ticket = true;
+//        }
 
         //Handle Facebook channel replies
         if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
@@ -1678,9 +1678,9 @@ class KSD_Admin {
             $this->reply_ticket( $new_ticket ); 
             return;
         }
-        if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
-            $new_ticket['ksd_tkt_cust_id'] = 1;
-        }
+//        if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
+//            $new_ticket['ksd_tkt_cust_id'] = 1;
+//        }
         //This is a new ticket
         $this->log_new_ticket( $new_ticket, true );                        
     }
