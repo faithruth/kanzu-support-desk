@@ -957,8 +957,8 @@ var KSDHooks = KSDHooks || {};
                 $('#ksd-merge-ticket-select').removeClass('hidden');
              });
              
-             //On canceling the merger, boohoo!!
-             $('#ksd-merge-cancel').click(function(e){
+             //On canceling the merger, boohoo!! 
+             $("#ksd-merge-ticket-wrap").on('click', '#ksd-merge-cancel', function (e) {
                 e.preventDefault();
                 $('#ksd-merge-merge-ticket-title').html( '' );
                 $('#ksd-merge-merge-ticket-id').val( 0 );

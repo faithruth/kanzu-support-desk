@@ -393,12 +393,35 @@ a.ksd-new-ticket-cc:visited {
   display: none;
 }
 #ksd-merge-final-response{
-    padding: 7px;
+    padding: 0.5rem;
     background-color: #0085ba;
     color: #FFF;
 }
 #ksd-merge-final-response.empty{
     padding: 0;
+}
+#ksd-merge-ticket-merge-button {
+  margin-top: 0.5rem;
+}
+.ksd-merge-how-to {
+  padding-left: 1rem;
+}	
+#ksd-merge-search-panel {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  float: left;
+  margin: 1rem 0;
+  padding: 1rem 0;
+}
+#ksd-merge-ticket-search-text {
+  color: #888;
+  font-size: 0.9em;
+}
+#ksd-merge-ticket-select {
+  padding-top: 0.5rem;
+}
+.confirm-merge-wrapper {
+  padding-top: 0.5rem;
 }
 ul#ksd_attachments, ul#ksd_attachments-single-ticket{
     width: 100%;
