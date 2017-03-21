@@ -2824,7 +2824,8 @@ class KSD_Admin {
             $headers[] = "Cc: $cc";
         }
                  
-        $headers = array_merge( $headers, $extra_headers );    
+        $headers = apply_filter( 'ksd_send_mail_headers', array_merge( $headers, $extra_headers ) );    
+
        
          return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
      }
