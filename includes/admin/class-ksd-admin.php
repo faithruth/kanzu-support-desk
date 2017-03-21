@@ -613,6 +613,8 @@ class KSD_Admin {
         }
         //Remove post meta fields
         remove_meta_box( 'postcustom', 'ksd_ticket', 'normal' );
+        remove_meta_box( 'commentstatusdiv', 'ksd_ticket', 'normal' );
+        remove_meta_box( 'commentsdiv', 'ksd_ticket', 'normal' );
 
         //Add a custom submitdiv
         $publish_callback_args = array( 'revisions_count' => 0, 'revision_id' => NULL   );   
