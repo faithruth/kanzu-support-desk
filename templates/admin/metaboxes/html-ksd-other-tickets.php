@@ -1,4 +1,6 @@
-<div class="ksd-misc-extras misc-pub-section"><?php  
+<div class="ksd-misc-extras misc-pub-section">
+    <button class="button button-small" id="merge-tickets-button"><?php _e( 'Merge Ticket', 'kanzu-support-desk' ); ?></button>
+    <?php  
         $ksd_current_customer = get_userdata( $post->post_author );
         $ksd_admin = KSD_Admin::get_instance();
         $customer_other_tickets = $ksd_admin->get_customer_tickets( $ksd_current_customer->ID, array( 'exclude' => array( $post->ID ) ) );     
@@ -53,5 +55,5 @@
             endforeach;
             echo '</ul>';
         endif;
-    endif; ?>                
+    endif; ?>       
 </div>
