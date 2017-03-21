@@ -49,6 +49,9 @@ class KSD_Admin {
         // Add an action link pointing to the settings page.
         add_filter( 'plugin_action_links_' . plugin_basename( KSD_PLUGIN_FILE ), array( $this, 'add_action_links' ) );		
 
+        //Set whether an incoming ticket is a reply
+        add_filter( 'ksd_new_ticket_or_reply', array( $this, 'set_is_ticket_a_reply' ) );
+
         //Handle AJAX calls
         add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ) );
         add_action( 'wp_ajax_ksd_filter_totals', array( $this, 'filter_totals' ) );
@@ -1702,7 +1705,7 @@ class KSD_Admin {
      * @param array $new_ticket The incoming ticket 
      * 
      */
-    public function set_is_reply( $new_ticket ){
+    public function set_is_ticket_a_reply( $new_ticket ){
         if( false !== strpos( $new_ticket['ksd_tkt_subject'], '~' ) ){
             $ticket_subject_array   = explode( '~', $new_ticket['ksd_tkt_subject'] );
             $new_ticket[ 'tkt_id' ] = end( $ticket_subject_array );
