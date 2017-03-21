@@ -1565,6 +1565,13 @@ class KSD_Admin {
                     $notify_user = get_userdata( $parent_ticket->post_author );                        
                 }
                 
+                /**
+                 * @filter `ksd_reply_content_send_pre` The content of a ticket reply just before it is 
+                 * sent to the customer/agent
+                 *
+                 * @param string $new_reply_content The reply to be sent
+                 * @param int $parent_ticket_ID Ticket ID of the parent ticket
+                 */
                 $ticket_reply = apply_filters( 'ksd_reply_content_send_pre', $new_reply['post_content'], $parent_ticket_ID );
                 $ticket_reply .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID );
 				
@@ -1576,7 +1583,7 @@ class KSD_Admin {
                         $extra_headers['In-Reply-To'] = $mail_message_id;
                         $extra_headers['References']  = $mail_message_id;
                 }
-                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . trim( $parent_ticket->post_title ) . '-KSD-Ticket-' . $parent_ticket_ID, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
+                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . $parent_ticket->post_title . '~' . $parent_ticket_ID, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
 
                 if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
                    do_action( 'ksd_new_reply_logged', $_POST['ksd_addon_tkt_id'], $new_reply_id );
@@ -1662,13 +1669,14 @@ class KSD_Admin {
      */
     public function do_log_new_ticket( $new_ticket ) {      
         $this->do_admin_includes();
+        $new_ticket['is_reply'] = false;
 
-        //Check if this was initiated from our notify_email, in which case it is a reply/new ticket from an agent  
-//        $ksd_settings = Kanzu_Support_Desk::get_settings();
-//        $agent_initiated_ticket = false;
-//        if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
-//            $agent_initiated_ticket = true;
-//        }
+        /**
+         * @filter `ksd_new_ticket_or_reply` An incoming KSD ticket/reply. Add-ons should 
+         * modify $new_ticket and set $new_ticket['is_reply'] = true for this to be considered
+         * a reply. If it is a reply, the add-on should also set the ticket parent ID in $new_ticket['tkt_id']
+         */
+        $new_ticket = apply_filters( 'ksd_new_ticket_or_reply', $new_ticket );
 
         //Handle Facebook channel replies
         if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
@@ -1678,13 +1686,34 @@ class KSD_Admin {
             $this->reply_ticket( $new_ticket ); 
             return;
         }
-//        if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
-//            $new_ticket['ksd_tkt_cust_id'] = 1;
-//        }
+
+        if( $new_ticket['is_reply'] ){
+            $this->reply_ticket( $new_ticket ); 
+            return;            
+        }
+
         //This is a new ticket
         $this->log_new_ticket( $new_ticket, true );                        
     }
+
+    /**
+     * Decide whether an incoming ticket is a reply
+     * 
+     * @param array $new_ticket The incoming ticket 
+     * 
+     */
+    public function set_is_reply( $new_ticket ){
+        if( false !== strpos( $new_ticket['ksd_tkt_subject'], '~' ) ){
+            $ticket_subject_array   = explode( '~', $new_ticket['ksd_tkt_subject'] );
+            $new_ticket[ 'tkt_id' ] = end( $ticket_subject_array );
+            $new_ticket['is_reply'] = true;
+        }
+        return $new_ticket ;
+    }
     
+
+
+
     /**
      * Log new ticket reply 
      * 
@@ -2824,7 +2853,7 @@ class KSD_Admin {
             $headers[] = "Cc: $cc";
         }
                  
-        $headers = apply_filter( 'ksd_send_mail_headers', array_merge( $headers, $extra_headers ) );    
+        $headers = apply_filters( 'ksd_send_mail_headers', array_merge( $headers, $extra_headers ) );    
 
        
          return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
