@@ -1566,7 +1566,7 @@ class KSD_Admin {
                 }
                 
                 $ticket_reply = apply_filters( 'ksd_reply_content_send_pre', $new_reply['post_content'], $parent_ticket_ID );
-                $ticket_reply .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID, false );
+                $ticket_reply .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID );
 				
                 //Check if the parent ticket has an email message id $parent_ticket_ID
                 $mail_message_id = get_post_meta( $parent_ticket_ID, '_ksd_tkt_info_mail_message_id', true );  
