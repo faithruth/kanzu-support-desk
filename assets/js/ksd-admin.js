@@ -1200,7 +1200,7 @@ var KSDHooks = KSDHooks || {};
              based on knowing that content's structure. Currently matches Gmail (Android and Desktop) & Outlook. To be expanded
              -------------------------------------------------------------------------------------------*/
             //Match Outlook 2013 extra content  @TODO Add mobile outlook, outlook 2007 and 2010
-            $('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="ksd_extra"></div>');
+            $('p:contains("-----Original Message-----")').nextUntil("div").addBack().wrapAll('<div class="ksd_extra"></div>');
             //Match Gmail ( Android and Desktop ) clients
             $('div.gmail_quote,blockquote.gmail_quote').addClass('ksd_extra');
             //Match Yahoo desktop clients. Written separately from the rest merely for legibility
