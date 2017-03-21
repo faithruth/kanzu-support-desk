@@ -770,7 +770,9 @@ var KSDHooks = KSDHooks || {};
             this.ticketInfo();
             
              //Page Refresh
-            this.attachRefreshTicketsPage();           
+            this.attachRefreshTicketsPage();   
+            
+            this.formatTicketReplies();
             
         };
         

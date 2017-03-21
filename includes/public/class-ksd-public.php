@@ -523,7 +523,7 @@ class KSD_Public {
             $ksd_public_labels['lbl_last_name']         = __( 'Last Name', 'kanzu-support-desk');
             $ksd_public_labels['lbl_username']          = __( 'Username', 'kanzu-support-desk');
             $ksd_public_labels['lbl_CC']                = __( 'CC', 'kanzu-support-desk');
-            $ksd_public_labels['lbl_reply_to_all']      = __( 'Reply to all', 'kanzu-support-desk' );
+            $ksd_public_labels['lbl_reply_to_all']      = __( 'Reply', 'kanzu-support-desk' );
             $ksd_public_labels['lbl_populate_cc']       = __( 'Populate CC field', 'kanzu-support-desk' );
             
             //@TODO Don't retrieve settings again. Use same set of settings

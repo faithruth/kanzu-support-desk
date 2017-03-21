@@ -305,7 +305,7 @@ class KSD_Admin {
         $admin_labels_array['lbl_toggle_trimmed_content']   = __( 'Toggle Trimmed Content', 'kanzu-support-desk' );
         $admin_labels_array['lbl_tickets']                  = __( 'Tickets', 'kanzu-support-desk' );
         $admin_labels_array['lbl_CC']                       = __( 'CC', 'kanzu-support-desk' ); 
-        $admin_labels_array['lbl_reply_to_all']             = __( 'Reply to all', 'kanzu-support-desk' );
+        $admin_labels_array['lbl_reply_to_all']             = __( 'Reply', 'kanzu-support-desk' );
         $admin_labels_array['lbl_populate_cc']              = __( 'Populate CC field', 'kanzu-support-desk' );
         $admin_labels_array['lbl_save']                     = __( 'Save', 'kanzu-support-desk' );
         $admin_labels_array['lbl_update']                   = __( 'Submit', 'kanzu-support-desk' );
@@ -1576,7 +1576,7 @@ class KSD_Admin {
                         $extra_headers['In-Reply-To'] = $mail_message_id;
                         $extra_headers['References']  = $mail_message_id;
                 }
-                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . $parent_ticket->post_title, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
+                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . trim( $parent_ticket->post_title ) . '-KSD-Ticket-' . $parent_ticket_ID, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
 
                 if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
                    do_action( 'ksd_new_reply_logged', $_POST['ksd_addon_tkt_id'], $new_reply_id );
@@ -1664,11 +1664,11 @@ class KSD_Admin {
         $this->do_admin_includes();
 
         //Check if this was initiated from our notify_email, in which case it is a reply/new ticket from an agent  
-        $ksd_settings = Kanzu_Support_Desk::get_settings();
-        $agent_initiated_ticket = false;
-        if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
-            $agent_initiated_ticket = true;
-        }
+//        $ksd_settings = Kanzu_Support_Desk::get_settings();
+//        $agent_initiated_ticket = false;
+//        if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
+//            $agent_initiated_ticket = true;
+//        }
 
         //Handle Facebook channel replies
         if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
@@ -1678,9 +1678,9 @@ class KSD_Admin {
             $this->reply_ticket( $new_ticket ); 
             return;
         }
-        if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
-            $new_ticket['ksd_tkt_cust_id'] = 1;
-        }
+//        if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
+//            $new_ticket['ksd_tkt_cust_id'] = 1;
+//        }
         //This is a new ticket
         $this->log_new_ticket( $new_ticket, true );                        
     }
