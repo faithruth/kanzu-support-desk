@@ -1540,10 +1540,10 @@ class KSD_Admin {
 
     /**
      * Add a reply to a single ticket
-     * @param Array $ticket_reply_array The ticket reply Array. This exists wnen this function is called
-     * by an add-on
-     * Note that add-ons have to provide tkt_id too. It's retrieved in the check before this function
-     * is called
+     * 
+     * @param Array $ticket_reply_array The ticket reply Array. This exists wnen this function is called by an add-on
+     * Note that add-ons have to provide tkt_id too. It's retrieved in the check before this function is called
+     * 
      */
 
     public function reply_ticket( $ticket_reply_array=null ) {
@@ -1636,31 +1636,43 @@ class KSD_Admin {
                     $notify_user = $this->get_ticket_assignee_to_notify( $parent_ticket_ID );
                 }
                 else{//This is a reply from an agent. Notify the customer               
-                    $notify_user = get_userdata( $parent_ticket->post_author );                        
+                    $notify_user 		= get_userdata( $parent_ticket->post_author );          
                 }
-                
+
+                $parent_ticket_channel = get_post_meta( $parent_ticket_id, '_ksd_tkt_info_channel', true );
                 /**
-                 * @filter `ksd_reply_content_send_pre` The content of a ticket reply just before it is 
-                 * sent to the customer/agent
+                 * @filter `ksd_reply_logged_notfxn_email_message_{$parent_ticket_channel}` Right after a ticket reply is logged, this is applied to the message content of the email notification to be sent to the customer/agent. $parent_ticket_channel is the channel used to log the parent ticket 
                  *
                  * @param string $new_reply_content The reply to be sent
                  * @param int $parent_ticket_ID Ticket ID of the parent ticket
                  */
-                $ticket_reply = apply_filters( 'ksd_reply_content_send_pre', $new_reply['post_content'], $parent_ticket_ID );
-                $ticket_reply .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID );
-				
-                //Check if the parent ticket has an email message id $parent_ticket_ID
-                $mail_message_id = get_post_meta( $parent_ticket_ID, '_ksd_tkt_info_mail_message_id', true );  
-                $extra_headers = array();
+                $ticket_reply_message = apply_filters( 'ksd_reply_logged_notfxn_email_message_'.$parent_ticket_channel, $new_reply['post_content'], $parent_ticket_ID );
+                $ticket_reply_message .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID );
 
-                if ( false !== $mail_message_id ) {
-                        $extra_headers['In-Reply-To'] = $mail_message_id;
-                        $extra_headers['References']  = $mail_message_id;
-                }
-                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . $parent_ticket->post_title . '~' . $parent_ticket_ID, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
+                /**
+                 * @filter `ksd_reply_logged_notfxn_email_subject_{$parent_ticket_channel}` Right after a ticket reply is logged, this is applied to the message subject of the email notification to be sent to the customer/agent. $parent_ticket_channel is the channel used to log the parent ticket 
+                 *
+                 * @param string $new_reply_subject The reply to be sent
+                 * @param int $parent_ticket_ID Ticket ID of the parent ticket
+                 */
+                $ticket_reply_subject = apply_filters( 'ksd_reply_logged_notfxn_email_subject', $parent_ticket->post_title, $parent_ticket_ID );
+
+                $addon_tkt_id = ( isset( $_POST['ksd_addon_tkt_id'] ) ? $_POST['ksd_addon_tkt_id'] : 0 );
+
+                /**
+                 * @filter `ksd_reply_logged_notfxn_email_headers_{$parent_ticket_channel}` Right after a ticket reply is logged, this is applied to the message headers of the email notification to be sent to the customer/agent. $parent_ticket_channel is the channel used to log the parent ticket  
+                 *
+                 * @param array $ticket_reply_headers Headers of the email being sent
+                 * @param WP_Post Object $parent_ticket The parent ticket
+                 * @param int $addon_tkt_id The ID received from the add-on that logged this reply if this reply came from an add-on. Otherwise, it'll be 0
+                 */                
+                $ticket_reply_headers	= apply_filters( 'ksd_reply_logged_notfxn_email_headers_'.$parent_ticket_channel, $ticket_reply_headers, $parent_ticket, $addon_tkt_id );
+                								
+
+                $this->send_email( $notify_user->user_email, $ticket_reply_message, $ticket_reply_subject, $cc, array(), 0, $ticket_reply_headers );//NOTE: Prefix the reply subject with Re:    
 
                 if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
-                   do_action( 'ksd_new_reply_logged', $_POST['ksd_addon_tkt_id'], $new_reply_id );
+                   do_action( 'ksd_new_reply_logged', $addon_tkt_id , $new_reply_id );
                    return;//End the party if this came from an add-on. All an add-on needs if for the reply to be logged
                }
 
@@ -1684,7 +1696,7 @@ class KSD_Admin {
     
     /**
      * Remove all 'Ticket read' meta values
-     * @param type $parent_ticket_id
+     * @param int $parent_ticket_id
      */
     private function mark_ticket_reply_unread( $parent_ticket_id ){
        $post_meta = get_post_meta( $parent_ticket_id );
@@ -1698,6 +1710,7 @@ class KSD_Admin {
     /**
      * Validate the post date before saving a post. This is usually set by add-ons
      * Adapted from wp-includes/post.php
+     * 
      * @param Date $post_date
      * @return Date in form 0000-00-00 00:00:00
      * @since 2.0.0
@@ -2903,6 +2916,7 @@ class KSD_Admin {
 
      /**
       * Send mail. 
+      * 
       * @param string $to Recipient email address
       * @param string $message The message to send. Can be "new_ticket"
       * @param string $subject The message subject
@@ -2910,6 +2924,7 @@ class KSD_Admin {
       * @param Array $attachments Array of attachment filenames
       * @param int $customer_ID The customer's user ID
       * @param Array $extra_headers Extra email header fields @since 2.2.12
+      * @deprecated 2.3.1
       */
      public function send_email( $to, $message="new_ticket", $subject=null, $cc=null,  $attachments= array(), $customer_ID=0, $extra_headers = array() ) {
         $settings = Kanzu_Support_Desk::get_settings();             
@@ -2932,6 +2947,25 @@ class KSD_Admin {
        
          return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
      }
+
+
+ 	/**
+ 	 * Send email
+ 	 * 
+ 	 * @param  string|array $to    Recipient email address or array of recipient addresses
+ 	 * @param  string $subject     The email subject
+ 	 * @param  string $message     The message. Supports HTML
+ 	 * @param  string $type        The message type. For example, email notifications sent after a reply is logged are of type `reply_logged`. This is mainly useful when calling specifc filters
+ 	 * @param  string $headers     The email headers
+ 	 * @param  array  $attachments Email attachments
+ 	 * @return boolean Whether the email was sent or not              
+ 	 */
+    public function ksd_mail( $to, $subject, $message, $type='', $headers='', $attachments=array() ){
+
+    	 $to = apply_filters( 'ksd_send_mail_recipient_pre'. $type, $to );
+
+ 
+    }
 
      /**
       * Retrieve Kanzu Support Desk notifications. These are currently
@@ -3788,7 +3822,8 @@ class KSD_Admin {
             wp_delete_post( $activity->ID, true );
         }        
     }
-    
+
+
     /**
      * Change a ticket into a reply
      * @param int $ticket_ID
