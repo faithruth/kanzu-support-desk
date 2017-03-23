@@ -277,6 +277,7 @@ final class Kanzu_Support_Desk {
 
         //Load scripts used in both the front and back ends
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
+        
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) ); 
 
         //Share the plugin's settings with add-ons
@@ -333,7 +334,7 @@ final class Kanzu_Support_Desk {
       * @param boolean $append_logo Whether to append a logo or not
       * @since 1.7.0
       */
-     public static function output_ksd_signature( $tkt_id, $append_logo = true ){
+     public static function output_ksd_signature( $tkt_id, $append_logo = false ){
         $suffix = '';
         $no_logo_style = ( $append_logo ? '' : 'text-align:right;width:100%;' ); 
         $settings = self::get_settings();

@@ -147,11 +147,6 @@ class KSD_Public {
      * @param WP_Admin_Bar $admin_bar
      */
     public function display_admin_bar_menu( $admin_bar ){
-        $this->add_ksd_admin_bar_node( array(
-            'id'        => 'ksd-discount',
-            'title'     => __( 'Get A Discount', 'kanzu-support-desk' ),
-            'href'      => 'https://kanzucode.com/quick-chat',
-        ) );
         
         $this->add_ksd_admin_bar_node( array(
             'id'        => 'ksd-qs-tour',

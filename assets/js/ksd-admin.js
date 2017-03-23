@@ -770,7 +770,9 @@ var KSDHooks = KSDHooks || {};
             this.ticketInfo();
             
              //Page Refresh
-            this.attachRefreshTicketsPage();   
+            this.attachRefreshTicketsPage();     
+            //Merge tickets
+            this.mergeTickets();
             
             this.formatTicketReplies();
             
@@ -790,6 +792,110 @@ var KSDHooks = KSDHooks || {};
                     }
             );               
  
+        };
+        
+        this.mergeTickets = function(){
+            if( $('#ksd-merge-parent-ticket-title').length ){
+                $('#ksd-merge-parent-ticket-title').html( $('#titlediv h2.post_title').text() );
+            }
+            //Show the first 'Merge' dialog
+             $('#merge-tickets-button').click(function(e){
+                e.preventDefault();                
+                $('#ksd-merge-ticket-wrap').dialog({
+                    dialogClass: "ksd-merge-no-close",
+                    modal: true,
+                    buttons: {
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });  
+            });
+ 
+           //Get a list of possible tickets to merge
+            $('#ksd-merge-ticket-search').click(function(e){
+                e.preventDefault();   
+                $('.ksd-merge-spinner').removeClass('hidden').addClass('is-active');
+                $.post(
+                ksd_admin.ajax_url,
+                {
+                    action: 'ksd_get_merge_tickets',
+                    parent_tkt_ID: $('input[name=ksd-merge-parent-ticket]').val(),
+                    _ajax_ksd_merging_nonce : $('#_ajax_ksd_merging_nonce').val(),
+                    search: $('#ksd-merge-ticket-search-text').val()
+                },
+                function ( response ) {          
+                    $('.ksd-merge-spinner').removeClass('is-active').addClass('hidden');
+                    var responseContainer = $('ul.ksd-merge-tickets-list');
+                    responseContainer.html(''); 
+                    try{
+                        respObj = JSON.parse( response );
+                        if ( $.isArray( respObj ) && respObj.length > 0 ) {                      
+                          $.each( respObj, function ( key, value ) {
+                             responseContainer.append('<li data-ksd-merge-tkt-id="'+value.ID+'" class="ksd-merge-do-merge"> #'+value.ID+' '+value.title+'</li>');
+                          });                       
+                        }else{
+                            responseContainer.html('<li>No results found. Please search again</li>');
+                        }
+                    }catch(err){
+                        responseContainer.html('<li>An error occured. Please re-try</li>');
+                    }
+
+                }
+            );  
+            });
+            
+            //On selecting one of the possible tickets as the merge candidate
+             $("#ksd-merge-ticket-wrap").on('click', '.ksd-merge-do-merge', function (event) {
+                 event.preventDefault();
+                 var mergeID = $(this).data('ksdMergeTktId');
+                 $('#ksd-merge-merge-ticket-title').html( $(this).html() );
+                 $('#ksd-merge-merge-ticket-id').val( mergeID );
+                 $('#ksd-merge-ticket-merge-button').fadeIn();//In case this button's hidden
+                 $('.ksd-merge-ticket-merge-wrap').removeClass('hidden');
+             });
+             
+             //The merge is imminent. On selecting to merge. One more step before the merge is sealed..
+             $('#ksd-merge-ticket-merge-button').click(function(e){
+                e.preventDefault();
+                $(this).fadeOut();
+                $('#ksd-merge-ticket-select').removeClass('hidden');
+             });
+             
+             //On canceling the merger, boohoo!! 
+             $("#ksd-merge-ticket-wrap").on('click', '#ksd-merge-cancel', function (e) {
+                e.preventDefault();
+                $('#ksd-merge-merge-ticket-title').html( '' );
+                $('#ksd-merge-merge-ticket-id').val( 0 );
+                $('.ksd-merge-ticket-merge-wrap,#ksd-merge-ticket-select').addClass('hidden');
+                $(this).fadeOut();
+                $('#ksd-merge-ticket-wrap').dialog("close");
+             });             
+             
+             //On confirming the merger. The deal is sealed!!              
+             $('#ksd-merge-ticket-confirm').click(function(e){
+                e.preventDefault();
+                $('.ksd-merge-spinner').removeClass( 'hidden' ).addClass( 'is-active' );
+                $.post(
+                ksd_admin.ajax_url,
+                {
+                    action: 'ksd_merge_tickets',
+                    parent_tkt_ID: $('input[name=ksd-merge-parent-ticket]').val(),
+                    _ajax_ksd_merging_nonce : $('#_ajax_ksd_merging_nonce').val(),
+                    merge_tkt_ID: $('#ksd-merge-merge-ticket-id').val()
+                },
+                function ( response ) { 
+                   $('.ksd-merge-spinner').removeClass( 'is-active' ).addClass( 'hidden' );
+                   $('#ksd-merge-final-response').removeClass('empty');
+                   var responseContainer = $('#ksd-merge-final-response');
+                   if ( response.success ) {
+                       responseContainer.html( response.data.message );
+                        location.reload();
+                    }else{
+                         responseContainer.html( response.data.message );
+                    }
+                });
+             });  
         };
         
         /*
@@ -1200,7 +1306,7 @@ var KSDHooks = KSDHooks || {};
              based on knowing that content's structure. Currently matches Gmail (Android and Desktop) & Outlook. To be expanded
              -------------------------------------------------------------------------------------------*/
             //Match Outlook 2013 extra content  @TODO Add mobile outlook, outlook 2007 and 2010
-            $('p:contains("-----Original Message-----")').nextUntil("div").andSelf().wrapAll('<div class="ksd_extra"></div>');
+            $('p:contains("-----Original Message-----")').nextUntil("div").addBack().wrapAll('<div class="ksd_extra"></div>');
             //Match Gmail ( Android and Desktop ) clients
             $('div.gmail_quote,blockquote.gmail_quote').addClass('ksd_extra');
             //Match Yahoo desktop clients. Written separately from the rest merely for legibility

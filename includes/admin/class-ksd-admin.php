@@ -49,6 +49,9 @@ class KSD_Admin {
         // Add an action link pointing to the settings page.
         add_filter( 'plugin_action_links_' . plugin_basename( KSD_PLUGIN_FILE ), array( $this, 'add_action_links' ) );		
 
+        //Set whether an incoming ticket is a reply
+        add_filter( 'ksd_new_ticket_or_reply', array( $this, 'set_is_ticket_a_reply' ) );
+
         //Handle AJAX calls
         add_action( 'wp_ajax_ksd_filter_tickets', array( $this, 'filter_tickets' ) );
         add_action( 'wp_ajax_ksd_filter_totals', array( $this, 'filter_totals' ) );
@@ -81,7 +84,8 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
         add_action( 'wp_ajax_ksd_reset_role_caps', array( $this, 'reset_role_caps' ) );
         add_action( 'wp_ajax_ksd_get_unread_ticket_count', array( $this, 'get_unread_ticket_count' ) );
-        
+        add_action( 'wp_ajax_ksd_get_merge_tickets', array( $this, 'get_merge_tickets' ) );
+        add_action( 'wp_ajax_ksd_merge_tickets', array( $this, 'merge_tickets' ) );        
         
         
         //Generate a debug file
@@ -609,6 +613,8 @@ class KSD_Admin {
         }
         //Remove post meta fields
         remove_meta_box( 'postcustom', 'ksd_ticket', 'normal' );
+        remove_meta_box( 'commentstatusdiv', 'ksd_ticket', 'normal' );
+        remove_meta_box( 'commentsdiv', 'ksd_ticket', 'normal' );
 
         //Add a custom submitdiv
         $publish_callback_args = array( 'revisions_count' => 0, 'revision_id' => NULL   );   
@@ -1212,8 +1218,76 @@ class KSD_Admin {
         echo json_encode( $response );
         die(); // IMPORTANT: don't leave this out
     }
-
- 
+    
+    
+    /**
+     * Get tickets used in the merge tickets list
+     */
+    public function get_merge_tickets(){
+        check_ajax_referer( 'ksd-merging', '_ajax_ksd_merging_nonce' );
+        $results    = array();
+        $args       = array(
+                    'post_type'     => 'ksd_ticket',
+                    'posts_per_page'=> 12,
+                    'offset'        => 0,
+                    'post_status'   => array('new','open','pending','resolved','draft'),
+                    'post__not_in'  => array( sanitize_key( $_POST['parent_tkt_ID'] ) )
+                );
+        
+	if ( isset( $_POST['search'] ) ) {
+		$args['s'] = wp_unslash( $_POST['search'] );
+	}
+                       
+        
+        $merge_tickets = get_posts( $args );
+        foreach ( $merge_tickets as $ticket ) {
+            $results[] = array(
+                'ID'            => $ticket->ID,
+                'title'         => trim( esc_html( $ticket->post_title ) )
+            );
+        }
+        wp_die( wp_json_encode( $results ) );
+    }
+    
+    /**
+     * Merge two tickets
+     */
+    public function merge_tickets(){
+        check_ajax_referer( 'ksd-merging', '_ajax_ksd_merging_nonce' );
+        $parent_ticket_ID  = sanitize_text_field( $_POST['parent_tkt_ID'] );
+        $merge_tkt_ID      = sanitize_text_field( $_POST['merge_tkt_ID'] );
+        
+        //Make the merge ticket a reply of the parent ticket
+        $post_id = $this->transform_ticket_to_reply( $merge_tkt_ID, $parent_ticket_ID ); 
+                        
+        if ( 0 == $post_id || is_wp_error( $post_id ) ){
+            wp_send_json_error( array(
+                'message' => __( 'Sorry, merging the tickets failed. Please retry', 'kanzu-support-desk' )
+            ) );
+        }
+        
+        //Change parent_id of all $merge_tkt_ID replies and notes to $parent_ticket_ID
+        $this->change_replies_parent( $merge_tkt_ID, $parent_ticket_ID );
+        
+        //Delete $merge_tkt_ID's post meta since $parent_ticket_ID's now takes precedence 
+        $this->delete_ticket_meta( $merge_tkt_ID );
+        
+        //Delete ticket activity since merging it with the current will only become confusing and misleading
+        $this->delete_ticket_activities( $merge_tkt_ID );
+        
+        //Record this  activity
+        global $current_user, $post;
+        $new_ticket_activity = array();
+        $new_ticket_activity['post_author']    = $current_user->ID;
+        $new_ticket_activity['post_title']     = get_the_title( $parent_ticket_ID );        
+        $new_ticket_activity['post_parent']    = $parent_ticket_ID;          
+        $new_ticket_activity['post_content']   = sprintf( __( ' merged Ticket #%d into this ticket','kanzu-support-desk' ),  $merge_tkt_ID );
+        do_action( 'ksd_insert_new_ticket_activity', $new_ticket_activity );
+        
+        wp_send_json_success(
+                    array('message' => __( 'Merging completed successfully! Reloading the page...', 'kanzu-support-desk') )
+            );
+    }
 
     /**
      * Get a customer's tickets
@@ -1565,8 +1639,15 @@ class KSD_Admin {
                     $notify_user = get_userdata( $parent_ticket->post_author );                        
                 }
                 
+                /**
+                 * @filter `ksd_reply_content_send_pre` The content of a ticket reply just before it is 
+                 * sent to the customer/agent
+                 *
+                 * @param string $new_reply_content The reply to be sent
+                 * @param int $parent_ticket_ID Ticket ID of the parent ticket
+                 */
                 $ticket_reply = apply_filters( 'ksd_reply_content_send_pre', $new_reply['post_content'], $parent_ticket_ID );
-                $ticket_reply .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID, false );
+                $ticket_reply .= Kanzu_Support_Desk::output_ksd_signature( $parent_ticket_ID );
 				
                 //Check if the parent ticket has an email message id $parent_ticket_ID
                 $mail_message_id = get_post_meta( $parent_ticket_ID, '_ksd_tkt_info_mail_message_id', true );  
@@ -1576,7 +1657,7 @@ class KSD_Admin {
                         $extra_headers['In-Reply-To'] = $mail_message_id;
                         $extra_headers['References']  = $mail_message_id;
                 }
-                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . trim( $parent_ticket->post_title ) . '-KSD-Ticket-' . $parent_ticket_ID, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
+                $this->send_email( $notify_user->user_email, $ticket_reply, 'Re: ' . $parent_ticket->post_title . '~' . $parent_ticket_ID, $cc,array(), 0, $extra_headers );//NOTE: Prefix the reply subject with Re:    
 
                 if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
                    do_action( 'ksd_new_reply_logged', $_POST['ksd_addon_tkt_id'], $new_reply_id );
@@ -1662,13 +1743,14 @@ class KSD_Admin {
      */
     public function do_log_new_ticket( $new_ticket ) {      
         $this->do_admin_includes();
+        $new_ticket['is_reply'] = false;
 
-        //Check if this was initiated from our notify_email, in which case it is a reply/new ticket from an agent  
-//        $ksd_settings = Kanzu_Support_Desk::get_settings();
-//        $agent_initiated_ticket = false;
-//        if ( $ksd_settings['notify_email'] == $new_ticket['ksd_cust_email'] ) {
-//            $agent_initiated_ticket = true;
-//        }
+        /**
+         * @filter `ksd_new_ticket_or_reply` An incoming KSD ticket/reply. Add-ons should 
+         * modify $new_ticket and set $new_ticket['is_reply'] = true for this to be considered
+         * a reply. If it is a reply, the add-on should also set the ticket parent ID in $new_ticket['tkt_id']
+         */
+        $new_ticket = apply_filters( 'ksd_new_ticket_or_reply', $new_ticket );
 
         //Handle Facebook channel replies
         if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
@@ -1678,13 +1760,34 @@ class KSD_Admin {
             $this->reply_ticket( $new_ticket ); 
             return;
         }
-//        if ( $agent_initiated_ticket ) {//This is a new ticket from an agent. We attribute it to the primary admin in the system
-//            $new_ticket['ksd_tkt_cust_id'] = 1;
-//        }
+
+        if( $new_ticket['is_reply'] ){
+            $this->reply_ticket( $new_ticket ); 
+            return;            
+        }
+
         //This is a new ticket
         $this->log_new_ticket( $new_ticket, true );                        
     }
+
+    /**
+     * Decide whether an incoming ticket is a reply
+     * 
+     * @param array $new_ticket The incoming ticket 
+     * 
+     */
+    public function set_is_ticket_a_reply( $new_ticket ){
+        if( false !== strpos( $new_ticket['ksd_tkt_subject'], '~' ) ){
+            $ticket_subject_array   = explode( '~', $new_ticket['ksd_tkt_subject'] );
+            $new_ticket[ 'tkt_id' ] = end( $ticket_subject_array );
+            $new_ticket['is_reply'] = true;
+        }
+        return $new_ticket ;
+    }
     
+
+
+
     /**
      * Log new ticket reply 
      * 
@@ -2824,7 +2927,8 @@ class KSD_Admin {
             $headers[] = "Cc: $cc";
         }
                  
-        $headers = array_merge( $headers, $extra_headers );    
+        $headers = apply_filters( 'ksd_send_mail_headers', array_merge( $headers, $extra_headers ) );    
+
        
          return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
      }
@@ -3635,7 +3739,78 @@ class KSD_Admin {
         $user = get_userdata( $user_id );
         return '<a href="' . admin_url( "user-edit.php?user_id={$user_id}").'">' . $user->display_name.'</a>';
     }
+    
+    /**
+     * Change the parent ID of ticket replies and private notes
+     * 
+     * @param int $old_parent_ID The current parent ticket ID
+     * @param int $new_parent_ID The new parent ticket ID
+     */
+    private function change_replies_parent( $old_parent_ID, $new_parent_ID ){
+        $reply_args = array( 
+            'post_type'         => array ( 'ksd_reply', 'ksd_private_note' ), 
+            'post_parent'       => $old_parent_ID, 
+            'post_status'       => array ( 'private', 'publish' ),
+            'posts_per_page'    => -1, 
+            'offset'            => 0 
+          );
 
+        $replies_and_notes = get_posts( $reply_args );
+        foreach ( $replies_and_notes as $tkt_reply_or_note ){
+            $update_details = array( 'ID' => $tkt_reply_or_note->ID, 'post_parent' => $new_parent_ID );
+            wp_update_post( $update_details  );
+        }
+    }
+    
+    /**
+     * Delete a ticket's meta info
+     * @global Object $wpdb
+     * @param int $ticket_ID
+     */
+    private function delete_ticket_meta( $ticket_ID ){
+        global $wpdb;
+        $merge_tickets_meta_keys_query  = "SELECT meta_id FROM {$wpdb->prefix}postmeta WHERE meta_key LIKE '_ksd_tkt_info%' AND post_id='{$ticket_ID}'";
+        $merge_ticket_meta_keys         = $wpdb->get_results( $merge_tickets_meta_keys_query );
+        foreach( $merge_ticket_meta_keys as $meta_info ){
+            delete_meta( $meta_info->meta_id );
+        }
+    }
+    
+    /**
+     * Delete a ticket's activities
+     * @param int $ticket_ID
+     */
+    private function delete_ticket_activities( $ticket_ID ){
+        $activity_args = array( 
+            'post_type'         => array ( 'ksd_ticket_activity' ), 
+            'post_parent'       => $ticket_ID, 
+            'post_status'       => array ( 'private' ),
+            'posts_per_page'    => -1, 
+            'offset'            => 0 
+          );
+
+        $ticket_activities = get_posts( $activity_args );
+        foreach ( $ticket_activities as $activity ){
+            wp_delete_post( $activity->ID, true );
+        }        
+    }
+    
+    /**
+     * Change a ticket into a reply
+     * @param int $ticket_ID
+     * @param int $new_parent_ticket_ID The ticket's new parent ID
+     * @return int | WP_Error
+     */
+    private function transform_ticket_to_reply( $ticket_ID, $new_parent_ticket_ID ){
+        $transformer_ticket = array(
+            'ID'            => $ticket_ID, 
+            'post_type'     => 'ksd_reply', 
+            'post_status'   => 'publish',
+            'post_parent'   => $new_parent_ticket_ID
+        );
+        return wp_update_post( $transformer_ticket  ); 
+    }
+    
     private function current_user_can_view_private_notes(){
         global $current_user;
         if ( isset( $current_user->roles ) && is_array( $current_user->roles ) && ( in_array( 'ksd_agent', $current_user->roles ) || in_array( 'ksd_supervisor', $current_user->roles ) || in_array( 'administrator', $current_user->roles ) ) ){   

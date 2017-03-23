@@ -24,6 +24,7 @@
         <!--/ private notes -->
     </div> 
     <?php wp_nonce_field( 'ksd-add-new-reply', 'ksd_new_reply_nonce' ); ?>
+    <?php include_once( KSD_PLUGIN_DIR. 'templates/admin/dialog-merge-tickets.php' ); ?>
     <div class="ksd-reply-submit-wrapper">
         <span class="spinner ksd-reply-spinner hidden"></span>
         <input type="submit" value="<?php _e('Send', 'kanzu-support-desk'); ?>" name="ksd_reply_ticket" id="ksd-reply-ticket-submit" class="button button-primary button-large ksd-submit"/>         
