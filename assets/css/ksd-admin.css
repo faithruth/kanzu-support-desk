@@ -1167,6 +1167,10 @@ ul.edit-ticket-options.ui-widget-header{
 #update-settings div.setting span.invalid{
     color: red;
 }
+#update-settings div.setting span.license_status{
+    display: inline-block;
+    max-width: 40%;
+}
 #update-settings div.setting span.loading {
     background-image: url("../images/loading_dialog.gif");
     background-position: center center;
