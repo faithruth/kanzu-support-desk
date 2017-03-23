@@ -2982,7 +2982,13 @@ class KSD_Admin {
                 case 'check_license':
                     if ( $license_data && 'valid' == $license_data->license ) {
                         $plugin_settings[ $license_status_key ] = 'valid';
-                        $response_message = apply_filters( 'ksd_message_succ_addon_lic_activation', __('License successfully validated. Welcome to a super-charged Kanzu Support Desk! Please reload the page.', 'kanzu-support-desk' ) );
+                        $addons = $this->get_installed_addons();
+                        $response_message = __('License successfully validated. Welcome to a super-charged Kanzu Support Desk! Please reload the page.', 'kanzu-support-desk' );
+                        foreach( $addons as $addon ){
+                            if( $plugin_options_key === $addon ){
+                                $response_message = apply_filters( 'ksd_message_succ_addon_lic_activation_' . $addon, $response_message );
+                            }
+                        }
                     }
                     else{//Invalid license
                         $plugin_settings[ $license_status_key ] = 'invalid';
@@ -3639,7 +3645,19 @@ class KSD_Admin {
         return false;
 
     }
-                   
+    
+    private function get_installed_addons(){
+        $addons = array();
+        $settings = Kanzu_Support_Desk::get_settings();
+        foreach( $settings as $key => $value ){
+            if( 'ksd_' === substr( $key, 0, 4) ){
+                if( 'ksd_owner' != $key && 'ksd_activation_time' != $key ){
+                    $addons[] = $key;
+                }
+            }
+        }
+        return $addons;
+    }
 
 }   
         
