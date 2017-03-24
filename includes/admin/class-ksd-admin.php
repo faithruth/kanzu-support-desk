@@ -1640,6 +1640,7 @@ class KSD_Admin {
                 }
 
                 $parent_ticket_channel = get_post_meta( $parent_ticket_id, '_ksd_tkt_info_channel', true );
+
                 /**
                  * @filter `ksd_reply_logged_notfxn_email_message_{$parent_ticket_channel}` Right after a ticket reply is logged, this is applied to the message content of the email notification to be sent to the customer/agent. $parent_ticket_channel is the channel used to log the parent ticket 
                  *
@@ -1657,6 +1658,9 @@ class KSD_Admin {
                  */
                 $ticket_reply_subject = apply_filters( 'ksd_reply_logged_notfxn_email_subject', $parent_ticket->post_title, $parent_ticket_ID );
 
+                //Like all good replies, prepend a Re:
+                $ticket_reply_subject = 'Re:'.$ticket_reply_subject;
+
                 $addon_tkt_id = ( isset( $_POST['ksd_addon_tkt_id'] ) ? $_POST['ksd_addon_tkt_id'] : 0 );
 
                 /**
@@ -1669,10 +1673,30 @@ class KSD_Admin {
                 $ticket_reply_headers	= apply_filters( 'ksd_reply_logged_notfxn_email_headers_'.$parent_ticket_channel, $ticket_reply_headers, $parent_ticket, $addon_tkt_id );
                 								
 
-                $this->send_email( $notify_user->user_email, $ticket_reply_message, $ticket_reply_subject, $cc, array(), 0, $ticket_reply_headers );//NOTE: Prefix the reply subject with Re:    
+                $this->send_email( $notify_user->user_email, $ticket_reply_message, $ticket_reply_subject, $cc, array(), 0, $ticket_reply_headers );     
 
                 if ( $add_on_mode && ! isset( $_POST['ksd_public_reply_form'] ) ) {//ksd_public_reply_form is set for replies from the public reply form
+
+                   /**
+                    * @filter `ksd_new_reply_logged` Run when a new reply to a ticket is created. 
+                    *
+                    * @param int $addon_tkt_id The ID specified by the add-on that logged this ticket
+                    * @param int $new_reply_id The ID of the newly-created reply
+                    */
                    do_action( 'ksd_new_reply_logged', $addon_tkt_id , $new_reply_id );
+
+
+                   /**
+                    * @filter 'ksd_new_reply_logged_'.{$parent_ticket_channel} Run when a new reply is logged.
+                    * $parent_ticket_channel is the channel used to log the parent ticket. This allows particular
+                    * addons to run custom actions when a new channel-specific reply is logged and not on every reply
+                    *
+                    * @since 2.3.4
+                    *
+                    * @param int $addon_tkt_id The ID specified by the add-on that logged this ticket
+                    * @param int $new_reply_id The ID of the newly-created reply
+                    */
+                   do_action( 'ksd_new_reply_logged_'.$parent_ticket_channel, $addon_tkt_id , $new_reply_id );
                    return;//End the party if this came from an add-on. All an add-on needs if for the reply to be logged
                }
 
@@ -2948,24 +2972,7 @@ class KSD_Admin {
          return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
      }
 
-
- 	/**
- 	 * Send email
- 	 * 
- 	 * @param  string|array $to    Recipient email address or array of recipient addresses
- 	 * @param  string $subject     The email subject
- 	 * @param  string $message     The message. Supports HTML
- 	 * @param  string $type        The message type. For example, email notifications sent after a reply is logged are of type `reply_logged`. This is mainly useful when calling specifc filters
- 	 * @param  string $headers     The email headers
- 	 * @param  array  $attachments Email attachments
- 	 * @return boolean Whether the email was sent or not              
- 	 */
-    public function ksd_mail( $to, $subject, $message, $type='', $headers='', $attachments=array() ){
-
-    	 $to = apply_filters( 'ksd_send_mail_recipient_pre'. $type, $to );
-
  
-    }
 
      /**
       * Retrieve Kanzu Support Desk notifications. These are currently
