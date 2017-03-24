@@ -3,7 +3,7 @@
  * Plugin Name:       Kanzu Support Desk - WordPress Helpdesk Plugin
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
  * Description:       Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer interactions fast & personal.
- * Version:           2.3.3
+ * Version:           2.3.4
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
  * Text Domain:       kanzu-support-desk
@@ -26,7 +26,7 @@ final class Kanzu_Support_Desk {
     /**
      * @var string
      */
-    public $version = '2.3.3';
+    public $version = '2.3.4';
 
     /**
      * @var string
@@ -43,7 +43,12 @@ final class Kanzu_Support_Desk {
     /**
      * The name used to store KSD admin notices in the Db
      */
-    public $ksd_admin_notices = "ksd_admin_notices";    
+    public $ksd_admin_notices = "ksd_admin_notices"; 
+    
+    /**
+     * The options key to store KSD admin bar nodes in the DB
+     */
+    public $ksd_admin_bar_nodes = 'ksd_admin_bar_nodes';
 
     /**
      * Session instance.
@@ -59,6 +64,14 @@ final class Kanzu_Support_Desk {
      * @since 2.2.9
      */
     public $roles = null;        
+
+    /**
+     * KSD Templates Object.
+     *
+     * @var object|KSD_Templates
+     * @since 2.3.4
+     */
+    public $templates = null;    
 
     /**
      * @var Kanzu_Support_Desk The single instance of the class
@@ -154,20 +167,25 @@ final class Kanzu_Support_Desk {
         include_once( KSD_PLUGIN_DIR .'includes/admin/class-ksd-admin-notices.php' );
         include_once( KSD_PLUGIN_DIR .'includes/class-ksd-install.php' );
         include_once( KSD_PLUGIN_DIR .'includes/class-ksd-uninstall.php' );
+
+        //Others
         include_once( KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php' );
+        include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
+
+        //The front-end
+        require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );        
 
         //Dashboard and Administrative Functionality 
         if ( is_admin() ) {
-                require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
+            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
         }
-        //The front-end
-        require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );
 
        //Deliver plugin updates like pizza
         if ( ! class_exists( 'KSD_Plugin_Updater' ) ) {
             include_once( KSD_PLUGIN_DIR . '/includes/libraries/class-ksd-plugin-updater.php' );
         }
-        $this->roles    = new KSD_Roles();//Required in installation
+        $this->roles        = new KSD_Roles();//Required in installation
+        $this->templates    = new KSD_Templates();
     }
 
 
@@ -259,6 +277,7 @@ final class Kanzu_Support_Desk {
 
         //Load scripts used in both the front and back ends
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
+        
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) ); 
 
         //Share the plugin's settings with add-ons
@@ -315,7 +334,7 @@ final class Kanzu_Support_Desk {
       * @param boolean $append_logo Whether to append a logo or not
       * @since 1.7.0
       */
-     public static function output_ksd_signature( $tkt_id, $append_logo = true ){
+     public static function output_ksd_signature( $tkt_id, $append_logo = false ){
         $suffix = '';
         $no_logo_style = ( $append_logo ? '' : 'text-align:right;width:100%;' ); 
         $settings = self::get_settings();

@@ -25,7 +25,7 @@
     <p><?php _e( "Let's take it from the top", 'kanzu-support-desk' ); ?></p>
     <p><strong><?php _e( 'What is a ticket?', 'kanzu-support-desk' ); ?></strong> <?php _e( 'Every conversation between you and your customer is called a ticket.', 'kanzu-support-desk' ); ?></p>
     <p><strong><?php _e( 'Who creates a ticket?', 'kanzu-support-desk' ); ?></strong> <?php _e( 'Usually, your customer creates a ticket by using a form on your website, sending an email to your support email address or getting in touch with you on social media. Also, you or one of your team can create a ticket on behalf of a customer.', 'kanzu-support-desk' ); ?></p>
-		       <p><strong><?php _e( 'Who can view/manage/reply to a ticket?', 'kanzu-support-desk' ); ?></strong><?php _e( 'Management of tickets is restricted to certain WordPress roles. KSD comes with 3 custom roles: ', 'kanzu-support-desk' ); ?>
+		       <p><strong><?php _e( 'Who can view/manage/reply to a ticket?', 'kanzu-support-desk' ); ?></strong><?php _e( 'Management of tickets is restricted to certain WordPress roles. Tickets are not public. KSD comes with 3 custom roles: ', 'kanzu-support-desk' ); ?>
 				<ul class="ksd-gs-user-roles">
 					<li><strong><?php _ex( 'KSD Customer','WordPress role for customers', 'kanzu-support-desk' ); ?>:</strong><?php _e( 'This is the default role assigned to everyone who submits a ticket. It is the equivalent of the', 'kanzu-support-desk' ); ?> <a href="https://codex.wordpress.org/Roles_and_Capabilities#Subscriber" target="_blank"><?php _e( 'WordPress subscriber role', 'kanzu-support-desk' ); ?></a></li>
 					<li><strong><?php _ex( 'KSD Agent','WordPress role for helpdesk staff', 'kanzu-support-desk' ); ?></strong><?php _e( 'This is a member of your team who can view, reply and make all changes to tickets apart from deleting them.', 'kanzu-support-desk' ); ?></li>
@@ -81,8 +81,7 @@
     </p>
     <p><?php _e( "That's it!! In case you'd like to take this tour again, go to the admin menu at the top, click 'Quick Tour' and we'll show you around this neck of the woods again.", 'kanzu-support-desk' ); ?></p>
     <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_admin_menu.jpg"; ?>" class="ksd-gs-image"/>  
-    <p class="promotion-message"><?php _e( 'PS: We are running a crazy promotion on all our add-ons. Check it out', 'kanzu-support-desk' ); ?> <a href="https://kanzucode.com/quick-chat" target="_blank"><?php _e( 'here', 'kanzu-support-desk' ); ?></a></p>
-  <ul class="ksd-gs-navigation">
+    <ul class="ksd-gs-navigation">
       <li><a href="https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/" target="_blank" class="button button-primary"><?php _e( 'Quick start guide', 'kanzu-support-desk' ); ?></a> </li>
       <li><a class="button button-secondary" href="<?php echo admin_url('edit.php?post_type=ksd_ticket'); ?>"><?php _e( 'Close Guide', 'kanzu-support-desk' ); ?></a></li>
     </ul>   

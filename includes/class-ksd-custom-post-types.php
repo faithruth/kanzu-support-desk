@@ -133,7 +133,7 @@ class KSD_Custom_Post_Types {
                 'has_archive'           => true,
                 'capability_type'       => 'ksd_ticket',
 		'map_meta_cap'          => true,
-                'menu_icon'             => 'dashicons-groups',
+                'menu_icon'             => 'dashicons-tickets-alt',
                 'supports'              => $ticket_supports,
                 'taxonomies'            => array( 'post_tag' )
             );

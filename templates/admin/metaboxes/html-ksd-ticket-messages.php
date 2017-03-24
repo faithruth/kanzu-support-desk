@@ -4,10 +4,12 @@
         if ( ! empty ( $ksd_cc ) ) : ?><div class="ksd-ticket-cc"><?php _e ( 'CC', 'kanzu-support-desk' ) ; ?>:<span class="ksd-cc-emails"><?php echo $ksd_cc; ?></span></div><?php endif; ?>
         <div class="ksd-ticket-message-content"><?php echo apply_filters( 'ksd_the_ticket_content', $post->post_content, $post->ID ); ?></div>
     </div>
-    <ul id="ksd-ticket-replies" class="pending"><?php _e('Loading Replies...', 'kanzu-support-desk'); ?></ul>   
+
+    <?php KSD()->templates->get_template_part( 'single', 'replies' ); ?>
+
     <div id="edit-ticket-tabs"> 
         <ul class="edit-ticket-options">
-            <li><a href="#reply_ticket"><?php _e( 'Reply to all', 'kanzu-support-desk' ); ?></a></li>
+            <li><a href="#reply_ticket"><?php _e( 'Reply', 'kanzu-support-desk' ); ?></a></li>
             <li><a href="#update_private_note"><?php _e('Reply to staff only', 'kanzu-support-desk'); ?></a></li>
         </ul>
         <div class="edit-ticket-description" id="reply_ticket">
@@ -22,6 +24,7 @@
         <!--/ private notes -->
     </div> 
     <?php wp_nonce_field( 'ksd-add-new-reply', 'ksd_new_reply_nonce' ); ?>
+    <?php include_once( KSD_PLUGIN_DIR. 'templates/admin/dialog-merge-tickets.php' ); ?>
     <div class="ksd-reply-submit-wrapper">
         <span class="spinner ksd-reply-spinner hidden"></span>
         <input type="submit" value="<?php _e('Send', 'kanzu-support-desk'); ?>" name="ksd_reply_ticket" id="ksd-reply-ticket-submit" class="button button-primary button-large ksd-submit"/>         

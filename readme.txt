@@ -3,8 +3,8 @@ Contributors: kanzucode
 Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
-Tested up to: 4.6
-Stable tag: 2.3.3
+Tested up to: 4.7
+Stable tag: 2.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,17 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+
+= 2.3.4, March 24, 2017 =
+ * Add ability to merge multiple tickets
+ * Change default tickets icon
+ * Restyle replies to include gravatar and date in new format
+ * Load admin replies synchronously
+ * BUG FIX | Stop highlighting admin menu item on click
+ * Changed 'Reply to all' to just 'Reply'
+ * Replace jQuery's deprecated addSelf with addBack
+ * Add filters for reply notifications
+
 = 2.3.3, March 3, 2017 =
  * New on-boarding with welcome message in multiple tabs and single initial ticket
  * Freemius Insights integration with opt-in
@@ -410,6 +421,12 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+
+= 2.3.4 =
+ * Add ability to merge multiple tickets
+ * Change default tickets icon
+ * Restyle replies to include gravatar and date in new format
+
 = 2.3.3 =
  * Admin menu for discounts, getting started guide and quick tour
  * WooCommerce support tab added

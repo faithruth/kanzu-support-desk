@@ -107,6 +107,16 @@ No. Only supervisors and administrators can delete tickets
 
 ## Changelog ##
 
+###2.3.4, March 24, 2017 ###
+ * Add ability to merge multiple tickets
+ * Change default tickets icon
+ * Restyle replies to include gravatar and date in new format
+ * Load admin replies synchronously
+ * BUG FIX | Stop highlighting admin menu item on click
+ * Changed 'Reply to all' to just 'Reply'
+ * Replace jQuery's deprecated addSelf with addBack
+ * Add filters for reply notifications
+
 ###2.3.3, March 3, 2017 ###
  * New on-boarding with welcome message in multiple tabs and single initial ticket
  * Freemius Insights integration with opt-in
@@ -404,6 +414,16 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 ## Upgrade Notice ##
+###2.3.4 ###
+ * Add ability to merge multiple tickets
+ * Change default tickets icon
+ * Restyle replies to include gravatar and date in new format
+ * Load admin replies synchronously
+ * BUG FIX | Stop highlighting admin menu item on click
+ * Changed 'Reply to all' to just 'Reply'
+ * Replace jQuery's deprecated addSelf with addBack
+ * Add filters for reply notifications
+
 ###2.3.3 ###
  * Admin menu for discounts, getting started guide and quick tour
  * WooCommerce support tab added

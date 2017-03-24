@@ -389,6 +389,40 @@ a.ksd-new-ticket-cc:visited {
     width: 30%;
     border: 1px solid #d3d3d3;
 }
+.ksd-merge-no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+#ksd-merge-final-response{
+    padding: 0.5rem;
+    background-color: #0085ba;
+    color: #FFF;
+}
+#ksd-merge-final-response.empty{
+    padding: 0;
+}
+#ksd-merge-ticket-merge-button {
+  margin-top: 0.5rem;
+}
+.ksd-merge-how-to {
+  padding-left: 1rem;
+}	
+#ksd-merge-search-panel {
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  float: left;
+  margin: 1rem 0;
+  padding: 1rem 0;
+}
+#ksd-merge-ticket-search-text {
+  color: #888;
+  font-size: 0.9em;
+}
+#ksd-merge-ticket-select {
+  padding-top: 0.5rem;
+}
+.confirm-merge-wrapper {
+  padding-top: 0.5rem;
+}
 ul#ksd_attachments, ul#ksd_attachments-single-ticket{
     width: 100%;
     float: left;
@@ -528,7 +562,7 @@ ul.ksd_attachments li{
 .ksd-reply-submit-wrapper .spinner {
     float: left;
 }
-.spinner.ksd-reply-spinner.hidden{
+.spinner.ksd-reply-spinner.hidden,.spinner.ksd-merge-spinner.hidden{
     display: none;    
 }
 .ksd-migration-spinner {
@@ -663,6 +697,7 @@ ul.edit-ticket-options li.selected{
 }
 #ksd-messages-metabox #edit-ticket-tabs .ui-state-active a, #ksd-messages-metabox .ui-state-active a:link {
     color: #fff;
+    font-weight: bold;
 }
 #ksd-messages-metabox .ui-tabs .ui-tabs-nav {
     margin: 0;
@@ -739,7 +774,7 @@ ul.edit-ticket-options li.selected{
     padding-left: 0;
 }
 ul#ksd-ticket-replies {
-    border-top: 1px solid #EEE;
+    border-top: 1px solid #E7E7E7;
     margin: 0;
     padding: 0;
 }
@@ -748,6 +783,7 @@ ul#ksd-ticket-replies.pending {
 }
 ul#ksd-ticket-replies li {
     list-style-type: none;
+    margin-bottom: 0;
 }
 #ksd-ticket-replies pre {
     overflow-x: auto; /* Use horizontal scroller if needed */
@@ -801,37 +837,51 @@ div.replies-more:hover{
     opacity: 0.9;
 }
 .ticket-reply {
-    border-bottom: 1px solid #EEE;
+    border-bottom: 1px solid #E7E7E7;
     padding: 15px;
 }
 .ticket-reply.ksd_private_note {
     background-color: #efefef;
 }
 .reply_date {
-    float: right;
+  color: #888;
+  font-size: 0.9em;
 }
-
+.ticket-reply-author-avatar {
+  float: left;
+  width: 3rem;
+}
+.ticket-reply-author-avatar img{
+  border-radius: 50%;
+}
 .ksd-reply-cc {
     float: left;
     clear: both;
     color: #777;
     font-size: 0.9em;
 }
+
 .reply_message {
     clear: both;
 }
+.ticket-reply-meta img.avatar{
+  border-radius: 50%;
+  vertical-align: middle;
+}
 
-.reply_message img {
+.reply_content img {
     max-width: 90%;
 }
-
-#ticket-replies .reply_date {
-    float: right;
-    text-align: right;
-    width: 50%;
+.reply_content > p {
+  margin-top: 0px;
 }
+.reply_content {
+  padding-top: 0.5rem;
+  clear: both;
+}
+ 
 .reply_author {
-    float: left;
+    padding-left: 1rem;
     width: 50%;
     font-weight: bold;
 }
@@ -1116,6 +1166,10 @@ ul.edit-ticket-options.ui-widget-header{
 }
 #update-settings div.setting span.invalid{
     color: red;
+}
+#update-settings div.setting span.license_status{
+    display: inline-block;
+    max-width: 40%;
 }
 #update-settings div.setting span.loading {
     background-image: url("../images/loading_dialog.gif");
