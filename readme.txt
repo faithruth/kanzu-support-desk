@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.7
-Stable tag: 2.3.4
+Stable tag: 2.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,8 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+= 2.3.5, March 24, 2017 =
+ * BUG FIX | Add missing freemius file
 
 = 2.3.4, March 24, 2017 =
  * Add ability to merge multiple tickets
@@ -421,6 +423,8 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+= 2.3.5 =
+ * Add missing freemius files 
 
 = 2.3.4 =
  * Add ability to merge multiple tickets
