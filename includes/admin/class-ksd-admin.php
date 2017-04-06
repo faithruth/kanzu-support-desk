@@ -1789,15 +1789,6 @@ class KSD_Admin {
          */
         $new_ticket = apply_filters( 'ksd_new_ticket_or_reply', $new_ticket );
 
-        //Handle Facebook channel replies
-        if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
-            $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
-            $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
-            $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
-            $this->reply_ticket( $new_ticket ); 
-            return;
-        }
-
         if( $new_ticket['is_reply'] ){
             $this->reply_ticket( $new_ticket ); 
             return;            
