@@ -98,6 +98,7 @@ class KSD_Admin {
 
         //Add contextual help messages
         add_action( 'contextual_help', array ( $this, 'add_contextual_help' ), 10, 3 );
+        
 
         //In 'Edit ticket' view, customize the screen
         add_action( 'add_meta_boxes', array( $this, 'edit_metaboxes' ), 10, 2 );    
@@ -538,14 +539,18 @@ class KSD_Admin {
      * @param string $contextual_help
      * @param int $screen_id
      * @param Object $screen
+     * @global $wp_version
      * @return string $contextual_help The contextual help
      * @since 2.0.0
      */
     public function add_contextual_help( $contextual_help, $screen_id, $screen ) { 
+        global $wp_version;
+
         $current_ksd_screen = $this->get_current_ksd_screen( $screen );
         if ( 'not_a_ksd_screen' == $current_ksd_screen ) {
              return $contextual_help;
         }            
+
         switch ( $current_ksd_screen ) {
             case 'ksd-ticket-list': 
                 $contextual_help = sprintf( '<span><h2> %s </h2> <p> %s </p> <p> <b> %s </b> %s </p><p> <b> %s </b> %s </p></span>',
@@ -607,7 +612,32 @@ class KSD_Admin {
                                     );                      
                 break;
         }
-        return $contextual_help;
+
+        if ( version_compare( $wp_version, '3.3', '>=' ) )://Sweet tabbed contextual help was introduced in 3.3
+            $screen = get_current_screen();
+            $screen->add_help_tab( $this->add_support_help_tab() );
+            $screen->add_help_tab( 
+                    array(
+                    'id'       => $current_ksd_screen.'-help',
+                    'title'    => __( 'Overview' ),
+                    'content'  => $contextual_help
+            ));
+        else:
+            return $contextual_help;
+        endif;
+    }
+
+
+    private function add_support_help_tab(){
+        ob_start();
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/help-support-tab.php" );
+        $support_form = ob_get_clean();
+
+        return array(
+            'id'       => 'ksd-support-tab-help',
+            'title'    => __( 'Help/Feedback' ),
+            'content'  => $support_form
+        );
     }
 
     /**
@@ -1013,8 +1043,10 @@ class KSD_Admin {
         $ticket_types['ksd-addons']     =   '<span style="color:#d54e21;">' .__( 'Add-ons', 'kanzu-support-desk' ). '</span>';           
 
         foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
-            add_submenu_page( $menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array( $this,$function ) );                        		
+            $page_hook_suffix = add_submenu_page( $menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array( $this,$function ) );       
+            add_action( 'load-'.$page_hook_suffix, array( $this, 'add_help_tabs' ) );              		
         } 
+
         //Remove ticket tags
         remove_submenu_page( 'edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket' ); 
         

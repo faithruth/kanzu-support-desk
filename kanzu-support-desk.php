@@ -417,7 +417,7 @@ final class Kanzu_Support_Desk {
      * @since 2.3.6
      */
     public function addon_activated(){
-
+        //WIP
     }
 
 
