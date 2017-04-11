@@ -27,21 +27,23 @@ class KSD_Uninstall {
     public function do_uninstall(){
         global $wpdb;
         if ( is_multisite() ) {
-        $blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs}", ARRAY_A );
-        $this->delete_options();
-        $this->delete_roles();
-        $this->remove_caps();
-        if ( $blogs ) {
-            foreach ( $blogs as $blog ) {
-                            switch_to_blog( $blog['blog_id'] );
-                            $this->delete_options();
-                            $this->delete_roles();
-                            $this->remove_caps();
-                            $this->delete_tables();
-                            $this->delete_ticket_info();
-                            restore_current_blog();
-                    }
-            }
+            $blogs = $wpdb->get_results( "SELECT blog_id FROM {$wpdb->blogs}", ARRAY_A );
+            
+            $this->delete_options();
+            $this->delete_roles();
+            $this->remove_caps();
+
+            if ( $blogs ) {
+                foreach ( $blogs as $blog ) {
+                                switch_to_blog( $blog['blog_id'] );
+                                $this->delete_options();
+                                $this->delete_roles();
+                                $this->remove_caps();
+                                $this->delete_tables();
+                                $this->delete_ticket_info();
+                                restore_current_blog();
+                        }
+                }
         } else {
            $this->delete_options();
            $this->delete_roles();

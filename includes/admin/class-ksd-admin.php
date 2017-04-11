@@ -84,9 +84,8 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
         add_action( 'wp_ajax_ksd_reset_role_caps', array( $this, 'reset_role_caps' ) );
         add_action( 'wp_ajax_ksd_get_unread_ticket_count', array( $this, 'get_unread_ticket_count' ) );
-        add_action( 'wp_ajax_ksd_get_merge_tickets', array( $this, 'get_merge_tickets' ) );
-        add_action( 'wp_ajax_ksd_merge_tickets', array( $this, 'merge_tickets' ) );        
-        
+        add_action( 'wp_ajax_ksd_hide_questionnaire', array( $this, 'hide_questionnaire' ) );
+                
         
         //Generate a debug file
         add_action( 'ksd_generate_debug_file', array( $this, 'generate_debug_file' ) );                  
@@ -169,7 +168,7 @@ class KSD_Admin {
         add_filter( 'post_class', array( $this, 'append_classes_to_ticket_grid' ), 10, 3 );
 
         //Contact form 7
-       add_filter( 'wpcf7_editor_panels', array( $this, 'append_panel_to_wpcf7' ) );        
+       //add_filter( 'wpcf7_editor_panels', array( $this, 'append_panel_to_wpcf7' ) );        
 
     }
     
@@ -397,6 +396,20 @@ class KSD_Admin {
         echo json_encode( __( 'Thanks for your time. If you ever have any feedback, please get in touch - feedback@kanzucode.com', 'kanzu-support-desk') );
         if ( !defined( 'PHPUNIT' ) ) die();
     }        
+
+     /**
+      * Disable display of notifications
+      * 
+      * @since 2.3.6
+      */
+     public function hide_questionnaire() {
+        $ksd_settings = Kanzu_Support_Desk::get_settings();
+        $ksd_settings['show_questionnaire_link'] = "no";
+        Kanzu_Support_Desk::update_settings( $ksd_settings );
+        wp_send_json_success(
+                    array( 'message' => __( 'Questionnaire hidden', 'kanzu-support-desk') )
+            );
+    }    
 
     /**
      * Update ticket messages  displayed
@@ -1005,6 +1018,8 @@ class KSD_Admin {
         //Remove ticket tags
         remove_submenu_page( 'edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket' ); 
         
+        //Reset rights in case someone's updating from a very old version
+        $this->reset_user_rights();
     }
 
     /**
@@ -1021,6 +1036,7 @@ class KSD_Admin {
             return;
         }
         if( current_user_can( 'manage_options' ) && ! current_user_can( 'manage_ksd_settings' ) && ! current_user_can( 'edit_ksd_ticket' ) ){
+            include_once( KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php' );
             KSD()->roles->create_roles();
             KSD()->roles->modify_all_role_caps( 'add' );  
             //Make the current user a supervisor. They need to re-select supervisors and agents
@@ -1028,7 +1044,7 @@ class KSD_Admin {
             KSD()->roles->add_supervisor_caps_to_user( $current_user );
             $user = new WP_User( $current_user->ID );
             KSD()->roles->modify_default_owner_caps( $user, 'add_cap' );   
-            KSD_Admin_Notices::add_notice( 'update-roles' );//Inform the user of the changes they need to make            
+           // KSD_Admin_Notices::add_notice( 'update-roles' );//Inform the user of the changes they need to make            
         }
     }
     /**
@@ -1788,6 +1804,15 @@ class KSD_Admin {
          * a reply. If it is a reply, the add-on should also set the ticket parent ID in $new_ticket['tkt_id']
          */
         $new_ticket = apply_filters( 'ksd_new_ticket_or_reply', $new_ticket );
+
+        //Handle Facebook channel replies
+        if( 'Facebook Reply' == $new_ticket['ksd_tkt_subject'] ){
+            $new_ticket['ksd_reply_title']              = $new_ticket['ksd_tkt_subject'];                      
+            $new_ticket['ksd_ticket_reply']             = $new_ticket['ksd_tkt_message'];  
+            $new_ticket['ksd_rep_date_created']         = $new_ticket['ksd_tkt_time_logged'];  
+            $this->reply_ticket( $new_ticket ); 
+            return;
+        }
 
         if( $new_ticket['is_reply'] ){
             $this->reply_ticket( $new_ticket ); 
@@ -2951,19 +2976,16 @@ class KSD_Admin {
                    $message  =  preg_replace( '/{customer_display_name}/', $customer->display_name, $message ); 
                 }
         endswitch;
-        if( isset( $settings['ticket_mail_from_name'] ) && ! empty( $settings['ticket_mail_from_name'] ) && isset( $settings['ticket_mail_from_email'] ) && ! empty( $settings['ticket_mail_from_email'] ) ){
-            $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';
-        }
+        $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';
         $headers[] = 'Content-Type: text/html; charset=UTF-8'; //@since 1.6.4 Support HTML emails
-        if ( !is_null( $cc ) && ! empty( $cc ) ) {
+        if ( !is_null( $cc ) ) {
             $headers[] = "Cc: $cc";
         }
+                 
+        $headers = apply_filters( 'ksd_send_mail_headers', array_merge( $headers, $extra_headers ) );    
 
-        if( is_array( $extra_headers ) ){
-            $headers = array_merge( $extra_headers, $headers );   
-        }
        
-        return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
+         return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
      }
 
  

@@ -228,6 +228,7 @@ class KSD_Install {
      * @since 2.2.1 Changed $user_info to current user, not primary admin 
      * @since 2.2.9 ksd_owner
      * @since 2.3.3 show_woo_support_tickets_tab
+     * @since 2.3.6 show_questionnaire_link
      */
     public function get_default_options() {
         $user_info = wp_get_current_user();  
@@ -264,6 +265,7 @@ class KSD_Install {
             'notifications_enabled'             => 'yes',
             'ksd_owner'                         => $user_info->ID,
             'show_woo_support_tickets_tab'      => 'no',
+            'show_questionnaire_link'           => 'yes',
 
             /**Support form settings**/
             'supportform_show_categories'       => 'no',

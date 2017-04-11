@@ -180,7 +180,7 @@ var KSDHooks = KSDHooks || {};
                 this.notifications();
                 this.sendDebugEmail();
                 this.resetRoleCapabilities();
-
+                this.hideQuestionnaireLink();
             };
         
 
@@ -271,6 +271,23 @@ var KSDHooks = KSDHooks || {};
                         }
                 );               
             });
+        }
+
+
+        this.hideQuestionnaireLink = function(){
+            $( 'button.ksd-hide-questionnaire' ).click( function( e ){
+                e.preventDefault;
+                $.post(
+                        ksd_admin.ajax_url,
+                        {
+                            action: 'ksd_hide_questionnaire'
+                        },
+                        function ( response ) {                            
+                          $( '.ksd-section.ksd-questionnaire' ).fadeOut();
+                        }
+                );                 
+            } );
+
         }
         
         this.autocompleteUsers = function () {
@@ -389,7 +406,13 @@ var KSDHooks = KSDHooks || {};
                 var data = { action: 'ksd_notifications_user_feedback', notfxn_ID: notificationID, response: $('ul.ksd-nps-score li.active').text() };
                 __submitNotificationFeedback( data );
            });   
-                     
+           
+           //Campaigns
+           $('#wpbody').on( 'click', '.ksd-campaign-ninety-discount-notice button,.ksd-campaign-ninety-discount-notice a', function(){
+                var data = { action: 'ksd_notifications_disable_campaign' };
+                __submitNotificationFeedback( data );   
+           });        
+
         };        
         
         /**

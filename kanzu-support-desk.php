@@ -3,7 +3,7 @@
  * Plugin Name:       Kanzu Support Desk - WordPress Helpdesk Plugin
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
  * Description:       Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer interactions fast & personal.
- * Version:           2.3.0
+ * Version:           2.3.5
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
  * Text Domain:       kanzu-support-desk
@@ -26,7 +26,7 @@ final class Kanzu_Support_Desk {
     /**
      * @var string
      */
-    public $version = '2.3.0';
+    public $version = '2.3.5';
 
     /**
      * @var string
@@ -291,6 +291,9 @@ final class Kanzu_Support_Desk {
       
         //Handle logging of replies initiated by add-ons.   
         add_action( 'ksd_reply_ticket', array( $this, 'do_reply_ticket' ) );
+
+        //A new add-on has been activated
+        add_action( 'ksd_addon_activated', array( $this, 'addon_activated' ) );        
         
         do_action( 'ksd_loaded' ); 
     }
@@ -406,6 +409,15 @@ final class Kanzu_Support_Desk {
         $new_ticket_activity['post_status']    = 'private';
         $new_ticket_activity['comment_status'] = 'closed ';
         return wp_insert_post( $new_ticket_activity ); 
+    }
+
+    /**
+     * A new addon's been activated
+     *
+     * @since 2.3.6
+     */
+    public function addon_activated(){
+
     }
 
 

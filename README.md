@@ -3,7 +3,7 @@ Kanzu Support Desk
 
 Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer interactions fast & personal.
 
-##Description 
+## Description 
 
 Great customer care is at the heart of every good product or service. Kanzu Support Desk simplifies the process of tracking customer requests, grouping them, assigning them and giving prompt
 feedback, all with a personal touch. KSD fits into your native WordPress interface like a hand in a snug glove so that you can get to do a lot intuitively.
@@ -23,7 +23,7 @@ KSD allows you to:
 * Change to a language you prefer since the plugin supports translation. You can [contribute to translations here](https://translate.wordpress.org/projects/wp-plugins/kanzu-support-desk)
 
 
-##Installation 
+## Installation 
 
 # Using The WordPress Dashboard #
 
@@ -106,6 +106,39 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 ## Changelog ##
+### 2.3.5, March 24, 2017 ###
+ * BUG FIX | Add missing freemius files 
+
+### 2.3.4, March 24, 2017 ###
+ * Add ability to merge multiple tickets
+ * Change default tickets icon
+ * Restyle replies to include gravatar and date in new format
+ * Load admin replies synchronously
+ * BUG FIX | Stop highlighting admin menu item on click
+ * Changed 'Reply to all' to just 'Reply'
+ * Replace jQuery's deprecated addSelf with addBack
+ * Add filters for reply notifications
+
+### 2.3.3, March 3, 2017 ###
+ * New on-boarding with welcome message in multiple tabs and single initial ticket
+ * Freemius Insights integration with opt-in
+ * Add new KSD Mail SAAS support
+ * Admin menu for discounts, getting started guide and quick tour
+ * WooCommerce support tab added
+ * 'Edit' in row actions changed to 'Reply'
+ * 'Update' and 'Publish' buttons changed to 'Submit'
+ * Remove custom meta fields below posts
+
+### 2.3.2, January 23, 2017 ###
+ * Add Facebook add-on support
+ * Run new discount offer
+
+### 2.3.1, November 1, 2016 ###
+ * Localize status and severity in ticket grid
+ * Position ticket error label
+ * BUG FIX | Correctly mark ticket as read on reply
+ * BUG FIX | Save reCAPTCHA key properly, don't let the xxxxx mess it up
+
 ### 2.3.0, October 22, 2016 ###
  * Add read/unread ticket indicator
  * Add unread count next to Tickets label
@@ -383,6 +416,34 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 ## Upgrade Notice ##
+### 2.3.5 ###
+ * BUG FIX | Add missing freemius files
+
+ ### 2.3.4 ###
+ * Add ability to merge multiple tickets
+ * Change default tickets icon
+ * Restyle replies to include gravatar and date in new format
+ * Load admin replies synchronously
+ * BUG FIX | Stop highlighting admin menu item on click
+ * Changed 'Reply to all' to just 'Reply'
+ * Replace jQuery's deprecated addSelf with addBack
+ * Add filters for reply notifications
+
+### 2.3.3 ###
+ * Admin menu for discounts, getting started guide and quick tour
+ * WooCommerce support tab added
+ * 'Edit' in row actions changed to 'Reply'
+ * 'Update' and 'Publish' buttons changed to 'Submit'
+ * Remove custom meta fields below posts
+
+### 2.3.2 ###
+ * Add Facebook add-on support
+ * Run new discount offer
+
+### 2.3.1 ###
+ * BUG FIX | Correctly mark ticket as read on reply
+ * BUG FIX | Save reCAPTCHA key properly, don't let the xxxxx mess it up
+
 ### 2.3.0###
  * Add read/unread ticket indicator
  * Add unread count next to Tickets label
