@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.7
-Stable tag: 2.3.5
+Stable tag: 2.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,13 +77,13 @@ Get the latest in KSD and WP in general from [@KanzuCode on Twitter](https://twi
 
 == Frequently Asked Questions ==
 
-= Can I run KSD on my .wordpress.com site? =
+= Are tickets public? =
 
-No, you cannot unfortunately
+By default, tickets are only visible to the customer who logged them and your staff ( users with role ksd_agent, ksd_supervisor or a site administrator)
 
 = Can my customers log tickets by sending me an email? =
 
-With an [optional add-on activated](https://kanzucode.com/downloads/kanzu-support-desk-mail), yes they can. By default though, they can use a support form on your website
+With an [optional add-on activated](https://kanzucode.com/downloads/kanzu-support-desk-mail), yes they can. By default though, they can use a support form on your website and add replies to the ticket on your website.
 
 = Where can I find KSD documentation and user guides? =
 
@@ -112,6 +112,13 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+
+= 2.3.6, April 12, 2017 =
+ * BUG FIX | Update  email headers that were forcing all mail to be plain text
+ * Add questionnaire
+ * Change first customer username
+ * Add support tab in contextual help
+
 = 2.3.5, March 24, 2017 =
  * BUG FIX | Add missing freemius file
 
@@ -423,6 +430,13 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+
+= 2.3.6 =
+ * BUG FIX | Update  email headers that were forcing all mail to be plain text
+ * Add questionnaire
+ * Change first customer username
+ * Add support tab in contextual help
+
 = 2.3.5 =
  * Add missing freemius files 
 
