@@ -90,23 +90,21 @@ class KSD_Public {
         //Add admin bar menu
         add_action( 'admin_bar_menu', array( $this, 'display_admin_bar_menu' ), 999 );
 
-        add_filter( 'post_row_actions', array( $this, 'replace_edit_in_row_action' ), 10, 2 );
+        add_filter( 'post_row_actions', array( $this, 'modify_row_actions' ), 10, 2 );
 
         add_action( 'ksd_after_ticket_content', array( $this, 'append_ticket_replies') );
-
-        //Contact form 7
-        add_action( 'wpcf7_form_class_attr', array( $this, 'append_ksd_class_to_wpcf7' )  );
   
     } 
 
     /**
      * Change the 'edit' link displayed in the row actions of the ticket
-     * grid to 'reply'
+     * grid to 'reply' and update the 'view' item if a hash URL exists
+     * 
      * @param  array  $actions Row actions
      * @param  object $post    WP_Post
      * @return array         Modified row actions
      */
-    public function replace_edit_in_row_action( $actions, $post ){
+    public function modify_row_actions( $actions, $post ){
         if ( 'ksd_ticket' == $post->post_type ){ 
             $title = _draft_or_post_title();
             $actions['edit'] = sprintf(
@@ -115,7 +113,19 @@ class KSD_Public {
                 /* translators: %s: post title */
                 esc_attr( sprintf( __( 'Reply &#8220;%s&#8221;','kanzu-support-desk' ), $title ) ),
                 __( 'Reply', 'kanzu-support-desk' )
-            );       
+            );
+
+            $hash_url =  get_post_meta( $post->ID, '_ksd_tkt_info_hash_url', true );     
+            if ( ! empty(  $hash_url ) ) {
+                $actions['view'] = sprintf(
+                    '<a href="%s" aria-label="%s">%s</a>',
+                    $hash_url,
+                    /* translators: %s: post title */
+                    esc_attr( sprintf( __( 'View &#8220;%s&#8221;','kanzu-support-desk' ), $title ) ),
+                    __( 'View', 'kanzu-support-desk' )
+                );                
+            }      
+  
         }
          
         return $actions;
@@ -812,21 +822,6 @@ class KSD_Public {
             KSD()->templates->get_template_part( 'form', 'new-reply' );
         }        
 
-        /**
-         * Append a KSD class to the WP contact form 7 form if the
-         * ksd_support_form setting is active
-         * //@todo while save is underway and ksd_support_form, check for required fields
-         * //when form is submitted, create ticket before 'feedback' entry is created
-         */
-        public function append_ksd_class_to_wpcf7( $class ){
-            if( class_exists( 'WPCF7_ContactForm' ) ):
-                $wpcf7 = WPCF7_ContactForm::get_current();
-                if( $wpcf7->is_true( 'ksd_support_form' ) ):
-                    return $class.' ksd-support-form';
-                endif;
-            endif;
-            return $class;
-        }
         
 }
 endif;
