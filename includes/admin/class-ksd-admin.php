@@ -68,6 +68,7 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_reset_settings', array( $this, 'reset_settings' ) ); 
         add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ) );  
         add_action( 'wp_ajax_ksd_send_feedback', array( $this, 'send_feedback' ) );  
+        add_action( 'wp_ajax_ksd_support_tab_send_feedback', array( $this, 'send_support_tab_feedback' ) );  
         add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ) );              
         add_action( 'wp_ajax_ksd_get_notifications', array( $this, 'get_notifications' ) );  
         add_action( 'wp_ajax_ksd_notify_new_ticket', array( $this, 'notify_new_ticket' ) );  
@@ -84,7 +85,8 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_send_debug_email', array( $this, 'send_debug_email' ) );
         add_action( 'wp_ajax_ksd_reset_role_caps', array( $this, 'reset_role_caps' ) );
         add_action( 'wp_ajax_ksd_get_unread_ticket_count', array( $this, 'get_unread_ticket_count' ) );
-        
+        add_action( 'wp_ajax_ksd_hide_questionnaire', array( $this, 'hide_questionnaire' ) );
+                
         
         //Generate a debug file
         add_action( 'ksd_generate_debug_file', array( $this, 'generate_debug_file' ) );                  
@@ -97,6 +99,7 @@ class KSD_Admin {
 
         //Add contextual help messages
         add_action( 'contextual_help', array ( $this, 'add_contextual_help' ), 10, 3 );
+        
 
         //In 'Edit ticket' view, customize the screen
         add_action( 'add_meta_boxes', array( $this, 'edit_metaboxes' ), 10, 2 );    
@@ -396,6 +399,20 @@ class KSD_Admin {
         if ( !defined( 'PHPUNIT' ) ) die();
     }        
 
+     /**
+      * Disable display of notifications
+      * 
+      * @since 2.3.6
+      */
+     public function hide_questionnaire() {
+        $ksd_settings = Kanzu_Support_Desk::get_settings();
+        $ksd_settings['show_questionnaire_link'] = "no";
+        Kanzu_Support_Desk::update_settings( $ksd_settings );
+        wp_send_json_success(
+                    array( 'message' => __( 'Questionnaire hidden', 'kanzu-support-desk') )
+            );
+    }    
+
     /**
      * Update ticket messages  displayed
      * @since 2.0.0
@@ -523,14 +540,18 @@ class KSD_Admin {
      * @param string $contextual_help
      * @param int $screen_id
      * @param Object $screen
+     * @global $wp_version
      * @return string $contextual_help The contextual help
      * @since 2.0.0
      */
     public function add_contextual_help( $contextual_help, $screen_id, $screen ) { 
+        global $wp_version;
+
         $current_ksd_screen = $this->get_current_ksd_screen( $screen );
         if ( 'not_a_ksd_screen' == $current_ksd_screen ) {
              return $contextual_help;
         }            
+
         switch ( $current_ksd_screen ) {
             case 'ksd-ticket-list': 
                 $contextual_help = sprintf( '<span><h2> %s </h2> <p> %s </p> <p> <b> %s </b> %s </p><p> <b> %s </b> %s </p></span>',
@@ -592,7 +613,32 @@ class KSD_Admin {
                                     );                      
                 break;
         }
-        return $contextual_help;
+
+        if ( version_compare( $wp_version, '3.3', '>=' ) )://Sweet tabbed contextual help was introduced in 3.3
+            $screen = get_current_screen();
+            $screen->add_help_tab( $this->add_support_help_tab() );
+            $screen->add_help_tab( 
+                    array(
+                    'id'       => $current_ksd_screen.'-help',
+                    'title'    => __( 'Overview' ),
+                    'content'  => $contextual_help
+            ));
+        else:
+            return $contextual_help;
+        endif;
+    }
+
+
+    private function add_support_help_tab(){
+        ob_start();
+        include_once( KSD_PLUGIN_DIR .  "templates/admin/help-support-tab.php" );
+        $support_form = ob_get_clean();
+
+        return array(
+            'id'       => 'ksd-support-tab-help',
+            'title'    => __( 'Help/Feedback' ),
+            'content'  => $support_form
+        );
     }
 
     /**
@@ -998,8 +1044,10 @@ class KSD_Admin {
         $ticket_types['ksd-addons']     =   '<span style="color:#d54e21;">' .__( 'Add-ons', 'kanzu-support-desk' ). '</span>';           
 
         foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
-            add_submenu_page( $menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array( $this,$function ) );                        		
+            $page_hook_suffix = add_submenu_page( $menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array( $this,$function ) );       
+            add_action( 'load-'.$page_hook_suffix, array( $this, 'add_help_tabs' ) );              		
         } 
+
         //Remove ticket tags
         remove_submenu_page( 'edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket' ); 
         
@@ -2922,6 +2970,39 @@ class KSD_Admin {
         echo json_encode( $response );
         die();  
     }
+
+    /**
+     * Send feedback using the form in contextual help
+     *
+     * @since 2.3.6
+     */
+    public function send_support_tab_feedback(){
+
+        $current_user   = wp_get_current_user();
+
+        $subject = sanitize_text_field( $_POST['ksd_support_tab_subject'] );
+        $message = sanitize_text_field( $_POST['ksd_support_tab_message'] );
+
+        
+        if ( strlen( $subject ) <= 2  ) {
+            $response = __("Error | The subject field is too short. Please type something then send", "kanzu-support-desk");
+            echo json_encode( $response );
+            die();              
+        }
+
+        if ( strlen( $message ) <= 2  ) {
+            $response = __("Error | The message field is too short. Please type something then send", "kanzu-support-desk");
+            echo json_encode( $response );
+            die();              
+        }        
+        
+        $feedback_message = "{$message},{$current_user->display_name},{$current_user->user_email}";
+        $feedback_subject = "KSD Feedback - ".$subject;
+
+        $response = ( $this->send_email( "feedback@kanzucode.com", $feedback_message, $feedback_subject ) ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') ); 
+        echo json_encode( $response );
+        die();          
+    }
     
     /**
      * Send feedback to Kanzu Analytics
@@ -2961,7 +3042,11 @@ class KSD_Admin {
                    $message  =  preg_replace( '/{customer_display_name}/', $customer->display_name, $message ); 
                 }
         endswitch;
-        $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';
+        
+        if( ! empty( $settings['ticket_mail_from_name'] ) && ! empty( $settings['ticket_mail_from_email'] ) ){
+            $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';    
+        }
+        
         $headers[] = 'Content-Type: text/html; charset=UTF-8'; //@since 1.6.4 Support HTML emails
         if ( !is_null( $cc ) ) {
             $headers[] = "Cc: $cc";

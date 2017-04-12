@@ -180,7 +180,7 @@ var KSDHooks = KSDHooks || {};
                 this.notifications();
                 this.sendDebugEmail();
                 this.resetRoleCapabilities();
-
+                this.hideQuestionnaireLink();
             };
         
 
@@ -271,6 +271,23 @@ var KSDHooks = KSDHooks || {};
                         }
                 );               
             });
+        }
+
+
+        this.hideQuestionnaireLink = function(){
+            $( 'button.ksd-hide-questionnaire' ).click( function( e ){
+                e.preventDefault;
+                $.post(
+                        ksd_admin.ajax_url,
+                        {
+                            action: 'ksd_hide_questionnaire'
+                        },
+                        function ( response ) {                            
+                          $( '.ksd-section.ksd-questionnaire' ).fadeOut();
+                        }
+                );                 
+            } );
+
         }
         
         this.autocompleteUsers = function () {

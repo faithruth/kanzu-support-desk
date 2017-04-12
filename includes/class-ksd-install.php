@@ -228,6 +228,7 @@ class KSD_Install {
      * @since 2.2.1 Changed $user_info to current user, not primary admin 
      * @since 2.2.9 ksd_owner
      * @since 2.3.3 show_woo_support_tickets_tab
+     * @since 2.3.6 show_questionnaire_link
      */
     public function get_default_options() {
         $user_info = wp_get_current_user();  
@@ -243,7 +244,7 @@ class KSD_Install {
             'ticket_mail_from_name'             => $user_info->display_name, 
             'ticket_mail_from_email'            => $user_info->user_email, 
             'ticket_mail_subject'               => __( 'Your support ticket has been received', 'kanzu-support-desk' ),
-            'ticket_mail_message'               => __( 'Thank you for getting in touch with us. Your support request has been opened. Please allow at least 24 hours for a reply.', 'kanzu-support-desk' ),
+            'ticket_mail_message'               => __( 'Thank you for getting in touch with us. Your support request has been opened. We will get back to you shortly.', 'kanzu-support-desk' ),
             'recency_definition'                => "1",
             'show_support_tab'                  => "yes",
             'support_button_text'               => "Click here for help",
@@ -264,6 +265,7 @@ class KSD_Install {
             'notifications_enabled'             => 'yes',
             'ksd_owner'                         => $user_info->ID,
             'show_woo_support_tickets_tab'      => 'no',
+            'show_questionnaire_link'           => 'yes',
 
             /**Support form settings**/
             'supportform_show_categories'       => 'no',
@@ -373,9 +375,16 @@ class KSD_Install {
         
     }    
 
+    /**
+     * Create a initial customer in the installation. The first ticket's 
+     * logged by this user
+     *
+     * @since 2.3.6 Changed `user_login` from `ksd_kanzu_code` to `ksd.kanzucode`
+     * @return int userid of the new user. Is 0 is user isn't created successfully  
+     */
     private function create_initial_ksd_customer_user(){
         $userdata = array(
-            'user_login'  => 'ksd_kanzu_code',
+            'user_login'  => 'ksd.kanzucode',
             'user_email'  => 'ksdcare@kanzucode.com',
             'user_url'    =>  "https://kanzucode.com",
             'first_name'  => 'Kanzu',
