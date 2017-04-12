@@ -68,6 +68,7 @@ class KSD_Admin {
         add_action( 'wp_ajax_ksd_reset_settings', array( $this, 'reset_settings' ) ); 
         add_action( 'wp_ajax_ksd_update_private_note', array( $this, 'update_private_note' ) );  
         add_action( 'wp_ajax_ksd_send_feedback', array( $this, 'send_feedback' ) );  
+        add_action( 'wp_ajax_ksd_support_tab_send_feedback', array( $this, 'send_support_tab_feedback' ) );  
         add_action( 'wp_ajax_ksd_disable_tour_mode', array( $this, 'disable_tour_mode' ) );              
         add_action( 'wp_ajax_ksd_get_notifications', array( $this, 'get_notifications' ) );  
         add_action( 'wp_ajax_ksd_notify_new_ticket', array( $this, 'notify_new_ticket' ) );  
@@ -2969,6 +2970,39 @@ class KSD_Admin {
         echo json_encode( $response );
         die();  
     }
+
+    /**
+     * Send feedback using the form in contextual help
+     *
+     * @since 2.3.6
+     */
+    public function send_support_tab_feedback(){
+
+        $current_user   = wp_get_current_user();
+
+        $subject = sanitize_text_field( $_POST['ksd_support_tab_subject'] );
+        $message = sanitize_text_field( $_POST['ksd_support_tab_message'] );
+
+        
+        if ( strlen( $subject ) <= 2  ) {
+            $response = __("Error | The subject field is too short. Please type something then send", "kanzu-support-desk");
+            echo json_encode( $response );
+            die();              
+        }
+
+        if ( strlen( $message ) <= 2  ) {
+            $response = __("Error | The message field is too short. Please type something then send", "kanzu-support-desk");
+            echo json_encode( $response );
+            die();              
+        }        
+        
+        $feedback_message = "{$message},{$current_user->display_name},{$current_user->user_email}";
+        $feedback_subject = "KSD Feedback - ".$subject;
+
+        $response = ( $this->send_email( "feedback@kanzucode.com", $feedback_message, $feedback_subject ) ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk') ); 
+        echo json_encode( $response );
+        die();          
+    }
     
     /**
      * Send feedback to Kanzu Analytics
@@ -3008,7 +3042,11 @@ class KSD_Admin {
                    $message  =  preg_replace( '/{customer_display_name}/', $customer->display_name, $message ); 
                 }
         endswitch;
-        $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';
+        
+        if( ! empty( $settings['ticket_mail_from_name'] ) && ! empty( $settings['ticket_mail_from_email'] ) ){
+            $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';    
+        }
+        
         $headers[] = 'Content-Type: text/html; charset=UTF-8'; //@since 1.6.4 Support HTML emails
         if ( !is_null( $cc ) ) {
             $headers[] = "Cc: $cc";

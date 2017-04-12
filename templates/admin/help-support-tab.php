@@ -1,6 +1,6 @@
-<h3><?php _e( 'Need help? Got feedback?', 'kanzu-support-desk' );  ?></h3>
+<h3><?php _e( 'Kanzu Support Desk: Need help? Got feedback?', 'kanzu-support-desk' );  ?></h3>
 <p><?php _e( 'We would love to hear from you. Send us feedback on what you love, what features you would like or simply get in touch for help.', 'kanzu-support-desk' );  ?></p>
-<form id="ksd_support_tab_form">
+<form id="ksd_support_tab_form" class="ksd-feedback-support-tab">
 	<div>
 		<input type="text" name="ksd_support_tab_subject" placeholder="<?php _e( 'Subject', 'kanzu-support-desk' );  ?>" />
 	</div>
