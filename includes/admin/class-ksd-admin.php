@@ -168,10 +168,6 @@ class KSD_Admin {
         
         //Tag 'read' tickets in the ticket grid
         add_filter( 'post_class', array( $this, 'append_classes_to_ticket_grid' ), 10, 3 );
-
-        //Contact form 7
-       //add_filter( 'wpcf7_editor_panels', array( $this, 'append_panel_to_wpcf7' ) );        
-
     }
     
 
@@ -3820,18 +3816,7 @@ class KSD_Admin {
             
         return $translation;
     }    
-    
-    public function append_panel_to_wpcf7( $panels ){
-        $panels['ksd-support-form'] = array(
-                                            'title' => __( 'Kanzu Support Desk', 'kanzu-support-desk' ),
-                                            'callback' => array( $this, 'render_contact_form_7_panel' )
-                                            );
-        return $panels;
-    }
-    
-    public function render_contact_form_7_panel(){
-        echo "Hello World";
-    }
+ 
    
     /**
      * Get meta query used in filtering read/unread tickets

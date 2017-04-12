@@ -173,7 +173,7 @@ final class Kanzu_Support_Desk {
         include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
 
         //The front-end
-        require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );        
+        require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );      
 
         //Dashboard and Administrative Functionality 
         if ( is_admin() ) {
@@ -187,6 +187,8 @@ final class Kanzu_Support_Desk {
         $this->roles        = new KSD_Roles();//Required in installation
         $this->templates    = new KSD_Templates();
     }
+
+ 
 
 
 
@@ -293,7 +295,10 @@ final class Kanzu_Support_Desk {
         add_action( 'ksd_reply_ticket', array( $this, 'do_reply_ticket' ) );
 
         //A new add-on has been activated
-        add_action( 'ksd_addon_activated', array( $this, 'addon_activated' ) );        
+        add_action( 'ksd_addon_activated', array( $this, 'addon_activated' ) );   
+
+        //After plugins are done loading
+        add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );     
         
         do_action( 'ksd_loaded' ); 
     }
@@ -389,6 +394,18 @@ final class Kanzu_Support_Desk {
             echo KSD_Public::generate_support_form();
         }else{
             return KSD_Public::generate_support_form();;
+        }
+    }
+
+    /**
+     * Run after all plugins are loaded
+     *
+     * @since 2.3.7
+     * 
+     */
+    public function on_plugins_loaded(){
+        if( class_exists( 'WPCF7_ContactForm' ) ){
+            require_once( KSD_PLUGIN_DIR .  'includes/class-ksd-wpcf7.php' );           
         }
     }
     
