@@ -615,7 +615,6 @@ class KSD_Admin {
         }
 
         if ( version_compare( $wp_version, '3.3', '>=' ) )://Sweet tabbed contextual help was introduced in 3.3
-            $screen = get_current_screen();
             $screen->add_help_tab( $this->add_support_help_tab() );
             $screen->add_help_tab( 
                     array(
