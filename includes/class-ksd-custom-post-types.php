@@ -107,6 +107,7 @@ class KSD_Custom_Post_Types {
                 'new_item'          => __( 'New Ticket', 'kanzu-support-desk' ),
                 'all_items'         => __( 'All Tickets', 'kanzu-support-desk' ),
                 'view_item'         => __( 'View Ticket', 'kanzu-support-desk' ),
+                'view_items'        => __( 'View Tickets', 'kanzu-support-desk' ),
                 'search_items'      => __( 'Search Tickets', 'kanzu-support-desk' ),
                 'not_found'         => __( 'No Tickets found', 'kanzu-support-desk' ),
                 'not_found_in_trash'=> __( 'No tickets found in the Trash', 'kanzu-support-desk' ),
