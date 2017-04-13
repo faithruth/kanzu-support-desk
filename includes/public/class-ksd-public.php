@@ -203,7 +203,8 @@ class KSD_Public {
         foreach( $admin_bar_nodes as $admin_bar_node ){
             $node_ids[] = $admin_bar_node['id'];
         }
-        if( ! empty( array_diff( $node_id, $node_ids ) ) ){
+        $node_mods = array_diff( $node_id, $node_ids );
+        if( ! empty( $node_mods ) ){
             $admin_bar_nodes[] = $args;
             $notifications++;
             update_option( KSD()->ksd_admin_bar_nodes, $admin_bar_nodes );
