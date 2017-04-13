@@ -1,0 +1,7 @@
+{
+    "name": "kanzucode/kanzu-support-desk",
+    "type": "wordpress-plugin",    
+    "require": {
+        "phpunit/phpunit": "5.6"
+    }
+}
