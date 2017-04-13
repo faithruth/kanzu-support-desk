@@ -10,7 +10,7 @@
 		<?php _e( 'Use these tags to specify which fields to use for the support ticket name, email, subject and message.','kanzu-support-desk' );
 	?>
 	</p>
-	<p><?php echo $cf7_form->suggest_mail_tags(); ?></p>
+	<p><?php echo $cf7_suggested_mail_tags; ?></p>
 	<form class="ksd-contact-form-7"> 
 	        <div class="ksd-cf7-field ksd-cust-fullname-cf7">       
 	          <label for="_ksd_wpcf7_name"><?php _e( 'Name', 'kanzu-support-desk' ); ?></label>

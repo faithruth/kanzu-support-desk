@@ -68,14 +68,54 @@ if ( ! class_exists( 'KSD_WPCF7' ) ) :
 	     * @param  Object $cf7_form Contact Form 7 form
 	     */
 	    public function render_contact_form_7_admin_panel( $cf7_form ){
+	    	//Get the suggested mail tags
+	    	ob_start();
+	    	$cf7_form->suggest_mail_tags();
+	    	$cf7_suggested_mail_tags = ob_get_clean();
+
+	    	$this->auto_populate_ksd_cf7_fields( $cf7_form->id, $cf7_suggested_mail_tags );
 	        ob_start();
 	        include_once( KSD_PLUGIN_DIR .  "templates/admin/contact-form7-panel.php" );
 	        echo ob_get_clean();
 	    }
 
 	    /**
+	     * Attempt to autopopulate the KSD CF7 fields if they 
+	     * are not set. We check for the default CF7 fields
+	     * - `[your-name][your-email][your-subject][your-message]` and
+	     * we populate based on them.
+	     *
+	     * @param int $cf7_id The contact form 7 ID
+	     * @param  string $cf7_tags List of the configured CF7 tags
+	     * 
+	     */
+	    private function auto_populate_ksd_cf7_fields( $cf7_id, $cf7_tags ){
+
+	      $ksd_wpc7_default_fields = array( 
+	      	'_ksd_wpcf7_name' 		=> '[your-name]', 
+	      	'_ksd_wpcf7_subject' 	=> '[your-subject]', 
+	      	'_ksd_wpcf7_email' 		=> '[your-email]', 
+	      	'_ksd_wpcf7_message' 	=> '[your-message]' 
+	      );  	
+
+	      foreach ( $ksd_wpc7_default_fields as $ksd_meta_key => $cf7_default_field ){
+	      	 $current_ksd_cf7_field = get_post_meta( $cf7_id, $ksd_meta_key, true );
+	      	 
+	      	 if( ! empty( $current_ksd_cf7_field ) ) {
+	      	 	continue;
+	      	 }
+
+	      	 if( false !== strpos( $cf7_tags, $cf7_default_field ) ){ 
+	      	 	update_post_meta( $cf7_id, $ksd_meta_key, $cf7_default_field );
+	      	 }
+	      }   	
+	    }
+
+	    /**
 	     * In the admin side, after editing fields in the 'Kanzu Support Desk' panel, 
 	     * save the fields when the user clicks 'Save'
+	     * @todo check that the fields exist
+	     * 
    		 * @since 2.3.7
    		 *
    		 * @param Object The contact form
