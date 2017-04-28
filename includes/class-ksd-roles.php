@@ -20,18 +20,14 @@ class KSD_Roles {
      * @since 1.5.0
      */
     public function create_roles() {
-        add_role(       'ksd_customer', __( 'Customer', 'kanzu-support-desk' ), array(
-                        'read' 		=> true,
-                        'edit_posts' 	=> false,
-                        'delete_posts' 	=> false
-                ) ); 
-        add_role(       'ksd_agent', __( 'Agent', 'kanzu-support-desk' ), array(
-                        'read' 		=> true,
-                        'edit_posts' 	=> false,
+        add_role( 'ksd_customer', __( 'Customer', 'kanzu-support-desk' ), $this->get_default_customer_caps() ); 
+        add_role( 'ksd_agent', __( 'Agent', 'kanzu-support-desk' ), array(
+                        'read' 		    => true,
+                        'edit_posts'    => false,
                         'upload_files'  => true,
-                        'delete_posts' 	=> false
+                        'delete_posts'  => false
                 ) );   
-        add_role( 'ksd_supervisor', __( 'Supervisor', 'kanzu-support-desk' ), $this->default_supervisor_caps() );        
+        add_role( 'ksd_supervisor', __( 'Supervisor', 'kanzu-support-desk' ), $this->get_default_supervisor_caps() );        
     }    
     
 
@@ -42,7 +38,7 @@ class KSD_Roles {
      * @since 2.2.9
      * @return array
      */
-    private function default_supervisor_caps(){
+    private function get_default_supervisor_caps(){
         return array(
                 'read'                   => true,
                 'edit_posts'             => true,
@@ -75,6 +71,7 @@ class KSD_Roles {
         ) ;
     }
     
+
     
     /**
      * Modify capabilities for all KSD roles
@@ -87,6 +84,32 @@ class KSD_Roles {
         foreach ( $ksd_roles as $ksd_role ){
             $this->modify_role_caps( $ksd_role, $change );
         }
+    }
+
+    /**
+     * Reset the `ksd_customer` capabilities back to the default
+     * values
+     *
+     * @since 2.3.6
+     * 
+     */
+    public function reset_customer_role_caps(){
+        global $wp_roles;      
+
+        if ( class_exists('WP_Roles') ) {
+            if ( ! isset( $wp_roles ) ) {
+                $wp_roles = new WP_Roles();
+            }
+        } 
+
+        if ( is_object( $wp_roles ) ) {            
+            $role_obj   = get_role( 'ksd_customer' );
+            $caps       = $this->get_default_customer_caps();
+            foreach( $caps as $customer_cap ){
+                $role_obj->add_cap( $customer_cap );        
+            }           
+        }
+         
     }
     
     /**
@@ -120,7 +143,7 @@ class KSD_Roles {
             $this->modify_default_agent_caps( $role_obj, $cap_function );
 
             if( 'ksd_supervisor' == $role ){
-                $this->modify_default_supervisor_caps( $role_obj, $cap_function );
+                $this->modify_get_default_supervisor_caps( $role_obj, $cap_function );
             }      
               
         }        
@@ -136,7 +159,7 @@ class KSD_Roles {
      * 
      * @since 2.2.9
      */
-    private function modify_default_supervisor_caps( $cap_recipient, $cap_function ){
+    private function modify_get_default_supervisor_caps( $cap_recipient, $cap_function ){
         $supervisor_del_capabilities = $this->get_delete_ticket_caps();
         foreach ( $supervisor_del_capabilities as $sup_cap_group ) {
                 foreach ( $sup_cap_group as $cap ) {
@@ -161,7 +184,7 @@ class KSD_Roles {
      */    
     public function modify_default_owner_caps( $wp_user , $cap_function  ){
         $this->modify_default_agent_caps( $wp_user, $cap_function  );
-        $this->modify_default_supervisor_caps( $wp_user, $cap_function  );
+        $this->modify_get_default_supervisor_caps( $wp_user, $cap_function  );
         $wp_user->$cap_function( 'ksd_manage_licenses' );     
     }
     
@@ -171,7 +194,7 @@ class KSD_Roles {
      */
     public function add_supervisor_caps_to_user( $wp_user ){
         $this->modify_default_agent_caps( $wp_user, 'add_cap'  );
-        $this->modify_default_supervisor_caps( $wp_user, 'add_cap'  );
+        $this->modify_get_default_supervisor_caps( $wp_user, 'add_cap'  );
     }
     
                 
@@ -248,7 +271,22 @@ class KSD_Roles {
         }
 
         return $capabilities;        
-    }    
+    }  
+
+    /**
+     * Get the default caps for the `ksd_customer` role
+     *
+     * @since 2.3.6
+     * @return  array The `ksd_customoer` caps
+     */
+    private function get_default_customer_caps(){
+        return array(
+                        'read'          => true,
+                        'edit_posts'    => false,
+                        'upload_files'  => true,
+                        'delete_posts'  => false
+                );
+    }      
     
 }
 

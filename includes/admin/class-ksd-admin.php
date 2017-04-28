@@ -2909,6 +2909,7 @@ class KSD_Admin {
      public function reset_role_caps(){
         include_once( KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php' );
         KSD()->roles->modify_all_role_caps( 'add' );  
+        KSD()->roles->reset_customer_role_caps();
         wp_send_json_success( __( 'Roles reset. All should be well now','kanzu-support-desk' ) );          
      }
      
