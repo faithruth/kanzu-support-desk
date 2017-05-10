@@ -58,8 +58,8 @@ git checkout-index -a -f --prefix=$SVNPATH/trunk/
 echo "Ignoring github specific & deployment script"
 svn propset svn:ignore "deploy.sh
 README.md
-tests/
-bin/
+tests
+bin
 .travis.yml
 phpunit.xml
 .git

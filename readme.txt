@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.7
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,6 +112,8 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+= 2.4.1, May 10, 2017 =
+ * Security Fix | Remove vulnerable WP_session
 
 = 2.4.0, May 10, 2017 =
  * Contact form 7 integration
@@ -432,6 +434,8 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+= 2.4.1 =
+ * Security Fix | Remove vulnerable WP_session
 
 = 2.4.0 =
  * Contact form 7 support

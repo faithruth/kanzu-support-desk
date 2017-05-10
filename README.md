@@ -106,6 +106,8 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 ## Changelog ##
+### 2.4.1, May 10, 2017 ###
+ * Security Fix | Remove vulnerable WP_session
 
 ### 2.4.0, May 10, 2017 ###
  * Contact form 7 integration
