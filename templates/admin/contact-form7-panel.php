@@ -7,10 +7,10 @@
 </p>
 <div class="ksd-wpcf7-config-wrapper">
 	<p>
-		<?php _e( "Use these tags to specify which fields to use for the support ticket name, email, subject and message. We auto-populate these fields for you based on Contact form 7's default tags.",'kanzu-support-desk' );
+		<?php _e( "Use the contact form tags below to specify which fields to use for the support ticket name, email, subject and message. We auto-populate these fields for you based on the form's default tags.",'kanzu-support-desk' );
 	?>
 	</p>
-	<p><?php echo $cf7_suggested_mail_tags; ?></p>
+	<p><strong><?php _e( "Tags to use: ",'kanzu-support-desk' ); ?></strong><?php echo $cf7_suggested_mail_tags; ?></p>
 	<form class="ksd-contact-form-7">
 	        <div class="ksd-cf7-field ksd-cust-fullname-cf7">
 	          <label for="_ksd_wpcf7_name"><?php _e( 'Name', 'kanzu-support-desk' ); ?></label>
@@ -30,7 +30,7 @@
 	    	</div>
 	</form>
 	<p>
-		<?php _e( 'To test, send a message using the form and check that a ticket is created', 'kanzu-support-desk' ); ?>
+		<?php _e( 'To test, send a message using the form and confirm that a ticket is created', 'kanzu-support-desk' ); ?>
 	</p>
 	<a href="https://kanzucode.com/knowledge_base/ksd-contact-form-7-integration-quickstart/" target="_blank"><?php _e( 'Configuration Help', 'kanzu-support-desk'); ?></a>
 </div>
