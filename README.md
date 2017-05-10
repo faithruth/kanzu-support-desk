@@ -3,7 +3,7 @@ Kanzu Support Desk
 
 Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer interactions fast & personal.
 
-## Description 
+## Description
 
 Great customer care is at the heart of every good product or service. Kanzu Support Desk simplifies the process of tracking customer requests, grouping them, assigning them and giving prompt
 feedback, all with a personal touch. KSD fits into your native WordPress interface like a hand in a snug glove so that you can get to do a lot intuitively.
@@ -13,17 +13,17 @@ KSD allows you to:
 * Use a very simple, native WordPress interface
 * Receive email notifications to keep you and your happy customer up-to-date on a ticket's progress
 * Work seamlessly with WooCommerce or Easy Digital Downloads
-* Have multiple channels for ticket-creation. You can use a support form on the front-end of your site or a form in your admin panel. Using one of [our premium addons](https://kanzucode.com/downloads/category/kanzu-support-desk/), you can also enable support for tickets created by [email](https://kanzucode.com/downloads/kanzu-support-desk-mail/), [Facebook](https://kanzucode.com/downloads/kanzu-support-desk-facebook/) or [Twitter](https://kanzucode.com/downloads/kanzu-support-desk-twitter/). 
+* Have multiple channels for ticket-creation. You can use a support form on the front-end of your site or a form in your admin panel. Using one of [our premium addons](https://kanzucode.com/downloads/category/kanzu-support-desk/), you can also enable support for tickets created by [email](https://kanzucode.com/downloads/kanzu-support-desk-mail/), [Facebook](https://kanzucode.com/downloads/kanzu-support-desk-facebook/) or [Twitter](https://kanzucode.com/downloads/kanzu-support-desk-twitter/).
 * Have as many agents as you want
 * Track changes to a ticket from a ticket log
 * Monitor your performance from beautiful graphs on your dashboard
 * Create private notes on tickets to allow agents share extra information on tickets with each other
 * Re-assign tickets in a jiffy
-* Group tickets based on products/categories/tags/departments - whatever works for you 
+* Group tickets based on products/categories/tags/departments - whatever works for you
 * Change to a language you prefer since the plugin supports translation. You can [contribute to translations here](https://translate.wordpress.org/projects/wp-plugins/kanzu-support-desk)
 
 
-## Installation 
+## Installation
 
 # Using The WordPress Dashboard #
 
@@ -100,21 +100,23 @@ No. Only supervisors and administrators can delete tickets
 1. The dashboard showing ticket volumes
 2. Creation of a new ticket from the back-end
 3. The settings panel
-4. The ticket grid. 
+4. The ticket grid.
 5. The details of a single ticket and its corresponding replies
 6. Changing a ticket's status
 7. Private note support
 
 ## Changelog ##
 
-### 2.3.6, April 12, 2017 ###
+### 2.4.0, May 10, 2017 ###
+ * Contact form 7 integration
  * BUG FIX | Update  email headers that were forcing all mail to be plain text
  * Add questionnaire
  * Change first customer username
  * Add support tab in contextual help
+ * Add feedback menu items
 
 ### 2.3.5, March 24, 2017 ###
- * BUG FIX | Add missing freemius files 
+ * BUG FIX | Add missing freemius files
 
 ### 2.3.4, March 24, 2017 ###
  * Add ability to merge multiple tickets
@@ -193,7 +195,7 @@ No. Only supervisors and administrators can delete tickets
  * Remove UA tracking
 
 ### 2.2.6, May 16, 2016 ###
- * BUG FIX | Add support for custom fields. 
+ * BUG FIX | Add support for custom fields.
 
 ### 2.2.5, May 14, 2016 ###
  * Sort tickets by last time updated
@@ -234,7 +236,7 @@ No. Only supervisors and administrators can delete tickets
 
 ### 2.1.1, February 29, 2016 ###
  * Added ksd_settings_updated js "action" hook
- * BUG FIX | Settings only showing for the first addon when more than one addon is enabled 
+ * BUG FIX | Settings only showing for the first addon when more than one addon is enabled
 
 ### 2.1.0, February 21, 2016 ###
  * Change settings UI to horizontal tabs
@@ -262,7 +264,7 @@ No. Only supervisors and administrators can delete tickets
  * BUG FIX | New ticket notifications going to primary admin instead of auto-assign user
 
 - 2.0.6, October 05, 2015 #
- * BUG FIX | Large images in replies extending before the reply area 
+ * BUG FIX | Large images in replies extending before the reply area
 
 - 2.0.5, September 30, 2015 #
  * BUG FIX | Updating settings not working in Safari
@@ -286,7 +288,7 @@ No. Only supervisors and administrators can delete tickets
 
 ### 2.0.0, August 29, 2015 ###
  * Overhaul: Switched from custom tables to custom post types for all ticket info
- * Customers can reply and follow ticket progress from your website 
+ * Customers can reply and follow ticket progress from your website
  * Customers required to create accounts before submitting tickets
 
 ### 1.7.0, July 29, 2015 ###
@@ -360,7 +362,7 @@ No. Only supervisors and administrators can delete tickets
 
 ### 1.5.1, February 24, 2015 ###
  * BUG FIX | Added missing icons (more_top,ellipsis), updated loading_dialog.GIF to loading_dialog.gif
- 
+
 ### 1.5.0, February 24, 2015 ###
  * Added auto-assign feature for new tickets
  * Migrated customers from KSD customers table to wp_users
@@ -371,7 +373,7 @@ No. Only supervisors and administrators can delete tickets
  * Added sweet notifications panel
  * Added client-side validation for Google reCAPTCHA  
  * Introductory tour updated to be more user-friendly
- * Fixed typo. occured updated to occurred 
+ * Fixed typo. occured updated to occurred
  * Documentation links updated
 
 ### 1.3.1, February 05, 2015 ###
@@ -398,7 +400,7 @@ No. Only supervisors and administrators can delete tickets
 * Dashboard summary statistics re-styled and made clickable
 * Dashboard graph date format changed to DD-MM-YYYY
 * Ticket grid re-styled to highlight ticket subject & OPEN tickets
-* On the ticket grid, added number of replies per ticket 
+* On the ticket grid, added number of replies per ticket
 
 ### 1.1.3 ###
 * BUG FIX | Eliminated subject/message length error returned for tickets not logged by add-ons  
@@ -410,7 +412,7 @@ No. Only supervisors and administrators can delete tickets
 ### 1.1.1 ###
 * BUG FIX | MySQL <#5.5 tables weren't being created
 * Proper styling for the settings view
-* Gracefully handle errors in dashboard AJAX response 
+* Gracefully handle errors in dashboard AJAX response
 
 ### 1.1.0 ###
 * Introductory tour on activation
