@@ -3038,20 +3038,19 @@ class KSD_Admin {
                    $message  =  preg_replace( '/{customer_display_name}/', $customer->display_name, $message );
                 }
         endswitch;
-
-        if( ! empty( $settings['ticket_mail_from_name'] ) && ! empty( $settings['ticket_mail_from_email'] ) ){
+        if( isset( $settings['ticket_mail_from_name'] ) && ! empty( $settings['ticket_mail_from_name'] ) && isset( $settings['ticket_mail_from_email'] ) && ! empty( $settings['ticket_mail_from_email'] ) ){
             $headers[] = 'From: ' . $settings['ticket_mail_from_name'].' <' . $settings['ticket_mail_from_email'].'>';
         }
-
         $headers[] = 'Content-Type: text/html; charset=UTF-8'; //@since 1.6.4 Support HTML emails
-        if ( !is_null( $cc ) ) {
+        if ( !is_null( $cc ) && ! empty( $cc ) ) {
             $headers[] = "Cc: $cc";
         }
 
-        $headers = apply_filters( 'ksd_send_mail_headers', array_merge( $headers, $extra_headers ) );
-
-
-         return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments );
+        if( is_array( $extra_headers ) ){
+            $headers = array_merge( $extra_headers, $headers );   
+        }
+       
+        return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
      }
 
 
