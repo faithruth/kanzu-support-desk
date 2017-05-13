@@ -106,7 +106,10 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 ## Changelog ##
-### 2.4.1, May 10, 2017 ###
+ ### 2.4.3, May 12, 2017  ###
+ * BUGFIX | Proper support for HTML emails
+
+ ### 2.4.1, May 10, 2017 ###
  * Security Fix | Remove vulnerable WP_session
 
 ### 2.4.0, May 10, 2017 ###
