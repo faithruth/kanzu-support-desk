@@ -4,7 +4,7 @@ Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
 Tested up to: 4.7
-Stable tag: 2.4.3
+Stable tag: 2.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,7 +112,10 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
-= 2.4.3, May 12, 2017 =
+= 2.4.4, May 17, 2017 =
+ * BUGFIX | Enable plugin to be uninstalled
+
+ = 2.4.3, May 12, 2017 =
  * BUGFIX | Proper support for HTML emails
 
  = 2.4.1, May 10, 2017 =
@@ -437,6 +440,9 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+= 2.4.4 =
+ * BUGFIX | Enable plugin to be uninstalled
+
 = 2.4.3 =
  * BUGFIX | Proper support for HTML emails
 
