@@ -2,6 +2,7 @@
 # Adapted from https://gist.github.com/BFTrick/3767319
 # A modification of Dean Clatworthy's deploy script as found here: https://github.com/deanc/wordpress-plugin-git-svn
 # The difference is that this script lives in the plugin's git repo & doesn't require an existing SVN repo.
+# Kanzu Code: Also, it automatically discovers files/folders in svn that no longer exist in git and removes them
 
 # main config
 PLUGINSLUG="kanzu-support-desk"
@@ -71,11 +72,15 @@ mv $SVNPATH/trunk/assets-wp-repo/* $SVNPATH/assets/
 svn add $SVNPATH/assets/
 svn delete $SVNPATH/trunk/assets-wp-repo
 
+echo "Removing all files or folders in svn that are no longer present in git"
+for obsoletesvnfile in `diff -arq $GITPATH  $SVNPATH/trunk/ | grep "$SVNPATH" | awk -F':' '{print $1"/"$2}' | sed 's:Only in::g' | sed 's: ::g'`; do svn delete $obsoletesvnfile ; done
+
+
 echo "Changing directory to SVN"
 cd $SVNPATH/trunk/
 # Add all new files that are not set to be ignored
 svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs svn add
-echo "committing to trunk"
+echo "Committing to trunk"
 svn commit --username=$SVNUSER -m "$COMMITMSG"
 
 echo "Updating WP plugin repo assets & committing"
@@ -91,4 +96,4 @@ svn commit --username=$SVNUSER -m "Tagging version $NEWVERSION1"
 echo "Removing temporary directory $SVNPATH"
 rm -fr $SVNPATH/
 
-echo "*** FIN ***"
+echo "*** THE END ***"
