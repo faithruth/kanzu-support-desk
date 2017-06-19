@@ -90,65 +90,6 @@ class KSDAdminTests extends WP_UnitTestCase {
             $this->assertNull( $ksd_admin->add_attachments_button( $editor_id ) );
         }
 
-        /**
-         * Test add_contextual_help
-         *
-         * @since 2.3.0
-         */
-        public function test_add_contextual_help(){
-            $ksd_admin = KSD_Admin::get_instance();
-
-            $contextual_help = '';
-            $screen_id_arr = array();
-
-            $screen_arr = array();
-            $screen = new stdClass();
-            $screen->post_type = 'ksd_ticket';
-
-            $screen_id_arr[] =  'ksd-ticket-list';
-            $screen->id = 'edit-ksd_ticket';
-            $screen_arr[] = $screen;
-
-            $screen_id_arr[] =  'ksd-add-new-ticket';
-            $screen->id = 'ksd_ticket';
-            $screen->action = 'add';
-            $screen_arr[] = $screen;
-
-            $screen_id_arr[] =  'ksd-single-ticket-details';
-            $screen->id = 'ksd_ticket';
-            $screen->action = 'action';
-            $screen_arr[] = $screen;
-
-            $screen_id_arr[] =  'ksd-edit-categories';
-            $screen->id = 'edit-ticket_category';
-            $screen_arr[] = $screen;
-
-            $screen_id_arr[] =  'ksd-edit-products';
-            $screen->id = 'edit-product';
-            $screen_arr[] = $screen;
-
-            $screen_id_arr[] =  'ksd-dashboard';
-            $screen->id = 'ksd_ticket_page_ksd-dashboard';
-            $screen_arr[] = $screen;
-
-            $screen_id_arr[] =  'ksd-settings';
-            $screen->id = 'ksd_ticket_page_ksd-settings';
-            $screen_arr[] = $screen;
-
-            $screen_id_arr[] =  'ksd-addons';
-            $screen->id = 'ksd_ticket_page_ksd-addons';
-            $screen_arr[] = $screen;
-
-            foreach ( $screen_id_arr as $key => $screen_id ){
-                $screen = $screen_arr[$key];
-                $contextual_help = $ksd_admin->add_contextual_help( '', $screen_id, $screen );
-
-                $pattern = '/^<span>/';
-                $this->assertRegExp( $pattern, $contextual_help );
-            }
-
-        }
-
 
         /**
          * Test add_importer_to_toolbox
