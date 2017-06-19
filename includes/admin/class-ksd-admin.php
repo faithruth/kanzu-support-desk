@@ -1683,7 +1683,7 @@ class KSD_Admin {
                     $notify_user 		= get_userdata( $parent_ticket->post_author );
                 }
 
-                $parent_ticket_channel = get_post_meta( $parent_ticket_id, '_ksd_tkt_info_channel', true );
+                $parent_ticket_channel = get_post_meta( $parent_ticket_ID, '_ksd_tkt_info_channel', true );
 
                 /**
                  * @filter `ksd_reply_logged_notfxn_email_message_{$parent_ticket_channel}` Right after a ticket reply is logged, this is applied to the message content of the email notification to be sent to the customer/agent. $parent_ticket_channel is the channel used to log the parent ticket
@@ -1706,7 +1706,7 @@ class KSD_Admin {
                 $ticket_reply_subject = 'Re:'.$ticket_reply_subject;
 
                 $addon_tkt_id = ( isset( $_POST['ksd_addon_tkt_id'] ) ? $_POST['ksd_addon_tkt_id'] : 0 );
-
+                $ticket_reply_headers = array();
                 /**
                  * @filter `ksd_reply_logged_notfxn_email_headers_{$parent_ticket_channel}` Right after a ticket reply is logged, this is applied to the message headers of the email notification to be sent to the customer/agent. $parent_ticket_channel is the channel used to log the parent ticket
                  *
@@ -3047,10 +3047,10 @@ class KSD_Admin {
         }
 
         if( is_array( $extra_headers ) ){
-            $headers = array_merge( $extra_headers, $headers );   
+            $headers = array_merge( $extra_headers, $headers );
         }
-       
-        return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments ); 
+
+        return wp_mail( $to, $subject, $this->format_message_content_for_viewing( $message ), $headers, $attachments );
      }
 
 
