@@ -3,8 +3,8 @@ Contributors: kanzucode
 Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
-Tested up to: 4.7.5
-Stable tag: 2.4.4
+Tested up to: 4.8
+Stable tag: 2.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -112,7 +112,10 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
-= 2.4.4, May 17, 2017 =
+ = 2.4.5, June 19, 2017 =
+ * BUGFIX | Fix undefined variables. Support WP 4.8
+
+ = 2.4.4, May 17, 2017 =
  * BUGFIX | Enable plugin to be uninstalled
 
  = 2.4.3, May 12, 2017 =
@@ -440,6 +443,9 @@ No. Only supervisors and administrators can delete tickets
 * Launched.
 
 == Upgrade Notice ==
+= 2.4.5 =
+ * BUGFIX | Fix undefined variables. Support WP 4.8
+
 = 2.4.4 =
  * BUGFIX | Enable plugin to be uninstalled
 
