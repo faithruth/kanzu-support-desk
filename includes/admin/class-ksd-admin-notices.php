@@ -1,4 +1,7 @@
 <?php
+
+namespace Ksd\Admin;
+
 /**
  * KSD's admin notices
  *
@@ -11,17 +14,17 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-if ( ! class_exists( 'KSD_Admin_Notices' ) ) : 
-    
+if ( ! class_exists( 'KSD_Admin_Notices' ) ) :
+
 class KSD_Admin_Notices {
 
     public function __construct(){
         add_action( 'admin_notices', array ( $this, 'display_admin_notices' ) );
-        add_action( 'ksd_hide_notices', array( $this, 'hide_admin_notices' ) );        
+        add_action( 'ksd_hide_notices', array( $this, 'hide_admin_notices' ) );
     }
-    
+
     public function display_admin_notices() {
-        $ksd_admin_notices = get_option( KSD()->ksd_admin_notices, array() );     
+        $ksd_admin_notices = get_option( KSD()->ksd_admin_notices, array() );
         if ( $ksd_admin_notices ) {
             $notice_body = '';
             foreach ( $ksd_admin_notices as $admin_notice_name ){
@@ -30,12 +33,12 @@ class KSD_Admin_Notices {
                 }
                 ob_start();
                 include_once( KSD_PLUGIN_DIR .  "templates/admin/notices/{$admin_notice_name}.php");
-                $notice_body .= ob_get_clean();                      
+                $notice_body .= ob_get_clean();
             }
-            echo $notice_body;        
+            echo $notice_body;
         }
-    }   
-    
+    }
+
     /**
      * Check if the current user can view the notice
      * @param string $notice_name
@@ -47,7 +50,7 @@ class KSD_Admin_Notices {
         }
         return false;
     }
-    
+
     public function hide_admin_notices(){
         $notice_name = sanitize_key( $_GET['ksd_notice'] );
         self::remove_notice( $notice_name );
@@ -56,13 +59,13 @@ class KSD_Admin_Notices {
 
     public static function add_notice( $notice_name ){
         $notices = array_unique( array_merge( get_option( KSD()->ksd_admin_notices, array() ), array( $notice_name ) ) );
-        update_option( KSD()->ksd_admin_notices, $notices );        
+        update_option( KSD()->ksd_admin_notices, $notices );
     }
-    
+
     public static function remove_notice( $notice_name ) {
         $notices = array_diff( get_option( KSD()->ksd_admin_notices, array() ), array( $notice_name ) );
         update_option( KSD()->ksd_admin_notices, $notices );
-    }    
+    }
 }
 
 endif;

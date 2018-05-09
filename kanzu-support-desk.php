@@ -35,6 +35,13 @@ final class Kanzu_Support_Desk {
     public $ksd_slug = 'kanzu-support-desk';
 
     /**
+		 * A dependency injection container
+		 *
+		 * @var Object
+		 */
+		public $container = null;
+
+    /**
      * The options name in the WP Db. We store all
      * KSD options using a single options key
      */
@@ -122,6 +129,8 @@ final class Kanzu_Support_Desk {
 
         //Set-up actions and filters
         $this->setup_actions();
+
+        // $this->container = \DI\ContainerBuilder::buildDevContainer();
 
         /*
          * Register hooks that are fired when the plugin is activated

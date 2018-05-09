@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admin side of Kanzu Support Desk
  *
@@ -24,6 +25,12 @@ class KSD_Admin {
      */
     protected static $instance = null;
 
+    /**
+  	 * The DI container
+  	 *
+  	 * @var Object
+  	 */
+  	private $container;
 
     /**
      * Initialize the plugin by loading admin scripts & styles and adding a
@@ -32,6 +39,8 @@ class KSD_Admin {
      * @since     1.0.0
      */
     public function __construct() {
+
+        $this->container = KSD()->container;
 
         // Load admin style sheet and JavaScript.
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_styles' ) );
@@ -335,8 +344,8 @@ class KSD_Admin {
      * @since 2.2.0
      */
     public function process_notification_feedback() {
-        include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
-        $ksd_notify = new KSD_Notifications();
+
+        $ksd_notify = $this->container->get( '\Ksd\Admin\KSD_Notifications' );
         $response = $ksd_notify->process_notification_feedback();
         echo json_encode( $response );
         die();
@@ -1100,8 +1109,7 @@ class KSD_Admin {
                 include_once( KSD_PLUGIN_DIR .  'templates/admin/html-admin-intro.php');
             }
             else{
-                include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-settings.php');
-                $addon_settings = new KSD_Settings();
+                $addon_settings = $this->container->get( '\Ksd\Admin\KSD_Settings' );
                 $addon_settings_html = $addon_settings->generate_addon_settings_html();
                 include_once( KSD_PLUGIN_DIR .  'templates/admin/html-admin-wrapper.php');
             }
@@ -2213,6 +2221,7 @@ class KSD_Admin {
 
             //Create a hash URL
             if( "no" == $settings['enable_customer_signup'] ){
+
                 include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-hash-urls.php" );
                 $hash_urls = new KSD_Hash_Urls();
                 $meta_array[ '_ksd_tkt_info_hash_url' ] = $hash_urls->create_hash_url( $new_ticket_id );
@@ -3249,6 +3258,7 @@ class KSD_Admin {
 
         header('Content-Type: text/plain' );
         header('Content-Disposition: attachment; filename="ksd-debug.txt"' );
+
         require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-debug.php' );
 
         $ksd_debug =  KSD_Debug::get_instance();
@@ -3627,8 +3637,8 @@ class KSD_Admin {
 
 
     public function append_admin_feedback(){
-        include_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-notifications.php' );
-        $ksd_notifications  = new KSD_Notifications();
+        $ksd_notifications = $this->container->get( '\Ksd\Admin\KSD_Notifications' );
+
         $notification       = $ksd_notifications->get_new_notification();
         echo $notification;
     }

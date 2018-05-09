@@ -1,5 +1,8 @@
 <?php
 
+namespace Ksd\Admin;
+
+
 /**
  * Generate KSD Debug information
  *
@@ -15,7 +18,7 @@ if ( !defined( 'ABSPATH' ) )
 if (!class_exists('KSD_Debug') ) :
 
     class KSD_Debug {
-    	
+
         /**
 	 * Instance of this class.
 	 *
@@ -23,7 +26,14 @@ if (!class_exists('KSD_Debug') ) :
 	 *
 	 * @var      object
 	 */
-	protected static $instance = null;   
+	protected static $instance = null;
+
+  /**
+	 * The DI container
+	 *
+	 * @var Object
+	 */
+	private $container;
 
         /**
 	 * Return an instance of this class.
@@ -42,7 +52,7 @@ if (!class_exists('KSD_Debug') ) :
 		return self::$instance;
 	}
 
-        
+
         /**
          * Get debug info
          *
@@ -53,7 +63,7 @@ if (!class_exists('KSD_Debug') ) :
          * This code is largely from EDD 2.3.9 with several adjustments specific to KSD's implementation
          */
         public function retrieve_debug_info() {
-	
+
             global $wpdb;
 
             if ( !class_exists( 'Browser' ) ) {
@@ -72,7 +82,7 @@ if (!class_exists('KSD_Debug') ) :
             }
 
             // Try to identify the hosting provider
-            $host = $this->get_host(); 
+            $host = $this->get_host();
 
             $return  = '### Begin System Info ###' . "\n\n";
 
@@ -153,7 +163,7 @@ if (!class_exists('KSD_Debug') ) :
 
             //KSD tickets & agents
             $return .= "\n" . '-- KSD Tickets & Users' . "\n\n";
-            $return .= 'Ticket information:      ' . $this->get_ticket_info() . "\n"; 
+            $return .= 'Ticket information:      ' . $this->get_ticket_info() . "\n";
             $return .= 'User information:       ' . $this->get_user_information() . "\n";
 
             //Must-use plugins
@@ -297,7 +307,7 @@ if (!class_exists('KSD_Debug') ) :
 
             return $host;
         }
-        
+
         /**
          * Check if AJAX works as expected
          *
@@ -370,16 +380,16 @@ if (!class_exists('KSD_Debug') ) :
 
             return $works;
         }
-        
+
         /**
          * Get ticket-related information
          * @since 1.7.0
          */
         private function get_ticket_info() {
-            require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );            
+            require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
             $ksd_admin =  KSD_Admin::get_instance();
             $ksd_admin->do_admin_includes();
-            $tickets = new KSD_Tickets_Controller();	
+            $tickets = new KSD_Tickets_Controller();
             $ticket_stats = $tickets->get_ticket_count_by_status();
             $total_tickets = 0;
             $ticket_status_info = "";
@@ -389,15 +399,15 @@ if (!class_exists('KSD_Debug') ) :
             }
             return "{$total_tickets} total tickets, {$ticket_status_info}";
         }
-        
+
         private function get_user_information() {
             $result = count_users();
             $user_info = "{$result['total_users']} total users";
-            
+
             foreach ( $result['avail_roles'] as $role => $count ):
                 $user_info.= ", {$count} are {$role}s";
             endforeach;
-            
+
             return $user_info;
         }
 
