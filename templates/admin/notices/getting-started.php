@@ -17,7 +17,7 @@
     	<p>
     	<?php _e( 'Your friends', 'kanzu-support-desk' ); ?>,<br/>
     	<?php _ex( 'Team','company team e.g. WordPress team', 'kanzu-support-desk' ); ?> Kanzu Code</p>
-    	<img src="<?php echo KSD_PLUGIN_URL . "/assets/images/kanzu_code_logo.png"; ?>" />      	
+    	<img src="<?php echo KSD_PLUGIN_URL . "/assets/images/kanzu_code_logo.png"; ?>" />
     </div>
   </div>
   <div id="ksd-gs-tabs-1">
@@ -33,20 +33,20 @@
 				</ul>
 			    <p><?php _e( "Assign the right role to the members of your team and they'll be able to easily manage tickets.", 'kanzu-support-desk' ); ?>
 			      <?php _e( 'Note that anyone with the WordPress role of administrator has unrestricted access to all functions. ', 'kanzu-support-desk' ); ?><a href="https://kanzucode.com/knowledge_base/help-desk-user-roles/" target="_blank" class="button button-primary"><?php _e( 'Read more on roles here', 'kanzu-support-desk' ); ?></a>
-		       </p>     
-  				<?php echo $nav_menu; ?>                         
+		       </p>
+  				<?php echo $nav_menu; ?>
   </div>
   <div id="ksd-gs-tabs-2">
     <h2><?php _e( 'Managing a ticket', 'kanzu-support-desk' ); ?></h2>
     <p><?php printf( '%s <strong>%s</strong> %s', __( 'All your tickets are listed under the', 'kanzu-support-desk' ), __( 'Tickets', 'kanzu-support-desk' ),__( 'menu. All tickets you have not yet read have a white background ', 'kanzu-support-desk' ) ); ?></p>
-    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_tickets_read_unread.jpg"; ?>" class="ksd-gs-image" /> 
+    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_tickets_read_unread.jpg"; ?>" class="ksd-gs-image" />
     <p><?php _e( 'Click on a ticket to manage it. This presents you a screen where you can change ticket status, ticket severity or who it is assigned to', 'kanzu-support-desk' ); ?></p>
       <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_ticket_info.jpg"; ?>" class="ksd-gs-image" />
     <p><?php _e( 'Reply to your customer or to staff only', 'kanzu-support-desk' ); ?></p>
       <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_reply_to_all.jpg"; ?>" class="ksd-gs-image" />
-    <p><?php _e( 'View ticket activity and what other tickets have been logged by the customer', 'kanzu-support-desk' ); ?></p>  
-    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_other_tickets.jpg"; ?>" class="ksd-gs-image" />       
-  	<?php echo $nav_menu; ?>            
+    <p><?php _e( 'View ticket activity and what other tickets have been logged by the customer', 'kanzu-support-desk' ); ?></p>
+    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_other_tickets.jpg"; ?>" class="ksd-gs-image" />
+  	<?php echo $nav_menu; ?>
   </div>
   <div id="ksd-gs-tabs-3">
     <h2><?php _e( 'Organization is key', 'kanzu-support-desk' ); ?></h2>
@@ -54,36 +54,27 @@
       <ol class="ksd-gs-categories">
         <li><strong><?php _e( 'Categories', 'kanzu-support-desk' ); ?>:</strong> <?php _e( 'Create multiple categories and subcategories to track tickets from particular clients (e.g. VIP), those from particular channels (e.g. email, facebook, website) or anything really.', 'kanzu-support-desk' ); ?></li>
         <li><strong><?php _e( 'Products', 'kanzu-support-desk' ); ?>:</strong> <?php _e( 'Create products to track tickets related to your products.', 'kanzu-support-desk' ); ?></li>
-      </ol>                  
-			<img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_products.jpg"; ?>" class="ksd-gs-image" />                        
-			<?php echo $nav_menu; ?>          
-  </div>              
+      </ol>
+			<img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_products.jpg"; ?>" class="ksd-gs-image" />
+			<?php echo $nav_menu; ?>
+  </div>
   <div id="ksd-gs-tabs-4">
     <h2><?php _e( 'Reports & Customization', 'kanzu-support-desk' ); ?></h2>
     <p><?php _e( 'Make changes to your set-up based on your needs. Set up replies to be sent automatically to your customer as soon as a ticket is created (auto-replies), select whom tickets should be automatically assigned to as soon as they are created and decide where your support page/form should be and what fields it should hold.', 'kanzu-support-desk' ); ?></p>
-    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_settings.jpg"; ?>" class="ksd-gs-image" /> 
-   <p><?php _e( 'Also, keep an eye on some key metrics', 'kanzu-support-desk' ); ?></p>  
-    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_dashboard.jpg"; ?>" class="ksd-gs-image" /> 
+    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_settings.jpg"; ?>" class="ksd-gs-image" />
+   <p><?php _e( 'Also, keep an eye on some key metrics', 'kanzu-support-desk' ); ?></p>
+    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_dashboard.jpg"; ?>" class="ksd-gs-image" />
     <p><a class="button button-primary" href="https://kanzucode.com/knowledge_base/ksd-wordpress-helpdesk-plugin-settings/" target="_blank"> <?php _e( 'More on settings here', 'kanzu-support-desk' ); ?></a></p>
-  		<?php echo $nav_menu; ?>                             
+  		<?php echo $nav_menu; ?>
   </div>
   <div id="ksd-gs-tabs-5">
     <h2><?php _e( 'Taking this further', 'kanzu-support-desk' ); ?>...</h2>
-    <p><?php _e( 'It might seem that with all those features there surely cannot be more...but there are. Lots more actually.', 'kanzu-support-desk' ); ?></p>
-    <p><?php _e( 'We have optional add-ons that allow you to', 'kanzu-support-desk' ); ?>:
-      <ul class="ksd-gs-addons">
-        <li><strong><?php _e( 'Mail', 'kanzu-support-desk' ); ?>:</strong> <?php _e( 'Create tickets automatically from emails sent to your support email address', 'kanzu-support-desk' ); ?></li>
-        <li><strong><?php _e( 'Chat', 'kanzu-support-desk' ); ?>:</strong> <?php _e( 'Set-up live chat and automatically create tickets from your conversations', 'kanzu-support-desk' ); ?></li>
-        <li><strong><?php _e( 'Knowledge Base', 'kanzu-support-desk' ); ?>:</strong> <?php _e( 'Create a rich set of articles that your customers can refer to even without contacting you', 'kanzu-support-desk' ); ?></li>
-        <li><strong><?php _e( 'Replies', 'kanzu-support-desk' ); ?>:</strong> <?php _e( 'Create message templates that you can use when replying a customer. ', 'kanzu-support-desk' ); ?></li>
-      </ul>
-      ...<?php _e( 'and a lot more', 'kanzu-support-desk' ); ?>....<a class="button button-seconday" href="<?php echo admin_url( 'edit.php?post_type=ksd_ticket&page=ksd-addons' );?>" target="_blank"> <?php _e( 'More addons', 'kanzu-support-desk' ); ?></a>
-    </p>
+    <p><?php _e( 'In case you need to give feedback on any of the features, do reach out.', 'kanzu-support-desk' ); ?></p>
     <p><?php _e( "That's it!! In case you'd like to take this tour again, go to the admin menu at the top, click 'Quick Tour' and we'll show you around this neck of the woods again.", 'kanzu-support-desk' ); ?></p>
-    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_admin_menu.jpg"; ?>" class="ksd-gs-image"/>  
+    <img src="<?php echo KSD_PLUGIN_URL . "/assets/images/ksd_admin_menu.jpg"; ?>" class="ksd-gs-image"/>
     <ul class="ksd-gs-navigation">
-      <li><a href="https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/" target="_blank" class="button button-primary"><?php _e( 'Quick start guide', 'kanzu-support-desk' ); ?></a> </li>
+      <li><a href="<?php echo admin_url('edit.php?post_type=ksd_ticket&page=ksd-feedback'); ?>" target="_blank" class="button button-primary"><?php _e( 'Give feedback', 'kanzu-support-desk' ); ?></a> </li>
       <li><a class="button button-secondary" href="<?php echo admin_url('edit.php?post_type=ksd_ticket'); ?>"><?php _e( 'Close Guide', 'kanzu-support-desk' ); ?></a></li>
-    </ul>   
-  </div>              
+    </ul>
+  </div>
 </div>

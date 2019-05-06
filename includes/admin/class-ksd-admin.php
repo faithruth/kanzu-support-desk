@@ -524,9 +524,6 @@ class KSD_Admin {
              case 'ksd_ticket_page_ksd-settings'://Settings
                  $current_ksd_screen_id = 'ksd-settings';
                  break;
-             case 'ksd_ticket_page_ksd-addons'://Add-ons
-                 $current_ksd_screen_id = 'ksd-addons';
-                 break;
         }
         return $current_ksd_screen_id;
     }
@@ -600,12 +597,6 @@ class KSD_Admin {
                 $contextual_help = sprintf( '<span><h2> %s </h2> <p> %s </p></span>',
                                             __( 'KSD Settings', 'kanzu-support-desk'),
                                             __( 'Customize your KSD experience by modifying your settings. Each setting has a help message next to it.', 'kanzu-support-desk')
-                                    );
-                break;
-            case 'ksd-addons':
-                $contextual_help = sprintf( '<span><h2> %s </h2> <p> %s </p></span>',
-                                            __( 'KSD Add-ons', 'kanzu-support-desk'),
-                                            __( 'Take your customer support to the next level by activating an add-on.', 'kanzu-support-desk')
                                     );
                 break;
         }
@@ -1037,7 +1028,6 @@ class KSD_Admin {
         $ticket_types['ksd-dashboard']  =   __( 'Dashboard', 'kanzu-support-desk' );
         $ticket_types['ksd-settings']   =   __( 'Settings', 'kanzu-support-desk' );
         $ticket_types['ksd-feedback']   =   __( 'Give Feedback', 'kanzu-support-desk' );
-        $ticket_types['ksd-addons']     =   '<span style="color:#d54e21;">' .__( 'Add-ons', 'kanzu-support-desk' ). '</span>';
 
         foreach ( $ticket_types as $submenu_slug => $submenu_title ) {
           add_submenu_page( $menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array( $this,$function ) );

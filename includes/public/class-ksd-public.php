@@ -169,12 +169,6 @@ class KSD_Public {
         ) );
 
         $this->add_ksd_admin_bar_node( array(
-            'id'        => 'ksd-docs',
-            'title'     => __( 'Getting Started Guide', 'kanzu-support-desk' ),
-            'href'      => 'https://kanzucode.com/knowledge_base/simple-wordpress-helpdesk-plugin-quick-start/',
-        ) );
-
-        $this->add_ksd_admin_bar_node( array(
             'id'        => 'ksd-feedback',
             'title'     => __( 'Give Feedback', 'kanzu-support-desk' ),
             'href'      => admin_url('edit.php?post_type=ksd_ticket&page=ksd-feedback')
