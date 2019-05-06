@@ -3,8 +3,9 @@ Contributors: kanzucode
 Donate link: https://kanzucode.com/
 Tags: helpdesk,ticketing,ticket system,customer service,ticket,system,support,help,support system,crm,customer relationship management
 Requires at least: 3.0.1
+Requires PHP: 5.3
 Tested up to: 4.8
-Stable tag: 2.4.5
+Stable tag: 2.4.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +21,6 @@ KSD allows you to:
 * Use a very simple, native WordPress interface
 * Receive email notifications to keep you and your happy customer up-to-date on a ticket's progress
 * Work seamlessly with WooCommerce or Easy Digital Downloads
-* Have multiple channels for ticket-creation. You can use a support form on the front-end of your site or a form in your admin panel. Using one of [our premium addons](https://kanzucode.com/downloads/category/kanzu-support-desk/), you can also enable support for tickets created by [email](https://kanzucode.com/downloads/kanzu-support-desk-mail/), [Facebook](https://kanzucode.com/downloads/kanzu-support-desk-facebook/) or [Twitter](https://kanzucode.com/downloads/kanzu-support-desk-twitter/).
 * Have as many agents as you want
 * Track changes to a ticket from a ticket log
 * Monitor your performance from beautiful graphs on your dashboard
@@ -81,21 +81,10 @@ Get the latest in KSD and WP in general from [@KanzuCode on Twitter](https://twi
 
 By default, tickets are only visible to the customer who logged them and your staff ( users with role ksd_agent, ksd_supervisor or a site administrator)
 
-= Can my customers log tickets by sending me an email? =
-
-With an [optional add-on activated](https://kanzucode.com/downloads/kanzu-support-desk-mail), yes they can. By default though, they can use a support form on your website and add replies to the ticket on your website.
-
-= Where can I find KSD documentation and user guides? =
-
-For help setting-up and configuring KSD, please refer to our [user guide](https://kanzucode.com/kb_topic/kb-kanzu-support-desk/)
-
 = Will KSD work with my theme? =
 
 Yes, it will
 
-= Can a customer reply to the agent email from his inbox? =
-
-You'd need to have [the email add-on](https://kanzucode.com/downloads/kanzu-support-desk-mail) active for this to work
 
 = Can an agent delete a ticket? =
 
@@ -112,6 +101,9 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 == Changelog ==
+ = 2.4.6, May 06, 2019 =
+ * Remove references to add-ons
+
  = 2.4.5, June 19, 2017 =
  * BUGFIX | Fix undefined variables. Support WP 4.8
 
