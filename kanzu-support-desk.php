@@ -3,7 +3,7 @@
  * Plugin Name:       Kanzu Support Desk - WordPress Helpdesk Plugin
  * Plugin URI:        http://kanzucode.com/kanzu-support-desk
  * Description:       Kanzu Support Desk (KSD) is a simple helpdesk solution that keeps your customer interactions fast & personal.
- * Version:           2.4.6
+ * Version:           2.4.7
  * Author:            Kanzu Code
  * Author URI:        http://kanzucode.com
  * Text Domain:       kanzu-support-desk
@@ -26,7 +26,7 @@ final class Kanzu_Support_Desk {
     /**
      * @var string
      */
-    public $version = '2.4.6';
+    public $version = '2.4.7';
 
     /**
      * @var string
@@ -175,11 +175,6 @@ final class Kanzu_Support_Desk {
         //The front-end
         require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );
 
-        //Dashboard and Administrative Functionality
-        if ( is_admin() ) {
-            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
-        }
-
        //Deliver plugin updates like pizza
         if ( ! class_exists( 'KSD_Plugin_Updater' ) ) {
             include_once( KSD_PLUGIN_DIR . '/includes/libraries/class-ksd-plugin-updater.php' );
@@ -275,6 +270,8 @@ final class Kanzu_Support_Desk {
         // Load plugin text domain
         add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
+        add_action( 'init', array( $this, 'initialize_plugin' ) );
+
         //Load scripts used in both the front and back ends
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_general_scripts' ) );
 
@@ -299,6 +296,13 @@ final class Kanzu_Support_Desk {
         add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ) );
 
         do_action( 'ksd_loaded' );
+    }
+
+    public function initialize_plugin(){
+        //Dashboard and Administrative Functionality
+        if ( is_admin() && is_user_logged_in() ) {
+            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
+        }
     }
 
 

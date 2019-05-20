@@ -93,6 +93,9 @@ No. Only supervisors and administrators can delete tickets
 7. Private note support
 
 ## Changelog ##
+ ### 2.4.7, May 20, 2019 ###
+ * SECURITY FIX | Check whether user's logged in before running custom admin actions
+
  ###  2.4.6, May 06, 2019 ###
  * Remove references to add-ons
 
