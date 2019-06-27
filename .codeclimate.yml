@@ -1,0 +1,31 @@
+version: "2"
+plugins:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        - php
+        - javascript
+  eslint:
+    enabled: true
+  fixme:
+    enabled: true
+  phpcodesniffer:
+    enabled: true
+    config:
+      standard: "WordPress"
+ratings:
+  paths:
+    - "**.js"
+    - "**.php"
+exclude_patterns:
+  - "tests/"
+  - "vendor/"
+  - "node_modules/"
+  - "languages/"
+  - "docs/"
+  - "assets/js/jquery*"
+  - "Gruntfile.js"
+  - "PHPCSAliases.php"
+  - "includes/library/freemius*"
+  - "includes/library/wp-session*"
