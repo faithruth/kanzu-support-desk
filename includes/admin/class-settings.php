@@ -9,6 +9,8 @@
  * @copyright 2014 Kanzu Code
  */
 
+namespace Kanzu\Ksd\Admin;
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -16,7 +18,7 @@ if (!defined('ABSPATH')) {
 
 if (!class_exists('KSD_Settings')):
 
-	class KSD_Settings {
+	class Settings {
 
 		/**
 		 * The KSD settings
@@ -34,6 +36,50 @@ if (!class_exists('KSD_Settings')):
 		public function __construct() {
 			//TODO: Throws PHP Strict Standards Warning:
 			//$this->settings = Kanzu_Support_Desk::get_settings();
+		}
+
+		/**
+		 * Add menu items in the admin panel
+		 */
+		public function add_menu_pages() {
+			//Add the top-level admin menu.
+			$page_title = 'Kanzu Support Desk';
+			$capability = 'manage_ksd_settings';
+			$menu_slug = 'edit.php?post_type=ksd_ticket';
+			$function = 'output_admin_menu_dashboard';
+
+			//Add the ticket sub-pages.
+			$ticket_types = array();
+			$ticket_types['ksd-dashboard'] = __('Dashboard', 'kanzu-support-desk');
+			$ticket_types['ksd-settings'] = __('Settings', 'kanzu-support-desk');
+
+			foreach ($ticket_types as $submenu_slug => $submenu_title) {
+				$page_hook_suffix = add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array($this, $function));
+				add_action('load-' . $page_hook_suffix, array($this, 'add_help_tabs'));
+			}
+
+			//Remove ticket tags.
+			remove_submenu_page('edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket');
+
+			//Reset rights in case someone's updating from a very old version.
+			$this->reset_user_rights();
+		}
+		/**
+		 * Display the main Kanzu Support Desk admin dashboard
+		 */
+		public function output_admin_menu_dashboard() {
+			$this->do_admin_includes();
+
+			$settings = Kanzu_Support_Desk::get_settings();
+
+			if (isset($_GET['ksd-intro'])) {
+				include_once KSD_PLUGIN_DIR . 'templates/admin/html-admin-intro.php';
+			} else {
+				include_once KSD_PLUGIN_DIR . 'includes/admin/class-ksd-settings.php';
+				$addon_settings = new KSD_Settings();
+				$addon_settings_html = $addon_settings->generate_addon_settings_html();
+				include_once KSD_PLUGIN_DIR . 'templates/admin/html-admin-wrapper.php';
+			}
 		}
 
 		public function generate_addon_settings_html() {

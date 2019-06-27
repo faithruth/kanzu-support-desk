@@ -9,7 +9,12 @@
  * @copyright 2014 Kanzu Code
  */
 
-class KSD_Admin_hooks_registry {
+namespace Kanzu\Ksd\Admin;
+
+use Kanzu\Ksd\Admin\Notification\Notification as ksd_notifications;
+use Kanzu\Ksd\Admin\Settings as ksd_settings;
+
+class Hooks_registry {
 
 	/**
 	 * The admin Object
@@ -19,11 +24,27 @@ class KSD_Admin_hooks_registry {
 	private $ksd_admin;
 
 	/**
+	 * The notofocations object
+	 * 
+	 * @var Object
+	 */
+	private $ksd_notifications;
+
+	/**
+	 * The settings object
+	 * 
+	 * @var Object
+	 */
+	private $ksd_settings;
+
+	/**
 	 * class constructor
 	 */
 	public function __construct() {
 		require_once KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php';
 		$this->ksd_admin = KSD_Admin::get_instance();
+		$this->ksd_notifications = $ksd_notifications;
+		$this->ksd_settings = $ksd_settings;
 
 		$this->add_action_hooks();
 		$this->add_filter_hooks();
@@ -41,7 +62,7 @@ class KSD_Admin_hooks_registry {
 		add_action('admin_enqueue_scripts', array($this->ksd_admin, 'enqueue_admin_styles'));
 		add_action('admin_enqueue_scripts', array($this->ksd_admin, 'enqueue_admin_scripts'));
 		// Add the options page and menu item.
-		add_action('admin_menu', array($this->ksd_admin, 'add_menu_pages'));
+		add_action('admin_menu', array($this->ksd_settings, 'add_menu_pages'));
 
 		//Add the attachments button
 		add_action('media_buttons', array($this->ksd_admin, 'add_attachments_button'), 15);
@@ -181,7 +202,7 @@ class KSD_Admin_hooks_registry {
 		add_action('wp_ajax_ksd_migrate_to_v2', array($this->ksd_admin, 'migrate_to_v2'));
 		add_action('wp_ajax_ksd_deletetables_v2', array($this->ksd_admin, 'deletetables_v2'));
 		add_action('wp_ajax_ksd_notifications_user_feedback', array($this->ksd_admin, 'process_notification_feedback'));
-		add_action('wp_ajax_ksd_notifications_disable', array($this->ksd_admin, 'disable_notifications'));
+		add_action('wp_ajax_ksd_notifications_disable', array($this->ksd_email, 'disable_notifications'));
 		add_action('wp_ajax_ksd_send_debug_email', array($this->ksd_admin, 'send_debug_email'));
 		add_action('wp_ajax_ksd_reset_role_caps', array($this->ksd_admin, 'reset_role_caps'));
 		add_action('wp_ajax_ksd_get_unread_ticket_count', array($this->ksd_admin, 'get_unread_ticket_count'));
@@ -190,9 +211,7 @@ class KSD_Admin_hooks_registry {
 	}
 
 	public function append_admin_feedback() {
-		include_once KSD_PLUGIN_DIR . 'includes/admin/class-ksd-notifications.php';
-		$ksd_notifications = new Notifications();
-		$notification = $ksd_notifications->get_new_notification();
+		$notification = $this->ksd_notifications->get_new_notification();
 		echo $notification;
 	}
 

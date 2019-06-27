@@ -230,6 +230,77 @@ class Ticket {
 		);
 	}
 
+	/**
+	 * Change a ticket into a reply
+	 * @param int $ticket_ID
+	 * @param int $new_parent_ticket_ID The ticket's new parent ID
+	 * @return int | WP_Error
+	 */
+	private function transform_ticket_to_reply($ticket_ID, $new_parent_ticket_ID) {
+		$transformer_ticket = array(
+			'ID' => $ticket_ID,
+			'post_type' => 'ksd_reply',
+			'post_status' => 'publish',
+			'post_parent' => $new_parent_ticket_ID,
+		);
+		return wp_update_post($transformer_ticket);
+	}
+
+	/**
+	 * Delete a ticket's meta info
+	 * @global Object $wpdb
+	 * @param int $ticket_ID
+	 */
+	private function delete_ticket_meta($ticket_ID) {
+		global $wpdb;
+		$merge_tickets_meta_keys_query = "SELECT meta_id FROM {$wpdb->prefix}postmeta WHERE meta_key LIKE '_ksd_tkt_info%' AND post_id='{$ticket_ID}'";
+		$merge_ticket_meta_keys = $wpdb->get_results($merge_tickets_meta_keys_query);
+		foreach ($merge_ticket_meta_keys as $meta_info) {
+			delete_meta($meta_info->meta_id);
+		}
+	}
+
+	/**
+	 * Delete a ticket's activities
+	 * @param int $ticket_ID
+	 */
+	private function delete_ticket_activities($ticket_ID) {
+		$activity_args = array(
+			'post_type' => array('ksd_ticket_activity'),
+			'post_parent' => $ticket_ID,
+			'post_status' => array('private'),
+			'posts_per_page' => -1,
+			'offset' => 0,
+		);
+
+		$ticket_activities = get_posts($activity_args);
+		foreach ($ticket_activities as $activity) {
+			wp_delete_post($activity->ID, true);
+		}
+	}
+
+	/**
+	 * Change the parent ID of ticket replies and private notes
+	 *
+	 * @param int $old_parent_ID The current parent ticket ID
+	 * @param int $new_parent_ID The new parent ticket ID
+	 */
+	private function change_replies_parent($old_parent_ID, $new_parent_ID) {
+		$reply_args = array(
+			'post_type' => array('ksd_reply', 'ksd_private_note'),
+			'post_parent' => $old_parent_ID,
+			'post_status' => array('private', 'publish'),
+			'posts_per_page' => -1,
+			'offset' => 0,
+		);
+
+		$replies_and_notes = get_posts($reply_args);
+		foreach ($replies_and_notes as $tkt_reply_or_note) {
+			$update_details = array('ID' => $tkt_reply_or_note->ID, 'post_parent' => $new_parent_ID);
+			wp_update_post($update_details);
+		}
+	}
+
 
 	/**
 	 * Check whether a new ticket already exists. If it does, return its current ID

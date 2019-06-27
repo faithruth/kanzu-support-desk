@@ -9,6 +9,9 @@
  * @copyright 2014 Kanzu Code
  */
 
+namespace Kanzu\Ksd\Admin;
+
+
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
@@ -17,7 +20,7 @@ if (!class_exists('KSD_Admin_Notices')):
 /**
  * KSD_Admin_Notices
  */
-	class KSD_Admin_Notices {
+	class Notices {
 		/**
 		 * class constructor
 		 */

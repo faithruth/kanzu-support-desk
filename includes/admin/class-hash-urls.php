@@ -11,6 +11,8 @@
  * @copyright 2014 Kanzu Code
  */
 
+namespace Kanzu\Ksd\Admin;
+
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }

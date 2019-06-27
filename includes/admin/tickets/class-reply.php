@@ -328,6 +328,16 @@ class Reply {
 		return $replies;
 	}
 
+	private function current_user_can_view_private_notes() {
+		global $current_user;
+		if (isset($current_user->roles) && is_array($current_user->roles) && (in_array('ksd_agent', $current_user->roles) || in_array('ksd_supervisor', $current_user->roles) || in_array('administrator', $current_user->roles))) {
+
+			return true;
+		}
+		return false;
+
+	}
+
 	/**
 	 * Remove all 'Ticket read' meta values
 	 * @param int $parent_ticket_id

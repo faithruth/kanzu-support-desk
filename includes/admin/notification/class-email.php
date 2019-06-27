@@ -140,24 +140,49 @@ class Email {
 
 	}
 
-	/**
-	 * Notify an agent when a ticket has been re-assigned to them
-	 * @param int $new_user_id The ID of the agent to whom the ticket has been reassigned
-	 * @param int $tkt_id The ID of the ticket that's been re-assigned
-	 * @since 2.2.0
-	 * @since 2.2.9 Params $agent_name and $notify_email replaced by $new_user_id
-	 */
-	public function do_notify_ticket_reassignment($new_user_id, $tkt_id) {
-		if ($new_user_id == 0) {
-			return;
+	public function send_debug_email() {
+		$email = sanitize_email($_POST['email']);
+		if (!is_email($email)) {
+			wp_send_json_error(__('Error | Invalid email address specified', 'kanzu-support-desk'));
 		}
-		$agent_name = get_userdata($new_user_id)->display_name;
-		$notify_email = get_userdata($new_user_id)->user_email;
-		$blog_name = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
-		$notify_tkt_reassign_message = sprintf(__('Hi %1$s, A support ticket has been reassigned to you on %2$s:', 'kanzu-support-desk'), $agent_name, $blog_name) . "\r\n\r\n";
-		$notify_tkt_reassign_message .= $this->ksd_hooks->output_ksd_signature($tkt_id);
-		$notify_tkt_reassign_subject = sprintf(__('[%s] Support Ticket Reassigned to you', 'kanzu-support-desk'), $blog_name);
-		$this->send_email($notify_email, $notify_tkt_reassign_message, $notify_tkt_reassign_subject);
+		$message = __('This is the test message you requested for. Signed. Sealed. Delivered.', 'kanzu-support-desk');
+		if ($this->send_email($email, $message)) {
+			wp_send_json_success(__('Email sent successfully', 'kanzu-support-desk'));
+		} else {
+			wp_send_json_error(sprintf(__('Error | Email sending failed. Please <a href="%s" target="_blank">read our guide on this</a>', 'kanzu-support-desk'), 'https://kanzucode.com/knowledge_base/troubleshooting-wordpress-email-delivery/'));
+		}
 	}
+
+		/**
+		 * Send feedback using the form in contextual help
+		 *
+		 * @since 2.3.6
+		 */
+		public function send_support_tab_feedback() {
+
+			$current_user = wp_get_current_user();
+
+			$subject = sanitize_text_field($_POST['ksd_support_tab_subject']);
+			$message = sanitize_text_field($_POST['ksd_support_tab_message']);
+
+			if (strlen($subject) <= 2) {
+				$response = __("Error | The subject field is too short. Please type something then send", "kanzu-support-desk");
+				echo json_encode($response);
+				die();
+			}
+
+			if (strlen($message) <= 2) {
+				$response = __("Error | The message field is too short. Please type something then send", "kanzu-support-desk");
+				echo json_encode($response);
+				die();
+			}
+
+			$feedback_message = "{$message},{$current_user->display_name},{$current_user->user_email}";
+			$feedback_subject = "KSD Feedback - " . $subject;
+
+			$response = ($this->send_email("feedback@kanzucode.com", $feedback_message, $feedback_subject) ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk'));
+			echo json_encode($response);
+			die();
+		}
 
 }

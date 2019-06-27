@@ -126,6 +126,63 @@ class Meta {
 	}
 
 	/**
+	 * Notify an agent when a ticket has been re-assigned to them
+	 * @param int $new_user_id The ID of the agent to whom the ticket has been reassigned
+	 * @param int $tkt_id The ID of the ticket that's been re-assigned
+	 * @since 2.2.0
+	 * @since 2.2.9 Params $agent_name and $notify_email replaced by $new_user_id
+	 */
+	public function do_notify_ticket_reassignment($new_user_id, $tkt_id) {
+		if ($new_user_id == 0) {
+			return;
+		}
+		$agent_name = get_userdata($new_user_id)->display_name;
+		$notify_email = get_userdata($new_user_id)->user_email;
+		$blog_name = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+		$notify_tkt_reassign_message = sprintf(__('Hi %1$s, A support ticket has been reassigned to you on %2$s:', 'kanzu-support-desk'), $agent_name, $blog_name) . "\r\n\r\n";
+		$notify_tkt_reassign_message .= $this->ksd_hooks->output_ksd_signature($tkt_id);
+		$notify_tkt_reassign_subject = sprintf(__('[%s] Support Ticket Reassigned to you', 'kanzu-support-desk'), $blog_name);
+		$this->send_email($notify_email, $notify_tkt_reassign_message, $notify_tkt_reassign_subject);
+	}
+
+		/**
+		 * Send the KSD team feedback
+		 * @since 1.1.0
+		 */
+		public function send_feedback() {
+			$feedback_type = isset($_POST['feedback_type']) ? sanitize_text_field($_POST['feedback_type']) : 'default';
+			$user_feedback = sanitize_text_field($_POST['ksd_user_feedback']);
+			$current_user = wp_get_current_user();
+
+			$data = array();
+			$data['action'] = 'feedback';
+			$data['feedback_item'] = 'kanzu-support-desk';
+			$data['feedback_type'] = $feedback_type;
+			$data['user_feedback'] = $user_feedback;
+			$data['user_email'] = $current_user->user_email;
+
+			if ('waiting_list' == $feedback_type) {
+				$this->send_to_analytics($data);
+				$addon_message = "{$user_feedback},{$current_user->user_email}";
+				$response = ($this->send_email("feedback@kanzucode.com", $addon_message, "KSD Add-on Waiting List") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk'));
+				echo json_encode($response);
+				die();
+			}
+
+			if (strlen($user_feedback) <= 2) {
+				$response = __("Error | The feedback field's empty. Please type something then send", "kanzu-support-desk");
+				echo json_encode($response);
+				die();
+			}
+
+			$this->send_to_analytics($data);
+			$feedback_message = "{$user_feedback},{$feedback_type}";
+			$response = ($this->send_email("feedback@kanzucode.com", $feedback_message, "KSD Feedback") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk'));
+			echo json_encode($response);
+			die();
+		}
+
+	/**
 	 * Update a ticket's information
 	 * @since 2.0.0
 	 */
@@ -190,6 +247,13 @@ class Meta {
 			$new_ticket_activity['post_content'] = sprintf(__('Ticket marked as unread by %s', 'kanzu-support-desk'), $this->get_user_permalink($current_user->ID));
 		}
 		do_action('ksd_insert_new_ticket_activity', $new_ticket_activity);
+	}
+	private function get_user_permalink($user_id) {
+		if (0 == $user_id) {
+			return false;
+		}
+		$user = get_userdata($user_id);
+		return '<a href="' . admin_url("user-edit.php?user_id={$user_id}") . '">' . $user->display_name . '</a>';
 	}
 
 	/**

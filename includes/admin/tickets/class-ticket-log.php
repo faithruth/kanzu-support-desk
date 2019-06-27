@@ -13,6 +13,7 @@ namespace Kanzu\Ksd\Admin\Tickets;
 use Kanzu\Ksd\Admin\Tickets\Customer as ksd_customer;
 use Kanzu\Ksd\Admin\Tickets\Meta as ksd_meta;
 use Kanzu\Ksd\Admin\Notification\Email as ksd_notification;
+use Kanzu\Ksd\Admin\Notification\Reply_Ticket as ksd_reply;
 
 
 if (!defined('ABSPATH')) {
@@ -30,11 +31,14 @@ class Ticket_Log {
 
 	private $ksd_notification;
 
+	private $ksd_reply;
+
 	public function __construct()
     {
 		$this->ksd_customer = $ksd_customer;
 		$this->ksd_meta = $ksd_meta;
 		$this->ksd_notification = $ksd_notification;
+		$this->ksd_reply = $ksd_reply;
     }
 	/**
 	 * Log new tickets or replies initiated by add-ons
@@ -63,12 +67,12 @@ class Ticket_Log {
 			$new_ticket['ksd_reply_title'] = $new_ticket['ksd_tkt_subject'];
 			$new_ticket['ksd_ticket_reply'] = $new_ticket['ksd_tkt_message'];
 			$new_ticket['ksd_rep_date_created'] = $new_ticket['ksd_tkt_time_logged'];
-			$this->reply_ticket($new_ticket);
+			$this->ksd_reply->reply_ticket($new_ticket);
 			return;
 		}
 
 		if ($new_ticket['is_reply']) {
-			$this->reply_ticket($new_ticket);
+			$this->ksd_reply->reply_ticket($new_ticket);
 			return;
 		}
 

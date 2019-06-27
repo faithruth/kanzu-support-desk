@@ -9,6 +9,8 @@
  * @copyright 2014 Kanzu Code
  */
 
+namespace Kanzu\Ksd\Admin;
+
 if (!defined('ABSPATH')) {
 	exit; // Exit if accessed directly.
 }
@@ -207,32 +209,6 @@ if (!class_exists('KSD_Admin')):
 			return $admin_labels_array;
 		}
 
-		/**
-		 * Ajax handler for autocomplete user
-		 *
-		 */
-		public function autocomplete_user() {
-			global $current_user;
-			$return = array();
-
-			$users = get_users(array(
-				'blog_id' => false,
-				'search' => '*' . $_REQUEST['term'] . '*',
-				'exclude' => $current_user->ID,
-				'search_columns' => array('user_login', 'user_nicename', 'user_email'),
-			));
-
-			foreach ($users as $user) {
-				$return[] = array(
-					/* translators: 1: user_login, 2: user_email */
-					'label' => sprintf(__('%1$s (%2$s)', 'kanzu-support-desk'), $user->user_login, $user->user_email),
-					'value' => $user->user_login,
-					'ID' => $user->ID,
-				);
-			}
-
-			wp_die(wp_json_encode($return));
-		}
 
 		/**
 		 * Add contextual help messages
@@ -400,99 +376,12 @@ if (!class_exists('KSD_Admin')):
 
 		}
 
-		/**
-		 * Add menu items in the admin panel
-		 */
-		public function add_menu_pages() {
-			//Add the top-level admin menu.
-			$page_title = 'Kanzu Support Desk';
-			$capability = 'manage_ksd_settings';
-			$menu_slug = 'edit.php?post_type=ksd_ticket';
-			$function = 'output_admin_menu_dashboard';
-
-			//Add the ticket sub-pages.
-			$ticket_types = array();
-			$ticket_types['ksd-dashboard'] = __('Dashboard', 'kanzu-support-desk');
-			$ticket_types['ksd-settings'] = __('Settings', 'kanzu-support-desk');
-
-			foreach ($ticket_types as $submenu_slug => $submenu_title) {
-				$page_hook_suffix = add_submenu_page($menu_slug, $page_title, $submenu_title, $capability, $submenu_slug, array($this, $function));
-				add_action('load-' . $page_hook_suffix, array($this, 'add_help_tabs'));
-			}
-
-			//Remove ticket tags.
-			remove_submenu_page('edit.php?post_type=ksd_ticket', 'edit-tags.php?taxonomy=post_tag&amp;post_type=ksd_ticket');
-
-			//Reset rights in case someone's updating from a very old version.
-			$this->reset_user_rights();
-		}
-
-		/**
-		 * Temporarily added in 2.2.10 to fix
-		 * user rights for anyone who upgrades from 2.2.8 and doesn't get the new roles
-		 *
-		 * Remove this > 2.2.10
-		 */
-		private function reset_user_rights() {
-			if (!isset($_GET['post_type']) || !isset($_GET['taxonomy'])) {
-				return;
-			}
-			if ('ksd_ticket' != sanitize_text_field($_GET['post_type'])) {
-				return;
-			}
-			if (current_user_can('manage_options') && !current_user_can('manage_ksd_settings') && !current_user_can('edit_ksd_ticket')) {
-				include_once KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php';
-				KSD()->roles->create_roles();
-				KSD()->roles->modify_all_role_caps('add');
-				//Make the current user a supervisor. They need to re-select supervisors and agents.
-				global $current_user;
-				KSD()->roles->add_supervisor_caps_to_user($current_user);
-				$user = new WP_User($current_user->ID);
-				KSD()->roles->modify_default_owner_caps($user, 'add_cap');
-				// KSD_Admin_Notices::add_notice( 'update-roles' );//Inform the user of the changes they need to make.
-			}
-		}
-
-		/**
-		 * Display the main Kanzu Support Desk admin dashboard
-		 */
-		public function output_admin_menu_dashboard() {
-			$this->do_admin_includes();
-
-			$settings = Kanzu_Support_Desk::get_settings();
-
-			if (isset($_GET['ksd-intro'])) {
-				include_once KSD_PLUGIN_DIR . 'templates/admin/html-admin-intro.php';
-			} else {
-				include_once KSD_PLUGIN_DIR . 'includes/admin/class-ksd-settings.php';
-				$addon_settings = new KSD_Settings();
-				$addon_settings_html = $addon_settings->generate_addon_settings_html();
-				include_once KSD_PLUGIN_DIR . 'templates/admin/html-admin-wrapper.php';
-			}
-		}
 
 		/**
 		 * Include the files we use in the admin dashboard
 		 */
 		public function do_admin_includes() {
 			include_once KSD_PLUGIN_DIR . "includes/libraries/class-ksd-controllers.php";
-		}
-
-		/**
-		 * Check if the user's a member of staff. The only users  considered as staff
-		 * are agents, supervisors and administrators
-		 *
-		 * @param Object $user The user to check
-		 * @return boolean Whether the user's a member of staff or not
-		 */
-		public function is_user_staff($user) {
-			if (!isset($user->roles) || !is_array($user->roles)) {
-				return false;
-			}
-			if (in_array('ksd_agent', $user->roles) || in_array('ksd_supervisor', $user->roles) || in_array('administrator', $user->roles)) {
-				return true;
-			}
-			return false;
 		}
 
 		/**
@@ -706,18 +595,6 @@ if (!class_exists('KSD_Admin')):
 			return $form;
 		}
 
-		public function send_debug_email() {
-			$email = sanitize_email($_POST['email']);
-			if (!is_email($email)) {
-				wp_send_json_error(__('Error | Invalid email address specified', 'kanzu-support-desk'));
-			}
-			$message = __('This is the test message you requested for. Signed. Sealed. Delivered.', 'kanzu-support-desk');
-			if ($this->send_email($email, $message)) {
-				wp_send_json_success(__('Email sent successfully', 'kanzu-support-desk'));
-			} else {
-				wp_send_json_error(sprintf(__('Error | Email sending failed. Please <a href="%s" target="_blank">read our guide on this</a>', 'kanzu-support-desk'), 'https://kanzucode.com/knowledge_base/troubleshooting-wordpress-email-delivery/'));
-			}
-		}
 
 		public function reset_role_caps() {
 			include_once KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php';
@@ -725,74 +602,6 @@ if (!class_exists('KSD_Admin')):
 			wp_send_json_success(__('Roles reset. All should be well now', 'kanzu-support-desk'));
 		}
 
-		/**
-		 * Send the KSD team feedback
-		 * @since 1.1.0
-		 */
-		public function send_feedback() {
-			$feedback_type = isset($_POST['feedback_type']) ? sanitize_text_field($_POST['feedback_type']) : 'default';
-			$user_feedback = sanitize_text_field($_POST['ksd_user_feedback']);
-			$current_user = wp_get_current_user();
-
-			$data = array();
-			$data['action'] = 'feedback';
-			$data['feedback_item'] = 'kanzu-support-desk';
-			$data['feedback_type'] = $feedback_type;
-			$data['user_feedback'] = $user_feedback;
-			$data['user_email'] = $current_user->user_email;
-
-			if ('waiting_list' == $feedback_type) {
-				$this->send_to_analytics($data);
-				$addon_message = "{$user_feedback},{$current_user->user_email}";
-				$response = ($this->send_email("feedback@kanzucode.com", $addon_message, "KSD Add-on Waiting List") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk'));
-				echo json_encode($response);
-				die();
-			}
-
-			if (strlen($user_feedback) <= 2) {
-				$response = __("Error | The feedback field's empty. Please type something then send", "kanzu-support-desk");
-				echo json_encode($response);
-				die();
-			}
-
-			$this->send_to_analytics($data);
-			$feedback_message = "{$user_feedback},{$feedback_type}";
-			$response = ($this->send_email("feedback@kanzucode.com", $feedback_message, "KSD Feedback") ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk'));
-			echo json_encode($response);
-			die();
-		}
-
-		/**
-		 * Send feedback using the form in contextual help
-		 *
-		 * @since 2.3.6
-		 */
-		public function send_support_tab_feedback() {
-
-			$current_user = wp_get_current_user();
-
-			$subject = sanitize_text_field($_POST['ksd_support_tab_subject']);
-			$message = sanitize_text_field($_POST['ksd_support_tab_message']);
-
-			if (strlen($subject) <= 2) {
-				$response = __("Error | The subject field is too short. Please type something then send", "kanzu-support-desk");
-				echo json_encode($response);
-				die();
-			}
-
-			if (strlen($message) <= 2) {
-				$response = __("Error | The message field is too short. Please type something then send", "kanzu-support-desk");
-				echo json_encode($response);
-				die();
-			}
-
-			$feedback_message = "{$message},{$current_user->display_name},{$current_user->user_email}";
-			$feedback_subject = "KSD Feedback - " . $subject;
-
-			$response = ($this->send_email("feedback@kanzucode.com", $feedback_message, $feedback_subject) ? __('Sent successfully. Thank you!', 'kanzu-support-desk') : __('Error | Message not sent. Please try sending mail directly to feedback@kanzucode.com', 'kanzu-support-desk'));
-			echo json_encode($response);
-			die();
-		}
 
 		/**
 		 * Send feedback to Kanzu Analytics
@@ -966,6 +775,19 @@ if (!class_exists('KSD_Admin')):
 			update_option(KSD_OPTIONS_KEY, $base_settings);
 
 			return $response_message;
+		}
+
+		private function get_installed_addons() {
+			$addons = array();
+			$settings = Kanzu_Support_Desk::get_settings();
+			foreach ($settings as $key => $value) {
+				if ('ksd_' === substr($key, 0, 4)) {
+					if ('ksd_owner' != $key && 'ksd_activation_time' != $key) {
+						$addons[] = $key;
+					}
+				}
+			}
+			return $addons;
 		}
 
 		/**
@@ -1172,108 +994,6 @@ break;
 
 	public function render_contact_form_7_panel() {
 		echo "Hello World";
-	}
-
-	private function get_user_permalink($user_id) {
-		if (0 == $user_id) {
-			return false;
-		}
-		$user = get_userdata($user_id);
-		return '<a href="' . admin_url("user-edit.php?user_id={$user_id}") . '">' . $user->display_name . '</a>';
-	}
-
-	/**
-	 * Change the parent ID of ticket replies and private notes
-	 *
-	 * @param int $old_parent_ID The current parent ticket ID
-	 * @param int $new_parent_ID The new parent ticket ID
-	 */
-	private function change_replies_parent($old_parent_ID, $new_parent_ID) {
-		$reply_args = array(
-			'post_type' => array('ksd_reply', 'ksd_private_note'),
-			'post_parent' => $old_parent_ID,
-			'post_status' => array('private', 'publish'),
-			'posts_per_page' => -1,
-			'offset' => 0,
-		);
-
-		$replies_and_notes = get_posts($reply_args);
-		foreach ($replies_and_notes as $tkt_reply_or_note) {
-			$update_details = array('ID' => $tkt_reply_or_note->ID, 'post_parent' => $new_parent_ID);
-			wp_update_post($update_details);
-		}
-	}
-
-	/**
-	 * Delete a ticket's meta info
-	 * @global Object $wpdb
-	 * @param int $ticket_ID
-	 */
-	private function delete_ticket_meta($ticket_ID) {
-		global $wpdb;
-		$merge_tickets_meta_keys_query = "SELECT meta_id FROM {$wpdb->prefix}postmeta WHERE meta_key LIKE '_ksd_tkt_info%' AND post_id='{$ticket_ID}'";
-		$merge_ticket_meta_keys = $wpdb->get_results($merge_tickets_meta_keys_query);
-		foreach ($merge_ticket_meta_keys as $meta_info) {
-			delete_meta($meta_info->meta_id);
-		}
-	}
-
-	/**
-	 * Delete a ticket's activities
-	 * @param int $ticket_ID
-	 */
-	private function delete_ticket_activities($ticket_ID) {
-		$activity_args = array(
-			'post_type' => array('ksd_ticket_activity'),
-			'post_parent' => $ticket_ID,
-			'post_status' => array('private'),
-			'posts_per_page' => -1,
-			'offset' => 0,
-		);
-
-		$ticket_activities = get_posts($activity_args);
-		foreach ($ticket_activities as $activity) {
-			wp_delete_post($activity->ID, true);
-		}
-	}
-
-	/**
-	 * Change a ticket into a reply
-	 * @param int $ticket_ID
-	 * @param int $new_parent_ticket_ID The ticket's new parent ID
-	 * @return int | WP_Error
-	 */
-	private function transform_ticket_to_reply($ticket_ID, $new_parent_ticket_ID) {
-		$transformer_ticket = array(
-			'ID' => $ticket_ID,
-			'post_type' => 'ksd_reply',
-			'post_status' => 'publish',
-			'post_parent' => $new_parent_ticket_ID,
-		);
-		return wp_update_post($transformer_ticket);
-	}
-
-	private function current_user_can_view_private_notes() {
-		global $current_user;
-		if (isset($current_user->roles) && is_array($current_user->roles) && (in_array('ksd_agent', $current_user->roles) || in_array('ksd_supervisor', $current_user->roles) || in_array('administrator', $current_user->roles))) {
-
-			return true;
-		}
-		return false;
-
-	}
-
-	private function get_installed_addons() {
-		$addons = array();
-		$settings = Kanzu_Support_Desk::get_settings();
-		foreach ($settings as $key => $value) {
-			if ('ksd_' === substr($key, 0, 4)) {
-				if ('ksd_owner' != $key && 'ksd_activation_time' != $key) {
-					$addons[] = $key;
-				}
-			}
-		}
-		return $addons;
 	}
 
 }
