@@ -1,5 +1,5 @@
 <div class="ksd-misc-extras misc-pub-section">
-	<button class="button button-small" id="merge-tickets-button"><?php _e( 'Merge Ticket', 'kanzu-support-desk' ); ?></button>
+	<button class="button button-small" id="merge-tickets-button"><?php esc_html_e( 'Merge Ticket', 'kanzu-support-desk' ); ?></button>
 	<?php
 	$ksd_current_customer   = get_userdata( $post->post_author );
 	$ksd_admin              = Admin::get_instance();
@@ -16,7 +16,7 @@
 	endforeach;
 		echo '</ul>';
 		else :
-			_e( 'No other tickets logged by this customer', 'kanzu-support-desk' );
+			esc_html_e( 'No other tickets logged by this customer', 'kanzu-support-desk' );
 endif;
 		?>
 	<?php

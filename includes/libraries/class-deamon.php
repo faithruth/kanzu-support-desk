@@ -69,7 +69,7 @@ if ( ! class_exists( 'Deamon' ) ) :
 
 				delete_transient( $transient );
 			} else {
-				_e( 'Script still running.', 'kanzu-support-desk' );
+				esc_html_e( 'Script still running.', 'kanzu-support-desk' );
 			}
 		}
 

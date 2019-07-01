@@ -53,7 +53,7 @@ if ( ! class_exists( 'Support_Form_Widget' ) ) :
 			$title = ! empty( $instance['title'] ) ? $instance['title'] : __( 'Contact Support', 'kanzu-support-desk' );
 			?>
 			<p>
-						<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'kanzu-support-desk' ); ?></label>
+						<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'kanzu-support-desk' ); ?></label>
 						<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
 			</p>
 			<?php

@@ -23,7 +23,7 @@
 				<span class="reply_date"><?php echo wp_kses_post( $reply->post_date ); ?></span>
 															<?php if ( ! empty( $reply->ksd_cc ) ) : ?>
 					<div class="ksd-reply-cc">
-																<?php esc_attr_e( 'CC', 'kanzu-support-desk' ); ?>:<span class="ksd-cc-emails"><?php echo wp_kses_post( $reply->ksd_cc ); ?></span>
+																<?php esc_attresc_html_e( 'CC', 'kanzu-support-desk' ); ?>:<span class="ksd-cc-emails"><?php echo wp_kses_post( $reply->ksd_cc ); ?></span>
 					</div>
 				<?php endif; ?>
 			</div>

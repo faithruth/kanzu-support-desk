@@ -30,4 +30,4 @@ endif;
 		?>
 </ul>
 <?php $current_settings = Kanzu_Support_Desk::get_settings(); ?>
-<a class="button button-large button-primary ksd-button" href="<?php echo get_permalink( $current_settings['page_submit_ticket'] ); ?>"><?php _e( 'Submit Ticket', 'kanzu-support-desk' ); ?></a>
+<a class="button button-large button-primary ksd-button" href="<?php echo get_permalink( $current_settings['page_submit_ticket'] ); ?>"><?php esc_html_e( 'Submit Ticket', 'kanzu-support-desk' ); ?></a>

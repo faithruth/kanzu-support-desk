@@ -13,10 +13,10 @@
 <table class="wp-list-table widefat striped downloads">
 	<thead>
 		<tr>
-			<th><?php esc_attr_e( 'Ticket', 'kanzu-support-desk' ); ?></th>
-			<th><?php esc_attr_e( 'Status', 'kanzu-support-desk' ); ?></th>
-			<th><?php esc_attr_e( 'Date', 'kanzu-support-desk' ); ?></th>
-			<th><?php esc_attr_e( 'Actions', 'kanzu-support-desk' ); ?></th>
+			<th><?php esc_attresc_html_e( 'Ticket', 'kanzu-support-desk' ); ?></th>
+			<th><?php esc_attresc_html_e( 'Status', 'kanzu-support-desk' ); ?></th>
+			<th><?php esc_attresc_html_e( 'Date', 'kanzu-support-desk' ); ?></th>
+			<th><?php esc_attresc_html_e( 'Actions', 'kanzu-support-desk' ); ?></th>
 		</tr>
 	</thead>
 	<tbody>

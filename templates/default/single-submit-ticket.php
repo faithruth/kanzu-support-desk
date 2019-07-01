@@ -22,7 +22,7 @@ endif;?>
 
 			  <li class="ksd-public-submit">
 				<img src="<?php echo wp_kses_post( KSD_PLUGIN_URL . 'assets/images/loading_dialog.gif' ); ?>" class="ksd_loading_dialog" width="45" height="35" />
-				<input type="submit" value="<?php esc_html_e( 'Send Message', 'kanzu-support-desk' ); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
+				<input type="submit" value="<?php esc_htmlesc_html_e( 'Send Message', 'kanzu-support-desk' ); ?>" name="ksd-submit-tab-new-ticket" class="ksd-submit"/>
 			  </li>
 			</ul>
 			<input name="action" type="hidden" value="ksd_log_new_ticket" />

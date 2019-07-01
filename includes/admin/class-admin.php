@@ -981,15 +981,15 @@ if ( ! class_exists( 'KSD_Admin' ) ) :
 									<fieldset class="inline-edit-col-right inline-edit-book">
 										<div class="inline-edit-col column-<?php echo $column_name; ?>">
 											<label class="inline-edit-group">
-												<span class="title"><?php _e( 'Assigned To:', 'kanzu-support-desk' ); ?></span>
+												<span class="title"><?php esc_html_e( 'Assigned To:', 'kanzu-support-desk' ); ?></span>
 												<select name="_ksd_tkt_info_assigned_to">
-													<option value="-1">--<?php _e( 'No Change', 'kanzu-support-desk' ); ?>--</option>
+													<option value="-1">--<?php esc_html_e( 'No Change', 'kanzu-support-desk' ); ?>--</option>
 													<?php foreach ( get_users( array( 'role__in' => array( 'ksd_agent', 'ksd_supervisor', 'administrator' ) ) ) as $agent ) { ?>
 													<option value="<?php echo $agent->ID; ?>">
 														<?php echo $agent->display_name; ?>
 													</option>
 													<?php }; ?>
-													<option value="0"><?php _e( 'No One', 'kanzu-support-desk' ); ?></option>
+													<option value="0"><?php esc_html_e( 'No One', 'kanzu-support-desk' ); ?></option>
 												</select>
 											</label>
 											</div>
@@ -1002,9 +1002,9 @@ if ( ! class_exists( 'KSD_Admin' ) ) :
 									<fieldset class="inline-edit-col-right inline-edit-book">
 										<div class="inline-edit-col column-<?php echo $column_name; ?>">
 										<label class="inline-edit-group">
-											<span class="title"><?php _e( 'Severity:', 'kanzu-support-desk' ); ?></span>
+											<span class="title"><?php esc_html_e( 'Severity:', 'kanzu-support-desk' ); ?></span>
 											<select name="_ksd_tkt_info_severity">
-												<option value="-1">--<?php _e( 'No Change', 'kanzu-support-desk' ); ?>--</option>
+												<option value="-1">--<?php esc_html_e( 'No Change', 'kanzu-support-desk' ); ?>--</option>
 																						   <?php
 																							foreach ( $this->get_severity_list() as $severity_label => $severity ) :
 																								?>
@@ -1019,9 +1019,9 @@ if ( ! class_exists( 'KSD_Admin' ) ) :
 								<fieldset class="inline-edit-col-right inline-edit-book">
 									<div class="inline-edit-col column-<?php echo $column_name; ?>">
 									<label class="inline-edit-group">
-										<span class="title"><?php _e( 'State:', 'kanzu-support-desk' ); ?></span>
+										<span class="title"><?php esc_html_e( 'State:', 'kanzu-support-desk' ); ?></span>
 										<select name="_ksd_tkt_info_is_read_by_<?php echo $current_user->ID; ?>">
-											<option value="-1">--<?php _e( 'No Change', 'kanzu-support-desk' ); ?>--</option>
+											<option value="-1">--<?php esc_html_e( 'No Change', 'kanzu-support-desk' ); ?>--</option>
 											 <option value="read"><?php _ex( 'Read', 'Ticket state', 'kanzu-support-desk' ); ?></option>
 											 <option value="unread"><?php _ex( 'Unread', 'Ticket state', 'kanzu-support-desk' ); ?></option>
 										</select>

@@ -11,7 +11,7 @@ if ( $ksd_user_avatar ) :
 	<?php $customer_label = __( 'Customer: ', 'kanzu-support-desk' ); ?>
 	<span><?php echo apply_filters( 'ksd_ticket_info_customer_label', $customer_label ); ?></span>
 	<span class="ksd-misc-value" id="ksd-misc-customer"><?php echo apply_filters( 'ksd_ticket_info_customer_display_name', $ksd_current_customer->display_name ); ?></span>
-	<a href="#customer" class="edit-customer"><?php _e( 'Edit', 'kanzu-support-desk' ); ?></a>
+	<a href="#customer" class="edit-customer"><?php esc_html_e( 'Edit', 'kanzu-support-desk' ); ?></a>
 	<div class="ksd_tkt_info_customer ksd_tkt_info_wrapper hidden">
 		<select name="_ksd_tkt_info_customer">
 			<?php
@@ -39,16 +39,16 @@ if ( $ksd_user_avatar ) :
 endif;
 			?>
 		</select>
-		<a class="save-customer button" href="#customer"><?php _e( 'OK', 'kanzu-support-desk' ); ?></a>
-		<a class="cancel-customer button-cancel" href="#customer"><?php _e( 'Cancel', 'kanzu-support-desk' ); ?></a>
+		<a class="save-customer button" href="#customer"><?php esc_html_e( 'OK', 'kanzu-support-desk' ); ?></a>
+		<a class="cancel-customer button-cancel" href="#customer"><?php esc_html_e( 'Cancel', 'kanzu-support-desk' ); ?></a>
 	</div>
 </div>
 <div class="ksd-misc-customer-email misc-pub-section">
-	<span><?php _e( 'Customer Email', 'kanzu-support-desk' ); ?>:</span>
+	<span><?php esc_html_e( 'Customer Email', 'kanzu-support-desk' ); ?>:</span>
 	<span class="ksd-misc-value" id="ksd-misc-customer-email"><?php echo apply_filters( 'ksd_ticket_info_customer_email', $ksd_current_customer->user_email ); ?></span>
 </div>
 <div class="ksd-misc-customer-since misc-pub-section">
-	<span><?php _e( 'Customer Since', 'kanzu-support-desk' ); ?>:</span>
+	<span><?php esc_html_e( 'Customer Since', 'kanzu-support-desk' ); ?>:</span>
 	<span class="ksd-misc-value" id="ksd-misc-customer-since"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $ksd_current_customer->user_registered ) ); ?></span>
 </div>
 

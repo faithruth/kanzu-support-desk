@@ -257,7 +257,7 @@ class Ticket {
 								<td><?php echo $ticket->post_title; ?></td>
 								<td><?php echo $ticket->post_status; ?></td>
 								<td><?php echo date( 'd M Y, @ H:i', strtotime( $ticket->post_modified ) ); ?></td>
-								<td><a href='<?php echo admin_url( 'post.php?post=' . absint( $ticket->ID ) . '&action=edit' ); ?>'><?php _e( 'View Ticket', 'kanzu-support-desk' ); ?></a></td>
+								<td><a href='<?php echo admin_url( 'post.php?post=' . absint( $ticket->ID ) . '&action=edit' ); ?>'><?php esc_html_e( 'View Ticket', 'kanzu-support-desk' ); ?></a></td>
 							</tr>
 							<?php
 		endforeach;

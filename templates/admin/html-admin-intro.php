@@ -1,7 +1,7 @@
 <div id="ksd-intro-one" class="wrap about-wrap">
 	<div class="ksd-logo-intro"></div>
 	<?php global $current_user; ?>
-	<h1><?php _e( 'Welcome to Kanzu Support Desk', 'kanzu-support-desk' ); ?></h1>
+	<h1><?php esc_html_e( 'Welcome to Kanzu Support Desk', 'kanzu-support-desk' ); ?></h1>
 	<div class="about-text">
 	<?php
 	printf(
@@ -16,6 +16,6 @@
 	?>
 
 		<br />
-		<a class="button-primary ksd-start-intro" href="<?php echo add_query_arg( 'ksd-onboarding', 'create-ticket', get_permalink( $settings['page_submit_ticket'] ) ); ?>"><?php _e( 'Get Started!', 'kanzu-support-desk' ); ?> </a>
+		<a class="button-primary ksd-start-intro" href="<?php echo add_query_arg( 'ksd-onboarding', 'create-ticket', get_permalink( $settings['page_submit_ticket'] ) ); ?>"><?php esc_html_e( 'Get Started!', 'kanzu-support-desk' ); ?> </a>
 	</div>
 </div>

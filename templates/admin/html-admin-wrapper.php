@@ -19,7 +19,7 @@
 
 		?>
 		<h2><?php echo $ksd_page[ $ksd_current_page ]['name']; ?></h2>
-		<span class="more_nav"><img src="<?php echo KSD_PLUGIN_URL . '/assets/images/icons/more_top.png'; ?>" title="<?php _e( 'Notifications', 'kanzu-support-desk' ); ?>" /></span>
+		<span class="more_nav"><img src="<?php echo KSD_PLUGIN_URL . '/assets/images/icons/more_top.png'; ?>" title="<?php esc_html_e( 'Notifications', 'kanzu-support-desk' ); ?>" /></span>
 	</div>
 	<div class="admin-ksd-container">
 		<div id="<?php echo $ksd_current_page; ?>" class="admin-ksd-content">
@@ -28,6 +28,6 @@
 		<div class="ksd-dialog loading hidden"><?php __( 'Loading...', 'kanzu-support-desk' ); ?></div>
 		<div class="ksd-dialog error hidden"><?php __( 'Error...', 'kanzu-support-desk' ); ?></div>
 		<div class="ksd-dialog success hidden"><?php __( 'Success...', 'kanzu-support-desk' ); ?></div>
-		<div id="ksd-blog-notifications"><?php _e( 'Loading...', 'kanzu-support-desk' ); ?></div>
+		<div id="ksd-blog-notifications"><?php esc_html_e( 'Loading...', 'kanzu-support-desk' ); ?></div>
 	</div>
 </div>
