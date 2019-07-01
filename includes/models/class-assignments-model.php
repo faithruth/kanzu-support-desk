@@ -7,22 +7,22 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
+namespace Kanzu\Ksd\Models;
+include_once KSD_PLUGIN_DIR . 'includes/libraries/class-model.php';
 
-include_once KSD_PLUGIN_DIR . "includes/libraries/class-ksd-model.php";
-
-class KSD_Assignments_Model extends KSD_Model {
+class Assignments_Model extends Model {
 
 	public function __construct() {
 		global $wpdb;
-		$this->_tablename = $wpdb->prefix . "kanzusupport_assignments";
-		$this->_id = "assign_id";
+		$this->_tablename = $wpdb->prefix . 'kanzusupport_assignments';
+		$this->_id        = 'assign_id';
 
 		$this->_formats = array(
-			'assign_tkt_id' => '%d',
-			'attach_rep_id' => '%d',
-			'assign_assigned_to' => '%d',
+			'assign_tkt_id'        => '%d',
+			'attach_rep_id'        => '%d',
+			'assign_assigned_to'   => '%d',
 			'assign_date_assigned' => '%s',
-			'assign_assigned_by' => '%d',
+			'assign_assigned_by'   => '%d',
 		);
 	}
 
@@ -31,18 +31,18 @@ class KSD_Assignments_Model extends KSD_Model {
 		*
 		*@param int assign_id
 	*/
-	public function get_assignment($id) {
-		return parent::get_row($id);
+	public function get_assignment( $id ) {
+		return parent::get_row( $id );
 	}
 
 	/*
 			*Get all assignments
 			*
 			*@param string $filter Everything after the WHERE clause. Uses placeholders %s and %d
-		        *@param Array $value_parameters The values to replace the placeholders
+				*@param Array $value_parameters The values to replace the placeholders
 	*/
-	public function get_all($filter = "", $value_parameters = array()) {
-		return parent::get_all($filter, $value_parameters);
+	public function get_all( $filter = '', $value_parameters = array() ) {
+		return parent::get_all( $filter, $value_parameters );
 	}
 
 	/*
@@ -50,8 +50,8 @@ class KSD_Assignments_Model extends KSD_Model {
 		*
 		*
 	*/
-	public function add_assignment(&$obj) {
-		return parent::add_row($obj);
+	public function add_assignment( &$obj ) {
+		return parent::add_row( $obj );
 	}
 
 	/*
@@ -59,8 +59,8 @@ class KSD_Assignments_Model extends KSD_Model {
 		*
 		*@param Object Assignment
 	*/
-	public function delete_assignment(&$obj) {
-		return parent::delete_row($obj);
+	public function delete_assignment( &$obj ) {
+		return parent::delete_row( $obj );
 	}
 
 	/*
@@ -68,7 +68,7 @@ class KSD_Assignments_Model extends KSD_Model {
 		* @param Object Assignment
 		* *new_* for new value
 	*/
-	public function update_assignment(&$obj) {
-		return parent::update_row($obj);
+	public function update_assignment( &$obj ) {
+		return parent::update_row( $obj );
 	}
 }

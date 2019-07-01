@@ -62,7 +62,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_add_action_links(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $links = $ksd_admin->add_action_links( array() );
             
             $this->assertGreaterThan( 0, count( $links ) );
@@ -75,7 +75,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_add_attachments_button(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $editor_id = 'ksd_ticket';
             $_GET['page'] = 'ksd_ticket';
@@ -94,7 +94,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_add_contextual_help(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $contextual_help = '';
             $screen_id_arr = array();
@@ -154,7 +154,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_add_importer_to_toolbox(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $ksd_admin->add_importer_to_toolbox();
             $pattern = '/.*tool-box.*>/';
@@ -178,7 +178,7 @@ class KSDAdminTests extends WP_UnitTestCase {
         public function test_ksd_importer_init(){
             global $wp_importers;
             
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $ksd_admin->ksd_importer_init();
 
             $this->assertTrue( isset( $wp_importers['ksdimporter'] ) );
@@ -191,7 +191,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          */
         public function test_add_menu_pages(){
             global $submenu;
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $ksd_admin->add_menu_pages();
 
             $menu_slug  = 'edit.php?post_type=ksd_ticket';
@@ -209,7 +209,7 @@ class KSDAdminTests extends WP_UnitTestCase {
             global $current_user;
             $current_user = $this->_current_user ;
   
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $ksd_admin->add_my_tickets_link();
             
             //$this->expectOutputRegex( '/^<a href/' );
@@ -223,7 +223,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_disable_notifications(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $ksd_admin->disable_notifications();
             
             $this->expectOutputRegex( '/.*Thanks for your time.*/' );
@@ -237,7 +237,7 @@ class KSDAdminTests extends WP_UnitTestCase {
 		$new_ticket = $this->_ksd_ticket_details;
                 $new_ticket['ksd_addon_tkt_id'] = '1';
                 
-		$ksd_admin = KSD_Admin::get_instance();
+		$ksd_admin = Admin::get_instance();
 		
 		add_action( 'save_post', function( $post_id ){
 			global $ticket_id;
@@ -262,7 +262,7 @@ class KSDAdminTests extends WP_UnitTestCase {
             $post_ID = $post_id;
             $post = get_post( $post_id );
             
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $arr = $ksd_admin->ticket_updated_messages( array() );
             
@@ -275,7 +275,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_ticket_bulk_update_messages(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $bulk_counts['updated'] = 0;
             $bulk_counts['locked'] = 0;
             $bulk_counts['deleted'] = 0;
@@ -321,7 +321,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_add_tinymce_cc_plugin(){           
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $plugin_array = $ksd_admin->add_tinymce_cc_plugin( array() );
             
@@ -335,7 +335,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          */
         public function test_register_tinymce_cc_button(){
             
-//            $ksd_admin = KSD_Admin::get_instance();
+//            $ksd_admin = Admin::get_instance();
 //            $editor_id = 'ksd_ticket';
 //            $buttons = $ksd_admin->register_tinymce_cc_button( array(), $editor_id );
 //            
@@ -350,7 +350,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_add_tickets_headers(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $defaults_arr = array( 'status' ,'assigned_to', 'severity','customer','replies' ); 
                 
@@ -367,7 +367,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          */
         public function test_ticket_table_sortable_columns(){
             $columns_arr = array( 'status', 'assigned_to', 'severity','customer' );
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $columns = $ksd_admin->ticket_table_sortable_columns( array() ) ;
             foreach( $columns as $column ){
@@ -382,7 +382,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_ticket_table_remove_columns(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $columns = $ksd_admin->ticket_table_remove_columns( array() );
             
@@ -410,7 +410,7 @@ class KSDAdminTests extends WP_UnitTestCase {
                         'orderby' => 'post_author'
                         );
             
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             foreach( $orderby as $key => $value ){
                 $vars['orderby'] = $key;
@@ -426,7 +426,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * Test ticket_table_filter_headers
          */
         public function test_ticket_table_filter_headers(){           
-            //$ksd_admin = KSD_Admin::get_instance();
+            //$ksd_admin = Admin::get_instance();
             //$ksd_admin->ticket_table_filter_headers();
             
             $this->markTestIncomplete();
@@ -436,7 +436,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * Test ticket_table_apply_filters
          */
         public function test_ticket_table_apply_filters(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $query = new WP_Query();
             
             $args = array( 'post_type' => 'ksd_ticket' );
@@ -469,7 +469,7 @@ class KSDAdminTests extends WP_UnitTestCase {
             $expected['new']        = __( 'New', 'kanzu-support-desk' );
             $expected['draft']      = __( 'Draft', 'kanzu-support-desk' );
             
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             foreach( $expected as $post_status => $expect ){
                 $output = $ksd_admin->get_ticket_status_label( $post_status );
@@ -489,7 +489,7 @@ class KSDAdminTests extends WP_UnitTestCase {
             $arr_expected['high']       = __( 'High', 'kanzu-support-desk' );
             $arr_expected['urgent']     = __( 'Urgent', 'kanzu-support-desk' );
 
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             foreach( $arr_expected as $ticket_severity => $expect ){
                 $output = $ksd_admin->get_ticket_severity_label( $ticket_severity );
@@ -505,7 +505,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @depends create_ticket
          */
         public function test_save_bulk_edit_ksd_ticket( $post_id ){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $_POST[ 'post_ids' ] = array( $post_id );
             $_POST['_ksd_tkt_info_assigned_to'] = 1;
@@ -526,7 +526,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_ticket_views(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $output = $ksd_admin->ticket_views( array() );
             
@@ -545,7 +545,7 @@ class KSDAdminTests extends WP_UnitTestCase {
             global $post;
             $post = get_post( $post_id );
             
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $output = $ksd_admin->display_ticket_statuses_next_to_title( array( null) );
             
             $this->assertTrue( 0 === count( $output ) );
@@ -560,7 +560,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * Test append_admin_feedback
          */
         public function test_append_admin_feedback(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $ksd_settings = Kanzu_Support_Desk::get_settings();
             $ksd_settings['notifications_enabled'] = 'no';
@@ -581,7 +581,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * 
          */
         public function test_on_new_product(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $category_id = wp_create_category( 'product' );
             
             $postarr = array(
@@ -619,7 +619,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          */
         public function test_quick_edit_custom_boxes(){
             $columns = array('assigned_to', 'severity' );
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $post_type = 'ksd_ticket';
             
             foreach( $columns as $col ){
@@ -638,7 +638,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @depends create_ticket
          */
         public function test_append_classes_to_ticket_grid( $post_id ){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $class = 'test-class';
             
             $output = $ksd_admin->append_classes_to_ticket_grid( array(), $class, $post_ID );
@@ -652,7 +652,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_change_publish_button(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $text = 'Publish';
             $translation = 'Translation';
             
@@ -676,12 +676,12 @@ class KSDAdminTests extends WP_UnitTestCase {
          */
         public function test_do_admin_includes(){
             
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             $ksd_admin->do_admin_includes();
             
-            $this->assertTrue(class_exists( 'KSD_Controller' ) );
-            $this->assertTrue(class_exists( 'KSD_Tickets_Controller' ) );
-            $this->assertTrue(class_exists( 'KSD_Users_Controller' ) );
+            $this->assertTrue(class_exists( 'Controller' ) );
+            $this->assertTrue(class_exists( 'Tickets_Controller' ) );
+            $this->assertTrue(class_exists( 'Users_Controller' ) );
         }
         
         /**
@@ -690,7 +690,7 @@ class KSDAdminTests extends WP_UnitTestCase {
          * @since 2.3.0
          */
         public function test_filter_totals(){
-            $ksd_admin = KSD_Admin::get_instance();
+            $ksd_admin = Admin::get_instance();
             
             $_POST['ksd_admin_nonce'] = wp_create_nonce( 'ksd-admin-nonce' );
             
@@ -711,7 +711,7 @@ class KSDAdminTests extends WP_UnitTestCase {
 		$new_ticket = $this->_ksd_ticket_details;
                 $new_ticket['ksd_addon_tkt_id'] = '1';
                 
-		$ksd_admin = KSD_Admin::get_instance();
+		$ksd_admin = Admin::get_instance();
 		
 		add_action( 'save_post', function( $post_id ){
 			global $ticket_id;
@@ -736,7 +736,7 @@ class KSDAdminTests extends WP_UnitTestCase {
 		//First log a new ticket 
 		$ticket_id = 0;
 		$new_ticket = $this->_ksd_ticket_details;
-		$ksd_admin = KSD_Admin::get_instance();
+		$ksd_admin = Admin::get_instance();
 		
 		add_action( 'save_post', function( $post_id ){
 			global $ticket_id;

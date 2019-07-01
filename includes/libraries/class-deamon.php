@@ -8,15 +8,15 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
-
+namespace Kanzu\Ksd\Libraries;
 // Exit if accessed directly
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if (!class_exists('KSD_Deamon')):
+if ( ! class_exists( 'Deamon' ) ) :
 
-	class KSD_Deamon {
+	class Deamon {
 
 		/**
 		 * Instance of this class.
@@ -32,11 +32,11 @@ if (!class_exists('KSD_Deamon')):
 		public function __construct() {
 			$this->transient = 'ksd_deamon_transient';
 
-			if (php_sapi_name() !== 'cli') {
-				die(__('Must be run from commandline.', 'kanzu-support-desk'));
+			if ( php_sapi_name() !== 'cli' ) {
+				die( __( 'Must be run from commandline.', 'kanzu-support-desk' ) );
 			}
-			set_error_handler(array($this, 'error_handler'), E_ERROR & ~E_DEPRECATED);
-			set_exception_handler(array($this, 'exception_handler'));
+			set_error_handler( array( $this, 'error_handler' ), E_ERROR & ~E_DEPRECATED );
+			set_exception_handler( array( $this, 'exception_handler' ) );
 		}
 
 		/**
@@ -49,7 +49,7 @@ if (!class_exists('KSD_Deamon')):
 		public static function get_instance() {
 
 			// If the single instance hasn't been set, set it now.
-			if (null == self::$instance) {
+			if ( null == self::$instance ) {
 				self::$instance = new self;
 			}
 
@@ -58,37 +58,37 @@ if (!class_exists('KSD_Deamon')):
 
 		public function run() {
 
-			$transient = $this->transient;
-			$value = $this->transient;
-			$expiration = 60 * 60 * 1; //1 hr
+			$transient  = $this->transient;
+			$value      = $this->transient;
+			$expiration = 60 * 60 * 1; // 1 hr
 
-			if (false === get_transient($transient)) {
-				set_transient($transient, $value, $expiration);
+			if ( false === get_transient( $transient ) ) {
+				set_transient( $transient, $value, $expiration );
 
-				do_action('ksd_run_deamon');
+				do_action( 'ksd_run_deamon' );
 
-				delete_transient($transient);
+				delete_transient( $transient );
 			} else {
-				_e('Script still running.', 'kanzu-support-desk');
+				_e( 'Script still running.', 'kanzu-support-desk' );
 			}
 		}
 
-		public function error_handler($errno, $errstr, $errfile, $errline, $errcontext) {
-			throw new Exception($errstr);
+		public function error_handler( $errno, $errstr, $errfile, $errline, $errcontext ) {
+			throw new Exception( $errstr );
 		}
 
-		public function exception_handler($e) {
+		public function exception_handler( $e ) {
 			echo $e;
-			delete_transient('ksd_deamon_transient');
+			delete_transient( 'ksd_deamon_transient' );
 		}
 
 	}
 
 endif;
-$ksd_deamon = KSD_Deamon::get_instance();
+$ksd_deamon = Deamon::get_instance();
 
 try {
 	$ksd_deamon->run();
-} catch (Exception $e) {
-	delete_transient('ksd_deamon_transient');
+} catch ( Exception $e ) {
+	delete_transient( 'ksd_deamon_transient' );
 }

@@ -14,7 +14,7 @@ class Autoloader
     public function autoload($class)
     {
 
-        $prefix     = 'Ksd\\';
+        $prefix     = 'Kanzu\Ksd\\';
         $len        = strlen($prefix);
         $classname  = substr($class, $len);
         $slash_pos  = strrpos($classname, '\\');

@@ -6,9 +6,9 @@
 	 * @since       1.1.4
 	 */
 
-	if ( ! defined( 'ABSPATH' ) ) {
-		exit;
-	}
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 	require_once dirname( __FILE__ ) . '/l10n.php';
 
@@ -34,147 +34,147 @@
 	global $fs_text;
 
 	$fs_text = array(
-		'account'                       => _fs_text( 'Account' ),
-		'addon'                         => _fs_text( 'Add On' ),
-		'contact-us'                    => _fs_text( 'Contact Us' ),
-		'contact-support'               => _fs_text( 'Contact Support' ),
-		'change-ownership'              => _fs_text( 'Change Ownership' ),
-		'support'                       => _fs_text( 'Support' ),
-		'support-forum'                 => _fs_text( 'Support Forum' ),
-		'add-ons'                       => _fs_text( 'Add Ons' ),
-		'upgrade'                       => _fs_x( 'Upgrade', 'verb' ),
-		'awesome'                       => _fs_text( 'Awesome' ),
-		'pricing'                       => _fs_x( 'Pricing', 'noun' ),
-		'price'                         => _fs_x( 'Price', 'noun' ),
-		'unlimited-updates'             => _fs_text( 'Unlimited Updates' ),
-		'downgrade'                     => _fs_x( 'Downgrade', 'verb' ),
-		'cancel-trial'                  => _fs_text( 'Cancel Trial' ),
-		'free-trial'                    => _fs_text( 'Free Trial' ),
-		'start-free-x'                  => _fs_text( 'Start my free %s' ),
-		'no-commitment-x'               => _fs_text( 'No commitment for %s - cancel anytime' ),
-		'after-x-pay-as-little-y'       => _fs_text( 'After your free %s, pay as little as %s' ),
-		'details'                       => _fs_text( 'Details' ),
-		'account-details'               => _fs_text( 'Account Details' ),
-		'delete'                        => _fs_x( 'Delete', 'verb' ),
-		'show'                          => _fs_x( 'Show', 'verb' ),
-		'hide'                          => _fs_x( 'Hide', 'verb' ),
-		'edit'                          => _fs_x( 'Edit', 'verb' ),
-		'update'                        => _fs_x( 'Update', 'verb' ),
-		'date'                          => _fs_text( 'Date' ),
-		'amount'                        => _fs_text( 'Amount' ),
-		'invoice'                       => _fs_text( 'Invoice' ),
-		'billing'                       => _fs_text( 'Billing' ),
-		'payments'                      => _fs_text( 'Payments' ),
-		'delete-account'                => _fs_text( 'Delete Account' ),
-		'dismiss'                       => _fs_x( 'Dismiss', 'as close a window' ),
-		'plan'                          => _fs_x( 'Plan', 'as product pricing plan' ),
-		'change-plan'                   => _fs_text( 'Change Plan' ),
-		'download-x-version'            => _fs_x( 'Download %s Version', 'as download professional version' ),
-		'download-x-version-now'        => _fs_x( 'Download %s version now', 'as download professional version now' ),
-		'download-latest'               => _fs_x( 'Download Latest', 'as download latest version' ),
-		'you-have-x-license'            => _fs_x( 'You have a %s license.', 'E.g. you have a professional license.' ),
-		'new'                           => _fs_text( 'New' ),
-		'free'                          => _fs_text( 'Free' ),
-		'trial'                         => _fs_x( 'Trial', 'as trial plan' ),
-		'start-trial'                   => _fs_x( 'Start Trial', 'as starting a trial plan' ),
-		'purchase'                      => _fs_x( 'Purchase', 'verb' ),
-		'purchase-license'              => _fs_text( 'Purchase License' ),
-		'buy'                           => _fs_x( 'Buy', 'verb' ),
-		'buy-license'                   => _fs_text( 'Buy License' ),
-		'license-single-site'           => _fs_text( 'Single Site License' ),
-		'license-unlimited'             => _fs_text( 'Unlimited Licenses' ),
-		'license-x-sites'               => _fs_text( 'Up to %s Sites' ),
-		'renew-license-now'             => _fs_text( '%sRenew your license now%s to access version %s features and support.' ),
-		'ask-for-upgrade-email-address' => _fs_text( "Enter the email address you've used for the upgrade below and we will resend you the license key." ),
-		'x-plan'                        => _fs_x( '%s Plan', 'e.g. Professional Plan' ),
-		'you-are-step-away'             => _fs_text( 'You are just one step away - %s' ),
-		'activate-x-now'                => _fs_x( 'Complete "%s" Activation Now',
-			'%s - plugin name. As complete "Jetpack" activation now' ),
-		'few-plugin-tweaks'             => _fs_text( 'We made a few tweaks to the plugin, %s' ),
-		'optin-x-now'                   => _fs_text( 'Opt-in to make "%s" Better!' ),
-		'error'                         => _fs_text( 'Error' ),
-		'failed-finding-main-path'      => _fs_text( 'Freemius SDK couldn\'t find the plugin\'s main file. Please contact sdk@freemius.com with the current error.' ),
-		#region Account
-
-		'expiration'                   => _fs_x( 'Expiration', 'as expiration date' ),
-		'license'                      => _fs_x( 'License', 'as software license' ),
-		'not-verified'                 => _fs_text( 'not verified' ),
-		'verify-email'                 => _fs_text( 'Verify Email' ),
-		'expires-in'                   => _fs_x( 'Expires in %s', 'e.g. expires in 2 months' ),
-		'renews-in'                    => _fs_x( 'Auto renews in %s', 'e.g. auto renews in 2 months' ),
-		'no-expiration'                => _fs_text( 'No expiration' ),
-		'expired'                      => _fs_text( 'Expired' ),
-		'cancelled'                    => _fs_text( 'Cancelled' ),
-		'in-x'                         => _fs_x( 'In %s', 'e.g. In 2 hours' ),
-		'x-ago'                        => _fs_x( '%s ago', 'e.g. 2 min ago' ),
+		'account'                                  => _fs_text( 'Account' ),
+		'addon'                                    => _fs_text( 'Add On' ),
+		'contact-us'                               => _fs_text( 'Contact Us' ),
+		'contact-support'                          => _fs_text( 'Contact Support' ),
+		'change-ownership'                         => _fs_text( 'Change Ownership' ),
+		'support'                                  => _fs_text( 'Support' ),
+		'support-forum'                            => _fs_text( 'Support Forum' ),
+		'add-ons'                                  => _fs_text( 'Add Ons' ),
+		'upgrade'                                  => _fs_x( 'Upgrade', 'verb' ),
+		'awesome'                                  => _fs_text( 'Awesome' ),
+		'pricing'                                  => _fs_x( 'Pricing', 'noun' ),
+		'price'                                    => _fs_x( 'Price', 'noun' ),
+		'unlimited-updates'                        => _fs_text( 'Unlimited Updates' ),
+		'downgrade'                                => _fs_x( 'Downgrade', 'verb' ),
+		'cancel-trial'                             => _fs_text( 'Cancel Trial' ),
+		'free-trial'                               => _fs_text( 'Free Trial' ),
+		'start-free-x'                             => _fs_text( 'Start my free %s' ),
+		'no-commitment-x'                          => _fs_text( 'No commitment for %s - cancel anytime' ),
+		'after-x-pay-as-little-y'                  => _fs_text( 'After your free %s, pay as little as %s' ),
+		'details'                                  => _fs_text( 'Details' ),
+		'account-details'                          => _fs_text( 'Account Details' ),
+		'delete'                                   => _fs_x( 'Delete', 'verb' ),
+		'show'                                     => _fs_x( 'Show', 'verb' ),
+		'hide'                                     => _fs_x( 'Hide', 'verb' ),
+		'edit'                                     => _fs_x( 'Edit', 'verb' ),
+		'update'                                   => _fs_x( 'Update', 'verb' ),
+		'date'                                     => _fs_text( 'Date' ),
+		'amount'                                   => _fs_text( 'Amount' ),
+		'invoice'                                  => _fs_text( 'Invoice' ),
+		'billing'                                  => _fs_text( 'Billing' ),
+		'payments'                                 => _fs_text( 'Payments' ),
+		'delete-account'                           => _fs_text( 'Delete Account' ),
+		'dismiss'                                  => _fs_x( 'Dismiss', 'as close a window' ),
+		'plan'                                     => _fs_x( 'Plan', 'as product pricing plan' ),
+		'change-plan'                              => _fs_text( 'Change Plan' ),
+		'download-x-version'                       => _fs_x( 'Download %s Version', 'as download professional version' ),
+		'download-x-version-now'                   => _fs_x( 'Download %s version now', 'as download professional version now' ),
+		'download-latest'                          => _fs_x( 'Download Latest', 'as download latest version' ),
+		'you-have-x-license'                       => _fs_x( 'You have a %s license.', 'E.g. you have a professional license.' ),
+		'new'                                      => _fs_text( 'New' ),
+		'free'                                     => _fs_text( 'Free' ),
+		'trial'                                    => _fs_x( 'Trial', 'as trial plan' ),
+		'start-trial'                              => _fs_x( 'Start Trial', 'as starting a trial plan' ),
+		'purchase'                                 => _fs_x( 'Purchase', 'verb' ),
+		'purchase-license'                         => _fs_text( 'Purchase License' ),
+		'buy'                                      => _fs_x( 'Buy', 'verb' ),
+		'buy-license'                              => _fs_text( 'Buy License' ),
+		'license-single-site'                      => _fs_text( 'Single Site License' ),
+		'license-unlimited'                        => _fs_text( 'Unlimited Licenses' ),
+		'license-x-sites'                          => _fs_text( 'Up to %s Sites' ),
+		'renew-license-now'                        => _fs_text( '%sRenew your license now%s to access version %s features and support.' ),
+		'ask-for-upgrade-email-address'            => _fs_text( "Enter the email address you've used for the upgrade below and we will resend you the license key." ),
+		'x-plan'                                   => _fs_x( '%s Plan', 'e.g. Professional Plan' ),
+		'you-are-step-away'                        => _fs_text( 'You are just one step away - %s' ),
+		'activate-x-now'                           => _fs_x(
+			'Complete "%s" Activation Now',
+			'%s - plugin name. As complete "Jetpack" activation now'
+		),
+		'few-plugin-tweaks'                        => _fs_text( 'We made a few tweaks to the plugin, %s' ),
+		'optin-x-now'                              => _fs_text( 'Opt-in to make "%s" Better!' ),
+		'error'                                    => _fs_text( 'Error' ),
+		'failed-finding-main-path'                 => _fs_text( 'Freemius SDK couldn\'t find the plugin\'s main file. Please contact sdk@freemius.com with the current error.' ),
+		// region Account
+		'expiration'                               => _fs_x( 'Expiration', 'as expiration date' ),
+		'license'                                  => _fs_x( 'License', 'as software license' ),
+		'not-verified'                             => _fs_text( 'not verified' ),
+		'verify-email'                             => _fs_text( 'Verify Email' ),
+		'expires-in'                               => _fs_x( 'Expires in %s', 'e.g. expires in 2 months' ),
+		'renews-in'                                => _fs_x( 'Auto renews in %s', 'e.g. auto renews in 2 months' ),
+		'no-expiration'                            => _fs_text( 'No expiration' ),
+		'expired'                                  => _fs_text( 'Expired' ),
+		'cancelled'                                => _fs_text( 'Cancelled' ),
+		'in-x'                                     => _fs_x( 'In %s', 'e.g. In 2 hours' ),
+		'x-ago'                                    => _fs_x( '%s ago', 'e.g. 2 min ago' ),
 		/* translators: %s: Version number (e.g. 4.6 or higher) */
-		'x-or-higher'                  => _fs_text( '%s or higher' ),
-		'version'                      => _fs_x( 'Version', 'as plugin version' ),
-		'name'                         => _fs_text( 'Name' ),
-		'email'                        => _fs_text( 'Email' ),
-		'email-address'                => _fs_text( 'Email address' ),
-		'verified'                     => _fs_text( 'Verified' ),
-		'module'                       => _fs_text( 'Module' ),
-		'module-type'                  => _fs_text( 'Module Type' ),
-		'plugin'                       => _fs_text( 'Plugin' ),
-		'plugins'                      => _fs_text( 'Plugins' ),
-		'theme'                        => _fs_text( 'Theme' ),
-		'themes'                       => _fs_text( 'Themes' ),
-		'path'                         => _fs_x( 'Path', 'as file/folder path' ),
-		'title'                        => _fs_text( 'Title' ),
-		'free-version'                 => _fs_text( 'Free version' ),
-		'premium-version'              => _fs_text( 'Premium version' ),
-		'slug'                         => _fs_x( 'Slug', 'as WP plugin slug' ),
-		'id'                           => _fs_text( 'ID' ),
-		'users'                        => _fs_text( 'Users' ),
-		'plugin-installs'              => _fs_text( 'Plugin Installs' ),
-		'module-installs'              => _fs_text( '%s Installs' ),
-		'sites'                        => _fs_x( 'Sites', 'like websites' ),
-		'user-id'                      => _fs_text( 'User ID' ),
-		'site-id'                      => _fs_text( 'Site ID' ),
-		'public-key'                   => _fs_text( 'Public Key' ),
-		'secret-key'                   => _fs_text( 'Secret Key' ),
-		'no-secret'                    => _fs_x( 'No Secret', 'as secret encryption key missing' ),
-		'no-id'                        => _fs_text( 'No ID' ),
-		'sync-license'                 => _fs_x( 'Sync License', 'as synchronize license' ),
-		'sync'                         => _fs_x( 'Sync', 'as synchronize' ),
-		'activate-license'             => _fs_text( 'Activate License' ),
-		'activate-free-version'        => _fs_text( 'Activate Free Version' ),
-		'activate-license-message'     => _fs_text( 'Please enter the license key that you received in the email right after the purchase:' ),
-		'activating-license'           => _fs_text( 'Activating license...' ),
-		'change-license'               => _fs_text( 'Change License' ),
-		'update-license'               => _fs_text( 'Update License' ),
-		'deactivate-license'           => _fs_text( 'Deactivate License' ),
-		'activate'                     => _fs_text( 'Activate' ),
-		'deactivate'                   => _fs_text( 'Deactivate' ),
-		'skip-deactivate'              => _fs_text( 'Skip & Deactivate' ),
-		'skip-and-x'                   => _fs_text( 'Skip & %s' ),
-		'no-deactivate'                => _fs_text( 'No - just deactivate' ),
-		'yes-do-your-thing'            => _fs_text( 'Yes - do your thing' ),
-		'active'                       => _fs_x( 'Active', 'active mode' ),
-		'is-active'                    => _fs_x( 'Is Active', 'is active mode?' ),
-		'install-now'                  => _fs_text( 'Install Now' ),
-		'install-update-now'           => _fs_text( 'Install Update Now' ),
-		'more-information-about-x'     => _fs_text( 'More information about %s' ),
-		'localhost'                    => _fs_text( 'Localhost' ),
-		'activate-x-plan'              => _fs_x( 'Activate %s Plan', 'as activate Professional plan' ),
-		'x-left'                       => _fs_x( '%s left', 'as 5 licenses left' ),
-		'last-license'                 => _fs_text( 'Last license' ),
-		'what-is-your-x'               => _fs_text( 'What is your %s?' ),
-		'activate-this-addon'          => _fs_text( 'Activate this add-on' ),
-		'deactivate-license-confirm'   => _fs_text( 'Deactivating your license will block all premium features, but will enable you to activate the license on another site. Are you sure you want to proceed?' ),
-		'delete-account-x-confirm'     => _fs_text( 'Deleting the account will automatically deactivate your %s plan license so you can use it on other sites. If you want to terminate the recurring payments as well, click the "Cancel" button, and first "Downgrade" your account. Are you sure you would like to continue with the deletion?' ),
-		'delete-account-confirm'       => _fs_text( 'Deletion is not temporary. Only delete if you no longer want to use this plugin anymore. Are you sure you would like to continue with the deletion?' ),
-		'downgrade-x-confirm'          => _fs_text( 'Downgrading your plan will immediately stop all future recurring payments and your %s plan license will expire in %s.' ),
-		'cancel-trial-confirm'         => _fs_text( 'Cancelling the trial will immediately block access to all premium features. Are you sure?' ),
-		'after-downgrade-non-blocking' => _fs_text( 'You can still enjoy all %s features but you will not have access to plugin updates and support.' ),
-		'after-downgrade-blocking'     => _fs_text( 'Once your license expires you can still use the Free version but you will NOT have access to the %s features.' ),
-		'proceed-confirmation'         => _fs_text( 'Are you sure you want to proceed?' ),
-		#endregion Account
-
+		'x-or-higher'                              => _fs_text( '%s or higher' ),
+		'version'                                  => _fs_x( 'Version', 'as plugin version' ),
+		'name'                                     => _fs_text( 'Name' ),
+		'email'                                    => _fs_text( 'Email' ),
+		'email-address'                            => _fs_text( 'Email address' ),
+		'verified'                                 => _fs_text( 'Verified' ),
+		'module'                                   => _fs_text( 'Module' ),
+		'module-type'                              => _fs_text( 'Module Type' ),
+		'plugin'                                   => _fs_text( 'Plugin' ),
+		'plugins'                                  => _fs_text( 'Plugins' ),
+		'theme'                                    => _fs_text( 'Theme' ),
+		'themes'                                   => _fs_text( 'Themes' ),
+		'path'                                     => _fs_x( 'Path', 'as file/folder path' ),
+		'title'                                    => _fs_text( 'Title' ),
+		'free-version'                             => _fs_text( 'Free version' ),
+		'premium-version'                          => _fs_text( 'Premium version' ),
+		'slug'                                     => _fs_x( 'Slug', 'as WP plugin slug' ),
+		'id'                                       => _fs_text( 'ID' ),
+		'users'                                    => _fs_text( 'Users' ),
+		'plugin-installs'                          => _fs_text( 'Plugin Installs' ),
+		'module-installs'                          => _fs_text( '%s Installs' ),
+		'sites'                                    => _fs_x( 'Sites', 'like websites' ),
+		'user-id'                                  => _fs_text( 'User ID' ),
+		'site-id'                                  => _fs_text( 'Site ID' ),
+		'public-key'                               => _fs_text( 'Public Key' ),
+		'secret-key'                               => _fs_text( 'Secret Key' ),
+		'no-secret'                                => _fs_x( 'No Secret', 'as secret encryption key missing' ),
+		'no-id'                                    => _fs_text( 'No ID' ),
+		'sync-license'                             => _fs_x( 'Sync License', 'as synchronize license' ),
+		'sync'                                     => _fs_x( 'Sync', 'as synchronize' ),
+		'activate-license'                         => _fs_text( 'Activate License' ),
+		'activate-free-version'                    => _fs_text( 'Activate Free Version' ),
+		'activate-license-message'                 => _fs_text( 'Please enter the license key that you received in the email right after the purchase:' ),
+		'activating-license'                       => _fs_text( 'Activating license...' ),
+		'change-license'                           => _fs_text( 'Change License' ),
+		'update-license'                           => _fs_text( 'Update License' ),
+		'deactivate-license'                       => _fs_text( 'Deactivate License' ),
+		'activate'                                 => _fs_text( 'Activate' ),
+		'deactivate'                               => _fs_text( 'Deactivate' ),
+		'skip-deactivate'                          => _fs_text( 'Skip & Deactivate' ),
+		'skip-and-x'                               => _fs_text( 'Skip & %s' ),
+		'no-deactivate'                            => _fs_text( 'No - just deactivate' ),
+		'yes-do-your-thing'                        => _fs_text( 'Yes - do your thing' ),
+		'active'                                   => _fs_x( 'Active', 'active mode' ),
+		'is-active'                                => _fs_x( 'Is Active', 'is active mode?' ),
+		'install-now'                              => _fs_text( 'Install Now' ),
+		'install-update-now'                       => _fs_text( 'Install Update Now' ),
+		'more-information-about-x'                 => _fs_text( 'More information about %s' ),
+		'localhost'                                => _fs_text( 'Localhost' ),
+		'activate-x-plan'                          => _fs_x( 'Activate %s Plan', 'as activate Professional plan' ),
+		'x-left'                                   => _fs_x( '%s left', 'as 5 licenses left' ),
+		'last-license'                             => _fs_text( 'Last license' ),
+		'what-is-your-x'                           => _fs_text( 'What is your %s?' ),
+		'activate-this-addon'                      => _fs_text( 'Activate this add-on' ),
+		'deactivate-license-confirm'               => _fs_text( 'Deactivating your license will block all premium features, but will enable you to activate the license on another site. Are you sure you want to proceed?' ),
+		'delete-account-x-confirm'                 => _fs_text( 'Deleting the account will automatically deactivate your %s plan license so you can use it on other sites. If you want to terminate the recurring payments as well, click the "Cancel" button, and first "Downgrade" your account. Are you sure you would like to continue with the deletion?' ),
+		'delete-account-confirm'                   => _fs_text( 'Deletion is not temporary. Only delete if you no longer want to use this plugin anymore. Are you sure you would like to continue with the deletion?' ),
+		'downgrade-x-confirm'                      => _fs_text( 'Downgrading your plan will immediately stop all future recurring payments and your %s plan license will expire in %s.' ),
+		'cancel-trial-confirm'                     => _fs_text( 'Cancelling the trial will immediately block access to all premium features. Are you sure?' ),
+		'after-downgrade-non-blocking'             => _fs_text( 'You can still enjoy all %s features but you will not have access to plugin updates and support.' ),
+		'after-downgrade-blocking'                 => _fs_text( 'Once your license expires you can still use the Free version but you will NOT have access to the %s features.' ),
+		'proceed-confirmation'                     => _fs_text( 'Are you sure you want to proceed?' ),
+		// endregion Account
 		'add-ons-for-x'                            => _fs_text( 'Add Ons for %s' ),
 		'add-ons-missing'                          => _fs_text( 'We could\'nt load the add-ons list. It\'s probably an issue on our side, please try to come back in few minutes.' ),
-		#region Plugin Deactivation
+		// region Plugin Deactivation
 		'anonymous-feedback'                       => _fs_text( 'Anonymous feedback' ),
 		'quick-feedback'                           => _fs_text( 'Quick feedback' ),
 		'deactivation-share-reason'                => _fs_text( 'If you have a moment, please let us know why you are deactivating' ),
@@ -188,8 +188,10 @@
 		'reason-suddenly-stopped-working'          => _fs_text( 'The plugin suddenly stopped working' ),
 		'reason-cant-pay-anymore'                  => _fs_text( "I can't pay for it anymore" ),
 		'reason-temporary-deactivation'            => _fs_text( "It's a temporary deactivation. I'm just debugging an issue." ),
-		'reason-other'                             => _fs_x( 'Other',
-			'the text of the "other" reason for deactivating the plugin that is shown in the modal box.' ),
+		'reason-other'                             => _fs_x(
+			'Other',
+			'the text of the "other" reason for deactivating the plugin that is shown in the modal box.'
+		),
 		'ask-for-reason-message'                   => _fs_text( 'Kindly tell us the reason so we can improve.' ),
 		'placeholder-plugin-name'                  => _fs_text( "What's the plugin's name?" ),
 		'placeholder-comfortable-price'            => _fs_text( 'What price would you feel comfortable paying?' ),
@@ -201,13 +203,12 @@
 		'placeholder-feature'                      => _fs_text( 'What feature?' ),
 		'placeholder-share-what-didnt-work'        => _fs_text( "Kindly share what didn't work so we can fix it for future users..." ),
 		'placeholder-what-youve-been-looking-for'  => _fs_text( "What you've been looking for?" ),
-		'placeholder-what-did-you-expect'          => _fs_text( "What did you expect?" ),
+		'placeholder-what-did-you-expect'          => _fs_text( 'What did you expect?' ),
 		'reason-didnt-work'                        => _fs_text( "The plugin didn't work" ),
 		'reason-dont-like-to-share-my-information' => _fs_text( "I don't like to share my information with you" ),
 		'dont-have-to-share-any-data'              => _fs_text( "You might have missed it, but you don't have to share any data and can just %s the opt-in." ),
-		#endregion Plugin Deactivation
-
-		#region Connect
+		// endregion Plugin Deactivation
+		// region Connect
 		'hey-x'                                    => _fs_x( 'Hey %s,', 'greeting' ),
 		'thanks-x'                                 => _fs_x( 'Thanks %s!', 'a greeting. E.g. Thanks John!' ),
 		'connect-message'                          => _fs_text( 'Never miss an important update - opt-in to our security and feature updates notifications, and non-sensitive diagnostic tracking with %4$s.' ),
@@ -254,14 +255,12 @@
 		'opt-out-message-appreciation'             => _fs_text( 'We appreciate your help in making the %s better by letting us track some usage data.' ),
 		'opt-out-message-usage-tracking'           => _fs_text( "Usage tracking is done in the name of making %s better. Making a better user experience, prioritizing new features, and more good things. We'd really appreciate if you'll reconsider letting us continue with the tracking." ),
 		'opt-out-message-clicking-opt-out'         => _fs_text( 'By clicking "Opt Out", we will no longer be sending any data from %s to %s.' ),
-		#endregion Connect
-
-		#region Screenshots
+		// endregion Connect
+		// region Screenshots
 		'screenshots'                              => _fs_text( 'Screenshots' ),
 		'view-full-size-x'                         => _fs_text( 'Click to view full-size screenshot %d' ),
-		#endregion Screenshots
-
-		#region Debug
+		// endregion Screenshots
+		// region Debug
 		'freemius-debug'                           => _fs_text( 'Freemius Debug' ),
 		'on'                                       => _fs_x( 'On', 'as turned on' ),
 		'off'                                      => _fs_x( 'Off', 'as turned off' ),
@@ -297,24 +296,28 @@
 		'type'                                     => _fs_text( 'Type' ),
 		'all-types'                                => _fs_text( 'All Types' ),
 		'all-requests'                             => _fs_text( 'All Requests' ),
-		#endregion Debug
-
-		#region Expressions
+		// endregion Debug
+		// region Expressions
 		'congrats'                                 => _fs_x( 'Congrats', 'as congratulations' ),
 		'oops'                                     => _fs_x( 'Oops', 'exclamation' ),
 		'yee-haw'                                  => _fs_x( 'Yee-haw', 'interjection expressing joy or exuberance' ),
-		'woot'                                     => _fs_x( 'W00t',
-			'(especially in electronic communication) used to express elation, enthusiasm, or triumph.' ),
+		'woot'                                     => _fs_x(
+			'W00t',
+			'(especially in electronic communication) used to express elation, enthusiasm, or triumph.'
+		),
 		'right-on'                                 => _fs_x( 'Right on', 'a positive response' ),
-		'hmm'                                      => _fs_x( 'Hmm',
-			'something somebody says when they are thinking about what you have just said. ' ),
+		'hmm'                                      => _fs_x(
+			'Hmm',
+			'something somebody says when they are thinking about what you have just said. '
+		),
 		'ok'                                       => _fs_text( 'O.K' ),
 		'hey'                                      => _fs_x( 'Hey', 'exclamation' ),
-		'heads-up'                                 => _fs_x( 'Heads up',
-			'advance notice of something that will need attention.' ),
-		#endregion Expressions
-
-		#region Admin Notices
+		'heads-up'                                 => _fs_x(
+			'Heads up',
+			'advance notice of something that will need attention.'
+		),
+		// endregion Expressions
+		// region Admin Notices
 		'you-have-latest'                          => _fs_text( 'Seems like you got the latest release.' ),
 		'you-are-good'                             => _fs_text( 'You are all good!' ),
 		'user-exist-message'                       => _fs_text( 'Sorry, we could not complete the email update. Another user with the same email is already registered.' ),
@@ -336,8 +339,10 @@
 		'deactivate-free-version'                  => _fs_text( 'Deactivate the free version' ),
 		'upload-and-activate'                      => _fs_text( 'Upload and activate the downloaded version' ),
 		'howto-upload-activate'                    => _fs_text( 'How to upload and activate?' ),
-		'addon-successfully-purchased-message'     => _fs_x( '%s Add-on was successfully purchased.',
-			'%s - product name, e.g. Facebook add-on was successfully...' ),
+		'addon-successfully-purchased-message'     => _fs_x(
+			'%s Add-on was successfully purchased.',
+			'%s - product name, e.g. Facebook add-on was successfully...'
+		),
 		'addon-successfully-upgraded-message'      => _fs_text( 'Your %s Add-on plan was successfully upgraded.' ),
 		'email-verified-message'                   => _fs_text( 'Your email has been successfully verified - you are AWESOME!' ),
 		'plan-upgraded-message'                    => _fs_text( 'Your plan was successfully upgraded.' ),
@@ -358,8 +363,10 @@
 		'trial-cancel-message'                     => _fs_text( 'Your %s free trial was successfully cancelled.' ),
 		'version-x-released'                       => _fs_x( 'Version %s was released.', '%s - numeric version number' ),
 		'please-download-x'                        => _fs_text( 'Please download %s.' ),
-		'latest-x-version'                         => _fs_x( 'the latest %s version here',
-			'%s - plan name, as the latest professional version here' ),
+		'latest-x-version'                         => _fs_x(
+			'the latest %s version here',
+			'%s - plan name, as the latest professional version here'
+		),
 		'trial-x-promotion-message'                => _fs_text( 'How do you like %s so far? Test all our %s premium features with a %d-day free trial.' ),
 		'start-free-trial'                         => _fs_x( 'Start free trial', 'call to action' ),
 		'starting-trial'                           => _fs_text( 'Starting trial' ),
@@ -378,14 +385,16 @@
 		'plan-did-not-change-message'              => _fs_text( 'It looks like you are still on the %s plan. If you did upgrade or change your plan, it\'s probably an issue on our side - sorry.' ),
 		'contact-us-here'                          => _fs_text( 'Please contact us here' ),
 		'plan-did-not-change-email-message'        => _fs_text( 'I have upgraded my account but when I try to Sync the License, the plan remains %s.' ),
-		#endregion Admin Notices
-		#region Connectivity Issues
+		// endregion Admin Notices
+		// region Connectivity Issues
 		'connectivity-test-fails-message'          => _fs_text( 'From unknown reason, the API connectivity test failed.' ),
 		'connectivity-test-maybe-temporary'        => _fs_text( 'It\'s probably a temporary issue on our end. Just to be sure, with your permission, would it be o.k to run another connectivity test?' ),
 		'curl-missing-message'                     => _fs_text( 'We use PHP cURL library for the API calls, which is a very common library and usually installed out of the box. Unfortunately, cURL is not installed on your server.' ),
 		'cloudflare-blocks-connection-message'     => _fs_text( 'From unknown reason, CloudFlare, the firewall we use, blocks the connection.' ),
-		'x-requires-access-to-api'                 => _fs_x( '%s requires an access to our API.',
-			'as pluginX requires an access to our API' ),
+		'x-requires-access-to-api'                 => _fs_x(
+			'%s requires an access to our API.',
+			'as pluginX requires an access to our API'
+		),
 		'squid-blocks-connection-message'          => _fs_text( 'It looks like your server is using Squid ACL (access control lists), which blocks the connection.' ),
 		'squid-no-clue-title'                      => _fs_text( 'I don\'t know what is Squid or ACL, help me!' ),
 		'squid-no-clue-desc'                       => _fs_text( 'We\'ll make sure to contact your hosting company and resolve the issue. You will get a follow-up email to %s once we have an update.' ),
@@ -403,32 +412,38 @@
 		'deactivate-plugin-title'                  => _fs_text( 'That\'s exhausting, please deactivate' ),
 		'deactivate-plugin-desc'                   => _fs_text( 'We feel your frustration and sincerely apologize for the inconvenience. Hope to see you again in the future.' ),
 		'fix-request-sent-message'                 => _fs_text( 'Thank for giving us the chance to fix it! A message was just sent to our technical staff. We will get back to you as soon as we have an update to %s. Appreciate your patience.' ),
-		'server-blocking-access'                   => _fs_x( 'Your server is blocking the access to Freemius\' API, which is crucial for %1s synchronization. Please contact your host to whitelist %2s',
-			'%1s - plugin title, %2s - API domain' ),
+		'server-blocking-access'                   => _fs_x(
+			'Your server is blocking the access to Freemius\' API, which is crucial for %1s synchronization. Please contact your host to whitelist %2s',
+			'%1s - plugin title, %2s - API domain'
+		),
 		'wrong-authentication-param-message'       => _fs_text( 'It seems like one of the authentication parameters is wrong. Update your Public Key, Secret Key & User ID, and try again.' ),
-		#endregion Connectivity Issues
-		#region Change Owner
+		// endregion Connectivity Issues
+		// region Change Owner
 		'change-owner-request-sent-x'              => _fs_text( 'Please check your mailbox, you should receive an email via %s to confirm the ownership change. From security reasons, you must confirm the change within the next 15 min. If you cannot find the email, please check your spam folder.' ),
 		'change-owner-request_owner-confirmed'     => _fs_text( 'Thanks for confirming the ownership change. An email was just sent to %s for final approval.' ),
 		'change-owner-request_candidate-confirmed' => _fs_text( '%s is the new owner of the account.' ),
-		#endregion Change Owner
-		'addon-x-cannot-run-without-y'             => _fs_x( '%s cannot run without %s.',
-			'addonX cannot run without pluginY' ),
+		// endregion Change Owner
+		'addon-x-cannot-run-without-y'             => _fs_x(
+			'%s cannot run without %s.',
+			'addonX cannot run without pluginY'
+		),
 		'addon-x-cannot-run-without-parent'        => _fs_x( '%s cannot run without the plugin.', 'addonX cannot run...' ),
-		'plugin-x-activation-message'              => _fs_x( '%s activation was successfully completed.',
-			'pluginX activation was successfully...' ),
+		'plugin-x-activation-message'              => _fs_x(
+			'%s activation was successfully completed.',
+			'pluginX activation was successfully...'
+		),
 		'features-and-pricing'                     => _fs_x( 'Features & Pricing', 'Plugin installer section title' ),
 		'free-addon-not-deployed'                  => _fs_text( 'Add-on must be deployed to WordPress.org or Freemius.' ),
 		'paid-addon-not-deployed'                  => _fs_text( 'Paid add-on must be deployed to Freemius.' ),
-		#--------------------------------------------------------------------------------
-		#region Add-On Licensing
-		#--------------------------------------------------------------------------------
+		// --------------------------------------------------------------------------------
+		// region Add-On Licensing
+		// --------------------------------------------------------------------------------
 		'addon-no-license-message'                 => _fs_text( '%s is a premium only add-on. You have to purchase a license first before activating the plugin.' ),
 		'addon-trial-cancelled-message'            => _fs_text( '%s free trial was successfully cancelled. Since the add-on is premium only it was automatically deactivated. If you like to use it in the future, you\'ll have to purchase a license.' ),
-		#endregion
-		#--------------------------------------------------------------------------------
-		#region Billing Cycles
-		#--------------------------------------------------------------------------------
+		// endregion
+		// --------------------------------------------------------------------------------
+		// region Billing Cycles
+		// --------------------------------------------------------------------------------
 		'monthly'                                  => _fs_x( 'Monthly', 'as every month' ),
 		'mo'                                       => _fs_x( 'mo', 'as monthly period' ),
 		'annual'                                   => _fs_x( 'Annual', 'as once a year' ),
@@ -439,21 +454,21 @@
 		'best'                                     => _fs_x( 'Best', 'e.g. the best product' ),
 		'billed-x'                                 => _fs_x( 'Billed %s', 'e.g. billed monthly' ),
 		'save-x'                                   => _fs_x( 'Save %s', 'as a discount of $5 or 10%' ),
-		#endregion Billing Cycles
+		// endregion Billing Cycles
 		'view-details'                             => _fs_text( 'View details' ),
-		#--------------------------------------------------------------------------------
-		#region Trial
-		#--------------------------------------------------------------------------------
+		// --------------------------------------------------------------------------------
+		// region Trial
+		// --------------------------------------------------------------------------------
 		'approve-start-trial'                      => _fs_x( 'Approve & Start Trial', 'button label' ),
 		/* translators: %1$s: Number of trial days; %2$s: Plan name; */
 		'start-trial-prompt-header'                => _fs_text( 'You are 1-click away from starting your %1$s-day free trial of the %2$s plan.' ),
 		/* translators: %s: Link to freemius.com */
 		'start-trial-prompt-message'               => _fs_text( 'For compliance with the WordPress.org guidelines, before we start the trial we ask that you opt-in with your user and non-sensitive site information, allowing the plugin to periodically send data to %s to check for version updates and to validate your trial.' ),
 
-		#endregion
-		#--------------------------------------------------------------------------------
-		#region Billing Details
-		#--------------------------------------------------------------------------------
+		// endregion
+		// --------------------------------------------------------------------------------
+		// region Billing Details
+		// --------------------------------------------------------------------------------
 		'business-name'                            => _fs_text( 'Business name' ),
 		'tax-vat-id'                               => _fs_text( 'Tax / VAT ID' ),
 		'address-line-n'                           => _fs_text( 'Address Line %d' ),
@@ -464,7 +479,7 @@
 		'state'                                    => _fs_text( 'State' ),
 		'province'                                 => _fs_text( 'Province' ),
 		'zip-postal-code'                          => _fs_text( 'ZIP / Postal Code' ),
-		#endregion
+		// endregion
 	);
 
 	/**

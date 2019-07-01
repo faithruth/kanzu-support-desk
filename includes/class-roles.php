@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 }
 // Exit if accessed directly
 
-if (!class_exists('KSD_Roles')):
+if (!class_exists('Roles')):
 
 	class Roles{
 

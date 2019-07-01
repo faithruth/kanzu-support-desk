@@ -64,7 +64,7 @@ class KSDAPITests extends WP_UnitTestCase {
 		$new_ticket = $this->_ksd_ticket_details;
                 $new_ticket['ksd_addon_tkt_id'] = '1';
                 
-		$ksd_admin = KSD_Admin::get_instance();
+		$ksd_admin = Admin::get_instance();
 		
 		add_action( 'save_post', function( $post_id ){
 			global $ticket_id;
@@ -91,7 +91,7 @@ class KSDAPITests extends WP_UnitTestCase {
 		$ticket_id = 0;
 		$new_ticket = $this->_ksd_ticket_details;
 		$new_ticket['ksd_addon_tkt_id'] = '1';
-                $ksd_admin = KSD_Admin::get_instance();
+                $ksd_admin = Admin::get_instance();
 		
 		add_action( 'save_post', function( $post_id ){
 			global $ticket_id;

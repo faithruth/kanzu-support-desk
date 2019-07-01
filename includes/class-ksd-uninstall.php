@@ -13,9 +13,9 @@
 
 
 
-if ( ! class_exists( 'KSD_Uninstall' ) ) :
+if ( ! class_exists( 'Uninstaller' ) ) :
 
-class KSD_Uninstall {
+class Uninstaller {
 
     public function __construct(){
         add_action( 'after_uninstall', array( $this, 'do_uninstall' ) );
@@ -140,4 +140,4 @@ It seems something did not quite add up. Sorry about that. Would you be so kind 
 }
 endif;
 
-return new KSD_Uninstall();
+return new Uninstaller();

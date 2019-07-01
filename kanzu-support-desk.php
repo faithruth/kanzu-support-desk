@@ -53,14 +53,14 @@ final class Kanzu_Support_Desk {
     /**
      * Session instance.
      *
-     * @var KSD_Session
+     * @var Session
      */
     public $session = null;
 
     /**
      * KSD Roles Object.
      *
-     * @var object|KSD_Roles
+     * @var object|Roles
      * @since 2.2.9
      */
     public $roles = null;
@@ -68,7 +68,7 @@ final class Kanzu_Support_Desk {
     /**
      * KSD Templates Object.
      *
-     * @var object|KSD_Templates
+     * @var object|Templates
      * @since 2.3.4
      */
     public $templates = null;
@@ -163,26 +163,29 @@ final class Kanzu_Support_Desk {
      * Include all the files we need
      */
     private function includes() {
+        //auoloader
+        include_once( KSD_PLUGIN_DIR .'includes/class-autoloader.php' );
+
         //Do installation-related work
-        include_once( KSD_PLUGIN_DIR .'includes/admin/class-ksd-admin-notices.php' );
-        include_once( KSD_PLUGIN_DIR .'includes/class-ksd-install.php' );
-        include_once( KSD_PLUGIN_DIR .'includes/class-ksd-uninstall.php' );
+        include_once( KSD_PLUGIN_DIR .'includes/admin/class-admin-notices.php' );
+        include_once( KSD_PLUGIN_DIR .'includes/class-installer.php' );
+        include_once( KSD_PLUGIN_DIR .'includes/class-uninstall.php' );
 
         //Others
-        include_once( KSD_PLUGIN_DIR . 'includes/class-ksd-roles.php' );
-        include_once( KSD_PLUGIN_DIR.  "includes/public/class-ksd-templates.php");
+        include_once( KSD_PLUGIN_DIR . 'includes/class-roles.php' );
+        include_once( KSD_PLUGIN_DIR.  "includes/public/class-templates.php");
 
         //The front-end
-        require_once( KSD_PLUGIN_DIR .  'includes/public/class-ksd-public.php' );
+        require_once( KSD_PLUGIN_DIR .  'includes/public/class-public.php' );
 
         //Dashboard and Administrative Functionality
         if ( is_admin() && is_user_logged_in() ) {
-            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-ksd-admin.php' );
+            require_once( KSD_PLUGIN_DIR .  'includes/admin/class-admin.php' );
         }
 
        //Deliver plugin updates like pizza
         if ( ! class_exists( 'KSD_Plugin_Updater' ) ) {
-            include_once( KSD_PLUGIN_DIR . '/includes/libraries/class-ksd-plugin-updater.php' );
+            include_once( KSD_PLUGIN_DIR . '/includes/libraries/class-plugin-updater.php' );
         }
         $this->roles        = new KSD_Roles();//Required in installation
         $this->templates    = new KSD_Templates();
@@ -314,7 +317,7 @@ final class Kanzu_Support_Desk {
      */
     public function do_log_new_ticket( $new_ticket ){
         require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
-        $ksd_admin =  KSD_Admin::get_instance();
+        $ksd_admin =  Admin::get_instance();
         $ksd_admin->do_log_new_ticket( $new_ticket );
     }
 
@@ -326,8 +329,8 @@ final class Kanzu_Support_Desk {
      * @param Object $new_ticket The reply object
      */
     public function do_reply_ticket( $ticket_reply ){
-        require_once( KSD_PLUGIN_DIR . 'includes/admin/class-ksd-admin.php' );
-        $ksd_admin =  KSD_Admin::get_instance();
+        require_once( KSD_PLUGIN_DIR . 'includes/admin/class-admin.php' );
+        $ksd_admin =  Admin::get_instance();
         $ksd_admin->do_reply_ticket( $ticket_reply );
     }
 
@@ -345,7 +348,7 @@ final class Kanzu_Support_Desk {
         if( "no" == $settings[ 'enable_customer_signup'] ){
             $url =    get_post_meta( $tkt_id, '_ksd_tkt_info_hash_url', true );
             if( empty( $url ) ){
-                include_once( KSD_PLUGIN_DIR.  "includes/admin/class-ksd-hash-urls.php" );
+                include_once( KSD_PLUGIN_DIR.  "includes/admin/class-hash-urls.php" );
                 $hash_urls = new KSD_Hash_Urls();
                 $url = $hash_urls->create_hash_url( $tkt_id );
             }

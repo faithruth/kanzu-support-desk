@@ -11,7 +11,7 @@
 
 namespace Kanzu\Ksd\Admin\Notification;
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -28,34 +28,34 @@ class Default_role {
 	 */
 	private function default_supervisor_caps() {
 		return array(
-			'read' => true,
-			'edit_posts' => true,
-			'delete_posts' => true,
-			'unfiltered_html' => true,
-			'upload_files' => true,
-			'export' => true,
-			'import' => true,
-			'delete_others_pages' => true,
-			'delete_others_posts' => true,
-			'delete_pages' => true,
-			'delete_private_pages' => true,
-			'delete_private_posts' => true,
+			'read'                   => true,
+			'edit_posts'             => true,
+			'delete_posts'           => true,
+			'unfiltered_html'        => true,
+			'upload_files'           => true,
+			'export'                 => true,
+			'import'                 => true,
+			'delete_others_pages'    => true,
+			'delete_others_posts'    => true,
+			'delete_pages'           => true,
+			'delete_private_pages'   => true,
+			'delete_private_posts'   => true,
 			'delete_published_pages' => true,
 			'delete_published_posts' => true,
-			'edit_others_pages' => true,
-			'edit_others_posts' => true,
-			'edit_pages' => true,
-			'edit_private_pages' => true,
-			'edit_private_posts' => true,
-			'edit_published_pages' => true,
-			'edit_published_posts' => true,
-			'manage_categories' => true,
-			'manage_links' => true,
-			'moderate_comments' => true,
-			'publish_pages' => true,
-			'publish_posts' => true,
-			'read_private_pages' => true,
-			'read_private_posts' => true,
+			'edit_others_pages'      => true,
+			'edit_others_posts'      => true,
+			'edit_pages'             => true,
+			'edit_private_pages'     => true,
+			'edit_private_posts'     => true,
+			'edit_published_pages'   => true,
+			'edit_published_posts'   => true,
+			'manage_categories'      => true,
+			'manage_links'           => true,
+			'moderate_comments'      => true,
+			'publish_pages'          => true,
+			'publish_posts'          => true,
+			'read_private_pages'     => true,
+			'read_private_posts'     => true,
 		);
 	}
 
@@ -67,17 +67,17 @@ class Default_role {
 	 *
 	 * @since 2.2.9
 	 */
-	private function modify_default_supervisor_caps($cap_recipient, $cap_function) {
+	private function modify_default_supervisor_caps( $cap_recipient, $cap_function ) {
 		$supervisor_del_capabilities = $this->get_delete_ticket_caps();
-		foreach ($supervisor_del_capabilities as $sup_cap_group) {
-			foreach ($sup_cap_group as $cap) {
-				$cap_recipient->$cap_function($cap);
+		foreach ( $supervisor_del_capabilities as $sup_cap_group ) {
+			foreach ( $sup_cap_group as $cap ) {
+				$cap_recipient->$cap_function( $cap );
 			}
 		}
 
-		$supervisor_capabilities = array('ksd_manage_users', 'ksd_view_dashboard', 'ksd_view_addons', 'manage_ksd_settings');
-		foreach ($supervisor_capabilities as $caps) {
-			$cap_recipient->$cap_function($caps);
+		$supervisor_capabilities = array( 'ksd_manage_users', 'ksd_view_dashboard', 'ksd_view_addons', 'manage_ksd_settings' );
+		foreach ( $supervisor_capabilities as $caps ) {
+			$cap_recipient->$cap_function( $caps );
 		}
 
 	}
@@ -90,10 +90,10 @@ class Default_role {
 	 *
 	 * @since 2.2.9
 	 */
-	public function modify_default_owner_caps($wp_user, $cap_function) {
-		$this->modify_default_agent_caps($wp_user, $cap_function);
-		$this->modify_default_supervisor_caps($wp_user, $cap_function);
-		$wp_user->$cap_function('ksd_manage_licenses');
+	public function modify_default_owner_caps( $wp_user, $cap_function ) {
+		$this->modify_default_agent_caps( $wp_user, $cap_function );
+		$this->modify_default_supervisor_caps( $wp_user, $cap_function );
+		$wp_user->$cap_function( 'ksd_manage_licenses' );
 	}
 
 	/**
@@ -104,11 +104,11 @@ class Default_role {
 	 *
 	 * @since 2.2.9
 	 */
-	private function modify_default_agent_caps($cap_recipient, $cap_function) {
+	private function modify_default_agent_caps( $cap_recipient, $cap_function ) {
 		$agent_capabilities = $this->get_default_agent_caps();
-		foreach ($agent_capabilities as $agent_cap_group) {
-			foreach ($agent_cap_group as $cap) {
-				$cap_recipient->$cap_function($cap);
+		foreach ( $agent_capabilities as $agent_cap_group ) {
+			foreach ( $agent_cap_group as $cap ) {
+				$cap_recipient->$cap_function( $cap );
 			}
 		}
 	}
@@ -123,10 +123,10 @@ class Default_role {
 	private function get_default_agent_caps() {
 		$capabilities = array();
 
-		$capability_types = array('ksd_ticket', 'ksd_reply', 'ksd_private_note', 'ksd_ticket_activity');
+		$capability_types = array( 'ksd_ticket', 'ksd_reply', 'ksd_private_note', 'ksd_ticket_activity' );
 
-		foreach ($capability_types as $capability_type) {
-			$capabilities[$capability_type] = array(
+		foreach ( $capability_types as $capability_type ) {
+			$capabilities[ $capability_type ] = array(
 				// Post type
 				"edit_{$capability_type}",
 				"read_{$capability_type}",
