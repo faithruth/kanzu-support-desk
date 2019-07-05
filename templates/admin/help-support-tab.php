@@ -1,3 +1,15 @@
+<?php
+/**
+ * Help Support Tab Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <h3><?php esc_html_e( 'Kanzu Support Desk: Need help? Got feedback?', 'kanzu-support-desk' ); ?></h3>
 <p><?php esc_html_e( 'We would love to hear from you. Send us feedback on what you love, what features you would like or simply get in touch for help.', 'kanzu-support-desk' ); ?></p>
 <form id="ksd_support_tab_form" class="ksd-feedback-support-tab">

@@ -110,7 +110,7 @@ function _fs_x( $text, $context ) {
 	 * @param string $text
 	 * @param string $context
 	 */
-function _fs_ex( $text, $context ) {
+function _fsesc_attr_x( $text, $context ) {
 	// Avoid misleading Theme Check warning.
 	$fn = '_x';
 	echo $fn( $text, $context, 'freemius' );

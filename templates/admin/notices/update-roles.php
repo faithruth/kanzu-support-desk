@@ -1,6 +1,18 @@
+<?php
+/**
+ * Update Roles Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <div class='update-nag'>
 	<p>
-	   <?php printf( __( 'Kanzu Support Desk | Based on your feedback, we have changed the way roles are managed. Please update the users who manage your installation by following <a href="%s" target="_blank">this KSD User role guide</a>. Your agents will only be able to manage tickets after you do so', 'kanzu-support-desk' ), 'https://kanzucode.com/knowledge_base/help-desk-user-roles/' ); ?>
+		<?php printf( esc_html( 'Kanzu Support Desk | Based on your feedback, we have changed the way roles are managed. Please update the users who manage your installation by following <a href="%s" target="_blank">this KSD User role guide</a>. Your agents will only be able to manage tickets after you do so', 'kanzu-support-desk' ), 'https://kanzucode.com/knowledge_base/help-desk-user-roles/' ); ?>
 	</p>
 	<p class="submit">
 		<a href="https://kanzucode.com/knowledge_base/help-desk-user-roles/?utm_source=wpadmin&amp;utm_medium=notice&amp;utm_campaign=KSD" class="button-primary" target="_blank"><?php esc_html_e( 'Read KSD user roles guide', 'kanzu-support-desk' ); ?></a>

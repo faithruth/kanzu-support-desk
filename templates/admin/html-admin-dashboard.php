@@ -1,3 +1,15 @@
+<?php
+/**
+ * Admin Dashboard Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <ul class="dashboard-statistics-summary pending">
 		<li> <?php esc_html_e( 'Loading...', 'kanzu-support-desk' ); ?></li>
 </ul>

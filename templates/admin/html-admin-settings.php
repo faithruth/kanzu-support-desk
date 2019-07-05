@@ -1,4 +1,16 @@
 <?php
+/**
+ * Admin Settings Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
+<?php
 $settings              = Kanzu_Support_Desk::get_settings();
 $settings_and_licenses = apply_filters( 'ksd_display_licenses', $settings );
 $licenses              = ( isset( $settings_and_licenses['licenses'] ) ? $settings_and_licenses['licenses'] : array() );
@@ -42,9 +54,9 @@ $licenses              = ( isset( $settings_and_licenses['licenses'] ) ? $settin
 					</div>
 				</div><!--.enable_new_tkt_notifxns-->
 				<!--<div class="setting enable_notify_on_new_ticket">
-					  <label for="notify_email"><?php esc_html_e( 'Send notifications to', 'kanzu-support-desk' ); ?></label>
-					  <input type="text" value="<?php echo $settings['notify_email']; ?>" size="30" name="notify_email" />
-					  <img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . '/assets/images/help.png'; ?>" class="help_tip" title="<?php esc_html_e( 'We send a notification to this email address when a new ticket is created', 'kanzu-support-desk' ); ?>"/>
+						<label for="notify_email"><?php esc_html_e( 'Send notifications to', 'kanzu-support-desk' ); ?></label>
+						<input type="text" value="<?php echo $settings['notify_email']; ?>" size="30" name="notify_email" />
+						<img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . '/assets/images/help.png'; ?>" class="help_tip" title="<?php esc_html_e( 'We send a notification to this email address when a new ticket is created', 'kanzu-support-desk' ); ?>"/>
 				</div>-->
 				<div class="setting">
 					<label for="auto_assign_user"><?php esc_html_e( 'Auto-assign new tickets to', 'kanzu-support-desk' ); ?></label>
@@ -67,7 +79,7 @@ $licenses              = ( isset( $settings_and_licenses['licenses'] ) ? $settin
 					</div>
 				<?php endif; ?>
 				<div id="ksd-below-settings">
-					<?php if ( 'yes' == $settings['show_questionnaire_link'] ) : ?>
+					<?php if ( 'yes' === $settings['show_questionnaire_link'] ) : ?>
 						<div class="ksd-section ksd-questionnaire">
 							<?php
 							$ksd_questionnaire_link = '<a href="https://goo.gl/forms/yQWhyIlyoByQ8N953" target="_blank">' . __( '2-minute questionnaire', 'kanzu-support-desk' ) . '</a>';
@@ -104,8 +116,8 @@ $licenses              = ( isset( $settings_and_licenses['licenses'] ) ? $settin
 						</div>
 						<div class="ksd-debug-reset-role-caps">
 							<img width="16" height="16" src="<?php echo KSD_PLUGIN_URL . '/assets/images/help.png'; ?>" class="help_tip" title="<?php esc_html_e( 'If some agents do not have the Tickets menu or a role does not have capabilities it should have, use this to perform a reset', 'kanzu-support-desk' ); ?>"/>
-						   <button class="button action button-large" id="ksd-reset-role-caps"><?php esc_html_e( 'Reset role capabilities', 'kanzu-support-desk' ); ?> </button>
-						   <div id="ksd-debug-reset-role-caps-response"></div>
+							<button class="button action button-large" id="ksd-reset-role-caps"><?php esc_html_e( 'Reset role capabilities', 'kanzu-support-desk' ); ?> </button>
+							<div id="ksd-debug-reset-role-caps-response"></div>
 						</div>
 					</div>
 				</div>
@@ -126,13 +138,13 @@ $licenses              = ( isset( $settings_and_licenses['licenses'] ) ? $settin
 				<h3><?php esc_html_e( 'Licence Management', 'kanzu-support-desk' ); ?> </h3>
 				<div>
 					<?php
-					// Iterate through the licenses and display them
+					// Iterate through the licenses and display them.
 					foreach ( $licenses as $license_details ) :
 						?>
 						<div class="setting">
 							<label for="<?php echo $license_details['license_db_key']; ?>"><?php echo $license_details['addon_name']; ?></label>
 							<input type="text" value="<?php echo $license_details['license']; ?>" size="30" name="<?php echo $license_details['license_db_key']; ?>" />
-							<?php if ( $license_details['license_status'] == 'valid' ) { ?>
+							<?php if ( 'valid' === $license_details['license_status'] ) { ?>
 								<span class="license_status valid"><?php esc_html_e( 'active', 'kanzu-support-desk' ); ?></span>
 								<input type="submit" class="button-secondary ksd-license ksd-deactivate_license" name="<?php echo $license_details['license_status_db_key']; ?>" value="<?php esc_html_e( 'Deactivate License', 'kanzu-support-desk' ); ?>"/>
 							<?php } else { ?>

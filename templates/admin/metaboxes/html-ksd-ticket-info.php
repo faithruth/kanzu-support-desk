@@ -1,3 +1,15 @@
+<?php
+/**
+ * Ticket Info Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <?php if ( '' !== get_post_meta( $post->ID, '_ksd_tkt_info_woo_order_id', true ) ) : ?>
 	<div class="ksd-misc-woo-order-id misc-pub-section">
 		<span><?php esc_html_e( 'Order', 'kanzu-support-desk' ); ?>:</span>
@@ -30,8 +42,8 @@
 	<span><?php esc_html_e( 'Assigned To:', 'kanzu-support-desk' ); ?></span>
 	<span class="ksd-misc-value" id="ksd-misc-assign-to">
 	<?php
-	$assigned_to_ID   = get_post_meta( $post->ID, '_ksd_tkt_info_assigned_to', true );
-	$assigned_to_user = get_userdata( $assigned_to_ID );
+	$assigned_to_id   = get_post_meta( $post->ID, '_ksd_tkt_info_assigned_to', true );
+	$assigned_to_user = get_userdata( $assigned_to_id );
 	$assigned_to      = ( false !== $assigned_to_user ? $assigned_to_user->display_name : __( 'No One', 'kanzu-support-desk' ) );
 	echo $assigned_to;
 	?>

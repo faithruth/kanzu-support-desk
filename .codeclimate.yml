@@ -13,13 +13,14 @@ plugins:
   phpcodesniffer:
     enabled: true
     config:
-      standard: "WordPress"
+      standard: "WordPress-VIP"
 ratings:
   paths:
     - "**.js"
     - "**.php"
 exclude_patterns:
   - "tests/"
+  - "bin/"
   - "vendor/"
   - "node_modules/"
   - "languages/"
@@ -27,5 +28,3 @@ exclude_patterns:
   - "assets/js/jquery*"
   - "Gruntfile.js"
   - "PHPCSAliases.php"
-  - "includes/library/freemius*"
-  - "includes/library/wp-session*"

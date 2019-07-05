@@ -1,3 +1,15 @@
+<?php
+/**
+ * Dialog Merge Tickets Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <div id="ksd-merge-ticket-wrap" style="display: none;" role="dialog" title="<?php esc_html_e( 'Merge ticket into current ticket', 'kanzu-support-desk' ); ?>">
 	<form id="ksd-merge-ticket" tabindex="-1">
 		<?php wp_nonce_field( 'ksd-merging', '_ajax_ksd_merging_nonce', false ); ?>
@@ -5,7 +17,9 @@
 			<div id="ksd-merge-options">
 				<?php esc_html_e( 'Current ticket:', 'kanzu-support-desk' ); ?>
 				<div class="ksd-merge-parent-ticket-details">
+					<?php if( isset($_GET['post']) ){ ?>
 					<span id="ksd-merge-parent-ticket-id">#<?php echo sanitize_key( $_GET['post'] ); ?> </span><span id="ksd-merge-parent-ticket-title"></span>
+					<?php } ?>
 				</div>
 			</div>
 			<div class="ksd-merge-ticket-merge-wrap hidden">

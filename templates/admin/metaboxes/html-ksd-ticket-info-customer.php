@@ -1,3 +1,15 @@
+<?php
+/**
+ * Customer Ticket Info Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <?php $ksd_current_customer = get_userdata( $post->post_author ); ?>
 <?php
 $ksd_user_avatar = get_avatar( $ksd_current_customer->user_email );

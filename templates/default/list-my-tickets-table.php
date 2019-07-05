@@ -1,6 +1,6 @@
 <?php
 /**
- * list my ticket table template
+ * List my ticket table template
  *
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
@@ -8,6 +8,7 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
+
 ?>
 <table class="wp-list-table widefat striped downloads">
 	<thead>
@@ -20,7 +21,7 @@
 	</thead>
 	<tbody>
 		<?php
-		global $current_user; // Current user
+		global $current_user; // Current user.
 		$ksd_admin  = Admin::get_instance();
 		$my_tickets = $ksd_admin->get_customer_tickets( $current_user->ID );
 

@@ -1,3 +1,15 @@
+<?php
+/**
+ * Admin intro Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <div id="ksd-intro-one" class="wrap about-wrap">
 	<div class="ksd-logo-intro"></div>
 	<?php global $current_user; ?>

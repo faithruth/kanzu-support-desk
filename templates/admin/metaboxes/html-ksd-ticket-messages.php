@@ -1,8 +1,22 @@
+<?php
+/**
+ * Help Support Tab Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <div id="ksd-messages-metabox">
 	<div id="ksd-ticket-message">
-		<?php $ksd_cc = get_post_meta( $post->ID, '_ksd_tkt_info_cc', true );
+		<?php
+			$ksd_cc = get_post_meta( $post->ID, '_ksd_tkt_info_cc', true );
 		if ( ! empty( $ksd_cc ) ) :
-			?><div class="ksd-ticket-cc"><?php esc_html_e( 'CC', 'kanzu-support-desk' ); ?>:<span class="ksd-cc-emails"><?php echo $ksd_cc; ?></span></div><?php endif; ?>
+			?>
+		<div class="ksd-ticket-cc"><?php esc_html_e( 'CC', 'kanzu-support-desk' ); ?>:<span class="ksd-cc-emails"><?php echo $ksd_cc; ?></span></div><?php endif; ?>
 		<div class="ksd-ticket-message-content"><?php echo apply_filters( 'ksd_the_ticket_content', $post->post_content, $post->ID ); ?></div>
 	</div>
 

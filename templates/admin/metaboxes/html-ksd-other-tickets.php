@@ -1,3 +1,15 @@
+<?php
+/**
+ * Other Tickets Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <div class="ksd-misc-extras misc-pub-section">
 	<button class="button button-small" id="merge-tickets-button"><?php esc_html_e( 'Merge Ticket', 'kanzu-support-desk' ); ?></button>
 	<?php

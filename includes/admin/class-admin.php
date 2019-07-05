@@ -1022,8 +1022,8 @@ if ( ! class_exists( 'KSD_Admin' ) ) :
 										<span class="title"><?php esc_html_e( 'State:', 'kanzu-support-desk' ); ?></span>
 										<select name="_ksd_tkt_info_is_read_by_<?php echo $current_user->ID; ?>">
 											<option value="-1">--<?php esc_html_e( 'No Change', 'kanzu-support-desk' ); ?>--</option>
-											 <option value="read"><?php _ex( 'Read', 'Ticket state', 'kanzu-support-desk' ); ?></option>
-											 <option value="unread"><?php _ex( 'Unread', 'Ticket state', 'kanzu-support-desk' ); ?></option>
+											 <option value="read"><?php esc_attr_x( 'Read', 'Ticket state', 'kanzu-support-desk' ); ?></option>
+											 <option value="unread"><?php esc_attr_x( 'Unread', 'Ticket state', 'kanzu-support-desk' ); ?></option>
 										</select>
 									</label>
 									</div>

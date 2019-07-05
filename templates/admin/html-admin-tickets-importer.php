@@ -1,3 +1,15 @@
+<?php
+/**
+ * Admin Ticket Importer Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <div class="wrap">
 	<div id="icon-tools" class="icon32"><br /></div>
 	<h2><?php esc_html_e( 'KSD Tickets Importer', 'kanzu-support-desk' ); ?></h2>

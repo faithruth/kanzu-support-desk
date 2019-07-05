@@ -1,13 +1,25 @@
+<?php
+/**
+ * Admin Wrapper template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <div id="admin-kanzu-support-desk" >
 	<div class="admin-ksd-title">
 		<?php
 		$ksd_current_page              = str_ireplace( 'ksd-', '', sanitize_key( $_GET['page'] ) );
-		$ksd_page                      = array(); // We do this to internationalize the names
+		$ksd_page                      = array(); // We do this to internationalize the names.
 		$ksd_page['dashboard']['name'] = __( 'Dashboard', 'kanzu-support-desk' );
 		$ksd_page['settings']['name']  = __( 'Settings', 'kanzu-support-desk' );
 		$ksd_page['addons']['name']    = __( 'Add-ons', 'kanzu-support-desk' );
 
-		// Files
+		// Files.
 		$ksd_page['dashboard']['file'] = 'html-admin-dashboard.php';
 		$ksd_page['settings']['file']  = 'html-admin-settings.php';
 		$ksd_page['addons']['file']    = 'html-admin-addons.php';

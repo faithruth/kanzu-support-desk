@@ -8,6 +8,7 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
+
 ?>
 <?php global $post; ?>
 <ul id="ksd-ticket-replies" class="ticket-<?php echo wp_kses_post( $post->ID ); ?>"> 

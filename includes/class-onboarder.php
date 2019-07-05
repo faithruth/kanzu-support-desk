@@ -88,8 +88,8 @@ if (!class_exists('Onboarder')):
 		 */
 		private function render_getting_started_nav_menu() {?>
 			  <ul class="ksd-gs-navigation">
-			      <li><button class="button button-secondary ksd-gs-nav ksd-gs-nav-prev"><?php _ex('Previous', 'navigation button to previous section', 'kanzu-support-desk');?></button> </li>
-			      <li><button class="button button-primary ksd-gs-nav"><?php _ex('Next', 'navigation button to next section', 'kanzu-support-desk');?></button> </li>
+			      <li><button class="button button-secondary ksd-gs-nav ksd-gs-nav-prev"><?php esc_attr_x('Previous', 'navigation button to previous section', 'kanzu-support-desk');?></button> </li>
+			      <li><button class="button button-primary ksd-gs-nav"><?php esc_attr_x('Next', 'navigation button to next section', 'kanzu-support-desk');?></button> </li>
 			    </ul>
 	        <?php
 	}

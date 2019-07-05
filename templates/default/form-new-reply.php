@@ -1,6 +1,6 @@
 <?php
 /**
- * new reply form
+ * New reply form
  *
  * @package   Kanzu_Support_Desk
  * @author    Kanzu Code <feedback@kanzucode.com>
@@ -8,23 +8,26 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
+
 ?>
 <form id="ksd-reply">
 	<div class="ksd-reply-wp-editor">
-		<?php global $post;
-		if ( ! is_user_logged_in() && ! empty( $post->post_password ) ) : ?>
-				<input type="email" value="<?php esc_html_e( 'Your Email', 'kanzu-support-desk' ); ?>" name="ksd_cust_email" label="Email" class="ksd-customer-email" minlength="2" required/>
-				<?php endif; ?>
 		<?php
-		wp_editor(
-			'',
-			'ksd-public-new-reply',
-			array(
-				'media_buttons' => true,
-				'textarea_rows' => 5,
-			)
-		);
-		?>
+			global $post;
+		if ( ! is_user_logged_in() && ! empty( $post->post_password ) ) :
+			?>
+					<input type="email" value="<?php esc_html_e( 'Your Email', 'kanzu-support-desk' ); ?>" name="ksd_cust_email" label="Email" class="ksd-customer-email" minlength="2" required/>
+					<?php endif; ?>
+			<?php
+			wp_editor(
+				'',
+				'ksd-public-new-reply',
+				array(
+					'media_buttons' => true,
+					'textarea_rows' => 5,
+				)
+			);
+			?>
 	</div>
 	<div id="ksd-public-reply-error" class="hidden"></div>
 	<div id="ksd-public-reply-success" class="hidden"></div>

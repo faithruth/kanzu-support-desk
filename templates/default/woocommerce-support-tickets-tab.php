@@ -8,6 +8,7 @@
  * @link      http://kanzucode.com
  * @copyright 2014 Kanzu Code
  */
+
 ?>
 
 <table class="wp-list-table widefat striped downloads">

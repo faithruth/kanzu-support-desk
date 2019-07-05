@@ -1,3 +1,15 @@
+<?php
+/**
+ * Admin Ticket List Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <?php global $tab_id; ?>
 <div class="ksd-ticket-extras">
 		<div class="ksd-ticket-refresh">

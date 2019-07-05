@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Template for our custom registration forms. It is used for two registration forms:
  *      1. The one that slides in and out when the public support button is clicked
  *      2. The one that's displayed on pages/posts that have the [ksd_my_tickets] shortcode WHEN a user isn't logged in
@@ -10,32 +10,33 @@
  * @author    Kanzu Code <feedback@kanzucode.com>
  * @since 2.0.0
  */
+
 ?>
-<div class="ksd-new-ticket-form-wrap ksd-register-form-wrap <?php echo $form_wrapper_classes; ?>">
+<div class="ksd-new-ticket-form-wrap ksd-register-form-wrap <?php echo wp_kses_post( $form_wrapper_classes ); ?>">
 	<?php $settings = Kanzu_Support_Desk::get_settings(); ?>
 	<div class="ksd-close-form-wrapper">
 		<span class="ksd_close_button">
 			<?php esc_html_e( 'Close', 'kanzu-support-desk' ); ?>
-			<img src="<?php echo KSD_PLUGIN_URL . 'assets/images/icons/close.png'; ?>"  width="32" height="32" Alt="<?php __( 'Close', 'kanzu-support-desk' ); ?>" />
+			<img src="<?php echo wp_kses_post( KSD_PLUGIN_URL . 'assets/images/icons/close.png' ); ?>"  width="32" height="32" Alt="<?php __( 'Close', 'kanzu-support-desk' ); ?>" />
 		</span>
 	</div>
-	<form method="POST" class="ksd-register-public <?php echo $form_classes; ?>-form">
+	<form method="POST" class="ksd-register-public <?php echo wp_kses_post( $form_classes ); ?>-form">
 		<div class="ksd-register-description">
 			<p><?php esc_html_e( 'Before you submit a ticket, you need to be logged in.', 'kanzu-support-desk' ); ?></p>
-			<p><?php printf( __( 'If you already have an account, please %1$s login here %2$s. If you do not, register below.', 'kanzu-support-desk' ), '<a href="' . get_admin_url() . '" class="button">', '</a>' ); ?></p>
+			<p><?php printf( esc_html( 'If you already have an account, please %1$s login here %2$s. If you do not, register below.', 'kanzu-support-desk' ), '<a href="' . get_admin_url() . '" class="button">', '</a>' ); ?></p>
 		</div>
 		<ul>
 			<li class="ksd-first-name">
-				  <input type="text" value="<?php esc_html_e( 'First Name', 'kanzu-support-desk' ); ?>" size="30" name="ksd_cust_firstname" label="<?php esc_html_e( 'First Name', 'kanzu-support-desk' ); ?>" class="ksd-customer-name" minlength="2" required/>
+				<input type="text" value="<?php esc_html_e( 'First Name', 'kanzu-support-desk' ); ?>" size="30" name="ksd_cust_firstname" label="<?php esc_html_e( 'First Name', 'kanzu-support-desk' ); ?>" class="ksd-customer-name" minlength="2" required/>
 			</li>
 			<li class="ksd-last-name">
-				  <input type="text" value="<?php esc_html_e( 'Last Name', 'kanzu-support-desk' ); ?>" size="30" name="ksd_cust_lastname" label="<?php esc_html_e( 'Last Name', 'kanzu-support-desk' ); ?>" class="ksd-customer-name" minlength="2"/>
+				<input type="text" value="<?php esc_html_e( 'Last Name', 'kanzu-support-desk' ); ?>" size="30" name="ksd_cust_lastname" label="<?php esc_html_e( 'Last Name', 'kanzu-support-desk' ); ?>" class="ksd-customer-name" minlength="2"/>
 			</li>
 			<li class="ksd-email">
-				  <input type="email" value="<?php esc_html_e( 'Email', 'kanzu-support-desk' ); ?>" size="30" name="ksd_cust_email" label="<?php esc_html_e( 'Customer Email', 'kanzu-support-desk' ); ?>" class="ksd-customer-email" required/>
+				<input type="email" value="<?php esc_html_e( 'Email', 'kanzu-support-desk' ); ?>" size="30" name="ksd_cust_email" label="<?php esc_html_e( 'Customer Email', 'kanzu-support-desk' ); ?>" class="ksd-customer-email" required/>
 			</li>
 			<li class="ksd-username">
-				  <input type="text" value="<?php esc_html_e( 'Username', 'kanzu-support-desk' ); ?>" size="30" name="ksd_cust_username" label="<?php esc_html_e( 'Username', 'kanzu-support-desk' ); ?>" class="ksd-customer-name" minlength="2" required/>
+				<input type="text" value="<?php esc_html_e( 'Username', 'kanzu-support-desk' ); ?>" size="30" name="ksd_cust_username" label="<?php esc_html_e( 'Username', 'kanzu-support-desk' ); ?>" class="ksd-customer-name" minlength="2" required/>
 			</li>
 			<li class="ksd-password">
 				<input type="password" value="" maxlength="32" name="ksd_cust_password" label="<?php esc_html_e( 'Password', 'kanzu-support-desk' ); ?>" class="ksd-password" minlength="8" placeholder="<?php esc_html_e( 'Password', 'kanzu-support-desk' ); ?>"  required/>
@@ -44,13 +45,13 @@
 		<?php if ( 'yes' == $settings['enable_recaptcha'] && $settings['recaptcha_site_key'] !== '' ) : ?>
 			<li class="ksd-g-recaptcha">
 				<span class="ksd-g-recaptcha-error"></span>
-				<div id="<?php echo uniqid( 'g-recaptcha-field-' ); ?>" class="g-recaptcha"></div>
+				<div id="<?php echo wp_kses_post(  uniqid( 'g-recaptcha-field-' ) ); ?>" class="g-recaptcha"></div>
 			</li>
 		<?php endif; ?>
 			<li class="ksd-show-password"><input type="checkbox" name="ksd_cust_show_password" /><?php esc_html_e( 'Show Password', 'kanzu-support-desk' ); ?></li>
 			<li class="ksd-public-submit">
-			  <img src="<?php echo KSD_PLUGIN_URL . 'assets/images/loading_dialog.gif'; ?>" class="ksd_loading_dialog" width="45" height="35" />
-			  <input type="submit" value="<?php esc_html_e( 'Register', 'kanzu-support-desk' ); ?>" name="ksd-submit-tab-register" class="ksd-submit"/>
+				<img src="<?php echo wp_kses_post( KSD_PLUGIN_URL . 'assets/images/loading_dialog.gif' ); ?>" class="ksd_loading_dialog" width="45" height="35" />
+				<input type="submit" value="<?php esc_html_e( 'Register', 'kanzu-support-desk' ); ?>" name="ksd-submit-tab-register" class="ksd-submit"/>
 			</li>
 
 		</ul>

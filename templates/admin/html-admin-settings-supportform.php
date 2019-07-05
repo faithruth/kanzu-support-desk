@@ -1,3 +1,15 @@
+<?php
+/**
+ * Admin Settings Support Form Template
+ *
+ * @package   Kanzu_Support_Desk
+ * @author    Kanzu Code <feedback@kanzucode.com>
+ * @license   GPL-2.0+
+ * @link      http://kanzucode.com
+ * @copyright 2014 Kanzu Code
+ */
+
+?>
 <div>
 	<h3><?php esc_html_e( 'Customer Support Form Options', 'kanzu-support-desk' ); ?> </h3>
 	<div class="setting">

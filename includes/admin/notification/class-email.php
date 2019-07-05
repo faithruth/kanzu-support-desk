@@ -21,10 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Email class functionality
  */
 class Email {
-
+	/**
+	 * Hooks Object
+	 *
+	 * @var [type]
+	 */
 	private $ksd_hooks;
-
-	public function __constructor() {
+	/**
+	 * Declar constructor methods
+	 */
+	public function __construct() {
 		$this->ksd_hooks = $ksd_hooks;
 	}
 
@@ -84,7 +90,7 @@ class Email {
 			if ( ! is_wp_error( $feed ) ) {
 				if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 					$cache = wp_remote_retrieve_body( $feed );
-					set_transient( 'ksd_notifications_feed', $cache, 86400 ); // Check everyday
+					set_transient( 'ksd_notifications_feed', $cache, 86400 ); // Check everyday.
 				}
 			} else {
 				$cache['error'] = __( 'Sorry, an error occurred while retrieving the latest notifications. A re-attempt will be made later. Thank you.', 'kanzu-support-desk' );
@@ -110,13 +116,14 @@ class Email {
 	/**
 	 * Notify the primary administrator that a new ticket has been logged
 	 * The wp_mail call in send_mail takes a while (about 5s in our tests)
-	 * so for tickets logged in the admin side, we call this using AJAX
+	 * so for tickets logged in the admin side, we call this using AJAX.
 	 *
-	 * @param string $notify_email Email to notify
-	 * @param int    $tkt_id
-	 * @param string $customer_email The email of the customer for whom the new ticket has been created
-	 * @param string $ticket_subject The new ticket's subject
-	 * @param Array  $attachments Filenames to attach to the notification
+	 * @param string $notify_email Email to notify.
+	 * @param int    $tkt_id The ticket ID.
+	 * @param string $customer_email The email of the customer for whom the new ticket has been created.
+	 * @param string $ticket_subject The new ticket's subject.
+	 * @param string $ticket_message The new ticket's message.
+	 * @param Array  $attachments Filenames to attach to the notification.
 	 * @since 1.5.5
 	 */
 	public function do_notify_new_ticket( $notify_email, $tkt_id, $customer_email = null, $ticket_subject = null, $ticket_message = null, $attachments = array() ) {
@@ -137,16 +144,23 @@ class Email {
 		$notify_new_tkt_message .= $this->ksd_hooks->output_ksd_signature( $tkt_id );
 		$notify_new_tkt_subject  = sprintf( __( '[%s] New Support Ticket', 'kanzu-support-desk' ), $blog_name );
 
-		// Use two filters, ksd_new_ticket_notifxn_message and ksd_new_ticket_notifxn_subject, to make changes to the
-		// the notification message and subject by add-ons
+		// Use two filters, ksd_new_ticket_notifxn_message and ksd_new_ticket_notifxn_subject, to make changes to the.
+		// the notification message and subject by add-ons.
 		$this->send_email( $notify_email, apply_filters( 'ksd_new_ticket_notifxn_message', $notify_new_tkt_message, $ticket_message, $ksd_settings, $tkt_id ), apply_filters( 'ksd_new_ticket_notifxn_subject', $notify_new_tkt_subject, $ticket_subject, $ksd_settings, $tkt_id ), null, $attachments );
 
 	}
 
+	/**
+	 * Send debug email
+	 *
+	 * @return void
+	 */
 	public function send_debug_email() {
-		$email = sanitize_email( $_POST['email'] );
-		if ( ! is_email( $email ) ) {
-			wp_send_json_error( __( 'Error | Invalid email address specified', 'kanzu-support-desk' ) );
+		if ( isset( $_POST['email'] ) ) {
+			$email = sanitize_email( $_POST['email'] );
+			if ( ! is_email( $email ) ) {
+				wp_send_json_error( __( 'Error | Invalid email address specified', 'kanzu-support-desk' ) );
+			}
 		}
 		$message = __( 'This is the test message you requested for. Signed. Sealed. Delivered.', 'kanzu-support-desk' );
 		if ( $this->send_email( $email, $message ) ) {
@@ -165,8 +179,8 @@ class Email {
 
 		$current_user = wp_get_current_user();
 
-		$subject = sanitize_text_field( $_POST['ksd_support_tab_subject'] );
-		$message = sanitize_text_field( $_POST['ksd_support_tab_message'] );
+		$subject = wp_unslash( sanitize_text_field( $_POST['ksd_support_tab_subject'] ) );
+		$message = wp_unslash( sanitize_text_field( $_POST['ksd_support_tab_message'] ) );
 
 		if ( strlen( $subject ) <= 2 ) {
 			$response = __( 'Error | The subject field is too short. Please type something then send', 'kanzu-support-desk' );
